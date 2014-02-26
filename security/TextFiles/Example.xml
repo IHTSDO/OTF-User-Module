@@ -1,0 +1,97 @@
+<userSecurity defaultpw="Sn0m3dDefPass" users="Users" members="Members">
+	<directories>
+		<directory name="OTF Users" description="List of All OTF Users" >
+			<accounts>
+				<account name="Bob" email="bob@test.com" givenName="Bob" surname="Bobbin">
+					<customField key="" value="APP:Mapping:Specialist:INTL"/>
+					<customField  value="MEMBER:INTL"/>
+					<customField  value="MEMBER:UK"/>
+				</account>
+				<account name="Frank" email="frank@test.com" givenName="Frank" middleName="Lee" surname="MyDear">
+					<customField value="APP:Mapping:Specialist:*"/>
+				</account>
+				<account name="Sven" email="sven@test.com" givenName="Sven" surname="Svenson">
+					<customField value="APP:Mapping:Specialist:DK"/>
+					<customField value="MEMBER:DK"/>
+				</account>
+				<account name="Skippy" email="skippy@test.com" givenName="Skippy" middleName="the" surname="Kangeroo">
+					<customField  value="APP:Mapping:Specialist:AUS"/>
+					<customField value="MEMBER:AUS"/>
+				</account>
+				<account name="VAAdmingroup" email="va@test.com" givenName="VA" middleName="Admin" surname="Group"/>
+				<account name="Sue" email="sue@test.com" givenName="Sue" surname="Ellen"/>
+				<account name="Peggy" email="peggy@test.com" givenName="Peggy" surname="Sue"/>
+				<account email="justEmail@test.com" />
+			</accounts>
+		</directory>
+		<directory name="Members" description="List of IHTSDO Members">
+			<groups>
+				<group name="*" description="All - Used for when no member needed "/>
+				<group name="UK" description="United Kingdom"/>
+				<group name="US"/>
+				<group name="NZ"/>
+				<group name="AUS"/>
+				<group name="DK"/>
+				<group name="INTL"/>
+			</groups>
+		</directory>
+		<directory name="Mapping Directory">
+			<groups>
+				<group name="Admin" status="enabled" description="The Administrator" >
+					<customField value="PERM:cardinality:0"/>
+				</group>
+				<group name="Specialist" description="The Specialist">
+					<customField value="PERM:cardinality:1"/>
+				</group>
+				<group name="Reviewer" description="The Reviewer">
+					<customField value="PERM:cardinality:2"/>
+				</group>
+			</groups>
+		</directory>
+		<directory name="Release Directory">
+			<groups>
+				<group name="Admin"/>
+				<group name="Manager"/>
+				<group name="Reviewer"/>
+			</groups>
+		</directory>
+		<directory name="Editor Directory">
+			<groups>
+				<group name="Admin"/>
+				<group name="Owner"/>
+				<group name="Editor"/>
+				<group name="Reviewer"/>
+			</groups>
+		</directory>
+		<directory name="Refset Directory">
+			<groups>
+				<group name="Admin"/>
+				<group name="Owner"/>
+				<group name="Designer"/>
+				<group name="Reviewer"/>
+			</groups>
+		</directory>
+	</directories>
+	<applications>
+		<application name="Users" description="Users Application">
+			<accountStore name="OTF Users"/>
+		</application>
+		<application name="Members" description="Members Application">
+			<accountStore name="Members"/>
+		</application>
+		<application name="Mapping">
+			<accountStore name="Mapping Directory"/>
+		</application>
+		<application name="Release">
+			<accountStore name="Release Directory"/>
+		</application>
+		<application name="Editor">
+			<accountStore name="Editor Directory"/>
+		</application>
+		<application name="Refset">
+			<accountStore name="Refset Directory"/>
+		</application>
+	</applications>
+
+</userSecurity>
+
