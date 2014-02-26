@@ -16,7 +16,7 @@ public class StormTest {
 	private static final Logger LOG = Logger.getLogger(XmlUserSecurity.class
 			.getName());
 
-	String fn = "D:/Data/Dropbox/Backup/misc/idMan.xml";
+	String fn = "./TextFiles/Example.xml";
 
 	public static void main(String[] args) {
 		StormTest sTest = new StormTest();
@@ -29,7 +29,6 @@ public class StormTest {
 		// build();
 		rebuild();
 		// clearSP();
-		// sortXML();
 	}
 
 	private void build() {
