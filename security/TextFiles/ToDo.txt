@@ -1,0 +1,15 @@
+XSLT Sort XML - so can compare.
+
+Easy API - no need for user app to know which is the Users Dir, members dir etc. just want to:
+Authenticate
+Get list of No reserved words custom fields
+Get list of Members
+Get List of Apps -> Get List of Groups/Roles - Use Group based Cust Fields to denote Members, Roles
+
+Need to finish the app > AcStore inc defaults and order.
+
+Shiro Example - API
+Web app example - > git
+
+"I think we just need a shiro config pointing to Adam's REST interface in every application and shiro on the classpath. 
+The application will use shiro to authenticate and for authorisation - we only talk to shiro. What shiro and the API do "
