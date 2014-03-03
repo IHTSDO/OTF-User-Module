@@ -19,4 +19,8 @@ public class OtfDirectories {
 		directories = directoriesIn;
 	}
 
+	public OtfDirectory getDirByName(String name) {
+		return directories.get(name);
+	}
+
 }

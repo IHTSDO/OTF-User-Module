@@ -13,7 +13,7 @@ public class XMLTest {
 	private static final Logger LOG = Logger.getLogger(XmlUserSecurity.class
 			.getName());
 
-	String fn = "D:/Data/Dropbox/Backup/misc/idMan.xml";
+	String fn = "./TextFiles/Example.xml";
 
 	public static void main(String[] args) {
 		XMLTest xxmlt = new XMLTest();
@@ -26,12 +26,12 @@ public class XMLTest {
 		XmlUserSecurity xmlUs = new XmlUserSecurity(fn);
 		try {
 			xmlUs.initFromFile();
-			LOG.info("defpw = " + xmlUs.getUserSecurity().getDefaultpw());
-			LOG.info("num top dirs = "
-					+ xmlUs.getUserSecurity().getDirs().getDirectories().size());
-			LOG.info("num apps = "
-					+ xmlUs.getUserSecurity().getApps().getApplications()
-							.size());
+			// LOG.info("defpw = " + xmlUs.getUserSecurity().getDefaultpw());
+			// LOG.info("num top dirs = "
+			// + xmlUs.getUserSecurity().getDirs().getDirectories().size());
+			// LOG.info("num apps = "
+			// + xmlUs.getUserSecurity().getApps().getApplications()
+			// .size());
 
 			LOG.info(xmlUs.getXMLFromUserSecurityAsString());
 

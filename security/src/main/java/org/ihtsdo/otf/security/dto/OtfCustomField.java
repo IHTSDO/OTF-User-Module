@@ -3,6 +3,12 @@ package org.ihtsdo.otf.security.dto;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldApplication;
+import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldMember;
+import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldModel;
+import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldPerm;
+import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldSetting;
+
 public class OtfCustomField {
 
 	/**
@@ -19,9 +25,23 @@ public class OtfCustomField {
 	private CustomType type = CustomType.DEFAULT;
 	private String[] vals;
 
-	private OtfCustomFieldMember member;
-	private OtfCustomFieldPerm perm;
-	private OtfCustomFieldApplication app;
+	private OtfCustomFieldModel model;
+
+	/**
+	 * Used to indicate the sort of custom field Start of the key string
+	 */
+	public static enum CustomType {
+		/** NO VALUE. */
+		DEFAULT,
+		/** A Member */
+		MEMBER,
+		/** A permission. */
+		PERM,
+		/** An Application. */
+		APP,
+		/** An Setting. */
+		SETTING
+	}
 
 	public OtfCustomField() {
 		super();
@@ -40,7 +60,6 @@ public class OtfCustomField {
 	}
 
 	public final void init() {
-		// analyseKey();
 		analyseValue();
 	}
 
@@ -57,13 +76,18 @@ public class OtfCustomField {
 		if (tval.equalsIgnoreCase(CustomType.APP.name())) {
 			setType(CustomType.APP);
 			return;
+
+		}
+		if (tval.equalsIgnoreCase(CustomType.SETTING.name())) {
+			setType(CustomType.SETTING);
+			return;
 		} else {
 			setType(CustomType.DEFAULT);
 		}
 
 	}
 
-	private void analyseValue() {
+	public void analyseValue() {
 
 		// Split val
 		vals = getValue().split(SEP);
@@ -72,31 +96,20 @@ public class OtfCustomField {
 		}
 		switch (type) {
 		case APP:
-			setApp(new OtfCustomFieldApplication(vals));
+			setModel(new OtfCustomFieldApplication(vals));
 		case MEMBER:
-			setMember(new OtfCustomFieldMember(vals));
+			setModel(new OtfCustomFieldMember(vals));
 			break;
 		case PERM:
-			setPerm(new OtfCustomFieldPerm(vals));
+			setModel(new OtfCustomFieldPerm(vals));
+			break;
+		case SETTING:
+			setModel(new OtfCustomFieldSetting(vals));
 			break;
 		default:
 			// do nothing
 			break;
 		}
-	}
-
-	/**
-	 * Used to indicate the sort of custom field Start of the key string
-	 */
-	public static enum CustomType {
-		/** NO VALUE. */
-		DEFAULT,
-		/** A Member */
-		MEMBER,
-		/** A permission. */
-		PERM,
-		/** An Application. */
-		APP
 	}
 
 	public String getKey() {
@@ -124,7 +137,6 @@ public class OtfCustomField {
 	}
 
 	public void setType(CustomType type) {
-		// LOG.info("CUSTOM - Setting type to : " + type);
 		this.type = type;
 	}
 
@@ -136,28 +148,12 @@ public class OtfCustomField {
 		vals = valsIn;
 	}
 
-	public OtfCustomFieldPerm getPerm() {
-		return perm;
+	public OtfCustomFieldModel getModel() {
+		return model;
 	}
 
-	public void setPerm(OtfCustomFieldPerm permIn) {
-		perm = permIn;
-	}
-
-	public OtfCustomFieldApplication getApp() {
-		return app;
-	}
-
-	public void setApp(OtfCustomFieldApplication appIn) {
-		app = appIn;
-	}
-
-	public OtfCustomFieldMember getMember() {
-		return member;
-	}
-
-	public void setMember(OtfCustomFieldMember memberIn) {
-		member = memberIn;
+	public void setModel(OtfCustomFieldModel modelIn) {
+		model = modelIn;
 	}
 
 }

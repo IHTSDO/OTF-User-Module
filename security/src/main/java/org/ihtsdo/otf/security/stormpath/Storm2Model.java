@@ -111,7 +111,7 @@ public class Storm2Model {
 			OtfCustomField cf = new OtfCustomField();
 			cf.setKey(key);
 			cf.setValue(val);
-			ogrp.getCustFields().put(key, cf);
+			ogrp.getCustData().getCustFields().put(key, cf);
 		}
 
 		return ogrp;
@@ -131,7 +131,7 @@ public class Storm2Model {
 			OtfCustomField cf = new OtfCustomField();
 			cf.setKey(key);
 			cf.setValue(val);
-			oacc.getCustFields().put(key, cf);
+			oacc.getCustData().getCustFields().put(key, cf);
 		}
 
 		return oacc;

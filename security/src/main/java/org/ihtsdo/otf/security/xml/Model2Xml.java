@@ -4,6 +4,7 @@ import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.OtfAccountStore;
 import org.ihtsdo.otf.security.dto.OtfAccounts;
 import org.ihtsdo.otf.security.dto.OtfApplication;
+import org.ihtsdo.otf.security.dto.OtfCustomData;
 import org.ihtsdo.otf.security.dto.OtfCustomField;
 import org.ihtsdo.otf.security.dto.OtfDirectory;
 import org.ihtsdo.otf.security.dto.OtfGroup;
@@ -88,21 +89,11 @@ public class Model2Xml {
 		if (grp.getAccounts() != null) {
 			buildAccounts(elemNew, grp.getAccounts());
 		}
-		for (OtfCustomField cfield : grp.getCustFields().values()) {
-			buildCustField(elemNew, cfield);
+		if (grp.getCustData().getCustFields().size() > 0) {
+			buildCustData(elemNew, grp.getCustData());
 		}
 		elem.appendChild(elemNew);
 	}
-
-	// private void buildCustData(final Element elem, final OtfCustomData cdata)
-	// {
-	// final Element elemNew = doc.createElement(XmlStatics.XML_E_CUSTD);
-	// for (OtfCustomField cf : cdata.getCustFields().values()) {
-	// buildCustField(elemNew, cf);
-	// }
-	//
-	// elem.appendChild(elemNew);
-	// }
 
 	private void buildCustField(final Element elem, final OtfCustomField cField) {
 		final Element elemNew = doc.createElement(XmlStatics.XML_E_CUST);
@@ -123,6 +114,14 @@ public class Model2Xml {
 
 	}
 
+	private void buildCustData(final Element elem, final OtfCustomData cdata) {
+		final Element elemNew = doc.createElement(XmlStatics.XML_E_CUSTD);
+		for (OtfCustomField cf : cdata.getCustFields().values()) {
+			buildCustField(elemNew, cf);
+		}
+		elem.appendChild(elemNew);
+	}
+
 	private void buildAccount(final Element elem, final OtfAccount acc) {
 		final Element elemNew = doc.createElement(XmlStatics.XML_E_ACC);
 		elemNew.setAttribute(XmlStatics.XML_A_NAME, acc.getName());
@@ -131,8 +130,8 @@ public class Model2Xml {
 		elemNew.setAttribute(XmlStatics.XML_A_SNAME, acc.getSurname());
 		elemNew.setAttribute(XmlStatics.XML_A_EMAIL, acc.getEmail());
 		elemNew.setAttribute(XmlStatics.XML_A_STAT, acc.getStatus().toString());
-		for (OtfCustomField cfield : acc.getCustFields().values()) {
-			buildCustField(elemNew, cfield);
+		if (acc.getCustData().getCustFields().size() > 0) {
+			buildCustData(elemNew, acc.getCustData());
 		}
 		elem.appendChild(elemNew);
 	}

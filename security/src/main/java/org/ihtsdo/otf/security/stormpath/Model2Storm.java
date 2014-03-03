@@ -200,7 +200,8 @@ public class Model2Storm {
 			// add accounts
 			buildAccounts(ogrp, grp);
 			// add customFields
-			buildCustomData(ogrp.getCustFields(), grp.getCustomData());
+			buildCustomData(ogrp.getCustData().getCustFields(),
+					grp.getCustomData());
 		}
 
 	}
@@ -281,7 +282,8 @@ public class Model2Storm {
 
 		if (oacc != null && acc != null) {
 			// add customFields
-			buildCustomData(oacc.getCustFields(), acc.getCustomData());
+			buildCustomData(oacc.getCustData().getCustFields(),
+					acc.getCustomData());
 
 		}
 

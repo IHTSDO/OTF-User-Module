@@ -1,19 +1,19 @@
 package org.ihtsdo.otf.security.dto;
 
-import java.util.HashMap;
-
 public class OtfAccount extends OtfBaseName {
 	public OtfAccount() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	private final HashMap<String, OtfCustomField> custFields = new HashMap<String, OtfCustomField>();
+	// private final HashMap<String, OtfCustomField> custFields = new
+	// HashMap<String, OtfCustomField>();
 
 	private String email;
 	private String givenName;
 	private String middleName;
 	private String surname;
+	private OtfCustomData custData = new OtfCustomData();
 
 	@Override
 	public String getName() {
@@ -21,6 +21,14 @@ public class OtfAccount extends OtfBaseName {
 			name = email;
 		}
 		return name;
+	}
+
+	public OtfCustomData getCustData() {
+		return custData;
+	}
+
+	public void setCustData(OtfCustomData custDataIn) {
+		custData = custDataIn;
 	}
 
 	public String getEmail() {
@@ -31,9 +39,9 @@ public class OtfAccount extends OtfBaseName {
 		email = emailIn;
 	}
 
-	public HashMap<String, OtfCustomField> getCustFields() {
-		return custFields;
-	}
+	// public HashMap<String, OtfCustomField> getCustFields() {
+	// return custFields;
+	// }
 
 	public String getGivenName() {
 		if (givenName == null || givenName.length() == 0) {

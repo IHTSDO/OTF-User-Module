@@ -13,4 +13,8 @@ public class OtfGroups {
 		return groups;
 	}
 
+	public OtfGroup getGroupByName(String name) {
+		return groups.get(name);
+	}
+
 }

@@ -122,19 +122,19 @@ public class Xml2Model {
 		grp.setStatus(elem.getAttribute(XmlStatics.XML_A_STAT));
 		// CustomData
 		//
-		// List<Element> namedChildren = XMLUtil.getChildElemsListByName(
-		// XmlStatics.XML_E_CUSTD, elem);
-		// for (Element el : namedChildren) {
-		// OtfCustomData cust = buildCustData(el);
-		// grp.setCustData(cust);
-		// }
-
-		// CustFields
 		List<Element> namedChildren = XMLUtil.getChildElemsListByName(
-				XmlStatics.XML_E_CUST, elem);
+				XmlStatics.XML_E_CUSTD, elem);
+		for (Element el : namedChildren) {
+			OtfCustomData cust = buildCustData(el);
+			grp.setCustData(cust);
+		}
+
+		// CustFields - allow people to edit fields as direct children of group.
+		namedChildren = XMLUtil.getChildElemsListByName(XmlStatics.XML_E_CUST,
+				elem);
 		for (Element el : namedChildren) {
 			OtfCustomField cust = buildCustField(el);
-			grp.getCustFields().put(cust.getKey(), cust);
+			grp.getCustData().getCustFields().put(cust.getKey(), cust);
 			// custData.getCustFields().put(cust.getKey(), cust);
 		}
 
@@ -185,13 +185,22 @@ public class Xml2Model {
 		acc.setEmail(elem.getAttribute(XmlStatics.XML_A_EMAIL));
 		acc.setStatus(elem.getAttribute(XmlStatics.XML_A_STAT));
 
+		// CustomData
+		//
 		List<Element> namedChildren = XMLUtil.getChildElemsListByName(
-				XmlStatics.XML_E_CUST, elem);
+				XmlStatics.XML_E_CUSTD, elem);
 		for (Element el : namedChildren) {
-			OtfCustomField cust = buildCustField(el);
-			acc.getCustFields().put(cust.getKey(), cust);
+			OtfCustomData cust = buildCustData(el);
+			acc.setCustData(cust);
 		}
 
+		// CustFields - allow people to edit fields as direct children of group.
+		namedChildren = XMLUtil.getChildElemsListByName(XmlStatics.XML_E_CUST,
+				elem);
+		for (Element el : namedChildren) {
+			OtfCustomField cust = buildCustField(el);
+			acc.getCustData().getCustFields().put(cust.getKey(), cust);
+		}
 		return acc;
 	}
 

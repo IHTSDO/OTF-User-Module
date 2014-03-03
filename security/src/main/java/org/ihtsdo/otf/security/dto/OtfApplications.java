@@ -19,4 +19,8 @@ public class OtfApplications {
 		applications = applicationsIn;
 	}
 
+	public OtfApplication getAppByName(String name) {
+		return applications.get(name);
+	}
+
 }
