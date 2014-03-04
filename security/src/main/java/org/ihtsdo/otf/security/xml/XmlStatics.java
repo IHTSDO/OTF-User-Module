@@ -19,9 +19,9 @@ public class XmlStatics {
 	public static String XML_E_ROOT = "userSecurity";
 
 	/** The xml attribute names. */
-	public static String XML_A_DEFPW = "defaultpw";
-	public static String XML_A_USERS_APP = "users";
-	public static String XML_A_MEMBERS_APP = "members";
+	// public static String XML_A_DEFPW = "defaultpw";
+	// public static String XML_A_USERS_APP = "users";
+	// public static String XML_A_MEMBERS_APP = "members";
 	public static String XML_A_STAT = "status";
 	public static String XML_A_NAME = "name";
 	public static String XML_A_DESC = "description";

@@ -67,12 +67,12 @@ public class Model2Storm {
 			String UCName = app.getName().toUpperCase();
 			boolean canDel = !UCName.contains(UCSP);
 			if (canDel) {
-				LOG.info("Can del app " + app.getName());
+				// LOG.info("Can del app " + app.getName());
 				app.delete();
 			}
-			if (!canDel) {
-				LOG.info("Can NOT del app " + app.getName());
-			}
+			// if (!canDel) {
+			// LOG.info("Can NOT del app " + app.getName());
+			// }
 
 		}
 
@@ -82,12 +82,12 @@ public class Model2Storm {
 			String UCName = dir.getName().toUpperCase();
 			boolean canDel = !UCName.contains(UCSP);
 			if (canDel) {
-				LOG.info("Can del Dir " + dir.getName());
+				// LOG.info("Can del Dir " + dir.getName());
 				dir.delete();
 			}
-			if (!canDel) {
-				LOG.info("Can NOT del Dir " + dir.getName());
-			}
+			// if (!canDel) {
+			// LOG.info("Can NOT del Dir " + dir.getName());
+			// }
 
 		}
 
@@ -200,8 +200,12 @@ public class Model2Storm {
 			// add accounts
 			buildAccounts(ogrp, grp);
 			// add customFields
-			buildCustomData(ogrp.getCustData().getCustFields(),
-					grp.getCustomData());
+			if (ogrp.getCustData().getCustFields().size() > 0) {
+				CustomData cd = spbd.getCustomData(grp.getCustomData()
+						.getHref());
+				buildCustomData(ogrp.getCustData().getCustFields(), cd);
+				cd.save();
+			}
 		}
 
 	}
@@ -237,14 +241,23 @@ public class Model2Storm {
 	}
 
 	private void buildAccount(OtfAccount oacc, Account acc, AccountStore accSt) {
+		boolean log = false;
+
 		if (oacc == null && acc == null) {
 			LOG.severe("buildAccount all is null");
 			return;
 		}
+		// log = oacc.getName().equalsIgnoreCase("bob");
 		if (oacc != null && acc != null) {
-			// update dir
+			// update
 			acc.setUsername(oacc.getName());
 			acc.setEmail(oacc.getEmail());
+			if (oacc.getCustData().getCustFields().size() > 0) {
+				CustomData cd = spbd.getCustomData(acc.getCustomData()
+						.getHref());
+				buildCustomData(oacc.getCustData().getCustFields(), cd);
+				cd.save();
+			}
 			acc.save();
 		} else {
 			if (acc == null) {
@@ -258,6 +271,17 @@ public class Model2Storm {
 				acc.setSurname(oacc.getSurname());
 				acc.setEmail(oacc.getEmail());
 				acc.setPassword(userSecurity.getDefaultpw());
+				if (oacc.getCustData().getCustFields().size() > 0) {
+					// LOG.info("CD2BADDED num = "
+					// + oacc.getCustData().getCustFields().size());
+					CustomData cd = acc.getCustomData();
+					// cd.put("rank", "Captain");
+					buildCustomData(oacc.getCustData().getCustFields(), cd);
+					if (log) {
+						LOG.info("Acc1 = " + acc);
+						// LOG.info("Acc1 = " + acc.getCustomData().size());
+					}
+				}
 
 				SPAccountStoreVisitor spa = new SPAccountStoreVisitor();
 				accSt.accept(spa);
@@ -274,32 +298,41 @@ public class Model2Storm {
 				}
 
 			}
-			if (oacc == null) {
-				// delete existing? NOT STORMPATH
-				acc = null;
-			}
+			// if (oacc == null) {
+			// // delete existing? NOT STORMPATH
+			// acc = null;
+			// }
 		}
-
-		if (oacc != null && acc != null) {
-			// add customFields
-			buildCustomData(oacc.getCustData().getCustFields(),
-					acc.getCustomData());
-
-		}
+		// if (log) {
+		// LOG.info("Acc2 = " + acc);
+		// }
+		// buildCustomData(oacc.getCustData().getCustFields(),
+		// acc.getCustomData());
+		// acc.getCustomData().save();
+		// if (log) {
+		// LOG.info("Acc3 = " + acc);
+		// }
+		// spbd.load();
+		// CustomData customData = spbd.getClient().getResource(
+		// acc.getCustomData().getHref(), CustomData.class);
+		// if (log) {
+		// LOG.info("Acc4 = customData size " + customData.size());
+		// }
 
 	}
 
 	private void buildCustomData(HashMap<String, OtfCustomField> custFields,
 			CustomData customData) {
-		if (custFields == null && customData == null) {
-			LOG.severe("buildCustomData all is null");
-			return;
-		}
+		// LOG.info("buildCustomData custFields size = " + custFields.size());
+		// LOG.info("buildCustomData customData = " + customData);
 		if (custFields != null && customData != null) {
+			// LOG.info("buildCustomData about to roll through cust fuie");
 			for (String key : custFields.keySet()) {
-				Object value = custFields.get(key);
+				String value = custFields.get(key).getValFromVals();
+				// LOG.info("buildCustomData customData val1= " + value);
 				// roll through keys in cust field
 				if (!OtfCustomData.getReservedWords().contains(key)) {
+					// LOG.info("buildCustomData customData adding " + value);
 					customData.put(key, value);
 				}
 			}
@@ -307,11 +340,13 @@ public class Model2Storm {
 				// roll through keys checking not reserved.
 				if (!OtfCustomData.getReservedWords().contains(key)) {
 					if (!custFields.containsKey(key)) {
+						// LOG.info("buildCustomData about to rem key " + key);
 						customData.remove(key);
 					}
 				}
 			}
-			customData.save();
+			// LOG.info("customData.size = " + customData.size());
+
 		}
 	}
 

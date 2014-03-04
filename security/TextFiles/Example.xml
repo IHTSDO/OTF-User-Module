@@ -1,5 +1,4 @@
-<userSecurity defaultpw="Sn0m3dDefPass" users="Users"
-	members="Members">
+<userSecurity>
 	<directories>
 		<directory name="OTF Users" description="List of All OTF Users">
 			<accounts>
@@ -47,7 +46,7 @@
 			<groups>
 				<group name="OTFSettings" description="Used to store OTF Settings ">
 					<customField value="SETTING:defaultpw:Sn0m3dDefPass" />
-					<customField value="SETTING:users:Users" />
+					<customField value="SETTING:users:OTF Users" />
 					<customField value="SETTING:members:Members" />
 				</group>
 			</groups>
@@ -90,7 +89,7 @@
 		</directory>
 	</directories>
 	<applications>
-		<application name="Users" description="Users Application">
+		<application name="OTF Users" description="Users Application">
 			<accountStore name="OTF Users" />
 		</application>
 		<application name="Members" description="Members Application">

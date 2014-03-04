@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.UserSecurityHandler;
+import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.UserSecurity;
 
 import com.stormpath.sdk.account.Account;
 import com.stormpath.sdk.application.Application;
+import com.stormpath.sdk.application.ApplicationList;
 import com.stormpath.sdk.authc.AuthenticationRequest;
 import com.stormpath.sdk.authc.UsernamePasswordRequest;
 import com.stormpath.sdk.resource.ResourceException;
@@ -82,24 +84,6 @@ public class StormPathUserSecurity implements UserSecurityHandler {
 		spbd.load();
 	}
 
-	private Account authAccount(String acName, String pw) {
-		// Create an authentication request using the credentials
-		AuthenticationRequest request = new UsernamePasswordRequest(acName, pw);
-
-		// Now let's authenticate the account with the application:
-		try {
-			return getUsersApplication().authenticateAccount(request)
-					.getAccount();
-		} catch (ResourceException name) {
-			// ...catch the error and print it to the syslog if it wasn't.
-			LOG.severe("Auth error: " + name.getDeveloperMessage());
-			return null;
-		} finally {
-			// Clear the request data to prevent later memory access
-			request.clear();
-		}
-	}
-
 	@Override
 	public UserSecurity getUserSecurity() {
 		return userSecurity;
@@ -115,6 +99,16 @@ public class StormPathUserSecurity implements UserSecurityHandler {
 	}
 
 	public Application getUsersApplication() {
+		if (usersApplication == null) {
+			String userAppName = getUserSecurity().getUsersApp();
+			ApplicationList applications = spbd.getTenant().getApplications();
+			for (Application application : applications) {
+				if (application.getName().equals(userAppName)) {
+					setUsersApplication(application);
+					return usersApplication;
+				}
+			}
+		}
 		return usersApplication;
 	}
 
@@ -136,6 +130,35 @@ public class StormPathUserSecurity implements UserSecurityHandler {
 
 	public void setSpbd(StormPathBaseDTO spbdIn) {
 		spbd = spbdIn;
+	}
+
+	@Override
+	public OtfAccount authAccount(String acNameIn, String pwIn) {
+		Account acc = authSPAccount(acNameIn, pwIn);
+
+		// CustomData cd = spdb.
+
+		if (acc != null) {
+			return getUserSecurity().getUserAccountByName(acNameIn);
+		}
+		return null;
+	}
+
+	private Account authSPAccount(String acName, String pw) {
+		// Create an authentication request using the credentials
+		AuthenticationRequest request = new UsernamePasswordRequest(acName, pw);
+		// Now let's authenticate the account with the application:
+		try {
+			return getUsersApplication().authenticateAccount(request)
+					.getAccount();
+		} catch (ResourceException name) {
+			// ...catch the error and print it to the syslog if it wasn't.
+			LOG.severe("Auth error: " + name.getDeveloperMessage());
+			return null;
+		} finally {
+			// Clear the request data to prevent later memory access
+			request.clear();
+		}
 	}
 
 }

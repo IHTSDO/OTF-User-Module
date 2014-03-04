@@ -1,5 +1,7 @@
 package org.ihtsdo.otf.security.xml;
 
+import java.util.logging.Logger;
+
 import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.OtfAccountStore;
 import org.ihtsdo.otf.security.dto.OtfAccounts;
@@ -18,6 +20,13 @@ public class Model2Xml {
 
 	private Document doc;
 	private UserSecurity userSecurity;
+	/**
+	 * <p>
+	 * logger.
+	 * </p>
+	 */
+	private static final Logger LOG = Logger.getLogger(Model2Xml.class
+			.getName());
 
 	public Model2Xml() {
 		super();
@@ -32,11 +41,12 @@ public class Model2Xml {
 	private void buildFromModel() {
 
 		final Element elem = getDoc().createElement(XmlStatics.XML_E_ROOT);
-		elem.setAttribute(XmlStatics.XML_A_DEFPW, userSecurity.getDefaultpw());
-		elem.setAttribute(XmlStatics.XML_A_USERS_APP,
-				userSecurity.getUsersApp());
-		elem.setAttribute(XmlStatics.XML_A_MEMBERS_APP,
-				userSecurity.getMembersApp());
+		// elem.setAttribute(XmlStatics.XML_A_DEFPW,
+		// userSecurity.getDefaultpw());
+		// elem.setAttribute(XmlStatics.XML_A_USERS_APP,
+		// userSecurity.getUsersApp());
+		// elem.setAttribute(XmlStatics.XML_A_MEMBERS_APP,
+		// userSecurity.getMembersApp());
 
 		buildTopDirs(elem);
 		buildTopApps(elem);
@@ -99,6 +109,8 @@ public class Model2Xml {
 		final Element elemNew = doc.createElement(XmlStatics.XML_E_CUST);
 		elemNew.setAttribute(XmlStatics.XML_A_KEY, cField.getKey());
 		elemNew.setAttribute(XmlStatics.XML_A_VAL, cField.getValue());
+		// LOG.info("buildCustField cField.getValue() = " + cField.getValue()
+		// + " Getvals =" + cField.getValFromVals());
 		elem.appendChild(elemNew);
 	}
 

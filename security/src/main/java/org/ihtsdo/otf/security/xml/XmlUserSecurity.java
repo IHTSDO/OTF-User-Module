@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.UserSecurityHandler;
+import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.UserSecurity;
 import org.ihtsdo.otf.security.xml.base.XMLUtil;
 import org.w3c.dom.Document;
@@ -122,6 +123,18 @@ public class XmlUserSecurity implements UserSecurityHandler {
 
 	public void setSortXsltFn(String sortXsltFnIn) {
 		sortXsltFn = sortXsltFnIn;
+	}
+
+	@Override
+	public OtfAccount authAccount(String acNameIn, String pwIn) {
+		// Really for use in testing - simply check if password is defaultPw and
+		// that user account exists.
+
+		if (pwIn.equals(getUserSecurity().getDefaultpw())) {
+			return getUserSecurity().getUserAccountByName(acNameIn);
+		}
+
+		return null;
 	}
 
 }

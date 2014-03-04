@@ -18,6 +18,7 @@ import com.stormpath.sdk.authc.UsernamePasswordRequest;
 import com.stormpath.sdk.client.Client;
 import com.stormpath.sdk.client.ClientBuilder;
 import com.stormpath.sdk.directory.AccountStore;
+import com.stormpath.sdk.directory.CustomData;
 import com.stormpath.sdk.directory.Directory;
 import com.stormpath.sdk.directory.DirectoryList;
 import com.stormpath.sdk.group.Group;
@@ -75,8 +76,6 @@ public class BasicTest {
 						.build());
 	}
 
-	;
-
 	private Account createAccount(String uname, String pw) {
 		// Create the account object
 		Account account = client.instantiate(Account.class);
@@ -87,6 +86,8 @@ public class BasicTest {
 		account.setUsername(uname); // optional, defaults to email if unset
 		account.setEmail("afl@ihtsdo.org");
 		account.setPassword(pw);
+		CustomData cd = account.getCustomData();
+		cd.put("rank", "Captain");
 
 		// Create the account using the existing Application object
 		return application.createAccount(account);

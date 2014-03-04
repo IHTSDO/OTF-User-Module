@@ -4,6 +4,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 import com.stormpath.sdk.client.Client;
+import com.stormpath.sdk.directory.CustomData;
 import com.stormpath.sdk.tenant.Tenant;
 
 public class StormPathBaseDTO {
@@ -34,6 +35,10 @@ public class StormPathBaseDTO {
 		client = getOtfCb().setApiKeyFileLocation(getKeyPath()).build();
 		setApiProps(getOtfCb().getClientApiKeyProperties());
 		tenant = client.getCurrentTenant();
+	}
+
+	public CustomData getCustomData(String href) {
+		return getClient().getResource(href, CustomData.class);
 	}
 
 	public Client getClient() {

@@ -29,6 +29,9 @@ public class StormTest {
 		// build();
 		rebuild();
 		// clearSP();
+		// Xml2Storm(false);
+		// storm2Xml(true);
+
 	}
 
 	private void build() {

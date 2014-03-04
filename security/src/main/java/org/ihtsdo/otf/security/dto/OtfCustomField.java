@@ -125,11 +125,27 @@ public class OtfCustomField {
 	}
 
 	public String getValue() {
+		if (value == null || value.length() == 0) {
+			value = getValFromVals();
+		}
 		return value;
 	}
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	public String getValFromVals() {
+		StringBuilder sb = new StringBuilder();
+		int vl = vals.length - 1;
+		for (int i = 0; i <= vl; i++) {
+			sb.append(vals[i]);
+			if (i < vl) {
+				sb.append(SEP);
+			}
+		}
+		return sb.toString();
+
 	}
 
 	public CustomType getType() {

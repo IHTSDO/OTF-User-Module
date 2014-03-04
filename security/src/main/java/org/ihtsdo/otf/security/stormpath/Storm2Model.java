@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.OtfAccountStore;
 import org.ihtsdo.otf.security.dto.OtfApplication;
+import org.ihtsdo.otf.security.dto.OtfCustomData;
 import org.ihtsdo.otf.security.dto.OtfCustomField;
 import org.ihtsdo.otf.security.dto.OtfDirectory;
 import org.ihtsdo.otf.security.dto.OtfGroup;
@@ -47,21 +48,6 @@ public class Storm2Model {
 
 	private void buildUserSecurity() {
 		userSecurity = new UserSecurity();
-		// Load the base level info
-		String defpw = spbd.getApiProps().getProperty(StormPathBaseDTO.DEFPW);
-		// LOG.info("Def pw = " + defpw);
-		userSecurity.setDefaultpw(defpw);
-
-		String users = spbd.getApiProps().getProperty(
-				StormPathBaseDTO.USERS_APP);
-		// LOG.info("users app = " + users);
-		userSecurity.setUsersApp(users);
-
-		String members = spbd.getApiProps().getProperty(
-				StormPathBaseDTO.MEMBERS_APP);
-		// LOG.info("members app = " + members);
-		userSecurity.setMembersApp(members);
-
 		buildDirs();
 		buildApps();
 
@@ -88,6 +74,7 @@ public class Storm2Model {
 			oDir.getGroups().getGroups().put(ogroup.getName(), ogroup);
 		}
 		for (Account acc : dir.getAccounts()) {
+			// sLOG.info("Account =" + acc);
 			OtfAccount oacc = buildAccount(acc);
 			oDir.getAccounts().getAccounts().put(oacc.getName(), oacc);
 		}
@@ -105,19 +92,20 @@ public class Storm2Model {
 			ogrp.getAccounts().getAccounts().put(oacc.getName(), oacc);
 		}
 
-		Map<String, Object> cd = grp.getCustomData();
+		Map<String, Object> cd = spbd.getCustomData(grp.getCustomData()
+				.getHref());
 		for (String key : cd.keySet()) {
-			String val = cd.get(key).toString();
-			OtfCustomField cf = new OtfCustomField();
-			cf.setKey(key);
-			cf.setValue(val);
-			ogrp.getCustData().getCustFields().put(key, cf);
+			if (!OtfCustomData.getReservedWords().contains(key)) {
+				String val = cd.get(key).toString();
+				OtfCustomField cf = new OtfCustomField(key, val);
+				ogrp.getCustData().getCustFields().put(key, cf);
+			}
 		}
-
 		return ogrp;
 	}
 
 	private OtfAccount buildAccount(Account acc) {
+		// boolean log = acc.getUsername().equalsIgnoreCase("bob");
 		OtfAccount oacc = new OtfAccount();
 		oacc.setName(acc.getUsername());
 		oacc.setEmail(acc.getEmail());
@@ -125,13 +113,23 @@ public class Storm2Model {
 		oacc.setMiddleName(acc.getMiddleName());
 		oacc.setSurname(acc.getSurname());
 		oacc.setStatus(acc.getStatus().toString());
-		Map<String, Object> cd = acc.getCustomData();
+		Map<String, Object> cd = spbd.getCustomData(acc.getCustomData()
+				.getHref());
+		// if (log) {
+		// LOG.info("Account: " + acc);
+		// LOG.info("buildAccount1 cd size " + cd.size());
+		// LOG.info("href = " + acc.getCustomData().getHref());
+		// }
 		for (String key : cd.keySet()) {
-			String val = cd.get(key).toString();
-			OtfCustomField cf = new OtfCustomField();
-			cf.setKey(key);
-			cf.setValue(val);
-			oacc.getCustData().getCustFields().put(key, cf);
+			if (!OtfCustomData.getReservedWords().contains(key)) {
+
+				String val = cd.get(key).toString();
+				// if (log) {
+				// LOG.info("buildAccount val = " + val);
+				// }
+				OtfCustomField cf = new OtfCustomField(key, val);
+				oacc.getCustData().getCustFields().put(key, cf);
+			}
 		}
 
 		return oacc;

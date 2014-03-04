@@ -3,8 +3,17 @@ package org.ihtsdo.otf.security.dto;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class OtfCustomData {
+
+	/**
+	 * <p>
+	 * logger.
+	 * </p>
+	 */
+	private static final Logger LOG = Logger.getLogger(OtfCustomData.class
+			.getName());
 
 	public static final List<String> RESERVED_WORDS = new ArrayList<String>();
 	private final HashMap<String, OtfCustomField> custFields = new HashMap<String, OtfCustomField>();
@@ -27,7 +36,7 @@ public class OtfCustomData {
 		return RESERVED_WORDS;
 	}
 
-	List<OtfCustomField> getFieldsByType(OtfCustomField.CustomType type) {
+	public List<OtfCustomField> getFieldsByType(OtfCustomField.CustomType type) {
 		List<OtfCustomField> fields = new ArrayList<OtfCustomField>();
 		for (OtfCustomField cf : custFields.values()) {
 			if (cf.getType().equals(type)) {
@@ -37,23 +46,49 @@ public class OtfCustomData {
 		return fields;
 	}
 
-	List<OtfCustomField> getDefaults() {
+	public List<OtfCustomField> getDefaults() {
 		return getFieldsByType(OtfCustomField.CustomType.DEFAULT);
 	}
 
-	List<OtfCustomField> getMembers() {
+	public List<OtfCustomField> getMembers() {
 		return getFieldsByType(OtfCustomField.CustomType.MEMBER);
 	}
 
-	List<OtfCustomField> getPerms() {
+	public List<OtfCustomField> getPerms() {
 		return getFieldsByType(OtfCustomField.CustomType.PERM);
 	}
 
-	List<OtfCustomField> getApps() {
+	public List<OtfCustomField> getApps() {
 		return getFieldsByType(OtfCustomField.CustomType.APP);
 	}
 
-	List<OtfCustomField> getSettings() {
+	public List<OtfCustomField> getSettings() {
 		return getFieldsByType(OtfCustomField.CustomType.SETTING);
+	}
+
+	public List<OtfCustomField> getAppsByAppName(String appName) {
+
+		List<OtfCustomField> allApps = getApps();
+
+		List<OtfCustomField> allAppsByName = new ArrayList<OtfCustomField>();
+
+		for (OtfCustomField cf : allApps) {
+			if (cf.getModel().getVals()[1].equals(appName)) {
+				allAppsByName.add(cf);
+			}
+		}
+
+		return allAppsByName;
+	}
+
+	public boolean isaMemberOf(String member) {
+
+		for (OtfCustomField cf : getMembers()) {
+			if (cf.getVals()[1].equalsIgnoreCase(member)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

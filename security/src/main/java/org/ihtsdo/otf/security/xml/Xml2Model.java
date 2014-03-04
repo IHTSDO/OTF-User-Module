@@ -38,17 +38,17 @@ public class Xml2Model {
 
 	private void buildUserSecurity(final Element elem) {
 		userSecurity = new UserSecurity();
-		String defpw = elem.getAttribute(XmlStatics.XML_A_DEFPW);
-		// LOG.info("Def pw = " + defpw);
-		userSecurity.setDefaultpw(defpw);
-
-		String users = elem.getAttribute(XmlStatics.XML_A_USERS_APP);
-		// LOG.info("users app = " + users);
-		userSecurity.setUsersApp(users);
-
-		String members = elem.getAttribute(XmlStatics.XML_A_MEMBERS_APP);
-		// LOG.info("members app = " + members);
-		userSecurity.setMembersApp(members);
+		// String defpw = elem.getAttribute(XmlStatics.XML_A_DEFPW);
+		// // LOG.info("Def pw = " + defpw);
+		// userSecurity.setDefaultpw(defpw);
+		//
+		// String users = elem.getAttribute(XmlStatics.XML_A_USERS_APP);
+		// // LOG.info("users app = " + users);
+		// userSecurity.setUsersApp(users);
+		//
+		// String members = elem.getAttribute(XmlStatics.XML_A_MEMBERS_APP);
+		// // LOG.info("members app = " + members);
+		// userSecurity.setMembersApp(members);
 		buildTopDirs(elem);
 		buildTopApps(elem);
 
