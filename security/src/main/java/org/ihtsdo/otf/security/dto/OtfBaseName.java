@@ -20,9 +20,9 @@ public abstract class OtfBaseName {
 		return status;
 	}
 
-	public void setStatus(Status statusIn) {
-		status = statusIn;
-	}
+	// public void setStatus(Status statusIn) {
+	// status = statusIn;
+	// }
 
 	public void setStatus(String statusIn) {
 		if (statusIn != null && statusIn.length() > 0) {

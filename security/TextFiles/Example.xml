@@ -5,6 +5,8 @@
 				<account name="Bob" email="bob@test.com" givenName="Bob"
 					surname="Bobbin">
 					<customField key="" value="APP:Mapping:Specialist:INTL" />
+					<customField key="" value="APP:Mapping:Reviewer:DK" />
+					<customField key="" value="APP:Release:Manager:UK" />
 					<customField value="MEMBER:INTL" />
 					<customField value="MEMBER:UK" />
 				</account>

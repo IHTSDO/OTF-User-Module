@@ -145,6 +145,17 @@ public class UserSecurity {
 		return null;
 	}
 
+	public Collection<OftAccountMin> getMinUsers() {
+		Collection<OtfAccount> users = getUsers();
+		Collection<OftAccountMin> usersMin = new ArrayList<OftAccountMin>();
+		if (users != null) {
+			for (OtfAccount user : users) {
+				usersMin.add((new OftAccountMin(user)));
+			}
+		}
+		return usersMin;
+	}
+
 	public OtfAccount getUserAccountByName(String name) {
 		for (OtfAccount acc : getUsers()) {
 			if (acc.getName().equalsIgnoreCase(name)) {

@@ -97,6 +97,7 @@ public class OtfCustomField {
 		switch (type) {
 		case APP:
 			setModel(new OtfCustomFieldApplication(vals));
+			break;
 		case MEMBER:
 			setModel(new OtfCustomFieldMember(vals));
 			break;

@@ -396,6 +396,9 @@ public class Model2Storm {
 				// Applications.newCreateRequestFor(app).createDirectory()
 				// .build());
 
+				// TODO: NOTE not creating groups. This is on purpose as we do
+				// not require groups and it makes the coding and logic simpler.
+
 				DirectoryList dl = spbd.getTenant().getDirectories();
 
 				spbd.getTenant().createApplication(

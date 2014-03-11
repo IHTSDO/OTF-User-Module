@@ -12,6 +12,7 @@ import org.ihtsdo.otf.security.dto.OtfDirectory;
 import org.ihtsdo.otf.security.dto.OtfGroup;
 import org.ihtsdo.otf.security.dto.UserSecurity;
 import org.ihtsdo.otf.security.xml.Xml2Model;
+import org.ihtsdo.otf.security.xml.XmlStatics;
 
 import com.stormpath.sdk.account.Account;
 import com.stormpath.sdk.application.AccountStoreMapping;
@@ -165,6 +166,7 @@ public class Storm2Model {
 	private OtfAccountStore buildAccountStore(final AccountStoreMapping asm) {
 
 		AccountStore accountStore1 = asm.getAccountStore();
+
 		// LOG.info("accountStore1 = " + accountStore1);
 		SPAccountStoreVisitor spa = new SPAccountStoreVisitor();
 		accountStore1.accept(spa);
@@ -175,10 +177,16 @@ public class Storm2Model {
 			// LOG.info("DIR NAME =" + dir.getName());
 			OtfAccountStore oAs = new OtfAccountStore();
 			oAs.setName(dir.getName());
-
+			oAs.setType(XmlStatics.DIR);
 			return oAs;
-		} else
-			return null;
+		} else {
+			Group grp = (Group) accountStore1;
+			// LOG.info("DIR NAME =" + dir.getName());
+			OtfAccountStore oAs = new OtfAccountStore();
+			oAs.setName(grp.getName());
+			oAs.setType(XmlStatics.GRP);
+			return oAs;
+		}
 
 	}
 

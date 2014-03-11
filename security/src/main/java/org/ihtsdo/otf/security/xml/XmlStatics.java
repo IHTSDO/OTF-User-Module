@@ -22,6 +22,8 @@ public class XmlStatics {
 	// public static String XML_A_DEFPW = "defaultpw";
 	// public static String XML_A_USERS_APP = "users";
 	// public static String XML_A_MEMBERS_APP = "members";
+
+	public static String XML_A_ACCS_TYPE = "ASType";
 	public static String XML_A_STAT = "status";
 	public static String XML_A_NAME = "name";
 	public static String XML_A_DESC = "description";
@@ -32,4 +34,7 @@ public class XmlStatics {
 	public static String XML_A_MNAME = "middleName";
 	public static String XML_A_SNAME = "surname";
 
+	// default values
+	public static String DIR = "dir";
+	public static String GRP = "grp";
 }

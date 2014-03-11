@@ -172,6 +172,7 @@ public class Model2Xml {
 	private void buildAccStore(final Element elem, final OtfAccountStore st) {
 		final Element elemNew = doc.createElement(XmlStatics.XML_E_ACS);
 		elemNew.setAttribute(XmlStatics.XML_A_NAME, st.getName());
+		elemNew.setAttribute(XmlStatics.XML_A_ACCS_TYPE, st.getType());
 		elem.appendChild(elemNew);
 	}
 
