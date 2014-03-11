@@ -1,6 +1,11 @@
 package org.ihtsdo.otf.security.dto.query.queries;
 
 public class PermDTO {
+	public PermDTO() {
+		super();
+
+	}
+
 	public PermDTO(String keyIn, String valueIn) {
 		super();
 		key = keyIn;

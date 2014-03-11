@@ -6,6 +6,8 @@ import java.util.List;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.ihtsdo.otf.security.dto.OftAccountMin;
 import org.ihtsdo.otf.security.dto.query.queries.AppPermDTO;
+import org.ihtsdo.otf.security.dto.query.queries.AppPermGroupsQueryDTO;
+import org.ihtsdo.otf.security.dto.query.queries.GroupPermDTO;
 import org.ihtsdo.otf.security.dto.query.queries.MembersListQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.UserAppPermsListQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.UserByNameQueryDTO;
@@ -77,17 +79,15 @@ public class SecurityClient {
 		return null;
 	}
 
-	public String getUserAppPerms(String username, String appName,
-			String membership) {
-
-		return null;
-	}
-
-	public String getAppPermGroups(String json) {
-		return null;
-	}
-
-	public String getAppPermGroupPerms(String json) {
+	public static List<GroupPermDTO> getAppPermGroups(String json) {
+		try {
+			AppPermGroupsQueryDTO mlq = mapper.readValue(json,
+					AppPermGroupsQueryDTO.class);
+			return mlq.getPerms();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 

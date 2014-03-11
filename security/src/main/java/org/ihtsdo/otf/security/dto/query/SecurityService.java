@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.ihtsdo.otf.security.UserSecurityHandler;
+import org.ihtsdo.otf.security.dto.query.queries.AppPermGroupsQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.MembersListQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.UserAppPermsListQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.UserByNameQueryDTO;
@@ -80,19 +81,19 @@ public class SecurityService {
 	}
 
 	public String getAppPermGroups(String appName) {
-		UserMembersListQueryDTO uml = new UserMembersListQueryDTO(ush, appName);
+		AppPermGroupsQueryDTO uml = new AppPermGroupsQueryDTO(ush, appName);
 		String json = GetJSonFromObject(uml);
-		LOG.info("JSON = " + json);
+		LOG.info("getAppPermGroups appname JSON = " + json);
 		return json;
 	}
 
-	// public String getAppPermGroupPerms(String appName, String groupName) {
-	// UserMembersListQueryDTO uml = new UserMembersListQueryDTO(ush, appName,
-	// groupName);
-	// String json = GetJSonFromObject(uml);
-	// LOG.info("JSON = " + json);
-	// return json;
-	// }
+	public String getAppPermGroups(String appName, String groupName) {
+		AppPermGroupsQueryDTO uml = new AppPermGroupsQueryDTO(ush, appName,
+				groupName);
+		String json = GetJSonFromObject(uml);
+		LOG.info("getAppPermGroups app grp JSON = " + json);
+		return json;
+	}
 
 	private String GetJSonFromObject(Object obj) {
 		try {

@@ -1,8 +1,14 @@
 package org.ihtsdo.otf.security.dto.query.queries;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GroupPermDTO {
+
+	public GroupPermDTO(String nameIn) {
+		super();
+		name = nameIn;
+	}
 
 	public GroupPermDTO() {
 		super();
@@ -10,7 +16,7 @@ public class GroupPermDTO {
 	}
 
 	private String name;
-	private List<PermDTO> perms;
+	private List<PermDTO> perms = new ArrayList<PermDTO>();;
 
 	public String getName() {
 		return name;

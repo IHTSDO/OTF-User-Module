@@ -253,7 +253,7 @@ public class Xml2Model {
 	private OtfAccountStore buildAccountStore(final Element elem) {
 		OtfAccountStore oAs = new OtfAccountStore();
 		oAs.setName(elem.getAttribute(XmlStatics.XML_A_NAME));
-		oAs.setType(XmlStatics.XML_A_ACCS_TYPE);
+		oAs.setType(elem.getAttribute(XmlStatics.XML_A_ACCS_TYPE));
 		return oAs;
 
 	}
