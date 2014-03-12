@@ -7,9 +7,11 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.ihtsdo.otf.security.dto.OftAccountMin;
 import org.ihtsdo.otf.security.dto.query.queries.AppPermDTO;
 import org.ihtsdo.otf.security.dto.query.queries.AppPermGroupsQueryDTO;
+import org.ihtsdo.otf.security.dto.query.queries.AppsListQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.GroupPermDTO;
 import org.ihtsdo.otf.security.dto.query.queries.MembersListQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.UserAppPermsListQueryDTO;
+import org.ihtsdo.otf.security.dto.query.queries.UserAppsListQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.UserByNameQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.UserMembersListQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.UsersListQueryDTO;
@@ -28,7 +30,6 @@ public class SecurityClient {
 			e.printStackTrace();
 		}
 		return null;
-
 	}
 
 	public static List<OftAccountMin> getUsers(String json) {
@@ -43,11 +44,47 @@ public class SecurityClient {
 		return null;
 	}
 
+	public static List<String> getApps(String json) {
+		try {
+			AppsListQueryDTO mlq = mapper.readValue(json,
+					AppsListQueryDTO.class);
+			return mlq.getApps();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	public static OftAccountMin getUserByName(String json) {
 		try {
 			UserByNameQueryDTO ulq = mapper.readValue(json,
 					UserByNameQueryDTO.class);
 			return ulq.getUser();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	// public static OftAccountMin getUserByNameFull(String json) {
+	// try {
+	// UserByNameFullQueryDTO ulq = mapper.readValue(json,
+	// UserByNameFullQueryDTO.class);
+	// return ulq.getUser();
+	// } catch (IOException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// return null;
+	// }
+
+	public static List<String> getUserApps(String json) {
+		try {
+			UserAppsListQueryDTO mlq = mapper.readValue(json,
+					UserAppsListQueryDTO.class);
+			return mlq.getApps();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

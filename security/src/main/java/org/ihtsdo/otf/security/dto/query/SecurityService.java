@@ -1,13 +1,16 @@
 package org.ihtsdo.otf.security.dto.query;
 
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.ihtsdo.otf.security.UserSecurityHandler;
 import org.ihtsdo.otf.security.dto.query.queries.AppPermGroupsQueryDTO;
+import org.ihtsdo.otf.security.dto.query.queries.AppsListQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.MembersListQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.UserAppPermsListQueryDTO;
+import org.ihtsdo.otf.security.dto.query.queries.UserAppsListQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.UserByNameQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.UserMembersListQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.UsersListQueryDTO;
@@ -31,6 +34,12 @@ public class SecurityService {
 	public static final String GET_USER_MEMBERSHIPS = "getUserMemberships";
 	public static final String GET_USER_APP_PERMS = "getUserAppPerms";
 	public static final String GET_APP_PERM_GROUPS = "getAppPermGroups";
+
+	public static final String GET_APPS = "getApps";
+	public static final String GET_USER_APPS = "getUserApps";
+
+	// Leaving this one for now as a problem wrt json and abstract types
+	public static final String GET_FULL_USER = "getFullUser";
 
 	// ArgNames:
 	public static final String APP_NAME = "appName";
@@ -61,6 +70,11 @@ public class SecurityService {
 		case GET_USERS:
 			retVal = getUsers();
 			break;
+
+		case GET_APPS:
+			retVal = getApps();
+			break;
+
 		case GET_USER_BY_NAME:
 			if (stringOK(username) && stringOK(password)) {
 				retVal = getUserByName(username, password);
@@ -69,6 +83,12 @@ public class SecurityService {
 		case GET_USER_MEMBERSHIPS:
 			if (stringOK(username)) {
 				retVal = getUserMemberships(username);
+			}
+			break;
+
+		case GET_USER_APPS:
+			if (stringOK(username)) {
+				retVal = getUserApps(username);
 			}
 			break;
 		case GET_USER_APP_PERMS:
@@ -114,6 +134,16 @@ public class SecurityService {
 
 	}
 
+	public String getApps() {
+
+		AppsListQueryDTO ulq = new AppsListQueryDTO(ush);
+		// LOG.info("ulq size = " + ulq.getUsers().size());
+		String json = GetJSonFromObject(ulq);
+		// LOG.info("JSON = " + json);
+		return json;
+
+	}
+
 	public String getUserByName(String username, String password) {
 		UserByNameQueryDTO ubn = new UserByNameQueryDTO(ush, username, password);
 		String json = GetJSonFromObject(ubn);
@@ -122,8 +152,27 @@ public class SecurityService {
 
 	}
 
+	// TODO the full account uses abstract ypes (model) which the json engine
+	// does not like.
+
+	// public String getUserByNameFull(String username) {
+	// UserByNameFullQueryDTO ubn = new UserByNameFullQueryDTO(ush, username,
+	// null);
+	// String json = GetJSonFromObject(ubn);
+	// // LOG.info("JSON = " + json);
+	// return json;
+	//
+	// }
+
 	public String getUserMemberships(String username) {
 		UserMembersListQueryDTO uml = new UserMembersListQueryDTO(ush, username);
+		String json = GetJSonFromObject(uml);
+		// LOG.info("JSON = " + json);
+		return json;
+	}
+
+	public String getUserApps(String username) {
+		UserAppsListQueryDTO uml = new UserAppsListQueryDTO(ush, username);
 		String json = GetJSonFromObject(uml);
 		// LOG.info("JSON = " + json);
 		return json;
@@ -148,7 +197,7 @@ public class SecurityService {
 	public String getAppPermGroups(String appName) {
 		AppPermGroupsQueryDTO uml = new AppPermGroupsQueryDTO(ush, appName);
 		String json = GetJSonFromObject(uml);
-		LOG.info("getAppPermGroups appname JSON = " + json);
+		// LOG.info("getAppPermGroups appname JSON = " + json);
 		return json;
 	}
 
@@ -156,16 +205,15 @@ public class SecurityService {
 		AppPermGroupsQueryDTO uml = new AppPermGroupsQueryDTO(ush, appName,
 				groupName);
 		String json = GetJSonFromObject(uml);
-		LOG.info("getAppPermGroups app grp JSON = " + json);
+		// LOG.info("getAppPermGroups app grp JSON = " + json);
 		return json;
 	}
 
-	private String GetJSonFromObject(Object obj) {
+	public String GetJSonFromObject(Object obj) {
 		try {
 			return mapper.writeValueAsString(obj);
 		} catch (IOException e) {
-
-			e.printStackTrace();
+			LOG.log(Level.SEVERE, "Problem getting JSON from Object", e);
 		}
 		return null;
 	}
