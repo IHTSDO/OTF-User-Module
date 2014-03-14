@@ -1,20 +1,16 @@
 package org.ihtsdo.otf.security.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
+import java.util.Properties;
 import java.util.logging.Logger;
 
-import org.ihtsdo.otf.security.dto.OtfAccount;
-import org.ihtsdo.otf.security.dto.OtfCustomData;
+import org.ihtsdo.otf.security.UserSecurityHandler;
+import org.ihtsdo.otf.security.stormpath.StormPathBaseDTO;
 import org.ihtsdo.otf.security.stormpath.StormPathUserSecurity;
 import org.ihtsdo.otf.security.xml.XmlUserSecurity;
 import org.junit.After;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
-public class SecurityTestStorm {
+public class SecurityTestStorm extends AbstractSecurityTest {
 
 	/**
 	 * <p>
@@ -25,24 +21,29 @@ public class SecurityTestStorm {
 			.getName());
 
 	private static String fn = "./TextFiles/Example.xml";
+	private static String apiKeyFile = "C:/Users/adamf/stormpath/apiKey.properties";
+	private static String apiKeyId = "2ZCPRU919FXQYF49HRUXK8905";
+	private static String apiKeySecret = "ORDQyayhl1wmFputDIrEh8xIKi4amFGGcKsF9zn94L0";
+
 	private static XmlUserSecurity xmlUs;
-	private static StormPathUserSecurity spu = new StormPathUserSecurity();
+	private static StormPathUserSecurity spu;
 
 	@BeforeClass
 	public static void createTestInstance() {
-		xmlUs = new XmlUserSecurity(fn);
+		SecurityTestStorm sts = new SecurityTestStorm();
 		try {
-			xmlUs.initFromFile();
+			getSpu();
+			sts.getSecS();
 			// clear existing records in SP
-			spu.clearSP();
+			getSpu().clearSP();
 			// Then build using the model generated from XML
 			refreshSpu();
-			spu.sendUserSecuritytoStormPath(xmlUs.getUserSecurity());
+			getSpu().sendUserSecuritytoStormPath(getXmlUs().getUserSecurity());
 			// the build from Stormpath and test.
 			refreshSpu();
-			spu.buildUserSecurity();
+			getSpu().buildUserSecurity();
 			// refreshSpu();
-			xmlUs.setUserSecurity(spu.getUserSecurity());
+			getXmlUs().setUserSecurity(getSpu().getUserSecurity());
 			// LOG.info("storm2Xml : \n"
 			// + xmlUs.getXMLFromUserSecurityAsStringSortByName());
 		} catch (Exception e) {
@@ -51,77 +52,101 @@ public class SecurityTestStorm {
 	}
 
 	private static void refreshSpu() {
-		spu.getSpbd().load();
+		getSpu().getSpbd().load();
 	}
 
-	@Test
-	public final void testNumDirs() {
-		assertEquals(8, spu.getUserSecurity().getDirs().getDirectories().size());
-	}
-
-	@Test
-	public final void testNumApps() {
-		assertEquals(7, spu.getUserSecurity().getApps().getApplications()
-				.size());
-	}
-
-	@Test
-	public final void testNumSettings() {
-		assertEquals(3, spu.getUserSecurity().getSettings().size());
-	}
-
-	@Test
-	public final void testSettingsVals() {
-
-		assertEquals("Sn0m3dDefPass", spu.getUserSecurity().getDefaultpw());
-		assertEquals("OTF Users", spu.getUserSecurity().getUsersApp());
-		assertEquals("Members", spu.getUserSecurity().getMembersApp());
-
-	}
-
-	@Test
-	public final void testNumMembers() {
-		assertEquals(7, spu.getUserSecurity().getMembers().size());
-	}
-
-	@Test
-	public final void testNumUsers() {
-		assertEquals(8, spu.getUserSecurity().getUsers().size());
-	}
-
-	@Test
-	public final void testAccount() {
-		OtfAccount testAcc = spu.getUserSecurity().getUserAccountByName("Bob");
-		assertNotNull(testAcc);
-		if (testAcc != null) {
-			// LOG.info("User name = " + testAcc.getName());
-			OtfCustomData accCd = testAcc.getCustData();
-			// check num custfields
-			assertEquals(3, accCd.getCustFields().size());
-			// Check is member of INTL
-			assertTrue(accCd.isaMemberOf("INTL"));
-			// Check Has mapping app setting.
-			assertTrue(accCd.getAppsByAppName("Mapping").size() > 0);
-		}
-	}
-
-	@Test
-	public final void testAccountAuth() {
-		OtfAccount testAcc = spu.authAccount("Bob", "Sn0m3dDefPass");
-		assertNotNull(testAcc);
-
-	}
-
-	// <account name="Bob" email="bob@test.com" givenName="Bob"
-	// surname="Bobbin">
-	// <customField key="" value="APP:Mapping:Specialist:INTL" />
-	// <customField value="MEMBER:INTL" />
-	// <customField value="MEMBER:UK" />
-	// </account>
-
+	@Override
 	@After
 	public void dispose() {
 
+	}
+
+	@Override
+	public UserSecurityHandler getUsh() {
+		return getSpu();
+	}
+
+	public static StormPathUserSecurity getSpu() {
+		if (spu == null) {
+			Properties spuP = new Properties();
+			spuP.setProperty(StormPathBaseDTO.KEY_PATH, apiKeyFile);
+			spuP.setProperty(StormPathBaseDTO.API_KEY_ID, apiKeyId);
+			spuP.setProperty(StormPathBaseDTO.API_KEY_SECRET, apiKeySecret);
+			spu = new StormPathUserSecurity(spuP);
+		}
+		return spu;
+	}
+
+	public static void setSpu(StormPathUserSecurity spuIn) {
+		spu = spuIn;
+	}
+
+	public static XmlUserSecurity getXmlUs() {
+		if (xmlUs == null) {
+			Properties xmlP = new Properties();
+			xmlP.setProperty(XmlUserSecurity.CONF_PROPS_FN, fn);
+			xmlUs = new XmlUserSecurity(xmlP);
+		}
+		return xmlUs;
+	}
+
+	public static void setXmlUs(XmlUserSecurity xmlUsIn) {
+		xmlUs = xmlUsIn;
+	}
+
+	@Override
+	public int getNumDirs() {
+		return 8;
+	}
+
+	@Override
+	public int getNumApps() {
+		return 7;
+	}
+
+	@Override
+	public int getNumSettings() {
+		return 3;
+	}
+
+	@Override
+	public int getNumMembers() {
+		return 7;
+	}
+
+	@Override
+	public int getNumUsers() {
+		return 8;
+	}
+
+	@Override
+	public int getNumAccountMembers() {
+		return 2;
+	}
+
+	@Override
+	public int getNumAccountApps() {
+		return 2;
+	}
+
+	@Override
+	public int getNumUserAppPerms() {
+		return 2;
+	}
+
+	@Override
+	public int getNumUserAppPermsMember() {
+		return 1;
+	}
+
+	@Override
+	public int getNumAppPermGroups() {
+		return 3;
+	}
+
+	@Override
+	public int getNumAppPermGroupsGroup() {
+		return 1;
 	}
 
 }

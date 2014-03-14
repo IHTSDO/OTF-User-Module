@@ -19,8 +19,8 @@ public class StormPathBaseDTO {
 
 	private Client client;
 	private Tenant tenant;
-	private String keyPath = "C:/Users/adamf/stormpath/apiKey.properties";
 	private Properties apiProps;
+	private Properties settingsProps;
 	private OtfClientBuilder otfCb;
 
 	// Static Strings
@@ -30,10 +30,36 @@ public class StormPathBaseDTO {
 	public static String USERS_APP = "users";
 	/** The App containing the members. */
 	public static String MEMBERS_APP = "members";
+	/** File path to the Storm Path Properties file **/
+	public static final String KEY_PATH = "keyPath";
 
-	public void load() {
-		client = getOtfCb().setApiKeyFileLocation(getKeyPath()).build();
+	public static final String API_KEY_ID = "apiKey.id";
+	public static final String API_KEY_SECRET = "apiKey.secret";
+
+	public StormPathBaseDTO(Properties settingsPropsIn) {
+		super();
+		settingsProps = settingsPropsIn;
+	}
+
+	public void load() throws IllegalArgumentException {
+
+		if (settingsProps.containsKey(API_KEY_ID)
+				&& settingsProps.containsKey(API_KEY_SECRET)) {
+			getOtfCb().loadApiKeyProperties(settingsProps);
+		} else {
+			if (settingsProps.containsKey(KEY_PATH)) {
+				getOtfCb().loadApiKeyProperties(
+						settingsProps.getProperty(KEY_PATH));
+			}
+		}
 		setApiProps(getOtfCb().getClientApiKeyProperties());
+		if (apiProps == null) {
+			throw new IllegalArgumentException(
+					"API props is null settingsProps = " + settingsProps);
+		}
+
+		client = getOtfCb().build();
+
 		tenant = client.getCurrentTenant();
 	}
 
@@ -57,14 +83,6 @@ public class StormPathBaseDTO {
 		tenant = tenantIn;
 	}
 
-	public String getKeyPath() {
-		return keyPath;
-	}
-
-	public void setKeyPath(String keyPathIn) {
-		keyPath = keyPathIn;
-	}
-
 	public Properties getApiProps() {
 		return apiProps;
 	}
@@ -82,6 +100,14 @@ public class StormPathBaseDTO {
 
 	public void setOtfCb(OtfClientBuilder otfCbIn) {
 		otfCb = otfCbIn;
+	}
+
+	public Properties getSettingsProps() {
+		return settingsProps;
+	}
+
+	public void setSettingsProps(Properties settingsPropsIn) {
+		settingsProps = settingsPropsIn;
 	}
 
 }

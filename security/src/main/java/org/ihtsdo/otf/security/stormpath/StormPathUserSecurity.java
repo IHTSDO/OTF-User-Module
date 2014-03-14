@@ -1,9 +1,10 @@
 package org.ihtsdo.otf.security.stormpath;
 
 import java.io.IOException;
+import java.util.Properties;
 import java.util.logging.Logger;
 
-import org.ihtsdo.otf.security.UserSecurityHandler;
+import org.ihtsdo.otf.security.AbstractUserSecurityHandler;
 import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.UserSecurity;
 
@@ -14,7 +15,7 @@ import com.stormpath.sdk.authc.AuthenticationRequest;
 import com.stormpath.sdk.authc.UsernamePasswordRequest;
 import com.stormpath.sdk.resource.ResourceException;
 
-public class StormPathUserSecurity implements UserSecurityHandler {
+public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 
 	/**
 	 * <p>
@@ -27,22 +28,38 @@ public class StormPathUserSecurity implements UserSecurityHandler {
 	private Application usersApplication;
 	private String usersAppName = "OTF Users";
 
-	private UserSecurity userSecurity;
-
 	private StormPathBaseDTO spbd;
 
 	public static final String STORMPATH = "Stormpath";
 
+	private Properties props;
+
 	Storm2Model storm2Mod;
 	Model2Storm mod2Storm;
 
-	public StormPathUserSecurity() {
+	// public StormPathUserSecurity() {
+	// super();
+	// }
+
+	public StormPathUserSecurity(Properties propsIn) {
 		super();
+		try {
+			init(propsIn);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public void init(Properties propsIn) throws Exception {
+		setProps(propsIn);
 	}
 
 	public final void clearSP() throws Exception {
 		if (spbd == null) {
-			spbd = new StormPathBaseDTO();
+			spbd = new StormPathBaseDTO(props);
 			spbd.load();
 		}
 		if (mod2Storm == null) {
@@ -54,44 +71,28 @@ public class StormPathUserSecurity implements UserSecurityHandler {
 
 	public final void buildUserSecurity() throws Exception {
 		if (spbd == null) {
-			spbd = new StormPathBaseDTO();
+			spbd = new StormPathBaseDTO(props);
 			spbd.load();
 		}
 		if (storm2Mod == null) {
 			storm2Mod = new Storm2Model(spbd);
 		}
-		userSecurity = storm2Mod.build();
+		setUserSecurity(storm2Mod.build());
 	}
 
 	public final void sendUserSecuritytoStormPath(UserSecurity userSecurityIn)
 			throws Exception {
 		if (userSecurityIn != null) {
-			userSecurity = userSecurityIn;
+			setUserSecurity(userSecurityIn);
 		}
 		if (spbd == null) {
-			spbd = new StormPathBaseDTO();
+			spbd = new StormPathBaseDTO(props);
 			spbd.load();
 		}
 		if (mod2Storm == null) {
 			mod2Storm = new Model2Storm(spbd);
 		}
-		mod2Storm.sendToStormPath(userSecurity);
-	}
-
-	public void load(String keyPathIn) {
-		spbd = new StormPathBaseDTO();
-		spbd.setKeyPath(keyPathIn);
-		spbd.load();
-	}
-
-	@Override
-	public UserSecurity getUserSecurity() {
-		return userSecurity;
-	}
-
-	@Override
-	public void setUserSecurity(UserSecurity userSecurityIn) {
-		userSecurity = userSecurityIn;
+		mod2Storm.sendToStormPath(getUserSecurity());
 	}
 
 	@Override
@@ -159,6 +160,14 @@ public class StormPathUserSecurity implements UserSecurityHandler {
 			// Clear the request data to prevent later memory access
 			request.clear();
 		}
+	}
+
+	public Properties getProps() {
+		return props;
+	}
+
+	public void setProps(Properties propsIn) {
+		props = propsIn;
 	}
 
 }

@@ -1,5 +1,6 @@
 package org.ihtsdo.otf.security;
 
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.xml.XmlUserSecurity;
@@ -23,7 +24,9 @@ public class XMLTest {
 
 	private void init() {
 
-		XmlUserSecurity xmlUs = new XmlUserSecurity(fn);
+		Properties xmlP = new Properties();
+		xmlP.setProperty(XmlUserSecurity.CONF_PROPS_FN, fn);
+		XmlUserSecurity xmlUs = new XmlUserSecurity(xmlP);
 		try {
 			xmlUs.initFromFile();
 			// LOG.info("defpw = " + xmlUs.getUserSecurity().getDefaultpw());

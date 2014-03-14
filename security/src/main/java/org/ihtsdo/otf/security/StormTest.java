@@ -1,7 +1,9 @@
 package org.ihtsdo.otf.security;
 
+import java.util.Properties;
 import java.util.logging.Logger;
 
+import org.ihtsdo.otf.security.stormpath.StormPathBaseDTO;
 import org.ihtsdo.otf.security.stormpath.StormPathUserSecurity;
 import org.ihtsdo.otf.security.xml.XmlUserSecurity;
 
@@ -16,7 +18,10 @@ public class StormTest {
 	private static final Logger LOG = Logger.getLogger(XmlUserSecurity.class
 			.getName());
 
-	String fn = "./TextFiles/Example.xml";
+	private static String fn = "./TextFiles/Example.xml";
+	private static String apiKeyFile = "C:/Users/adamf/stormpath/apiKey.properties";
+	private static XmlUserSecurity xmlUs;
+	private static StormPathUserSecurity spu;
 
 	public static void main(String[] args) {
 		StormTest sTest = new StormTest();
@@ -46,7 +51,7 @@ public class StormTest {
 	}
 
 	private void storm2Xml(boolean log) {
-		StormPathUserSecurity spu = new StormPathUserSecurity();
+		StormPathUserSecurity spu = getSpu();
 		XmlUserSecurity xmlUs = new XmlUserSecurity();
 		try {
 			spu.buildUserSecurity();
@@ -65,10 +70,9 @@ public class StormTest {
 
 	private void Xml2Storm(boolean log) {
 
-		XmlUserSecurity xmlUs = new XmlUserSecurity(fn);
-		StormPathUserSecurity spu = new StormPathUserSecurity();
+		StormPathUserSecurity spu = getSpu();
 		try {
-			xmlUs.initFromFile();
+			getXmlUs();
 			if (log) {
 				LOG.info("Xml2Storm : \n"
 						+ xmlUs.getXMLFromUserSecurityAsStringSortByName());
@@ -83,7 +87,7 @@ public class StormTest {
 	}
 
 	private void clearSP() {
-		StormPathUserSecurity spu = new StormPathUserSecurity();
+		StormPathUserSecurity spu = getSpu();
 		try {
 			spu.clearSP();
 		} catch (Exception e) {
@@ -93,10 +97,8 @@ public class StormTest {
 	}
 
 	private void sortXML() {
-		XmlUserSecurity xmlUs = new XmlUserSecurity(fn);
-
 		try {
-			xmlUs.initFromFile();
+			getXmlUs();
 			LOG.info("using XML :\n"
 					+ xmlUs.getXMLFromUserSecurityAsStringSortByName());
 
@@ -104,6 +106,34 @@ public class StormTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public static XmlUserSecurity getXmlUs() {
+		if (xmlUs == null) {
+			Properties xmlP = new Properties();
+			xmlP.setProperty(XmlUserSecurity.CONF_PROPS_FN, fn);
+			xmlUs = new XmlUserSecurity(xmlP);
+		}
+
+		return xmlUs;
+	}
+
+	public static void setXmlUs(XmlUserSecurity xmlUsIn) {
+		xmlUs = xmlUsIn;
+	}
+
+	public static StormPathUserSecurity getSpu() {
+		if (spu == null) {
+			Properties spuP = new Properties();
+			spuP.setProperty(StormPathBaseDTO.KEY_PATH, apiKeyFile);
+			spu = new StormPathUserSecurity(spuP);
+		}
+
+		return spu;
+	}
+
+	public static void setSpu(StormPathUserSecurity spuIn) {
+		spu = spuIn;
 	}
 
 }

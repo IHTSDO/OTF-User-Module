@@ -37,6 +37,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.ihtsdo.otf.security.objectcache.ObjectCache;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -62,9 +63,28 @@ public class ProcessXSLT {
 	public static Templates getSheet(String fileName)
 			throws TransformerException, TransformerConfigurationException,
 			org.xml.sax.SAXException, java.io.FileNotFoundException, Exception {
-		String full = fullqual(fileName);
-		TransformerFactory tFactory = TransformerFactory.newInstance();
-		Templates s = tFactory.newTemplates(new StreamSource(full));
+		Templates s = (Templates) ObjectCache.INSTANCE.get(fileName);
+		// System.out.println("2");
+		if (s == null) {
+			// System.out.println("3");
+			synchronized (ProcessXSLT.class) // make thread safe
+
+			{
+				s = (Templates) ObjectCache.INSTANCE.get(fileName);
+				if (s == null)
+				// may have changed between first if and synch call...
+				{
+					// System.out.println("4");
+					// Compile the stylesheet.
+					// GetFileURL gfu = new GetFileURL();
+					String full = fullqual(fileName);
+					TransformerFactory tFactory = TransformerFactory
+							.newInstance();
+					s = tFactory.newTemplates(new StreamSource(full));
+					ObjectCache.INSTANCE.put(fileName, s);
+				}
+			}
+		}
 		return s; // return the cached copy.
 	}
 
@@ -326,13 +346,30 @@ public class ProcessXSLT {
 			throws TransformerConfigurationException,
 			TransformerFactoryConfigurationError {
 
-		Transformer transformer = TransformerFactory.newInstance()
-				.newTransformer();
-		Properties props = new Properties();
-		props.put(OutputKeys.METHOD, "xml");
-		props.put(OutputKeys.OMIT_XML_DECLARATION, "yes");
-		props.put(OutputKeys.INDENT, "yes");
-		transformer.setOutputProperties(props);
+		String def = "DEFAULTTRANSFORMER";
+		Transformer transformer = null;
+		// Hashtable h = ObjectCache.getMap();
+		transformer = (Transformer) ObjectCache.INSTANCE.get(def);
+
+		if (transformer == null) {
+			synchronized (ProcessXSLT.class) // make thread safe
+			{
+				transformer = (Transformer) ObjectCache.INSTANCE.get(def);
+				if (transformer == null)
+				// may have changed between first if and synch call...
+				{
+
+					transformer = TransformerFactory.newInstance()
+							.newTransformer();
+					Properties props = new Properties();
+					props.put(OutputKeys.METHOD, "xml");
+					props.put(OutputKeys.OMIT_XML_DECLARATION, "yes");
+					props.put(OutputKeys.INDENT, "yes");
+					transformer.setOutputProperties(props);
+					ObjectCache.INSTANCE.put(def, transformer);
+				}
+			}
+		}
 
 		return transformer;
 	}

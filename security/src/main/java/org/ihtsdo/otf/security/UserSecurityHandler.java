@@ -1,6 +1,7 @@
 package org.ihtsdo.otf.security;
 
 import java.io.IOException;
+import java.util.Properties;
 
 import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.UserSecurity;
@@ -14,5 +15,9 @@ public interface UserSecurityHandler {
 	void saveUserSecurity() throws IOException;
 
 	OtfAccount authAccount(String acName, String pw);
+
+	void init(Properties props) throws Exception;
+
+	void reload();
 
 }
