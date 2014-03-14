@@ -219,7 +219,7 @@ public abstract class AbstractSecurityTest {
 		int jsonI = member2.size();
 		int origI = members.size();
 
-		LOG.info("jsonI = " + jsonI + " origI = " + origI);
+		// LOG.info("jsonI = " + jsonI + " origI = " + origI);
 
 		assertEquals(getNumAccountApps(), origI);
 		assertEquals(origI, jsonI);
@@ -262,6 +262,19 @@ public abstract class AbstractSecurityTest {
 		List<GroupPermDTO> perms2 = SecurityClient.getAppPermGroups(json2);
 		int jsonI2 = perms2.size();
 		assertEquals(getNumAppPermGroupsGroup(), jsonI2);
+	}
+
+	public abstract int getNumAppUsers();
+
+	@Test
+	public final void testAppUsers() {
+
+		String json = secS.getAppUsers(testApp);
+
+		List<String> users = SecurityClient.getAppUsers(json);
+		int jsonI = users.size();
+		LOG.info("testAppUsers = " + jsonI);
+		assertEquals(getNumAppUsers(), jsonI);
 	}
 
 	public SecurityService getSecS() {

@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.ihtsdo.otf.security.UserSecurityHandler;
 import org.ihtsdo.otf.security.dto.query.queries.AppPermGroupsQueryDTO;
+import org.ihtsdo.otf.security.dto.query.queries.AppUsersListQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.AppsListQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.MembersListQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.UserAppPermsListQueryDTO;
@@ -37,6 +38,7 @@ public class SecurityService {
 
 	public static final String GET_APPS = "getApps";
 	public static final String GET_USER_APPS = "getUserApps";
+	public static final String GET_APP_USERS = "getAppUsers";
 
 	// Leaving this one for now as a problem wrt json and abstract types
 	public static final String GET_FULL_USER = "getFullUser";
@@ -71,6 +73,11 @@ public class SecurityService {
 			retVal = getUsers();
 			break;
 
+		case GET_APP_USERS:
+			if (stringOK(appName)) {
+				retVal = getAppUsers(appName);
+			}
+			break;
 		case GET_APPS:
 			retVal = getApps();
 			break;
@@ -137,6 +144,16 @@ public class SecurityService {
 	public String getApps() {
 
 		AppsListQueryDTO ulq = new AppsListQueryDTO(ush);
+		// LOG.info("ulq size = " + ulq.getUsers().size());
+		String json = GetJSonFromObject(ulq);
+		// LOG.info("JSON = " + json);
+		return json;
+
+	}
+
+	public String getAppUsers(String appname) {
+
+		AppUsersListQueryDTO ulq = new AppUsersListQueryDTO(ush, appname);
 		// LOG.info("ulq size = " + ulq.getUsers().size());
 		String json = GetJSonFromObject(ulq);
 		// LOG.info("JSON = " + json);

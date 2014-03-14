@@ -7,6 +7,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.ihtsdo.otf.security.dto.OftAccountMin;
 import org.ihtsdo.otf.security.dto.query.queries.AppPermDTO;
 import org.ihtsdo.otf.security.dto.query.queries.AppPermGroupsQueryDTO;
+import org.ihtsdo.otf.security.dto.query.queries.AppUsersListQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.AppsListQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.GroupPermDTO;
 import org.ihtsdo.otf.security.dto.query.queries.MembersListQueryDTO;
@@ -79,6 +80,18 @@ public class SecurityClient {
 	// }
 	// return null;
 	// }
+
+	public static List<String> getAppUsers(String json) {
+		try {
+			AppUsersListQueryDTO mlq = mapper.readValue(json,
+					AppUsersListQueryDTO.class);
+			return mlq.getAppUsers();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	public static List<String> getUserApps(String json) {
 		try {

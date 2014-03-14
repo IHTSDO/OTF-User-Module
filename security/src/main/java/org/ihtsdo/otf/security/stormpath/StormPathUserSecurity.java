@@ -37,9 +37,9 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 	Storm2Model storm2Mod;
 	Model2Storm mod2Storm;
 
-	// public StormPathUserSecurity() {
-	// super();
-	// }
+	public StormPathUserSecurity() {
+		super();
+	}
 
 	public StormPathUserSecurity(Properties propsIn) {
 		super();
@@ -55,6 +55,7 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 	@Override
 	public void init(Properties propsIn) throws Exception {
 		setProps(propsIn);
+		buildUserSecurity();
 	}
 
 	public final void clearSP() throws Exception {
@@ -69,6 +70,7 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 
 	}
 
+	@Override
 	public final void buildUserSecurity() throws Exception {
 		if (spbd == null) {
 			spbd = new StormPathBaseDTO(props);

@@ -20,4 +20,6 @@ public interface UserSecurityHandler {
 
 	void reload();
 
+	void buildUserSecurity() throws Exception;
+
 }

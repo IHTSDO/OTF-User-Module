@@ -34,4 +34,19 @@ public class SecurityQueryDTO {
 		args = argsIn;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("QueryName = ").append(getQueryName()).append("\n");
+		sb.append("Query Args = \n");
+		for (String key : args.keySet()) {
+			String val = args.get(key);
+			sb.append("Key = ").append(key).append(" Value = ").append(val)
+					.append("\n");
+		}
+
+		return sb.toString();
+
+	}
+
 }

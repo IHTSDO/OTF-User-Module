@@ -23,6 +23,18 @@ public abstract class AbstractUserSecurityHandler implements
 			.getLogger(AbstractUserSecurityHandler.class.getName());
 
 	@Override
+	public abstract void saveUserSecurity() throws IOException;
+
+	@Override
+	public abstract OtfAccount authAccount(String acNameIn, String pwIn);
+
+	@Override
+	public abstract void init(Properties propsIn) throws Exception;
+
+	@Override
+	public abstract void buildUserSecurity() throws Exception;
+
+	@Override
 	public UserSecurity getUserSecurity() {
 		if (userSecurity == null) {
 			userSecurity = (UserSecurity) ObjectCache.INSTANCE.get(getKey());
@@ -33,7 +45,6 @@ public abstract class AbstractUserSecurityHandler implements
 	@Override
 	public void setUserSecurity(UserSecurity userSecurityIn) {
 		ObjectCache.INSTANCE.put(getKey(), userSecurityIn);
-		reload();
 	}
 
 	private String getKey() {
@@ -44,16 +55,13 @@ public abstract class AbstractUserSecurityHandler implements
 	@Override
 	public void reload() {
 		userSecurity = null;
+		try {
+			buildUserSecurity();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		getUserSecurity();
 	}
-
-	@Override
-	public abstract void saveUserSecurity() throws IOException;
-
-	@Override
-	public abstract OtfAccount authAccount(String acNameIn, String pwIn);
-
-	@Override
-	public abstract void init(Properties propsIn) throws Exception;
 
 }

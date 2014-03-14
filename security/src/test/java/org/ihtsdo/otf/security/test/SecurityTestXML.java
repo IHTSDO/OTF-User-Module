@@ -112,4 +112,9 @@ public class SecurityTestXML extends AbstractSecurityTest {
 	public int getNumAppPermGroupsGroup() {
 		return 1;
 	}
+
+	@Override
+	public int getNumAppUsers() {
+		return 4;
+	}
 }

@@ -149,4 +149,9 @@ public class SecurityTestStorm extends AbstractSecurityTest {
 		return 1;
 	}
 
+	@Override
+	public int getNumAppUsers() {
+		return 4;
+	}
+
 }

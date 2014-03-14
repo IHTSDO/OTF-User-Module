@@ -53,6 +53,11 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 	@Override
 	public void init(Properties propsIn) throws Exception {
 		setConfigFN(propsIn.getProperty(CONF_PROPS_FN));
+		buildUserSecurity();
+	}
+
+	@Override
+	public void buildUserSecurity() throws Exception {
 		initFromFile();
 	}
 
