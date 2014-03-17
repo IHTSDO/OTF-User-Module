@@ -9,6 +9,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -43,6 +44,7 @@ public class SecurityServlet extends HttpServlet {
 	public static final String QUERY_NAME = "queryName";
 	public static final String QUERY_JSON = "jsonQuery";
 	public static final String REDIRECT = "redirect";
+	public static final String CON_PATH = "context";
 	public static final String JSON = "json";
 	public static final String RELOAD = "reload";
 
@@ -99,14 +101,30 @@ public class SecurityServlet extends HttpServlet {
 		}
 
 		if (!reload) {
+			// setRedirect(getNamedParam(REDIRECT, hr));
 			redirect = getNamedParam(REDIRECT, hr);
 			String json = handleQuery(hr);
 			if (!stringOK(json)) {
 				json = "NO RESPONSE";
 			}
 			if (stringOK(redirect)) {
-				hr.getSession().setAttribute(JSON, json);
-				response.sendRedirect(redirect);
+				hr.setAttribute(JSON, json);
+				LOG.info("serv Contaxt Path = "
+						+ sc.getServletContext().getContextPath());
+				LOG.info("hr url = " + hr.getRequestURL());
+
+				String context = getNamedParam(CON_PATH, hr);
+				if (stringOK(context)) {
+					RequestDispatcher rd = sc.getServletContext()
+							.getContext(context).getRequestDispatcher(redirect);
+					rd.forward(request, response);
+				} else {
+					RequestDispatcher rd = sc.getServletContext()
+							.getRequestDispatcher(redirect);
+					rd.forward(request, response);
+				}
+
+				// response.sendRedirect(redirect);
 			} else {
 				response.setContentType("application/json");
 				hr.getSession().setAttribute(JSON, null);
@@ -156,19 +174,18 @@ public class SecurityServlet extends HttpServlet {
 
 			if (sqd.getQueryName().equals(SecurityService.GET_USER_BY_NAME)
 					&& stringOK(rval)) {
-				hr.getSession().setAttribute(SecurityService.USER_NAME,
+				hr.setAttribute(SecurityService.USER_NAME,
 						sqd.getArgs().get(SecurityService.USER_NAME));
-
 				// rem password
 				sqd.getArgs().put(SecurityService.PASSWORD, "*******");
 			}
 
 			if (stringOK(redirect)) {
 				String qasJ = getSecServ().GetJSonFromObject(sqd);
-				hr.getSession().setAttribute(QUERY_JSON, qasJ);
+				hr.setAttribute(QUERY_JSON, qasJ);
 			}
 			if (!stringOK(redirect)) {
-				hr.getSession().setAttribute(QUERY_JSON, null);
+				hr.setAttribute(QUERY_JSON, null);
 			}
 			return rval;
 		}
@@ -329,6 +346,35 @@ public class SecurityServlet extends HttpServlet {
 
 	public static final boolean stringOK(final String toCheck) {
 		return toCheck != null && toCheck.length() > 0;
+	}
+
+	public String getRedirect() {
+		return redirect;
+	}
+
+	public void setRedirect(String redirectIn) {
+
+		// If http assume full url is set
+		// if (redirectIn.startsWith("http")) {
+		// redirect = redirectIn;
+		// } else {
+		// // Assume on the same instance but different web app
+		// String rq = hr.getRequestURL().toString();
+		// String loccp = sc.getServletContext().getContextPath();
+		// int in = rq.indexOf(loccp);
+		// String baseUrl = rq.substring(0, in);
+		// LOG.info("baseUrl = " + baseUrl);
+		//
+		// LOG.info("hr url = " + hr.getRequestURL());
+		// if (redirectIn.startsWith("/")) {
+		// redirect = new StringBuilder().append(baseUrl)
+		// .append(redirectIn).toString();
+		// } else {
+		// redirect = new StringBuilder().append(baseUrl).append('/')
+		// .append(redirectIn).toString();
+		// }
+		// }
+		LOG.info("setRedirect redirect = " + redirect);
 	}
 
 }

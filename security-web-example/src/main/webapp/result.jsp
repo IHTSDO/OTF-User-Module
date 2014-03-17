@@ -11,8 +11,14 @@
 
 	<h1>IHTSDO OTF User Management Web Example Query Result</h1>
 	<%
-	String json = (String)session.getAttribute("json");
-	String query = (String)session.getAttribute("jsonQuery");
+	String json = (String)request.getAttribute("json");
+	String query = (String)request.getAttribute("jsonQuery");
+	String user = (String)request.getAttribute("username");
+	
+	if(session.getAttribute("username") == null && user != null){
+		session.setAttribute("username", user);
+	}
+	
 	%>
 
 	
