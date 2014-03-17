@@ -5,6 +5,7 @@
 <head>
 <link type="text/css" rel="stylesheet"
 	href="<c:url value="/style.css"/>" />
+	
 <title>Query Result</title>
 </head>
 <body>
@@ -14,15 +15,12 @@
 	String json = (String)request.getAttribute("json");
 	String query = (String)request.getAttribute("jsonQuery");
 	String user = (String)request.getAttribute("username");
-	
-	if(session.getAttribute("username") == null && user != null){
-		session.setAttribute("username", user);
-	}
-	
 	%>
 
 	
-	 <p><a href="<c:url value="/home.jsp"/>">Back To Home</a> </p>
+	 <p>
+	 <a href="<%=request.getContextPath()%>/home.jsp">Back To Home</a> 
+	 </p>
 	<h2>Result:</h2>
 	
 	<table class="sample">
@@ -35,7 +33,5 @@
             <td><textarea cols="50" rows="10"><%=json %></textarea> </td>
         </tr>
     </table>
-
-
 </body>
 </html>

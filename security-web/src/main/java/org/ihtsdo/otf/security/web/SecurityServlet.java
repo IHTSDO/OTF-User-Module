@@ -109,12 +109,9 @@ public class SecurityServlet extends HttpServlet {
 			}
 			if (stringOK(redirect)) {
 				hr.setAttribute(JSON, json);
-				LOG.info("serv Contaxt Path = "
-						+ sc.getServletContext().getContextPath());
-				LOG.info("hr url = " + hr.getRequestURL());
-
 				String context = getNamedParam(CON_PATH, hr);
 				if (stringOK(context)) {
+					LOG.info("Context = " + context);
 					RequestDispatcher rd = sc.getServletContext()
 							.getContext(context).getRequestDispatcher(redirect);
 					rd.forward(request, response);
@@ -136,13 +133,10 @@ public class SecurityServlet extends HttpServlet {
 	}
 
 	private final String handleQuery(HttpServletRequest request) {
-
-		// turn params in
-
 		String queryName = getNamedParam(QUERY_NAME, request);
 		if (queryName != null && queryName.length() > 0) {
 
-			HashMap<String, String> args = getParamsAsHM(request);
+			HashMap<String, String> args = getFiltParamsAsHM(request);
 
 			SecurityQueryDTO sqd = new SecurityQueryDTO(queryName, args);
 			// LOG.info("SQD \n" + getSecServ().GetJSonFromObject(sqd));
@@ -174,11 +168,14 @@ public class SecurityServlet extends HttpServlet {
 
 			if (sqd.getQueryName().equals(SecurityService.GET_USER_BY_NAME)
 					&& stringOK(rval)) {
-				hr.setAttribute(SecurityService.USER_NAME,
+				hr.getSession().setAttribute(SecurityService.USER_NAME,
 						sqd.getArgs().get(SecurityService.USER_NAME));
 				// rem password
 				sqd.getArgs().put(SecurityService.PASSWORD, "*******");
 			}
+
+			// hr.setAttribute(SecurityService.USER_NAME, hr.getSession()
+			// .getAttribute(SecurityService.USER_NAME));
 
 			if (stringOK(redirect)) {
 				String qasJ = getSecServ().GetJSonFromObject(sqd);
@@ -260,9 +257,26 @@ public class SecurityServlet extends HttpServlet {
 		return result;
 	}
 
-	private void logParameters(final HttpServletRequest hr) {
+	private final HashMap<String, String> getFiltParamsAsHM(
+			final HttpServletRequest hr) {
 
-		// Hashtable result = new Hashtable();
+		HashMap<String, String> result = new HashMap<String, String>();
+		Enumeration<String> paramNames = hr.getParameterNames();
+		while (paramNames.hasMoreElements()) {
+			String paramName = paramNames.nextElement();
+			if (!paramName.equals(CON_PATH) && !paramName.equals(REDIRECT)
+					&& !paramName.equals("submit")) {
+				String[] paramValues = hr.getParameterValues(paramName);
+				if (paramValues.length == 1) {
+					String paramValue = paramValues[0];
+					result.put(paramName, paramValue);
+				}
+			}
+		}
+		return result;
+	}
+
+	private void logParameters(final HttpServletRequest hr) {
 		Enumeration<String> paramNames = hr.getParameterNames();
 		while (paramNames.hasMoreElements()) {
 			String paramName = paramNames.nextElement();

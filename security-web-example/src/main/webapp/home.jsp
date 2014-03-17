@@ -1,29 +1,18 @@
 
-<%@ include file="include.jsp"%>
-
 <html>
 <head>
-<link type="text/css" rel="stylesheet"
-	href="<c:url value="/style.css"/>" />
+<link rel="stylesheet" type="text/css" href="style.css">
+
 <title>IHTSDO OTF User Management Web Example</title>
 </head>
 <body>
 
 	<h1>IHTSDO OTF User Management Web Example</h1>
 	<%
-	String welcome = "Hullo please login";
-	String user = (String)session.getAttribute("username");
-	if(user != null){
-		welcome = "Hello "+user;
-	}
-	
 	String contextPath = request.getContextPath();
 	//System.out.println("contextPath = "+contextPath);
 	%>
-
-	<p><%=welcome%></p>
-	<!-- <p><a href="<c:url value="/login.jsp"/>">Log in</a> </p> -->
-	<p><form name="loginform" action="/security-web/query" method="post">
+	<p><form name="checkUserform" action="/security-web/query" method="post">
 		<input type="hidden" name="queryName" value="getUserByName" />
 		<input type="hidden" name="redirect" value="/result.jsp" />
 <input type="hidden" name="context" value="<%=contextPath%>" />
@@ -40,7 +29,7 @@
 
         <tr>
             <td colspan="2" align="right"><input type="submit"
-					name="submit" value="Login"></td>
+					name="submit" value="Authenticate User"></td>
         </tr>
     </table>
 </form></p>
@@ -170,7 +159,5 @@
     </table>
 </form></p>
 
-
-getAppUsers
 </body>
 </html>
