@@ -1,0 +1,51 @@
+package org.ihtsdo.otf.security.dto.query.queries;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.ihtsdo.otf.security.UserSecurityHandler;
+import org.ihtsdo.otf.security.dto.OtfAccount;
+import org.ihtsdo.otf.security.dto.query.AbstractSecurityQuery;
+
+public class AppUsersListQueryDTO extends AbstractSecurityQuery {
+
+	List<String> appUsers = new ArrayList<String>();
+	String appname;
+
+	public AppUsersListQueryDTO() {
+		super();
+	}
+
+	public AppUsersListQueryDTO(UserSecurityHandler userSecurityIn,
+			String appnameIn) {
+		super(userSecurityIn);
+		appname = appnameIn;
+	}
+
+	public final List<String> getAppUsers() {
+
+		if (appUsers == null) {
+			appUsers = new ArrayList<String>();
+		}
+
+		if (appUsers.size() == 0) {
+			if (ush != null) {
+				for (OtfAccount ac : ush.getUserSecurity().getUsers()) {
+					if (ac.getCustData().getAppsByAppName(appname).size() > 0) {
+						String name = ac.getName();
+						if (!appUsers.contains(name)) {
+							appUsers.add(ac.getName());
+						}
+					}
+				}
+			}
+		}
+		Collections.sort(appUsers);
+		return appUsers;
+	}
+
+	public void setAppUsers(final List<String> appUsersIn) {
+		appUsers = appUsersIn;
+	}
+}
