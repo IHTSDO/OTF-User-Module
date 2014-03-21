@@ -9,11 +9,11 @@ public abstract class OtfBaseName {
 		return name;
 	}
 
-	public void setName(String nameIn) {
+	public final void setName(final String nameIn) {
 		name = nameIn;
 	}
 
-	public Status getStatus() {
+	public final Status getStatus() {
 		if (status == null) {
 			status = Status.ENABLED;
 		}
@@ -24,7 +24,7 @@ public abstract class OtfBaseName {
 	// status = statusIn;
 	// }
 
-	public void setStatus(String statusIn) {
+	public final void setStatus(final String statusIn) {
 		if (statusIn != null && statusIn.length() > 0) {
 			try {
 				status = Status.valueOf(statusIn);

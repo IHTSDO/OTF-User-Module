@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class OtfDirectory extends OtfBaseAccountStore {
 
-	HashMap<String, OtfAccount> AllAccounts;
+	private HashMap<String, OtfAccount> allAccounts;
 
 	public OtfDirectory() {
 		super();
@@ -12,47 +12,48 @@ public class OtfDirectory extends OtfBaseAccountStore {
 
 	private OtfGroups groups = new OtfGroups();
 
-	public OtfGroups getGroups() {
+	public final OtfGroups getGroups() {
 		return groups;
 	}
 
-	public void setGroups(OtfGroups groupsIn) {
+	public final void setGroups(final OtfGroups groupsIn) {
 		groups = groupsIn;
 	}
 
-	public HashMap<String, OtfAccount> getDirAccounts() {
+	public final HashMap<String, OtfAccount> getDirAccounts() {
 		return getAccounts().getAccounts();
 	}
 
-	public OtfAccount getAccountByName(String name) {
+	public final OtfAccount getAccountByName(final String name) {
 		return getAllAccounts().get(name);
 	}
 
-	public HashMap<String, OtfAccount> getAllAccounts() {
-		if (AllAccounts == null) {
-			AllAccounts = new HashMap<String, OtfAccount>();
+	public final HashMap<String, OtfAccount> getAllAccounts() {
+		if (allAccounts == null) {
+			allAccounts = new HashMap<String, OtfAccount>();
 		}
 		if (getGroups().getGroups().size() == 0) {
-			AllAccounts = getDirAccounts();
+			allAccounts = getDirAccounts();
 		}
 		if (getGroups().getGroups().size() > 0) {
 			for (String key : getDirAccounts().keySet()) {
-				AllAccounts.put(key, getDirAccounts().get(key));
+				allAccounts.put(key, getDirAccounts().get(key));
 			}
 			// Add Any Accounts in child groups.
 			for (OtfGroup grp : getGroups().getGroups().values()) {
 
 				for (String key : grp.getAccounts().getAccounts().keySet()) {
-					AllAccounts.put(key,
+					allAccounts.put(key,
 							grp.getAccounts().getAccounts().get(key));
 				}
 			}
 		}
-		return AllAccounts;
+		return allAccounts;
 	}
 
-	public void setAllAccounts(HashMap<String, OtfAccount> allAccountsIn) {
-		AllAccounts = allAccountsIn;
+	public final void setAllAccounts(
+			final HashMap<String, OtfAccount> allAccountsIn) {
+		allAccounts = allAccountsIn;
 	}
 
 }

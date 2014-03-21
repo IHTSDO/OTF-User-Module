@@ -15,11 +15,11 @@ public class OtfGroup extends OtfBaseAccountStore {
 	// return custFields;
 	// }
 
-	public OtfCustomData getCustData() {
+	public final OtfCustomData getCustData() {
 		return custData;
 	}
 
-	public void setCustData(OtfCustomData custDataIn) {
+	public final void setCustData(final OtfCustomData custDataIn) {
 		custData = custDataIn;
 	}
 

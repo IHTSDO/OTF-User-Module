@@ -10,20 +10,20 @@ import org.ihtsdo.otf.security.dto.query.AbstractSecurityQuery;
 
 public class UserMembersListQueryDTO extends AbstractSecurityQuery {
 
-	List<String> members;
-	String userName;
+	private List<String> members;
+	private String userName;
 
 	public UserMembersListQueryDTO() {
 		super();
 	}
 
-	public UserMembersListQueryDTO(UserSecurityHandler userSecurityIn,
-			String userNameIn) {
+	public UserMembersListQueryDTO(final UserSecurityHandler userSecurityIn,
+			final String userNameIn) {
 		super(userSecurityIn);
 		userName = userNameIn;
 	}
 
-	public List<String> getMembers() {
+	public final List<String> getMembers() {
 		if (members == null) {
 			members = new ArrayList<String>();
 		}
@@ -43,7 +43,7 @@ public class UserMembersListQueryDTO extends AbstractSecurityQuery {
 		return members;
 	}
 
-	public void setMembers(List<String> membersIn) {
+	public final void setMembers(final List<String> membersIn) {
 		members = membersIn;
 	}
 

@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -29,9 +28,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -46,8 +43,8 @@ import org.xml.sax.InputSource;
 public class ProcessXSLT {
 
 	// private static final Log log = LogFactory.getLog(ProcessXSLT.class);
-	private static final Logger log = Logger.getLogger(ProcessXSLT.class
-			.getName());
+	// private static final Logger LOG = Logger.getLogger(ProcessXSLT.class
+	// .getName());
 
 	// private static ObjectCache oc = new ObjectCache();
 	/**
@@ -60,20 +57,17 @@ public class ProcessXSLT {
 	/**
 	 * A Method which returns the template
 	 */
-	public static Templates getSheet(String fileName)
-			throws TransformerException, TransformerConfigurationException,
-			org.xml.sax.SAXException, java.io.FileNotFoundException, Exception {
+	public static Templates getSheet(final String fileName) throws Exception {
 		Templates s = (Templates) ObjectCache.INSTANCE.get(fileName);
 		// System.out.println("2");
 		if (s == null) {
 			// System.out.println("3");
 			synchronized (ProcessXSLT.class) // make thread safe
-
 			{
 				s = (Templates) ObjectCache.INSTANCE.get(fileName);
-				if (s == null)
-				// may have changed between first if and synch call...
-				{
+				if (s == null) {
+					// may have changed between first if and synch call...
+
 					// System.out.println("4");
 					// Compile the stylesheet.
 					// GetFileURL gfu = new GetFileURL();
@@ -98,24 +92,24 @@ public class ProcessXSLT {
 	 * 
 	 * @return The output of the transformation
 	 */
-	public String transformFiles(String xmlfileName, String xslfileName)
-			throws Exception {
+	public final String transformFiles(final String xmlfileName,
+			final String xslfileName) throws Exception {
 		// GetFileURL gfu = new GetFileURL();
-		String Result = "";
+		String result = "";
 		String fullfn = fullqual(xslfileName);
 		InputSource src1 = new InputSource(fullfn);
-		String SrcURL1 = src1.getSystemId();
-		Templates s = getSheet(SrcURL1);
+		String srcURL1 = src1.getSystemId();
+		Templates s = getSheet(srcURL1);
 		String full = fullqual(xmlfileName);
 		// System.out.println("XMLFILE fullqual= " +full);
 		InputSource src = new InputSource(full);
-		String SrcURL = src.getSystemId();
-		// System.out.println("XMLFILE SysID= " +SrcURL);
+		String srcURL = src.getSystemId();
+		// System.out.println("XMLFILE SysID= " +srcURL);
 		java.io.StringWriter sw = new java.io.StringWriter();
 		Transformer trans = s.newTransformer();
-		trans.transform(new StreamSource(SrcURL), new StreamResult(sw));
-		Result = sw.toString();
-		return Result;
+		trans.transform(new StreamSource(srcURL), new StreamResult(sw));
+		result = sw.toString();
+		return result;
 	}
 
 	/**
@@ -128,24 +122,25 @@ public class ProcessXSLT {
 	 * 
 	 * @return The output of the transformation
 	 */
-	public String transformStream(java.io.InputStream srcStream,
-			String xslfileName) throws Exception {
+	public final String transformStream(final java.io.InputStream srcStream,
+			final String xslfileName) throws Exception {
 		// GetFileURL gfu = new GetFileURL();
-		String Result = "";
+		String result = "";
 		String fullfn = fullqual(xslfileName);
 		InputSource src1 = new InputSource(fullfn);
-		String SrcURL1 = src1.getSystemId();
-		Templates s = getSheet(SrcURL1);
+		String srcURL1 = src1.getSystemId();
+		Templates s = getSheet(srcURL1);
 		java.io.StringWriter sw = new java.io.StringWriter();
 		Transformer trans = s.newTransformer();
 		// trans.setURIResolver(null);
 		trans.transform(new StreamSource(srcStream), new StreamResult(sw));
-		Result = sw.toString();
-		return Result;
+		result = sw.toString();
+		return result;
 	}
 
-	public InputStream transformStream2Stream(java.io.InputStream srcStream,
-			String xslfileName) throws Exception {
+	public final InputStream transformStream2Stream(
+			final java.io.InputStream srcStream, final String xslfileName)
+			throws Exception {
 		// GetFileURL gfu = new GetFileURL();
 		// String Result = "";
 		String fullfn = fullqual(xslfileName);
@@ -154,8 +149,8 @@ public class ProcessXSLT {
 		// log.error("Encoding = "+src1.getEncoding()
 		// +" for file :"+xslfileName);
 
-		String SrcURL1 = src1.getSystemId();
-		Templates s = getSheet(SrcURL1);
+		String srcURL1 = src1.getSystemId();
+		Templates s = getSheet(srcURL1);
 		// java.io.StringWriter sw = new java.io.StringWriter();
 		Transformer trans = s.newTransformer();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -173,9 +168,8 @@ public class ProcessXSLT {
 	 * 
 	 * @return The output of the transformation
 	 */
-	public static String transformString(String inputxml)
-			throws TransformerException, TransformerConfigurationException,
-			Exception {
+	public static String transformString(final String inputxml)
+			throws Exception {
 		String media = null, title = null, charset = null;
 		String result = "";
 		// GetFileURL gfu = new GetFileURL();
@@ -183,15 +177,15 @@ public class ProcessXSLT {
 		// System.out.println("XMLFILE fullqual= " +full);
 		// InputSource src = new InputSource(gfu.getFileURL(xmlFilename));
 		InputSource src = new InputSource(full);
-		String SrcURL = src.getSystemId();
-		// System.out.println("XMLFILE SysID= " +SrcURL);
+		String srcURL = src.getSystemId();
+		// System.out.println("XMLFILE SysID= " +srcURL);
 		try {
 			TransformerFactory tFactory = TransformerFactory.newInstance();
 			Source stylesheet = tFactory.getAssociatedStylesheet(
-					new StreamSource(SrcURL), media, title, charset);
+					new StreamSource(srcURL), media, title, charset);
 			Transformer transformer = tFactory.newTransformer(stylesheet);
 			java.io.StringWriter sw = new java.io.StringWriter();
-			transformer.transform(new StreamSource(SrcURL),
+			transformer.transform(new StreamSource(srcURL),
 					new StreamResult(sw));
 			// System.out.println("3");
 			result = sw.toString();
@@ -214,25 +208,25 @@ public class ProcessXSLT {
 	 * 
 	 * @return The output of the transformation
 	 */
-	public String transformString(String inputxml, String xslfileName)
-			throws Exception {
+	public final String transformString(final String inputxml,
+			final String xslfileName) throws Exception {
 		// GetFileURL gfu = new GetFileURL();
-		String Result = "";
+		String result = "";
 		String fullfn = fullqual(xslfileName);
 		InputSource src1 = new InputSource(fullfn);
-		String SrcURL1 = src1.getSystemId();
-		Templates s = getSheet(SrcURL1);
+		String srcURL1 = src1.getSystemId();
+		Templates s = getSheet(srcURL1);
 		byte[] buf = inputxml.getBytes();
 		InputStream is = new ByteArrayInputStream(buf);
 		java.io.StringWriter sw = new java.io.StringWriter();
 		Transformer trans = s.newTransformer();
 		trans.transform(new StreamSource(is), new StreamResult(sw));
-		Result = sw.toString();
-		return Result;
+		result = sw.toString();
+		return result;
 	}
 
-	public Document transformDoc(Node inputxml, String xslfileName)
-			throws Exception {
+	public final Document transformDoc(final Node inputxml,
+			final String xslfileName) throws Exception {
 
 		DOMSource domSource = new DOMSource(inputxml);
 
@@ -243,8 +237,8 @@ public class ProcessXSLT {
 
 		String fullfn = fullqual(xslfileName);
 		InputSource src1 = new InputSource(fullfn);
-		String SrcURL1 = src1.getSystemId();
-		Templates s = getSheet(SrcURL1);
+		String srcURL1 = src1.getSystemId();
+		Templates s = getSheet(srcURL1);
 		Transformer trans = s.newTransformer();
 
 		trans.transform(domSource, result);
@@ -252,8 +246,8 @@ public class ProcessXSLT {
 		return resultD;
 	}
 
-	public Document transformNodeProps(Node inputxml, String xslfileName,
-			Properties props) throws Exception {
+	public final Document transformNodeProps(final Node inputxml,
+			final String xslfileName, final Properties props) throws Exception {
 
 		DOMSource domSource = new DOMSource(inputxml);
 
@@ -264,8 +258,8 @@ public class ProcessXSLT {
 
 		String fullfn = fullqual(xslfileName);
 		InputSource src1 = new InputSource(fullfn);
-		String SrcURL1 = src1.getSystemId();
-		Templates s = getSheet(SrcURL1);
+		String srcURL1 = src1.getSystemId();
+		Templates s = getSheet(srcURL1);
 		Transformer trans = s.newTransformer();
 		trans.setOutputProperties(props);
 		// trans.setParameter(name, value)
@@ -275,8 +269,9 @@ public class ProcessXSLT {
 		return resultD;
 	}
 
-	public Document transformNodeIncDoc(Node inputxml, String xslfileName,
-			String XMLFilename, Properties props) throws Exception {
+	public final Document transformNodeIncDoc(final Node inputxml,
+			final String xslfileName, final String xMLFilename,
+			final Properties props) throws Exception {
 
 		boolean isNode = false;
 
@@ -288,8 +283,8 @@ public class ProcessXSLT {
 		String fullfn = fullqual(xslfileName);
 		// log.error("fullfn = "+fullfn);
 		InputSource src1 = new InputSource(fullfn);
-		String SrcURL1 = src1.getSystemId();
-		Templates s = getSheet(SrcURL1);
+		String srcURL1 = src1.getSystemId();
+		Templates s = getSheet(srcURL1);
 		Transformer trans = s.newTransformer();
 
 		DOMSource domSource = null;
@@ -308,7 +303,7 @@ public class ProcessXSLT {
 			trans.setParameter(CommonXMLStatics.ACTION_PARAM_NODELOCATE, uuid);
 			if (props != null && props.size() > 0) {
 
-				for (Enumeration e = props.keys(); e.hasMoreElements();) {
+				for (Enumeration<Object> e = props.keys(); e.hasMoreElements();) {
 					String key = (String) e.nextElement();
 					String value = props.getProperty(key);
 					trans.setParameter(key, value);
@@ -321,7 +316,7 @@ public class ProcessXSLT {
 		}
 
 		trans.setParameter(CommonXMLStatics.ACTION_PARAM_XMLFILENAME,
-				XMLFilename);
+				xMLFilename);
 		// Debug
 		/*
 		 * java.io.StringWriter sw = new java.io.StringWriter();
@@ -334,7 +329,8 @@ public class ProcessXSLT {
 		return resultD;
 	}
 
-	public Transformer getTransformer(String xslfilename) throws Exception {
+	public final Transformer getTransformer(final String xslfilename)
+			throws Exception {
 
 		Templates s = getSheet(xslfilename);
 		Transformer trans = s.newTransformer();
@@ -343,8 +339,7 @@ public class ProcessXSLT {
 	}
 
 	public static Transformer getEmptyTransformer()
-			throws TransformerConfigurationException,
-			TransformerFactoryConfigurationError {
+			throws TransformerConfigurationException {
 
 		String def = "DEFAULTTRANSFORMER";
 		Transformer transformer = null;
@@ -355,9 +350,8 @@ public class ProcessXSLT {
 			synchronized (ProcessXSLT.class) // make thread safe
 			{
 				transformer = (Transformer) ObjectCache.INSTANCE.get(def);
-				if (transformer == null)
-				// may have changed between first if and synch call...
-				{
+				if (transformer == null) {
+					// may have changed between first if and synch call...
 
 					transformer = TransformerFactory.newInstance()
 							.newTransformer();
@@ -374,10 +368,9 @@ public class ProcessXSLT {
 		return transformer;
 	}
 
-	public static String fullqual(String filename) throws Exception {
+	public static String fullqual(final String filename) throws Exception {
 		// System.out.println("Entering GFU.fullqual");
 		String fname = filename;
-		String name = "";
 		String fqn = "";
 		// String fpath = "file:///";
 		java.net.URL fins = ProcessXSLT.class.getResource(filename);
@@ -388,7 +381,7 @@ public class ProcessXSLT {
 		if (f1.exists()) {
 			try {
 				fname = f1.toURL().toString();
-				name = f1.getName();
+				// name = f1.getName();
 			} catch (java.net.MalformedURLException mfu) {
 				System.out
 						.println("java.Net.MalfromedURLException caught in GetFileURL.fullqual Error = "
@@ -397,7 +390,8 @@ public class ProcessXSLT {
 			// fname = fpath + f1.getAbsolutePath();
 			// System.out.println("File found thus fname now = " + fname);
 			return fname;
-		} // end checking if local file or URL
+		}
+		// end checking if local file or URL
 		else if (fins != null) {
 			// System.out.println("Fins = " + fins.toString());
 			return fins.toString();

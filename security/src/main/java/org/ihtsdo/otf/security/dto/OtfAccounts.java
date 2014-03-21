@@ -11,7 +11,7 @@ public class OtfAccounts {
 		// TODO Auto-generated constructor stub
 	}
 
-	public HashMap<String, OtfAccount> getAccounts() {
+	public final HashMap<String, OtfAccount> getAccounts() {
 		return accounts;
 	}
 

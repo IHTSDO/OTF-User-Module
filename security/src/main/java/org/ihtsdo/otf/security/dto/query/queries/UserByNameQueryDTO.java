@@ -7,7 +7,7 @@ import org.ihtsdo.otf.security.dto.query.AbstractSecurityQuery;
 
 public class UserByNameQueryDTO extends AbstractSecurityQuery {
 
-	OftAccountMin user;
+	private OftAccountMin user;
 	private String userName;
 	private String pw;
 
@@ -15,18 +15,18 @@ public class UserByNameQueryDTO extends AbstractSecurityQuery {
 		super();
 	}
 
-	public UserByNameQueryDTO(UserSecurityHandler userSecurityIn) {
+	public UserByNameQueryDTO(final UserSecurityHandler userSecurityIn) {
 		super(userSecurityIn);
 	}
 
-	public UserByNameQueryDTO(UserSecurityHandler userSecurityIn,
-			String userNameIn, String pwIn) {
+	public UserByNameQueryDTO(final UserSecurityHandler userSecurityIn,
+			final String userNameIn, final String pwIn) {
 		super(userSecurityIn);
 		userName = userNameIn;
 		pw = pwIn;
 	}
 
-	public OftAccountMin getUser() {
+	public final OftAccountMin getUser() {
 		if (user == null) {
 			OtfAccount oacc = null;
 			// if pw is set
@@ -44,7 +44,7 @@ public class UserByNameQueryDTO extends AbstractSecurityQuery {
 		return user;
 	}
 
-	public void setUser(OftAccountMin userIn) {
+	public final void setUser(final OftAccountMin userIn) {
 		user = userIn;
 	}
 

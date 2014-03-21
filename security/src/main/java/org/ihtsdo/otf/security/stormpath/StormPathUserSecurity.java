@@ -34,14 +34,14 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 
 	private Properties props;
 
-	Storm2Model storm2Mod;
-	Model2Storm mod2Storm;
+	private Storm2Model storm2Mod;
+	private Model2Storm mod2Storm;
 
 	public StormPathUserSecurity() {
 		super();
 	}
 
-	public StormPathUserSecurity(Properties propsIn) {
+	public StormPathUserSecurity(final Properties propsIn) {
 		super();
 		try {
 			init(propsIn);
@@ -53,7 +53,7 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 	}
 
 	@Override
-	public void init(Properties propsIn) throws Exception {
+	public final void init(final Properties propsIn) throws Exception {
 		setProps(propsIn);
 		buildUserSecurity();
 	}
@@ -82,8 +82,8 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 		setUserSecurity(storm2Mod.build());
 	}
 
-	public final void sendUserSecuritytoStormPath(UserSecurity userSecurityIn)
-			throws Exception {
+	public final void sendUserSecuritytoStormPath(
+			final UserSecurity userSecurityIn) throws Exception {
 		if (userSecurityIn != null) {
 			setUserSecurity(userSecurityIn);
 		}
@@ -101,7 +101,7 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 	public void saveUserSecurity() throws IOException {
 	}
 
-	public Application getUsersApplication() {
+	public final Application getUsersApplication() {
 		if (usersApplication == null) {
 			String userAppName = getUserSecurity().getUsersApp();
 			ApplicationList applications = spbd.getTenant().getApplications();
@@ -115,28 +115,28 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 		return usersApplication;
 	}
 
-	public void setUsersApplication(Application usersApplicationIn) {
+	public final void setUsersApplication(final Application usersApplicationIn) {
 		usersApplication = usersApplicationIn;
 	}
 
-	public String getUsersAppName() {
+	public final String getUsersAppName() {
 		return usersAppName;
 	}
 
-	public void setUsersAppName(String usersAppNameIn) {
+	public final void setUsersAppName(final String usersAppNameIn) {
 		usersAppName = usersAppNameIn;
 	}
 
-	public StormPathBaseDTO getSpbd() {
+	public final StormPathBaseDTO getSpbd() {
 		return spbd;
 	}
 
-	public void setSpbd(StormPathBaseDTO spbdIn) {
+	public final void setSpbd(final StormPathBaseDTO spbdIn) {
 		spbd = spbdIn;
 	}
 
 	@Override
-	public OtfAccount authAccount(String acNameIn, String pwIn) {
+	public final OtfAccount authAccount(final String acNameIn, final String pwIn) {
 		Account acc = authSPAccount(acNameIn, pwIn);
 
 		// CustomData cd = spdb.
@@ -147,7 +147,7 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 		return null;
 	}
 
-	private Account authSPAccount(String acName, String pw) {
+	private Account authSPAccount(final String acName, final String pw) {
 		// Create an authentication request using the credentials
 		AuthenticationRequest request = new UsernamePasswordRequest(acName, pw);
 		// Now let's authenticate the account with the application:
@@ -164,11 +164,11 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 		}
 	}
 
-	public Properties getProps() {
+	public final Properties getProps() {
 		return props;
 	}
 
-	public void setProps(Properties propsIn) {
+	public final void setProps(final Properties propsIn) {
 		props = propsIn;
 	}
 

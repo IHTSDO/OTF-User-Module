@@ -1,7 +1,6 @@
 package org.ihtsdo.otf.security.stormpath;
 
 import java.util.Properties;
-import java.util.logging.Logger;
 
 import com.stormpath.sdk.client.Client;
 import com.stormpath.sdk.directory.CustomData;
@@ -14,8 +13,8 @@ public class StormPathBaseDTO {
 	 * logger.
 	 * </p>
 	 */
-	private static final Logger LOG = Logger.getLogger(StormPathBaseDTO.class
-			.getName());
+	// private static final Logger LOG = Logger.getLogger(StormPathBaseDTO.class
+	// .getName());
 
 	private Client client;
 	private Tenant tenant;
@@ -25,23 +24,23 @@ public class StormPathBaseDTO {
 
 	// Static Strings
 	/** The default Password. */
-	public static String DEFPW = "defaultpw";
+	public static final String DEFPW = "defaultpw";
 	/** The App containing the users. */
-	public static String USERS_APP = "users";
+	public static final String USERS_APP = "users";
 	/** The App containing the members. */
-	public static String MEMBERS_APP = "members";
+	public static final String MEMBERS_APP = "members";
 	/** File path to the Storm Path Properties file **/
 	public static final String KEY_PATH = "keyPath";
 
 	public static final String API_KEY_ID = "apiKey.id";
 	public static final String API_KEY_SECRET = "apiKey.secret";
 
-	public StormPathBaseDTO(Properties settingsPropsIn) {
+	public StormPathBaseDTO(final Properties settingsPropsIn) {
 		super();
 		settingsProps = settingsPropsIn;
 	}
 
-	public void load() throws IllegalArgumentException {
+	public final void load() throws IllegalArgumentException {
 
 		if (settingsProps.containsKey(API_KEY_ID)
 				&& settingsProps.containsKey(API_KEY_SECRET)) {
@@ -63,50 +62,50 @@ public class StormPathBaseDTO {
 		tenant = client.getCurrentTenant();
 	}
 
-	public CustomData getCustomData(String href) {
+	public final CustomData getCustomData(final String href) {
 		return getClient().getResource(href, CustomData.class);
 	}
 
-	public Client getClient() {
+	public final Client getClient() {
 		return client;
 	}
 
-	public void setClient(Client clientIn) {
+	public final void setClient(final Client clientIn) {
 		client = clientIn;
 	}
 
-	public Tenant getTenant() {
+	public final Tenant getTenant() {
 		return tenant;
 	}
 
-	public void setTenant(Tenant tenantIn) {
+	public final void setTenant(final Tenant tenantIn) {
 		tenant = tenantIn;
 	}
 
-	public Properties getApiProps() {
+	public final Properties getApiProps() {
 		return apiProps;
 	}
 
-	public void setApiProps(Properties apiPropsIn) {
+	public final void setApiProps(final Properties apiPropsIn) {
 		apiProps = apiPropsIn;
 	}
 
-	public OtfClientBuilder getOtfCb() {
+	public final OtfClientBuilder getOtfCb() {
 		if (otfCb == null) {
 			otfCb = new OtfClientBuilder();
 		}
 		return otfCb;
 	}
 
-	public void setOtfCb(OtfClientBuilder otfCbIn) {
+	public final void setOtfCb(final OtfClientBuilder otfCbIn) {
 		otfCb = otfCbIn;
 	}
 
-	public Properties getSettingsProps() {
+	public final Properties getSettingsProps() {
 		return settingsProps;
 	}
 
-	public void setSettingsProps(Properties settingsPropsIn) {
+	public final void setSettingsProps(final Properties settingsPropsIn) {
 		settingsProps = settingsPropsIn;
 	}
 

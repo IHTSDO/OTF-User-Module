@@ -51,12 +51,12 @@ public class SecurityService {
 	public static final String MEMBER = "member";
 
 	// For use when acting as a server
-	public SecurityService(UserSecurityHandler ushIn) {
+	public SecurityService(final UserSecurityHandler ushIn) {
 		super();
 		ush = ushIn;
 	}
 
-	public String getQueryResultFromQueryDTO(SecurityQueryDTO sqd) {
+	public final String getQueryResultFromQueryDTO(final SecurityQueryDTO sqd) {
 
 		String retVal = null;
 		String username = sqd.getArgs().get(USER_NAME);
@@ -122,48 +122,49 @@ public class SecurityService {
 
 	}
 
-	public String getMembers() {
+	public final String getMembers() {
 
 		MembersListQueryDTO mlq = new MembersListQueryDTO(ush);
-		String json = GetJSonFromObject(mlq);
+		String json = getJSonFromObject(mlq);
 		// LOG.info("JSON = " + json);
 		return json;
 
 	}
 
-	public String getUsers() {
+	public final String getUsers() {
 
 		UsersListQueryDTO ulq = new UsersListQueryDTO(ush);
 		// LOG.info("ulq size = " + ulq.getUsers().size());
-		String json = GetJSonFromObject(ulq);
+		String json = getJSonFromObject(ulq);
 		// LOG.info("JSON = " + json);
 		return json;
 
 	}
 
-	public String getApps() {
+	public final String getApps() {
 
 		AppsListQueryDTO ulq = new AppsListQueryDTO(ush);
 		// LOG.info("ulq size = " + ulq.getUsers().size());
-		String json = GetJSonFromObject(ulq);
+		String json = getJSonFromObject(ulq);
 		// LOG.info("JSON = " + json);
 		return json;
 
 	}
 
-	public String getAppUsers(String appname) {
+	public final String getAppUsers(final String appname) {
 
 		AppUsersListQueryDTO ulq = new AppUsersListQueryDTO(ush, appname);
 		// LOG.info("ulq size = " + ulq.getUsers().size());
-		String json = GetJSonFromObject(ulq);
+		String json = getJSonFromObject(ulq);
 		// LOG.info("JSON = " + json);
 		return json;
 
 	}
 
-	public String getUserByName(String username, String password) {
+	public final String getUserByName(final String username,
+			final String password) {
 		UserByNameQueryDTO ubn = new UserByNameQueryDTO(ush, username, password);
-		String json = GetJSonFromObject(ubn);
+		String json = getJSonFromObject(ubn);
 		// LOG.info("JSON = " + json);
 		return json;
 
@@ -181,52 +182,55 @@ public class SecurityService {
 	//
 	// }
 
-	public String getUserMemberships(String username) {
+	public final String getUserMemberships(final String username) {
 		UserMembersListQueryDTO uml = new UserMembersListQueryDTO(ush, username);
-		String json = GetJSonFromObject(uml);
+		String json = getJSonFromObject(uml);
 		// LOG.info("JSON = " + json);
 		return json;
 	}
 
-	public String getUserApps(String username) {
+	public final String getUserApps(final String username) {
 		UserAppsListQueryDTO uml = new UserAppsListQueryDTO(ush, username);
-		String json = GetJSonFromObject(uml);
+		String json = getJSonFromObject(uml);
 		// LOG.info("JSON = " + json);
 		return json;
 	}
 
-	public String getUserAppPerms(String username, String appName) {
+	public final String getUserAppPerms(final String username,
+			final String appName) {
 		UserAppPermsListQueryDTO uml = new UserAppPermsListQueryDTO(ush,
 				username, appName);
-		String json = GetJSonFromObject(uml);
+		String json = getJSonFromObject(uml);
 		// LOG.info("getUserAppPerms JSON = " + json);
 		return json;
 	}
 
-	public String getUserAppPerms(String username, String appName, String member) {
+	public final String getUserAppPerms(final String username,
+			final String appName, final String member) {
 		UserAppPermsListQueryDTO uml = new UserAppPermsListQueryDTO(ush,
 				username, appName, member);
-		String json = GetJSonFromObject(uml);
+		String json = getJSonFromObject(uml);
 		// LOG.info("JSON = " + json);
 		return json;
 	}
 
-	public String getAppPermGroups(String appName) {
+	public final String getAppPermGroups(final String appName) {
 		AppPermGroupsQueryDTO uml = new AppPermGroupsQueryDTO(ush, appName);
-		String json = GetJSonFromObject(uml);
+		String json = getJSonFromObject(uml);
 		// LOG.info("getAppPermGroups appname JSON = " + json);
 		return json;
 	}
 
-	public String getAppPermGroups(String appName, String groupName) {
+	public final String getAppPermGroups(final String appName,
+			final String groupName) {
 		AppPermGroupsQueryDTO uml = new AppPermGroupsQueryDTO(ush, appName,
 				groupName);
-		String json = GetJSonFromObject(uml);
+		String json = getJSonFromObject(uml);
 		// LOG.info("getAppPermGroups app grp JSON = " + json);
 		return json;
 	}
 
-	public String GetJSonFromObject(Object obj) {
+	public final String getJSonFromObject(final Object obj) {
 		try {
 			return mapper.writeValueAsString(obj);
 		} catch (IOException e) {
@@ -235,7 +239,7 @@ public class SecurityService {
 		return null;
 	}
 
-	public static final boolean stringOK(String toCheck) {
+	public static final boolean stringOK(final String toCheck) {
 		return toCheck != null && toCheck.length() > 0;
 	}
 

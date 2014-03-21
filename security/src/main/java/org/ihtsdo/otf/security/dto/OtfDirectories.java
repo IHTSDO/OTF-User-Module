@@ -11,15 +11,16 @@ public class OtfDirectories {
 
 	}
 
-	public HashMap<String, OtfDirectory> getDirectories() {
+	public final HashMap<String, OtfDirectory> getDirectories() {
 		return directories;
 	}
 
-	public void setDirectories(HashMap<String, OtfDirectory> directoriesIn) {
+	public final void setDirectories(
+			final HashMap<String, OtfDirectory> directoriesIn) {
 		directories = directoriesIn;
 	}
 
-	public OtfDirectory getDirByName(String name) {
+	public final OtfDirectory getDirByName(final String name) {
 		return directories.get(name);
 	}
 

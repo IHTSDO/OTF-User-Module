@@ -26,11 +26,11 @@ public class ImportExport {
 	private Tenant tenant;
 	private String keyPath = "C:/Users/adamf/stormpath/apiKey.properties";
 
-	public String getFileName() {
+	public final String getFileName() {
 		return fileName;
 	}
 
-	public void setFileName(String fileNameIn) {
+	public final void setFileName(final String fileNameIn) {
 		fileName = fileNameIn;
 	}
 
@@ -38,23 +38,23 @@ public class ImportExport {
 		return client;
 	}
 
-	public static void setClient(Client clientIn) {
+	public static void setClient(final Client clientIn) {
 		client = clientIn;
 	}
 
-	public Tenant getTenant() {
+	public final Tenant getTenant() {
 		return tenant;
 	}
 
-	public void setTenant(Tenant tenantIn) {
+	public final void setTenant(final Tenant tenantIn) {
 		tenant = tenantIn;
 	}
 
-	public String getKeyPath() {
+	public final String getKeyPath() {
 		return keyPath;
 	}
 
-	public void setKeyPath(String keyPathIn) {
+	public final void setKeyPath(final String keyPathIn) {
 		keyPath = keyPathIn;
 	}
 

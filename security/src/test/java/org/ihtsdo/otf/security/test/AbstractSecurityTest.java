@@ -33,14 +33,14 @@ public abstract class AbstractSecurityTest {
 	// protected static UserSecurityHandler ush;
 	private static SecurityService secS;
 
-	public final static String testUser = "Bob";
-	public final static String testpw = "Sn0m3dDefPass";
-	public final static String testApp = "Mapping";
-	public final static String testMember = "INTL";
-	public final static String testGroup = "Reviewer";
+	public static final String TEST_USER = "Bob";
+	public static final String TEST_PW = "Sn0m3dDefPass";
+	public static final String TEST_APP = "Mapping";
+	public static final String TEST_MEMBER = "INTL";
+	public static final String TEST_GROUP = "Reviewer";
 
-	public final static String testUsersApp = "OTF Users";
-	public final static String testMembersApp = "Members";
+	public static final String TEST_USERS_APP = "OTF Users";
+	public static final String TEST_MENBERS_APP = "Members";
 
 	@After
 	public abstract void dispose();
@@ -83,9 +83,10 @@ public abstract class AbstractSecurityTest {
 
 	@Test
 	public final void testSettingsVals() {
-		assertEquals(testpw, getUsh().getUserSecurity().getDefaultpw());
-		assertEquals(testUsersApp, getUsh().getUserSecurity().getUsersApp());
-		assertEquals(testMembersApp, getUsh().getUserSecurity().getMembersApp());
+		assertEquals(TEST_PW, getUsh().getUserSecurity().getDefaultpw());
+		assertEquals(TEST_USERS_APP, getUsh().getUserSecurity().getUsersApp());
+		assertEquals(TEST_MENBERS_APP, getUsh().getUserSecurity()
+				.getMembersApp());
 
 	}
 
@@ -128,7 +129,7 @@ public abstract class AbstractSecurityTest {
 	@Test
 	public final void testAccount() {
 		OtfAccount testAcc = getUsh().getUserSecurity().getUserAccountByName(
-				testUser);
+				TEST_USER);
 		assertNotNull(testAcc);
 		if (testAcc != null) {
 			// LOG.info("User name = " + testAcc.getName());
@@ -144,8 +145,8 @@ public abstract class AbstractSecurityTest {
 
 	@Test
 	public final void testAccountAuth() {
-		OtfAccount testAcc = getUsh().authAccount(testUser, testpw);
-		String json = secS.getUserByName(testUser, testpw);
+		OtfAccount testAcc = getUsh().authAccount(TEST_USER, TEST_PW);
+		String json = secS.getUserByName(TEST_USER, TEST_PW);
 		// LOG.info("test acc JSON = " + json);
 
 		String name = "";
@@ -153,7 +154,7 @@ public abstract class AbstractSecurityTest {
 		if (user != null) {
 			name = user.getName();
 		}
-		assertEquals(testUser, name);
+		assertEquals(TEST_USER, name);
 		assertNotNull(testAcc);
 	}
 
@@ -177,7 +178,7 @@ public abstract class AbstractSecurityTest {
 	public final void testAccountMembers() {
 		List<String> members = new ArrayList<String>();
 		OtfAccount oacc = getUsh().getUserSecurity().getUserAccountByName(
-				testUser);
+				TEST_USER);
 		if (oacc != null) {
 			List<OtfCustomField> mems = oacc.getCustData().getMembers();
 			for (OtfCustomField cf : mems) {
@@ -185,7 +186,7 @@ public abstract class AbstractSecurityTest {
 			}
 		}
 
-		String json = secS.getUserMemberships(testUser);
+		String json = secS.getUserMemberships(TEST_USER);
 
 		List<String> member2 = SecurityClient.getUserMemberships(json);
 		int jsonI = member2.size();
@@ -202,7 +203,7 @@ public abstract class AbstractSecurityTest {
 	public final void testAccountApps() {
 		List<String> members = new ArrayList<String>();
 		OtfAccount oacc = getUsh().getUserSecurity().getUserAccountByName(
-				testUser);
+				TEST_USER);
 		if (oacc != null) {
 			List<OtfCustomField> mems = oacc.getCustData().getApps();
 			for (OtfCustomField cf : mems) {
@@ -213,7 +214,7 @@ public abstract class AbstractSecurityTest {
 			}
 		}
 
-		String json = secS.getUserApps(testUser);
+		String json = secS.getUserApps(TEST_USER);
 
 		List<String> member2 = SecurityClient.getUserApps(json);
 		int jsonI = member2.size();
@@ -233,13 +234,13 @@ public abstract class AbstractSecurityTest {
 	@Test
 	public final void testUserAppPerms() {
 
-		String json = secS.getUserAppPerms(testUser, testApp);
+		String json = secS.getUserAppPerms(TEST_USER, TEST_APP);
 
 		List<AppPermDTO> perms = SecurityClient.getUserAppPerms(json);
 		int jsonI = perms.size();
 		assertEquals(getNumUserAppPerms(), jsonI);
 
-		String json2 = secS.getUserAppPerms(testUser, testApp, testMember);
+		String json2 = secS.getUserAppPerms(TEST_USER, TEST_APP, TEST_MEMBER);
 		List<AppPermDTO> perms2 = SecurityClient.getUserAppPerms(json2);
 		int jsonI2 = perms2.size();
 		assertEquals(getNumUserAppPermsMember(), jsonI2);
@@ -252,13 +253,13 @@ public abstract class AbstractSecurityTest {
 	@Test
 	public final void testAppPermGroups() {
 
-		String json = secS.getAppPermGroups(testApp);
+		String json = secS.getAppPermGroups(TEST_APP);
 
 		List<GroupPermDTO> perms = SecurityClient.getAppPermGroups(json);
 		int jsonI = perms.size();
 		assertEquals(getNumAppPermGroups(), jsonI);
 
-		String json2 = secS.getAppPermGroups(testApp, testGroup);
+		String json2 = secS.getAppPermGroups(TEST_APP, TEST_GROUP);
 		List<GroupPermDTO> perms2 = SecurityClient.getAppPermGroups(json2);
 		int jsonI2 = perms2.size();
 		assertEquals(getNumAppPermGroupsGroup(), jsonI2);
@@ -269,7 +270,7 @@ public abstract class AbstractSecurityTest {
 	@Test
 	public final void testAppUsers() {
 
-		String json = secS.getAppUsers(testApp);
+		String json = secS.getAppUsers(TEST_APP);
 
 		List<String> users = SecurityClient.getAppUsers(json);
 		int jsonI = users.size();
@@ -277,14 +278,14 @@ public abstract class AbstractSecurityTest {
 		assertEquals(getNumAppUsers(), jsonI);
 	}
 
-	public SecurityService getSecS() {
+	public final SecurityService getSecS() {
 		if (secS == null) {
 			secS = new SecurityService(getUsh());
 		}
 		return secS;
 	}
 
-	public void setSecS(SecurityService secSIn) {
+	public final void setSecS(final SecurityService secSIn) {
 		secS = secSIn;
 	}
 

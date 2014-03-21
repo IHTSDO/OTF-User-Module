@@ -4,11 +4,11 @@ public abstract class OtfBaseAccountStore extends OtfBaseNameDesc {
 
 	private OtfAccounts accounts = new OtfAccounts();
 
-	public OtfAccounts getAccounts() {
+	public final OtfAccounts getAccounts() {
 		return accounts;
 	}
 
-	public void setAccounts(OtfAccounts accountsIn) {
+	public final void setAccounts(final OtfAccounts accountsIn) {
 		accounts = accountsIn;
 	}
 

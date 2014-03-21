@@ -34,7 +34,7 @@ public class SecurityTestXML extends AbstractSecurityTest {
 	}
 
 	@Override
-	public UserSecurityHandler getUsh() {
+	public final UserSecurityHandler getUsh() {
 		return getXmlUs();
 	}
 
@@ -48,7 +48,7 @@ public class SecurityTestXML extends AbstractSecurityTest {
 		return xmlUs;
 	}
 
-	public static void setXmlUs(XmlUserSecurity xmlUsIn) {
+	public static void setXmlUs(final XmlUserSecurity xmlUsIn) {
 		xmlUs = xmlUsIn;
 	}
 
@@ -59,62 +59,62 @@ public class SecurityTestXML extends AbstractSecurityTest {
 	}
 
 	@Override
-	public int getNumDirs() {
+	public final int getNumDirs() {
 		return 7;
 	}
 
 	@Override
-	public int getNumApps() {
+	public final int getNumApps() {
 		return 6;
 	}
 
 	@Override
-	public int getNumSettings() {
+	public final int getNumSettings() {
 		return 3;
 	}
 
 	@Override
-	public int getNumMembers() {
+	public final int getNumMembers() {
 		return 7;
 	}
 
 	@Override
-	public int getNumUsers() {
+	public final int getNumUsers() {
 		return 8;
 	}
 
 	@Override
-	public int getNumAccountMembers() {
+	public final int getNumAccountMembers() {
 		return 2;
 	}
 
 	@Override
-	public int getNumAccountApps() {
+	public final int getNumAccountApps() {
 		return 2;
 	}
 
 	@Override
-	public int getNumUserAppPerms() {
+	public final int getNumUserAppPerms() {
 		return 2;
 	}
 
 	@Override
-	public int getNumUserAppPermsMember() {
+	public final int getNumUserAppPermsMember() {
 		return 1;
 	}
 
 	@Override
-	public int getNumAppPermGroups() {
+	public final int getNumAppPermGroups() {
 		return 3;
 	}
 
 	@Override
-	public int getNumAppPermGroupsGroup() {
+	public final int getNumAppPermGroupsGroup() {
 		return 1;
 	}
 
 	@Override
-	public int getNumAppUsers() {
+	public final int getNumAppUsers() {
 		return 4;
 	}
 }

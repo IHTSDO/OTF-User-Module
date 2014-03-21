@@ -3,7 +3,6 @@ package org.ihtsdo.otf.security.dto;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class OtfCustomData {
 
@@ -12,13 +11,13 @@ public class OtfCustomData {
 	 * logger.
 	 * </p>
 	 */
-	private static final Logger LOG = Logger.getLogger(OtfCustomData.class
-			.getName());
+	// private static final Logger LOG = Logger.getLogger(OtfCustomData.class
+	// .getName());
 
 	public static final List<String> RESERVED_WORDS = new ArrayList<String>();
 	private final HashMap<String, OtfCustomField> custFields = new HashMap<String, OtfCustomField>();
 
-	public HashMap<String, OtfCustomField> getCustFields() {
+	public final HashMap<String, OtfCustomField> getCustFields() {
 		return custFields;
 	}
 
@@ -36,7 +35,8 @@ public class OtfCustomData {
 		return RESERVED_WORDS;
 	}
 
-	public List<OtfCustomField> getFieldsByType(OtfCustomField.CustomType type) {
+	public final List<OtfCustomField> getFieldsByType(
+			final OtfCustomField.CustomType type) {
 		List<OtfCustomField> fields = new ArrayList<OtfCustomField>();
 		for (OtfCustomField cf : custFields.values()) {
 			if (cf.getType().equals(type)) {
@@ -46,27 +46,27 @@ public class OtfCustomData {
 		return fields;
 	}
 
-	public List<OtfCustomField> getDefaults() {
+	public final List<OtfCustomField> getDefaults() {
 		return getFieldsByType(OtfCustomField.CustomType.DEFAULT);
 	}
 
-	public List<OtfCustomField> getMembers() {
+	public final List<OtfCustomField> getMembers() {
 		return getFieldsByType(OtfCustomField.CustomType.MEMBER);
 	}
 
-	public List<OtfCustomField> getPerms() {
+	public final List<OtfCustomField> getPerms() {
 		return getFieldsByType(OtfCustomField.CustomType.PERM);
 	}
 
-	public List<OtfCustomField> getApps() {
+	public final List<OtfCustomField> getApps() {
 		return getFieldsByType(OtfCustomField.CustomType.APP);
 	}
 
-	public List<OtfCustomField> getSettings() {
+	public final List<OtfCustomField> getSettings() {
 		return getFieldsByType(OtfCustomField.CustomType.SETTING);
 	}
 
-	public List<OtfCustomField> getAppsByAppName(String appName) {
+	public final List<OtfCustomField> getAppsByAppName(final String appName) {
 
 		List<OtfCustomField> allApps = getApps();
 
@@ -81,7 +81,7 @@ public class OtfCustomData {
 		return allAppsByName;
 	}
 
-	public boolean isaMemberOf(String member) {
+	public final boolean isaMemberOf(final String member) {
 
 		for (OtfCustomField cf : getMembers()) {
 			if (cf.getVals()[1].equalsIgnoreCase(member)) {

@@ -6,7 +6,7 @@ public abstract class AbstractSecurityQuery {
 
 	protected UserSecurityHandler ush;
 
-	public AbstractSecurityQuery(UserSecurityHandler ushIn) {
+	public AbstractSecurityQuery(final UserSecurityHandler ushIn) {
 		super();
 		ush = ushIn;
 	}

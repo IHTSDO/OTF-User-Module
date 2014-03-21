@@ -11,7 +11,7 @@ public class OtfApplication extends OtfBaseNameDesc {
 
 	private final HashMap<String, OtfAccountStore> accountStores = new HashMap<String, OtfAccountStore>();
 
-	public HashMap<String, OtfAccountStore> getAccountStores() {
+	public final HashMap<String, OtfAccountStore> getAccountStores() {
 		return accountStores;
 	}
 

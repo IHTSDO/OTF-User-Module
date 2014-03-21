@@ -4,11 +4,11 @@ public abstract class OtfBaseNameDesc extends OtfBaseName {
 
 	private String description;
 
-	public String getDescription() {
+	public final String getDescription() {
 		return description;
 	}
 
-	public void setDescription(String descriptionIn) {
+	public final void setDescription(final String descriptionIn) {
 		description = descriptionIn;
 	}
 

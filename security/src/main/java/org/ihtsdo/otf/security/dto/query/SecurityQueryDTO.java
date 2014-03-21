@@ -1,10 +1,13 @@
 package org.ihtsdo.otf.security.dto.query;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public class SecurityQueryDTO {
+	private String queryName;
+	private Map<String, String> args;
 
-	public SecurityQueryDTO(String queryNameIn, HashMap<String, String> argsIn) {
+	public SecurityQueryDTO(final String queryNameIn,
+			final Map<String, String> argsIn) {
 		super();
 		queryName = queryNameIn;
 		args = argsIn;
@@ -12,30 +15,26 @@ public class SecurityQueryDTO {
 
 	public SecurityQueryDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	String queryName;
-	HashMap<String, String> args;
-
-	public String getQueryName() {
+	public final String getQueryName() {
 		return queryName;
 	}
 
-	public void setQueryName(String queryNameIn) {
+	public final void setQueryName(final String queryNameIn) {
 		queryName = queryNameIn;
 	}
 
-	public HashMap<String, String> getArgs() {
+	public final Map<String, String> getArgs() {
 		return args;
 	}
 
-	public void setArgs(HashMap<String, String> argsIn) {
+	public final void setArgs(final Map<String, String> argsIn) {
 		args = argsIn;
 	}
 
 	@Override
-	public String toString() {
+	public final String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("QueryName = ").append(getQueryName()).append("\n");
 		sb.append("Query Args = \n");

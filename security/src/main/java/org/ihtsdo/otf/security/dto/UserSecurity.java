@@ -34,7 +34,7 @@ public class UserSecurity {
 
 	private List<String> members;
 
-	public String getDefaultpw() {
+	public final String getDefaultpw() {
 		if (!stringOK(defaultpw)) {
 			defaultpw = getSettings().get(OtfCustomFieldSetting.DEFPW).getVal()
 					.trim();
@@ -42,11 +42,11 @@ public class UserSecurity {
 		return defaultpw;
 	}
 
-	public void setDefaultpw(String defaultpwIn) {
+	public final void setDefaultpw(final String defaultpwIn) {
 		defaultpw = defaultpwIn;
 	}
 
-	public String getUsersApp() {
+	public final String getUsersApp() {
 		if (!stringOK(usersApp)) {
 			usersApp = getSettings().get(OtfCustomFieldSetting.USERS).getVal()
 					.trim();
@@ -54,11 +54,11 @@ public class UserSecurity {
 		return usersApp;
 	}
 
-	public void setUsersApp(String usersAppIn) {
+	public final void setUsersApp(final String usersAppIn) {
 		usersApp = usersAppIn;
 	}
 
-	public String getMembersApp() {
+	public final String getMembersApp() {
 		if (!stringOK(membersApp)) {
 			membersApp = getSettings().get(OtfCustomFieldSetting.MEMBERS)
 					.getVal().trim();
@@ -66,27 +66,27 @@ public class UserSecurity {
 		return membersApp;
 	}
 
-	public void setMembersApp(String membersAppIn) {
+	public final void setMembersApp(final String membersAppIn) {
 		membersApp = membersAppIn;
 	}
 
-	public OtfApplications getApps() {
+	public final OtfApplications getApps() {
 		return apps;
 	}
 
-	public void setApps(OtfApplications appsIn) {
+	public final void setApps(final OtfApplications appsIn) {
 		apps = appsIn;
 	}
 
-	public OtfDirectories getDirs() {
+	public final OtfDirectories getDirs() {
 		return dirs;
 	}
 
-	public void setDirs(OtfDirectories dirsIn) {
+	public final void setDirs(final OtfDirectories dirsIn) {
 		dirs = dirsIn;
 	}
 
-	public HashMap<String, OtfCustomFieldSetting> getSettings() {
+	public final HashMap<String, OtfCustomFieldSetting> getSettings() {
 		if (settings.size() == 0) {
 			// Get settings dir
 			OtfDirectory setDirectory = getDirs().getDirByName(SETTINGS);
@@ -109,11 +109,11 @@ public class UserSecurity {
 		return settings;
 	}
 
-	public boolean stringOK(String chk) {
+	public final boolean stringOK(final String chk) {
 		return chk != null && chk.length() > 0;
 	}
 
-	public List<String> getMembers() {
+	public final List<String> getMembers() {
 
 		if (members == null) {
 			members = new ArrayList<String>();
@@ -135,7 +135,7 @@ public class UserSecurity {
 		return members;
 	}
 
-	public Collection<OtfAccount> getUsers() {
+	public final Collection<OtfAccount> getUsers() {
 		// Get members dir
 		OtfDirectory uDirectory = getDirs().getDirByName(getUsersApp());
 		if (uDirectory != null) {
@@ -145,7 +145,7 @@ public class UserSecurity {
 		return null;
 	}
 
-	public Collection<OftAccountMin> getMinUsers() {
+	public final Collection<OftAccountMin> getMinUsers() {
 		Collection<OtfAccount> users = getUsers();
 		Collection<OftAccountMin> usersMin = new ArrayList<OftAccountMin>();
 		if (users != null) {
@@ -156,7 +156,7 @@ public class UserSecurity {
 		return usersMin;
 	}
 
-	public OtfAccount getUserAccountByName(String name) {
+	public final OtfAccount getUserAccountByName(final String name) {
 		for (OtfAccount acc : getUsers()) {
 			if (acc.getName().equalsIgnoreCase(name)) {
 				return acc;

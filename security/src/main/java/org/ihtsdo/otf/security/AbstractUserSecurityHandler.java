@@ -35,7 +35,7 @@ public abstract class AbstractUserSecurityHandler implements
 	public abstract void buildUserSecurity() throws Exception;
 
 	@Override
-	public UserSecurity getUserSecurity() {
+	public final UserSecurity getUserSecurity() {
 		if (userSecurity == null) {
 			userSecurity = (UserSecurity) ObjectCache.INSTANCE.get(getKey());
 		}
@@ -43,7 +43,7 @@ public abstract class AbstractUserSecurityHandler implements
 	}
 
 	@Override
-	public void setUserSecurity(UserSecurity userSecurityIn) {
+	public final void setUserSecurity(final UserSecurity userSecurityIn) {
 		ObjectCache.INSTANCE.put(getKey(), userSecurityIn);
 	}
 
@@ -53,7 +53,7 @@ public abstract class AbstractUserSecurityHandler implements
 	}
 
 	@Override
-	public void reload() {
+	public final void reload() {
 		userSecurity = null;
 		try {
 			buildUserSecurity();

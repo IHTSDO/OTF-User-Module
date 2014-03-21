@@ -14,9 +14,9 @@ public class XMLTest {
 	private static final Logger LOG = Logger.getLogger(XmlUserSecurity.class
 			.getName());
 
-	String fn = "./TextFiles/Example.xml";
+	private final String fn = "./TextFiles/Example.xml";
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		XMLTest xxmlt = new XMLTest();
 		xxmlt.init();
 

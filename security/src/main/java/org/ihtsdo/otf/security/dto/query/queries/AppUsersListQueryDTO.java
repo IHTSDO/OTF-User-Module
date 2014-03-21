@@ -10,15 +10,15 @@ import org.ihtsdo.otf.security.dto.query.AbstractSecurityQuery;
 
 public class AppUsersListQueryDTO extends AbstractSecurityQuery {
 
-	List<String> appUsers = new ArrayList<String>();
-	String appname;
+	private List<String> appUsers = new ArrayList<String>();
+	private String appname;
 
 	public AppUsersListQueryDTO() {
 		super();
 	}
 
-	public AppUsersListQueryDTO(UserSecurityHandler userSecurityIn,
-			String appnameIn) {
+	public AppUsersListQueryDTO(final UserSecurityHandler userSecurityIn,
+			final String appnameIn) {
 		super(userSecurityIn);
 		appname = appnameIn;
 	}
@@ -45,7 +45,7 @@ public class AppUsersListQueryDTO extends AbstractSecurityQuery {
 		return appUsers;
 	}
 
-	public void setAppUsers(final List<String> appUsersIn) {
+	public final void setAppUsers(final List<String> appUsersIn) {
 		appUsers = appUsersIn;
 	}
 }

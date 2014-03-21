@@ -9,17 +9,17 @@ import org.ihtsdo.otf.security.dto.query.AbstractSecurityQuery;
 
 public class UsersListQueryDTO extends AbstractSecurityQuery {
 
-	List<OftAccountMin> users;
+	private List<OftAccountMin> users;
 
 	public UsersListQueryDTO() {
 		super();
 	}
 
-	public UsersListQueryDTO(UserSecurityHandler userSecurityIn) {
+	public UsersListQueryDTO(final UserSecurityHandler userSecurityIn) {
 		super(userSecurityIn);
 	}
 
-	public List<OftAccountMin> getUsers() {
+	public final List<OftAccountMin> getUsers() {
 		if (users == null || users.size() == 0) {
 			if (ush != null) {
 				users = (List<OftAccountMin>) ush.getUserSecurity()
@@ -31,7 +31,7 @@ public class UsersListQueryDTO extends AbstractSecurityQuery {
 		return users;
 	}
 
-	public void setUsers(List<OftAccountMin> usersIn) {
+	public final void setUsers(final List<OftAccountMin> usersIn) {
 		users = usersIn;
 	}
 

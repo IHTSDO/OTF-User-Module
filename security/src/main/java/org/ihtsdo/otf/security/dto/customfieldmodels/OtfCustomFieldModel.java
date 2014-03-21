@@ -5,9 +5,9 @@ import org.ihtsdo.otf.security.dto.OtfCustomField;
 public abstract class OtfCustomFieldModel {
 
 	protected String[] vals;
-	OtfCustomField.CustomType type;
+	protected OtfCustomField.CustomType type;
 
-	public OtfCustomFieldModel(String[] valsIn) {
+	public OtfCustomFieldModel(final String[] valsIn) {
 		super();
 		setVals(valsIn);
 		modelFromVals();
@@ -17,14 +17,14 @@ public abstract class OtfCustomFieldModel {
 
 	public abstract void modelFromVals();
 
-	public String[] getVals() {
+	public final String[] getVals() {
 		if (vals == null || vals.length == 0) {
 			model2Vals();
 		}
 		return vals;
 	}
 
-	public void setVals(String[] valsIn) {
+	public final void setVals(final String[] valsIn) {
 		vals = valsIn;
 	}
 
@@ -33,7 +33,7 @@ public abstract class OtfCustomFieldModel {
 	}
 
 	@Override
-	public String toString() {
+	public final String toString() {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i <= vals.length - 1; i++) {
 			sb.append(i).append(" : ").append(vals[i]).append("\n");

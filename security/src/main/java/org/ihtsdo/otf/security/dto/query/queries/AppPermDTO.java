@@ -7,7 +7,8 @@ public class AppPermDTO {
 
 	}
 
-	public AppPermDTO(String appIn, String roleIn, String memberIn) {
+	public AppPermDTO(final String appIn, final String roleIn,
+			final String memberIn) {
 		super();
 		app = appIn;
 		role = roleIn;
@@ -18,27 +19,27 @@ public class AppPermDTO {
 	private String role;
 	private String member;
 
-	public String getApp() {
+	public final String getApp() {
 		return app;
 	}
 
-	public void setApp(String appIn) {
+	public final void setApp(final String appIn) {
 		app = appIn;
 	}
 
-	public String getRole() {
+	public final String getRole() {
 		return role;
 	}
 
-	public void setRole(String roleIn) {
+	public final void setRole(final String roleIn) {
 		role = roleIn;
 	}
 
-	public String getMember() {
+	public final String getMember() {
 		return member;
 	}
 
-	public void setMember(String memberIn) {
+	public final void setMember(final String memberIn) {
 		member = memberIn;
 	}
 

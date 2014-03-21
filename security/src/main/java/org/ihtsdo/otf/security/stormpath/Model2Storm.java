@@ -38,16 +38,16 @@ public class Model2Storm {
 	 */
 	private static final Logger LOG = Logger.getLogger(Model2Storm.class
 			.getName());
-	UserSecurity userSecurity;
+	private UserSecurity userSecurity;
 	private final StormPathBaseDTO spbd;
 
-	public Model2Storm(StormPathBaseDTO spbdIn) {
+	public Model2Storm(final StormPathBaseDTO spbdIn) {
 		super();
 		spbd = spbdIn;
 
 	}
 
-	public void sendToStormPath(UserSecurity userSecurityIn) {
+	public final void sendToStormPath(final UserSecurity userSecurityIn) {
 		if (userSecurityIn != null) {
 			userSecurity = userSecurityIn;
 			buildDirs();
@@ -110,7 +110,7 @@ public class Model2Storm {
 		}
 	}
 
-	private void buildDirectory(OtfDirectory oDir, Directory dir) {
+	private void buildDirectory(final OtfDirectory oDir, Directory dir) {
 		// TODO: catch both being null;
 
 		if (oDir == null && dir == null) {
@@ -151,7 +151,7 @@ public class Model2Storm {
 
 	}
 
-	private void buildGroups(OtfDirectory oDir, Directory dir) {
+	private void buildGroups(final OtfDirectory oDir, final Directory dir) {
 
 		GroupList grps = dir.getGroups();
 		for (OtfGroup ogrp : oDir.getGroups().getGroups().values()) {
@@ -169,7 +169,7 @@ public class Model2Storm {
 
 	}
 
-	private void buildGroup(OtfGroup ogrp, Group grp, Directory dir) {
+	private void buildGroup(final OtfGroup ogrp, Group grp, final Directory dir) {
 		if (ogrp == null && grp == null) {
 			LOG.severe("buildGroup all is null");
 			return;
@@ -210,7 +210,8 @@ public class Model2Storm {
 
 	}
 
-	private void buildAccounts(OtfBaseAccountStore oDir, AccountStore accSt) {
+	private void buildAccounts(final OtfBaseAccountStore oDir,
+			final AccountStore accSt) {
 		AccountList accs = null;
 		SPAccountStoreVisitor spa = new SPAccountStoreVisitor();
 		accSt.accept(spa);
@@ -240,7 +241,8 @@ public class Model2Storm {
 		}
 	}
 
-	private void buildAccount(OtfAccount oacc, Account acc, AccountStore accSt) {
+	private void buildAccount(final OtfAccount oacc, Account acc,
+			final AccountStore accSt) {
 		boolean log = false;
 
 		if (oacc == null && acc == null) {
@@ -321,8 +323,9 @@ public class Model2Storm {
 
 	}
 
-	private void buildCustomData(HashMap<String, OtfCustomField> custFields,
-			CustomData customData) {
+	private void buildCustomData(
+			final HashMap<String, OtfCustomField> custFields,
+			final CustomData customData) {
 		// LOG.info("buildCustomData custFields size = " + custFields.size());
 		// LOG.info("buildCustomData customData = " + customData);
 		if (custFields != null && customData != null) {
@@ -370,7 +373,7 @@ public class Model2Storm {
 		}
 	}
 
-	private void buildApp(OtfApplication oApp, Application app) {
+	private void buildApp(final OtfApplication oApp, Application app) {
 		if (oApp == null && app == null) {
 			LOG.severe("buildApp all is null");
 			return;
@@ -437,15 +440,15 @@ public class Model2Storm {
 
 	}
 
-	public UserSecurity getUserSecurity() {
+	public final UserSecurity getUserSecurity() {
 		return userSecurity;
 	}
 
-	public void setUserSecurity(UserSecurity userSecurityIn) {
+	public final void setUserSecurity(final UserSecurity userSecurityIn) {
 		userSecurity = userSecurityIn;
 	}
 
-	public StormPathBaseDTO getSpbd() {
+	public final StormPathBaseDTO getSpbd() {
 		return spbd;
 	}
 

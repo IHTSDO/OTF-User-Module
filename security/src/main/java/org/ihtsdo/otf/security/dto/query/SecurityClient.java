@@ -19,11 +19,11 @@ import org.ihtsdo.otf.security.dto.query.queries.UsersListQueryDTO;
 
 public class SecurityClient {
 
-	private final static ObjectMapper mapper = new ObjectMapper();
+	private static final ObjectMapper MAPPER = new ObjectMapper();
 
-	public static List<String> getMembers(String json) {
+	public static List<String> getMembers(final String json) {
 		try {
-			MembersListQueryDTO mlq = mapper.readValue(json,
+			MembersListQueryDTO mlq = MAPPER.readValue(json,
 					MembersListQueryDTO.class);
 			return mlq.getMembers();
 		} catch (IOException e) {
@@ -33,9 +33,9 @@ public class SecurityClient {
 		return null;
 	}
 
-	public static List<OftAccountMin> getUsers(String json) {
+	public static List<OftAccountMin> getUsers(final String json) {
 		try {
-			UsersListQueryDTO ulq = mapper.readValue(json,
+			UsersListQueryDTO ulq = MAPPER.readValue(json,
 					UsersListQueryDTO.class);
 			return ulq.getUsers();
 		} catch (IOException e) {
@@ -45,9 +45,9 @@ public class SecurityClient {
 		return null;
 	}
 
-	public static List<String> getApps(String json) {
+	public static List<String> getApps(final String json) {
 		try {
-			AppsListQueryDTO mlq = mapper.readValue(json,
+			AppsListQueryDTO mlq = MAPPER.readValue(json,
 					AppsListQueryDTO.class);
 			return mlq.getApps();
 		} catch (IOException e) {
@@ -57,9 +57,9 @@ public class SecurityClient {
 		return null;
 	}
 
-	public static OftAccountMin getUserByName(String json) {
+	public static OftAccountMin getUserByName(final String json) {
 		try {
-			UserByNameQueryDTO ulq = mapper.readValue(json,
+			UserByNameQueryDTO ulq = MAPPER.readValue(json,
 					UserByNameQueryDTO.class);
 			return ulq.getUser();
 		} catch (IOException e) {
@@ -81,9 +81,9 @@ public class SecurityClient {
 	// return null;
 	// }
 
-	public static List<String> getAppUsers(String json) {
+	public static List<String> getAppUsers(final String json) {
 		try {
-			AppUsersListQueryDTO mlq = mapper.readValue(json,
+			AppUsersListQueryDTO mlq = MAPPER.readValue(json,
 					AppUsersListQueryDTO.class);
 			return mlq.getAppUsers();
 		} catch (IOException e) {
@@ -93,9 +93,9 @@ public class SecurityClient {
 		return null;
 	}
 
-	public static List<String> getUserApps(String json) {
+	public static List<String> getUserApps(final String json) {
 		try {
-			UserAppsListQueryDTO mlq = mapper.readValue(json,
+			UserAppsListQueryDTO mlq = MAPPER.readValue(json,
 					UserAppsListQueryDTO.class);
 			return mlq.getApps();
 		} catch (IOException e) {
@@ -105,9 +105,9 @@ public class SecurityClient {
 		return null;
 	}
 
-	public static List<String> getUserMemberships(String json) {
+	public static List<String> getUserMemberships(final String json) {
 		try {
-			UserMembersListQueryDTO mlq = mapper.readValue(json,
+			UserMembersListQueryDTO mlq = MAPPER.readValue(json,
 					UserMembersListQueryDTO.class);
 			return mlq.getMembers();
 		} catch (IOException e) {
@@ -117,9 +117,9 @@ public class SecurityClient {
 		return null;
 	}
 
-	public static List<AppPermDTO> getUserAppPerms(String json) {
+	public static List<AppPermDTO> getUserAppPerms(final String json) {
 		try {
-			UserAppPermsListQueryDTO mlq = mapper.readValue(json,
+			UserAppPermsListQueryDTO mlq = MAPPER.readValue(json,
 					UserAppPermsListQueryDTO.class);
 			return mlq.getPerms();
 		} catch (IOException e) {
@@ -129,9 +129,9 @@ public class SecurityClient {
 		return null;
 	}
 
-	public static List<GroupPermDTO> getAppPermGroups(String json) {
+	public static List<GroupPermDTO> getAppPermGroups(final String json) {
 		try {
-			AppPermGroupsQueryDTO mlq = mapper.readValue(json,
+			AppPermGroupsQueryDTO mlq = MAPPER.readValue(json,
 					AppPermGroupsQueryDTO.class);
 			return mlq.getPerms();
 		} catch (IOException e) {

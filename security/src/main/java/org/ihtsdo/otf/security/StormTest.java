@@ -23,7 +23,7 @@ public class StormTest {
 	private static XmlUserSecurity xmlUs;
 	private static StormPathUserSecurity spu;
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		StormTest sTest = new StormTest();
 		sTest.init();
 
@@ -50,7 +50,7 @@ public class StormTest {
 		build();
 	}
 
-	private void storm2Xml(boolean log) {
+	private void storm2Xml(final boolean log) {
 		StormPathUserSecurity spu = getSpu();
 		XmlUserSecurity xmlUs = new XmlUserSecurity();
 		try {
@@ -68,7 +68,7 @@ public class StormTest {
 
 	}
 
-	private void Xml2Storm(boolean log) {
+	private void Xml2Storm(final boolean log) {
 
 		StormPathUserSecurity spu = getSpu();
 		try {
@@ -118,7 +118,7 @@ public class StormTest {
 		return xmlUs;
 	}
 
-	public static void setXmlUs(XmlUserSecurity xmlUsIn) {
+	public static void setXmlUs(final XmlUserSecurity xmlUsIn) {
 		xmlUs = xmlUsIn;
 	}
 
@@ -132,7 +132,7 @@ public class StormTest {
 		return spu;
 	}
 
-	public static void setSpu(StormPathUserSecurity spuIn) {
+	public static void setSpu(final StormPathUserSecurity spuIn) {
 		spu = spuIn;
 	}
 

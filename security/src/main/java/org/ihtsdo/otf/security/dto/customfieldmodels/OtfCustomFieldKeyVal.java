@@ -4,16 +4,16 @@ import org.ihtsdo.otf.security.dto.OtfCustomField;
 
 public class OtfCustomFieldKeyVal extends OtfCustomFieldModel {
 
-	String key;
-	String val;
+	private String key;
+	private String val;
 
-	public OtfCustomFieldKeyVal(String[] valsIn) {
+	public OtfCustomFieldKeyVal(final String[] valsIn) {
 		super(valsIn);
 		type = OtfCustomField.CustomType.DEFAULT;
 	}
 
 	@Override
-	public void model2Vals() {
+	public final void model2Vals() {
 		vals = new String[3];
 		vals[0] = getType().name();
 		vals[1] = getKey();
@@ -22,30 +22,30 @@ public class OtfCustomFieldKeyVal extends OtfCustomFieldModel {
 	}
 
 	@Override
-	public void modelFromVals() {
+	public final void modelFromVals() {
 		setKey(vals[1]);
 		setVal(vals[2]);
 	}
 
-	public String getKey() {
+	public final String getKey() {
 		if (key == null) {
 			key = "";
 		}
 		return key;
 	}
 
-	public void setKey(String keyIn) {
+	public final void setKey(final String keyIn) {
 		key = keyIn;
 	}
 
-	public String getVal() {
+	public final String getVal() {
 		if (val == null) {
 			val = "";
 		}
 		return val;
 	}
 
-	public void setVal(String valIn) {
+	public final void setVal(final String valIn) {
 		val = valIn;
 	}
 

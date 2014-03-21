@@ -9,11 +9,11 @@ public class OtfGroups {
 		super();
 	}
 
-	public HashMap<String, OtfGroup> getGroups() {
+	public final HashMap<String, OtfGroup> getGroups() {
 		return groups;
 	}
 
-	public OtfGroup getGroupByName(String name) {
+	public final OtfGroup getGroupByName(final String name) {
 		return groups.get(name);
 	}
 

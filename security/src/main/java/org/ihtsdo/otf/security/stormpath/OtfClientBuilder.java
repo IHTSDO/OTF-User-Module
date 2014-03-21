@@ -10,16 +10,16 @@ public class OtfClientBuilder extends ClientBuilder {
 		super();
 	}
 
-	public Properties getClientApiKeyProperties() {
+	public final Properties getClientApiKeyProperties() {
 		return loadApiKeyProperties();
 	}
 
-	protected Properties loadApiKeyProperties(Properties propsIn) {
+	protected final Properties loadApiKeyProperties(final Properties propsIn) {
 		super.setApiKeyProperties(propsIn);
 		return super.loadApiKeyProperties();
 	}
 
-	protected Properties loadApiKeyProperties(String pathIn) {
+	protected final Properties loadApiKeyProperties(final String pathIn) {
 		setApiKeyFileLocation(pathIn);
 		return super.loadApiKeyProperties();
 	}

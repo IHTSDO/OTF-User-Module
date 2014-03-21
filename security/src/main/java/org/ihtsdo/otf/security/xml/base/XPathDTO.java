@@ -1,4 +1,5 @@
 package org.ihtsdo.otf.security.xml.base;
+
 /**
  * @author Adam Flinton
  */
@@ -6,57 +7,52 @@ package org.ihtsdo.otf.security.xml.base;
 import java.util.Hashtable;
 
 public class XPathDTO {
-	
-	public String xPath = "";
-	public String startChars = "";
-	public Hashtable tokens = new Hashtable();
+
+	private String xPath = "";
+	private String startChars = "";
+	private Hashtable<Integer, String> tokens = new Hashtable<Integer, String>();
 
 	public XPathDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public String getStartChars() {
+	public final String getStartChars() {
 		return startChars;
 	}
 
-	public void setStartChars(String startChars) {
-		this.startChars = startChars;
+	public final void setStartChars(final String startCharsIn) {
+		this.startChars = startCharsIn;
 	}
 
-	public Hashtable getTokens() {
+	public final Hashtable<Integer, String> getTokens() {
 		return tokens;
 	}
 
-	public void setTokens(Hashtable tokens) {
-		this.tokens = tokens;
+	public final void setTokens(final Hashtable<Integer, String> tokensIn) {
+		this.tokens = tokensIn;
 	}
 
-	public String getXPath() {
+	public final String getXPath() {
 		return xPath;
 	}
 
-	public void setXPath(String path) {
+	public final void setXPath(final String path) {
 		xPath = path;
 	}
-	
-	public String getSubXpath(int tok){
-		String xp ="";
+
+	public final String getSubXpath(final int tok) {
+		String xp = "";
 		int i = 1;
-		while (i <= tok){
-			xp = xp+(String)tokens.get(Integer.valueOf(i));
-			if(i < tok){
-				xp = xp +"/";
+		while (i <= tok) {
+			xp = xp + tokens.get(Integer.valueOf(i));
+			if (i < tok) {
+				xp = xp + "/";
 			}
 			i++;
 		}
-		
-		
-		
-		
+
 		return xp;
 	}
-	
-	
 
 }

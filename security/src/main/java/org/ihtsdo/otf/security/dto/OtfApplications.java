@@ -11,15 +11,16 @@ public class OtfApplications {
 		// TODO Auto-generated constructor stub
 	}
 
-	public HashMap<String, OtfApplication> getApplications() {
+	public final HashMap<String, OtfApplication> getApplications() {
 		return applications;
 	}
 
-	public void setApplications(HashMap<String, OtfApplication> applicationsIn) {
+	public final void setApplications(
+			final HashMap<String, OtfApplication> applicationsIn) {
 		applications = applicationsIn;
 	}
 
-	public OtfApplication getAppByName(String name) {
+	public final OtfApplication getAppByName(final String name) {
 		return applications.get(name);
 	}
 

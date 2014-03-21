@@ -8,17 +8,17 @@ import org.ihtsdo.otf.security.dto.query.AbstractSecurityQuery;
 
 public class MembersListQueryDTO extends AbstractSecurityQuery {
 
+	private List<String> members;
+
 	public MembersListQueryDTO() {
 		super();
 	}
 
-	public MembersListQueryDTO(UserSecurityHandler userSecurityIn) {
+	public MembersListQueryDTO(final UserSecurityHandler userSecurityIn) {
 		super(userSecurityIn);
 	}
 
-	List<String> members;
-
-	public List<String> getMembers() {
+	public final List<String> getMembers() {
 
 		if (members == null || members.size() == 0) {
 			if (ush != null) {
@@ -30,12 +30,12 @@ public class MembersListQueryDTO extends AbstractSecurityQuery {
 		return members;
 	}
 
-	public void setMembers(List<String> membersIn) {
+	public final void setMembers(final List<String> membersIn) {
 		members = membersIn;
 	}
 
 	@Override
-	public String toString() {
+	public final String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Members Num found = ").append(getMembers().size() + "\n");
 		for (String member : getMembers()) {

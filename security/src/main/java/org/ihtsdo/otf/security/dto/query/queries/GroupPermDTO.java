@@ -5,7 +5,7 @@ import java.util.List;
 
 public class GroupPermDTO {
 
-	public GroupPermDTO(String nameIn) {
+	public GroupPermDTO(final String nameIn) {
 		super();
 		name = nameIn;
 	}
@@ -18,19 +18,19 @@ public class GroupPermDTO {
 	private String name;
 	private List<PermDTO> perms = new ArrayList<PermDTO>();;
 
-	public String getName() {
+	public final String getName() {
 		return name;
 	}
 
-	public void setName(String nameIn) {
+	public final void setName(final String nameIn) {
 		name = nameIn;
 	}
 
-	public List<PermDTO> getPerms() {
+	public final List<PermDTO> getPerms() {
 		return perms;
 	}
 
-	public void setPerms(List<PermDTO> permsIn) {
+	public final void setPerms(final List<PermDTO> permsIn) {
 		perms = permsIn;
 	}
 

@@ -2,7 +2,6 @@ package org.ihtsdo.otf.security.dto.query.queries;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.UserSecurityHandler;
 import org.ihtsdo.otf.security.dto.OtfAccount;
@@ -17,34 +16,35 @@ public class UserAppPermsListQueryDTO extends AbstractSecurityQuery {
 	 * logger.
 	 * </p>
 	 */
-	private static final Logger LOG = Logger
-			.getLogger(UserAppPermsListQueryDTO.class.getName());
+	// private static final Logger LOG = Logger
+	// .getLogger(UserAppPermsListQueryDTO.class.getName());
 
-	List<AppPermDTO> perms;
-	String userName;
-	String appName;
-	String membership;
+	private List<AppPermDTO> perms;
+	private String userName;
+	private String appName;
+	private String membership;
 
 	public UserAppPermsListQueryDTO() {
 		super();
 	}
 
-	public UserAppPermsListQueryDTO(UserSecurityHandler ushIn,
-			String userNameIn, String appNameIn) {
+	public UserAppPermsListQueryDTO(final UserSecurityHandler ushIn,
+			final String userNameIn, final String appNameIn) {
 		super(ushIn);
 		userName = userNameIn;
 		appName = appNameIn;
 	}
 
-	public UserAppPermsListQueryDTO(UserSecurityHandler ushIn,
-			String userNameIn, String appNameIn, String membershipIn) {
+	public UserAppPermsListQueryDTO(final UserSecurityHandler ushIn,
+			final String userNameIn, final String appNameIn,
+			final String membershipIn) {
 		super(ushIn);
 		userName = userNameIn;
 		appName = appNameIn;
 		membership = membershipIn;
 	}
 
-	public List<AppPermDTO> getPerms() {
+	public final List<AppPermDTO> getPerms() {
 		if (perms == null) {
 			perms = new ArrayList<AppPermDTO>();
 		}
@@ -76,7 +76,7 @@ public class UserAppPermsListQueryDTO extends AbstractSecurityQuery {
 		return perms;
 	}
 
-	private AppPermDTO getAp(OtfCustomFieldApplication cfapp) {
+	private AppPermDTO getAp(final OtfCustomFieldApplication cfapp) {
 
 		AppPermDTO ap = new AppPermDTO(cfapp.getApp(), cfapp.getRole(),
 				cfapp.getMember());
@@ -84,7 +84,7 @@ public class UserAppPermsListQueryDTO extends AbstractSecurityQuery {
 		return ap;
 	}
 
-	public void setPerms(List<AppPermDTO> permsIn) {
+	public final void setPerms(final List<AppPermDTO> permsIn) {
 		perms = permsIn;
 	}
 

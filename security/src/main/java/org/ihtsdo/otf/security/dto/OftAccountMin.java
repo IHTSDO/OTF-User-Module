@@ -5,7 +5,7 @@ public class OftAccountMin extends OtfBaseName {
 		super();
 	}
 
-	public OftAccountMin(OftAccountMin orig) {
+	public OftAccountMin(final OftAccountMin orig) {
 		super();
 		name = orig.getName();
 		email = orig.getEmail();
@@ -21,18 +21,18 @@ public class OftAccountMin extends OtfBaseName {
 	private String surname;
 
 	@Override
-	public String getName() {
+	public final String getName() {
 		if (name == null || name.length() == 0) {
 			name = email;
 		}
 		return name;
 	}
 
-	public String getEmail() {
+	public final String getEmail() {
 		return email;
 	}
 
-	public void setEmail(String emailIn) {
+	public final void setEmail(final String emailIn) {
 		email = emailIn;
 	}
 
@@ -40,33 +40,33 @@ public class OftAccountMin extends OtfBaseName {
 	// return custFields;
 	// }
 
-	public String getGivenName() {
+	public final String getGivenName() {
 		if (givenName == null || givenName.length() == 0) {
 			givenName = "NoGivenNameSet";
 		}
 		return givenName;
 	}
 
-	public void setGivenName(String givenNameIn) {
+	public final void setGivenName(final String givenNameIn) {
 		givenName = givenNameIn;
 	}
 
-	public String getMiddleName() {
+	public final String getMiddleName() {
 		return middleName;
 	}
 
-	public void setMiddleName(String middleNameIn) {
+	public final void setMiddleName(final String middleNameIn) {
 		middleName = middleNameIn;
 	}
 
-	public String getSurname() {
+	public final String getSurname() {
 		if (surname == null || surname.length() == 0) {
 			surname = getName();
 		}
 		return surname;
 	}
 
-	public void setSurname(String surnameIn) {
+	public final void setSurname(final String surnameIn) {
 		surname = surnameIn;
 	}
 

@@ -47,7 +47,7 @@ public class BasicTest {
 
 	private Application application;
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		BasicTest bt = new BasicTest();
 		bt.init();
 
@@ -68,7 +68,7 @@ public class BasicTest {
 
 	}
 
-	private void createApplication(String appName) {
+	private void createApplication(final String appName) {
 		application = client.instantiate(Application.class);
 		application.setName(appName); // must be unique among your other apps
 		application = client.getCurrentTenant().createApplication(
@@ -76,7 +76,7 @@ public class BasicTest {
 						.build());
 	}
 
-	private Account createAccount(String uname, String pw) {
+	private Account createAccount(final String uname, final String pw) {
 		// Create the account object
 		Account account = client.instantiate(Account.class);
 
@@ -93,7 +93,7 @@ public class BasicTest {
 		return application.createAccount(account);
 	}
 
-	private Account authAccount(String acName, String pw) {
+	private Account authAccount(final String acName, final String pw) {
 		// Create an authentication request using the credentials
 		AuthenticationRequest request = new UsernamePasswordRequest(acName, pw);
 
@@ -110,16 +110,16 @@ public class BasicTest {
 		}
 	}
 
-	public List<String> getApps() {
+	public final List<String> getApps() {
 		ArrayList<String> appsList = new ArrayList<String>();
 
 		ApplicationList applications = tenant.getApplications();
-		for (Application application : applications) {
-			appsList.add(application.getName());
-			LOG.info("Application =" + application);
+		for (Application app : applications) {
+			appsList.add(app.getName());
+			LOG.info("Application =" + app);
 			// getAppAccounts(application);
 
-			for (AccountStoreMapping accountStoreMap : application
+			for (AccountStoreMapping accountStoreMap : app
 					.getAccountStoreMappings()) {
 				int i = 0;
 				AccountStore accountStore1 = accountStoreMap.getAccountStore();
@@ -144,7 +144,7 @@ public class BasicTest {
 		return appsList;
 	}
 
-	public List<String> getDirs() {
+	public final List<String> getDirs() {
 		ArrayList<String> dirsList = new ArrayList<String>();
 
 		DirectoryList directories = tenant.getDirectories();
@@ -157,7 +157,7 @@ public class BasicTest {
 		return dirsList;
 	}
 
-	public List<String> getGroups(Directory directory) {
+	public final List<String> getGroups(final Directory directory) {
 		ArrayList<String> groupsList = new ArrayList<String>();
 		GroupList groups = directory.getGroups();
 
@@ -171,7 +171,7 @@ public class BasicTest {
 		return groupsList;
 	}
 
-	public List<String> getAppAccounts(Application application) {
+	public final List<String> getAppAccounts(final Application application) {
 		ArrayList<String> acList = new ArrayList<String>();
 
 		AccountList acs = application.getAccounts();
@@ -183,15 +183,15 @@ public class BasicTest {
 		return acList;
 	}
 
-	public String getKeyPath() {
+	public final String getKeyPath() {
 		return keyPath;
 	}
 
-	public void setKeyPath(String keyPath) {
+	public final void setKeyPath(final String keyPath) {
 		this.keyPath = keyPath;
 	}
 
-	public Application getTestApplication() {
+	public final Application getTestApplication() {
 		LOG.info("getTestApplication");
 		List<String> apps = getApps();
 		if (apps.contains(testAppname)) {
@@ -212,15 +212,15 @@ public class BasicTest {
 		return application;
 	}
 
-	public Application getApplication() {
+	public final Application getApplication() {
 		return application;
 	}
 
-	public void setApplication(Application application) {
+	public final void setApplication(final Application application) {
 		this.application = application;
 	}
 
-	public Account getTestUser() {
+	public final Account getTestUser() {
 
 		if (testUser == null) {
 			testUser = authAccount(testUname, testUname);
@@ -234,7 +234,7 @@ public class BasicTest {
 		return testUser;
 	}
 
-	public void setTestUser(Account testUser) {
+	public final void setTestUser(final Account testUser) {
 		this.testUser = testUser;
 	}
 

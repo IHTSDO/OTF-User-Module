@@ -1,7 +1,6 @@
 package org.ihtsdo.otf.security.stormpath;
 
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.OtfAccountStore;
@@ -11,7 +10,6 @@ import org.ihtsdo.otf.security.dto.OtfCustomField;
 import org.ihtsdo.otf.security.dto.OtfDirectory;
 import org.ihtsdo.otf.security.dto.OtfGroup;
 import org.ihtsdo.otf.security.dto.UserSecurity;
-import org.ihtsdo.otf.security.xml.Xml2Model;
 import org.ihtsdo.otf.security.xml.XmlStatics;
 
 import com.stormpath.sdk.account.Account;
@@ -31,13 +29,13 @@ public class Storm2Model {
 	 * logger.
 	 * </p>
 	 */
-	private static final Logger LOG = Logger.getLogger(Xml2Model.class
-			.getName());
+	// private static final Logger LOG = Logger.getLogger(Xml2Model.class
+	// .getName());
 
 	private UserSecurity userSecurity;
 	private final StormPathBaseDTO spbd;
 
-	public Storm2Model(StormPathBaseDTO spbdIn) {
+	public Storm2Model(final StormPathBaseDTO spbdIn) {
 		super();
 		spbd = spbdIn;
 	}
@@ -62,7 +60,7 @@ public class Storm2Model {
 		}
 	}
 
-	private OtfDirectory buildDirectory(Directory dir) {
+	private OtfDirectory buildDirectory(final Directory dir) {
 		OtfDirectory oDir = new OtfDirectory();
 		oDir.setName(dir.getName());
 		oDir.setDescription(dir.getDescription());
@@ -82,7 +80,7 @@ public class Storm2Model {
 		return oDir;
 	}
 
-	private OtfGroup buildGroup(Group grp) {
+	private OtfGroup buildGroup(final Group grp) {
 		OtfGroup ogrp = new OtfGroup();
 
 		ogrp.setName(grp.getName());
@@ -105,7 +103,7 @@ public class Storm2Model {
 		return ogrp;
 	}
 
-	private OtfAccount buildAccount(Account acc) {
+	private OtfAccount buildAccount(final Account acc) {
 		// boolean log = acc.getUsername().equalsIgnoreCase("bob");
 		OtfAccount oacc = new OtfAccount();
 		oacc.setName(acc.getUsername());
@@ -190,11 +188,9 @@ public class Storm2Model {
 
 	}
 
-	private OtfDirectory buildDir(Directory dir) {
-		OtfDirectory oDir = new OtfDirectory();
-
-		return oDir;
-
-	}
+	// private OtfDirectory buildDir(final Directory dir) {
+	// OtfDirectory oDir = new OtfDirectory();
+	// return oDir;
+	// }
 
 }

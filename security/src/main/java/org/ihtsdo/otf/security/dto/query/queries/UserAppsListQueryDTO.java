@@ -11,20 +11,20 @@ import org.ihtsdo.otf.security.dto.query.AbstractSecurityQuery;
 
 public class UserAppsListQueryDTO extends AbstractSecurityQuery {
 
-	List<String> apps;
-	String userName;
+	private List<String> apps;
+	private String userName;
 
 	public UserAppsListQueryDTO() {
 		super();
 	}
 
-	public UserAppsListQueryDTO(UserSecurityHandler userSecurityIn,
-			String userNameIn) {
+	public UserAppsListQueryDTO(final UserSecurityHandler userSecurityIn,
+			final String userNameIn) {
 		super(userSecurityIn);
 		userName = userNameIn;
 	}
 
-	public List<String> getApps() {
+	public final List<String> getApps() {
 		if (apps == null) {
 			apps = new ArrayList<String>();
 		}
@@ -48,7 +48,7 @@ public class UserAppsListQueryDTO extends AbstractSecurityQuery {
 		return apps;
 	}
 
-	public void setApps(List<String> appsIn) {
+	public final void setApps(final List<String> appsIn) {
 		apps = appsIn;
 	}
 
