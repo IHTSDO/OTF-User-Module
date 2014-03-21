@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -93,7 +94,7 @@ public class SecurityServlet extends HttpServlet {
 			IOException {
 		hr = request;
 
-		boolean reload = stringOK(getNamedParam(RELOAD, hr));
+		final boolean reload = stringOK(getNamedParam(RELOAD, hr));
 
 		if (reload) {
 			reloadUsh();
@@ -109,52 +110,52 @@ public class SecurityServlet extends HttpServlet {
 			}
 			if (stringOK(redirect)) {
 				hr.setAttribute(JSON, json);
-				String context = getNamedParam(CON_PATH, hr);
+				final String context = getNamedParam(CON_PATH, hr);
 				if (stringOK(context)) {
 					LOG.info("Context = " + context);
-					RequestDispatcher rd = sc.getServletContext()
+					final RequestDispatcher reqd = sc.getServletContext()
 							.getContext(context).getRequestDispatcher(redirect);
-					rd.forward(request, response);
+					reqd.forward(request, response);
 				} else {
-					RequestDispatcher rd = sc.getServletContext()
+					final RequestDispatcher reqd = sc.getServletContext()
 							.getRequestDispatcher(redirect);
-					rd.forward(request, response);
+					reqd.forward(request, response);
 				}
 
 				// response.sendRedirect(redirect);
 			} else {
 				response.setContentType("application/json");
 				hr.getSession().setAttribute(JSON, null);
-				PrintWriter out = response.getWriter();
+				final PrintWriter out = response.getWriter();
 				out.write(json);
 			}
 		}
 
 	}
 
-	private final String handleQuery(HttpServletRequest request) {
-		String queryName = getNamedParam(QUERY_NAME, request);
+	private final String handleQuery(final HttpServletRequest request) {
+		final String queryName = getNamedParam(QUERY_NAME, request);
 		if (queryName != null && queryName.length() > 0) {
 
-			HashMap<String, String> args = getFiltParamsAsHM(request);
+			final Map<String, String> args = getFiltParamsAsHM(request);
 
-			SecurityQueryDTO sqd = new SecurityQueryDTO(queryName, args);
+			final SecurityQueryDTO sqd = new SecurityQueryDTO(queryName, args);
 			// LOG.info("SQD \n" + getSecServ().GetJSonFromObject(sqd));
 			return getJSonFromSqd(sqd);
 		}
 
 		// else try for json as a param
-		String jsonQ = getNamedParam(QUERY_JSON, request);
+		final String jsonQ = getNamedParam(QUERY_JSON, request);
 		if (jsonQ != null && jsonQ.length() > 0) {
 			// LOG.info("jsonQ = " + jsonQ);
-			SecurityQueryDTO sqd = getSqdFromJSON(jsonQ);
+			final SecurityQueryDTO sqd = getSqdFromJSON(jsonQ);
 			return getJSonFromSqd(sqd);
 		}
 		// finally see if there is json in the body
-		String jsonB = getContentAsString(request);
+		final String jsonB = getContentAsString(request);
 		if (jsonB != null && jsonB.length() > 0) {
 			// LOG.info("jsonB = " + jsonB);
-			SecurityQueryDTO sqd = getSqdFromJSON(jsonB);
+			final SecurityQueryDTO sqd = getSqdFromJSON(jsonB);
 			return getJSonFromSqd(sqd);
 		}
 
@@ -164,7 +165,7 @@ public class SecurityServlet extends HttpServlet {
 	private final String getJSonFromSqd(final SecurityQueryDTO sqd) {
 		if (sqd != null) {
 			// LOG.info("sqd = " + sqd);
-			String rval = getSecServ().getQueryResultFromQueryDTO(sqd);
+			final String rval = getSecServ().getQueryResultFromQueryDTO(sqd);
 
 			if (sqd.getQueryName().equals(SecurityService.GET_USER_BY_NAME)
 					&& stringOK(rval)) {
@@ -178,7 +179,7 @@ public class SecurityServlet extends HttpServlet {
 			// .getAttribute(SecurityService.USER_NAME));
 
 			if (stringOK(redirect)) {
-				String qasJ = getSecServ().GetJSonFromObject(sqd);
+				final String qasJ = getSecServ().getJSonFromObject(sqd);
 				hr.setAttribute(QUERY_JSON, qasJ);
 			}
 			if (!stringOK(redirect)) {
@@ -192,8 +193,8 @@ public class SecurityServlet extends HttpServlet {
 
 	private final SecurityQueryDTO getSqdFromJSON(final String json) {
 		try {
-			ObjectMapper mapper = new ObjectMapper();
-			SecurityQueryDTO sqd = mapper.readValue(json,
+			final ObjectMapper mapper = new ObjectMapper();
+			final SecurityQueryDTO sqd = mapper.readValue(json,
 					SecurityQueryDTO.class);
 			return sqd;
 		} catch (IOException e) {
@@ -206,10 +207,10 @@ public class SecurityServlet extends HttpServlet {
 
 		String content = "";
 		try {
-			BufferedReader br = request.getReader();
+			final BufferedReader br = request.getReader();
 			String nextLine = "";
 
-			StringBuffer sb = new StringBuffer();
+			final StringBuffer sb = new StringBuffer();
 			while ((nextLine = br.readLine()) != null) {
 				sb.append(nextLine);
 			}
@@ -227,11 +228,11 @@ public class SecurityServlet extends HttpServlet {
 			final HttpServletRequest hr) {
 		String value = null;
 
-		Enumeration<String> paramNames = hr.getParameterNames();
+		final Enumeration<String> paramNames = hr.getParameterNames();
 		while (paramNames.hasMoreElements()) {
-			String paramName = paramNames.nextElement();
+			final String paramName = paramNames.nextElement();
 			if (paramName.indexOf(param_name) > -1) {
-				String[] paramValues = hr.getParameterValues(paramName);
+				final String[] paramValues = hr.getParameterValues(paramName);
 				if (paramValues.length == 1) {
 					value = paramValues[0];
 				}
@@ -241,23 +242,23 @@ public class SecurityServlet extends HttpServlet {
 		return value;
 	}
 
-	private final HashMap<String, String> getParamsAsHM(
-			final HttpServletRequest hr) {
+	// private final HashMap<String, String> getParamsAsHM(
+	// final HttpServletRequest hr) {
+	//
+	// HashMap<String, String> result = new HashMap<String, String>();
+	// Enumeration<String> paramNames = hr.getParameterNames();
+	// while (paramNames.hasMoreElements()) {
+	// String paramName = paramNames.nextElement();
+	// String[] paramValues = hr.getParameterValues(paramName);
+	// if (paramValues.length == 1) {
+	// String paramValue = paramValues[0];
+	// result.put(paramName, paramValue);
+	// }
+	// }
+	// return result;
+	// }
 
-		HashMap<String, String> result = new HashMap<String, String>();
-		Enumeration<String> paramNames = hr.getParameterNames();
-		while (paramNames.hasMoreElements()) {
-			String paramName = paramNames.nextElement();
-			String[] paramValues = hr.getParameterValues(paramName);
-			if (paramValues.length == 1) {
-				String paramValue = paramValues[0];
-				result.put(paramName, paramValue);
-			}
-		}
-		return result;
-	}
-
-	private final HashMap<String, String> getFiltParamsAsHM(
+	private final Map<String, String> getFiltParamsAsHM(
 			final HttpServletRequest hr) {
 
 		HashMap<String, String> result = new HashMap<String, String>();
