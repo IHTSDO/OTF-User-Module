@@ -44,6 +44,15 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.3-SNAPSHOT</version>
+				<configuration>
+					<server>tomcat-dev</server>
+					<url>http://localhost:8082/manager/text</url>
+				</configuration>
+			</plugin>
 		</plugins>
 
 	</build>
