@@ -389,6 +389,9 @@ public class SecurityServlet extends HttpServlet {
 		// .append(redirectIn).toString();
 		// }
 		// }
+		
+		redirect = redirectIn;
+	
 		LOG.info("setRedirect redirect = " + redirect);
 	}
 
