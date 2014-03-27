@@ -3,6 +3,7 @@ package org.ihtsdo.otf.security.dto;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class OtfCustomData {
 
@@ -15,9 +16,9 @@ public class OtfCustomData {
 	// .getName());
 
 	public static final List<String> RESERVED_WORDS = new ArrayList<String>();
-	private final HashMap<String, OtfCustomField> custFields = new HashMap<String, OtfCustomField>();
+	private final Map<String, OtfCustomField> custFields = new HashMap<String, OtfCustomField>();
 
-	public final HashMap<String, OtfCustomField> getCustFields() {
+	public final Map<String, OtfCustomField> getCustFields() {
 		return custFields;
 	}
 

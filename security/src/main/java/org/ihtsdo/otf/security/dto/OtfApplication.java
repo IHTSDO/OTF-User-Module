@@ -1,6 +1,7 @@
 package org.ihtsdo.otf.security.dto;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class OtfApplication extends OtfBaseNameDesc {
 
@@ -9,9 +10,9 @@ public class OtfApplication extends OtfBaseNameDesc {
 
 	}
 
-	private final HashMap<String, OtfAccountStore> accountStores = new HashMap<String, OtfAccountStore>();
+	private final Map<String, OtfAccountStore> accountStores = new HashMap<String, OtfAccountStore>();
 
-	public final HashMap<String, OtfAccountStore> getAccountStores() {
+	public final Map<String, OtfAccountStore> getAccountStores() {
 		return accountStores;
 	}
 

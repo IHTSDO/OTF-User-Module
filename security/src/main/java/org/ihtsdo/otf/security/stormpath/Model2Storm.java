@@ -1,6 +1,6 @@
 package org.ihtsdo.otf.security.stormpath;
 
-import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.dto.OtfAccount;
@@ -323,8 +323,7 @@ public class Model2Storm {
 
 	}
 
-	private void buildCustomData(
-			final HashMap<String, OtfCustomField> custFields,
+	private void buildCustomData(final Map<String, OtfCustomField> custFields,
 			final CustomData customData) {
 		// LOG.info("buildCustomData custFields size = " + custFields.size());
 		// LOG.info("buildCustomData customData = " + customData);

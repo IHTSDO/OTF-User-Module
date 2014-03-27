@@ -36,10 +36,6 @@ public class OftAccountMin extends OtfBaseName {
 		email = emailIn;
 	}
 
-	// public HashMap<String, OtfCustomField> getCustFields() {
-	// return custFields;
-	// }
-
 	public final String getGivenName() {
 		if (givenName == null || givenName.length() == 0) {
 			givenName = "NoGivenNameSet";

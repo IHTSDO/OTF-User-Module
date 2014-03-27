@@ -8,13 +8,6 @@ public class OtfGroup extends OtfBaseAccountStore {
 		super();
 	}
 
-	// private final HashMap<String, OtfCustomField> custFields = new
-	// HashMap<String, OtfCustomField>();
-
-	// public HashMap<String, OtfCustomField> getCustFields() {
-	// return custFields;
-	// }
-
 	public final OtfCustomData getCustData() {
 		return custData;
 	}

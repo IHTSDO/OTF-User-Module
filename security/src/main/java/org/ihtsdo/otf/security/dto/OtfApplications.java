@@ -1,22 +1,22 @@
 package org.ihtsdo.otf.security.dto;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class OtfApplications {
 
-	private HashMap<String, OtfApplication> applications = new HashMap<String, OtfApplication>();
+	private Map<String, OtfApplication> applications = new HashMap<String, OtfApplication>();
 
 	public OtfApplications() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	public final HashMap<String, OtfApplication> getApplications() {
+	public final Map<String, OtfApplication> getApplications() {
 		return applications;
 	}
 
 	public final void setApplications(
-			final HashMap<String, OtfApplication> applicationsIn) {
+			final Map<String, OtfApplication> applicationsIn) {
 		applications = applicationsIn;
 	}
 

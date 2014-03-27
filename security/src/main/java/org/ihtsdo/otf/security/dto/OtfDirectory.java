@@ -1,10 +1,11 @@
 package org.ihtsdo.otf.security.dto;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class OtfDirectory extends OtfBaseAccountStore {
 
-	private HashMap<String, OtfAccount> allAccounts;
+	private Map<String, OtfAccount> allAccounts;
 
 	public OtfDirectory() {
 		super();
@@ -20,7 +21,7 @@ public class OtfDirectory extends OtfBaseAccountStore {
 		groups = groupsIn;
 	}
 
-	public final HashMap<String, OtfAccount> getDirAccounts() {
+	public final Map<String, OtfAccount> getDirAccounts() {
 		return getAccounts().getAccounts();
 	}
 
@@ -28,7 +29,7 @@ public class OtfDirectory extends OtfBaseAccountStore {
 		return getAllAccounts().get(name);
 	}
 
-	public final HashMap<String, OtfAccount> getAllAccounts() {
+	public final Map<String, OtfAccount> getAllAccounts() {
 		if (allAccounts == null) {
 			allAccounts = new HashMap<String, OtfAccount>();
 		}
@@ -51,8 +52,7 @@ public class OtfDirectory extends OtfBaseAccountStore {
 		return allAccounts;
 	}
 
-	public final void setAllAccounts(
-			final HashMap<String, OtfAccount> allAccountsIn) {
+	public final void setAllAccounts(final Map<String, OtfAccount> allAccountsIn) {
 		allAccounts = allAccountsIn;
 	}
 

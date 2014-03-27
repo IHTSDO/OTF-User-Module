@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldSetting;
@@ -28,7 +29,7 @@ public class UserSecurity {
 	private String defaultpw;
 	private String usersApp;
 	private String membersApp;
-	private final HashMap<String, OtfCustomFieldSetting> settings = new HashMap<String, OtfCustomFieldSetting>();
+	private final Map<String, OtfCustomFieldSetting> settings = new HashMap<String, OtfCustomFieldSetting>();
 
 	public static final String SETTINGS = "OTFSettings";
 
@@ -86,7 +87,7 @@ public class UserSecurity {
 		dirs = dirsIn;
 	}
 
-	public final HashMap<String, OtfCustomFieldSetting> getSettings() {
+	public final Map<String, OtfCustomFieldSetting> getSettings() {
 		if (settings.size() == 0) {
 			// Get settings dir
 			OtfDirectory setDirectory = getDirs().getDirByName(SETTINGS);

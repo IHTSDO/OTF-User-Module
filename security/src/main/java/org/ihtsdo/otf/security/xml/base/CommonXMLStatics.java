@@ -23,7 +23,7 @@ public class CommonXMLStatics {
 	 */
 	public static final String CONCEPT_PRE = "C0ncept-";
 
-	/** ObjectCache Lookup for the UUID-INT hashmap */
+	/** ObjectCache Lookup for the UUID-INT map */
 	public static final String UUID_INT_HT = "UUID_INT_HTXYZ123";
 
 	/** Int Suffix */

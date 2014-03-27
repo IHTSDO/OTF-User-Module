@@ -1,22 +1,23 @@
 package org.ihtsdo.otf.security.dto;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class OtfDirectories {
 
-	private HashMap<String, OtfDirectory> directories = new HashMap<String, OtfDirectory>();
+	private Map<String, OtfDirectory> directories = new HashMap<String, OtfDirectory>();
 
 	public OtfDirectories() {
 		super();
 
 	}
 
-	public final HashMap<String, OtfDirectory> getDirectories() {
+	public final Map<String, OtfDirectory> getDirectories() {
 		return directories;
 	}
 
 	public final void setDirectories(
-			final HashMap<String, OtfDirectory> directoriesIn) {
+			final Map<String, OtfDirectory> directoriesIn) {
 		directories = directoriesIn;
 	}
 
