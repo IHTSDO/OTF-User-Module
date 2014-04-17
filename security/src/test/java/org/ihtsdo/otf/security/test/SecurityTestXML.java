@@ -3,6 +3,7 @@ package org.ihtsdo.otf.security.test;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import org.ihtsdo.otf.security.UserSecurityCompare;
 import org.ihtsdo.otf.security.UserSecurityHandler;
 import org.ihtsdo.otf.security.xml.XmlUserSecurity;
 import org.junit.After;
@@ -27,6 +28,11 @@ public class SecurityTestXML extends AbstractSecurityTest {
 		try {
 			stx.getSecS();
 			LOG.info(xmlUs.getXMLFromUserSecurityAsStringSortByName());
+			LOG.info("String representation: \n");
+			String uStr = xmlUs.getUserSecurity().toString();
+			LOG.info(uStr);
+			LOG.info(UserSecurityCompare.remSpaceLineEnds(uStr));
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

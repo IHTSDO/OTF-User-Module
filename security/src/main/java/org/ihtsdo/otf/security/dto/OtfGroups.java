@@ -1,6 +1,9 @@
 package org.ihtsdo.otf.security.dto;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class OtfGroups {
@@ -16,6 +19,18 @@ public class OtfGroups {
 
 	public final OtfGroup getGroupByName(final String name) {
 		return groups.get(name);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append("Groups:\n");
+		List<String> keys = new ArrayList<String>(groups.keySet());
+		Collections.sort(keys);
+		for (String key : keys) {
+			sbuild.append(groups.get(key).toString()).append("\n");
+		}
+		return sbuild.toString();
 	}
 
 }

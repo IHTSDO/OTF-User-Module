@@ -12,4 +12,13 @@ public abstract class OtfBaseAccountStore extends OtfBaseNameDesc {
 		accounts = accountsIn;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append(super.toString()).append("\n");
+		sbuild.append(accounts.toString());
+		return sbuild.toString();
+
+	}
+
 }

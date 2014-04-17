@@ -172,4 +172,12 @@ public class OtfCustomField {
 		model = modelIn;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append("CustomField: ").append("key:").append(key)
+				.append(", value:").append(value);
+		return sbuild.toString();
+
+	}
 }

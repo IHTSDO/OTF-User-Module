@@ -66,6 +66,7 @@ public class Model2Xml {
 
 	private void buildDir(final Element elem, final OtfDirectory dir) {
 		final Element elemNew = doc.createElement(XmlStatics.XML_E_DIR);
+		elemNew.setAttribute(XmlStatics.XML_A_ID_REF, dir.getIdref());
 		elemNew.setAttribute(XmlStatics.XML_A_NAME, dir.getName());
 		addNotEmptyAtt(dir.getDescription(), XmlStatics.XML_A_DESC, elemNew);
 		elemNew.setAttribute(XmlStatics.XML_A_STAT, dir.getStatus().toString());
@@ -93,6 +94,7 @@ public class Model2Xml {
 
 	private void buildGroup(final Element elem, final OtfGroup grp) {
 		final Element elemNew = doc.createElement(XmlStatics.XML_E_GRP);
+		elemNew.setAttribute(XmlStatics.XML_A_ID_REF, grp.getIdref());
 		elemNew.setAttribute(XmlStatics.XML_A_NAME, grp.getName());
 		addNotEmptyAtt(grp.getDescription(), XmlStatics.XML_A_DESC, elemNew);
 		elemNew.setAttribute(XmlStatics.XML_A_STAT, grp.getStatus().toString());
@@ -136,6 +138,7 @@ public class Model2Xml {
 
 	private void buildAccount(final Element elem, final OtfAccount acc) {
 		final Element elemNew = doc.createElement(XmlStatics.XML_E_ACC);
+		elemNew.setAttribute(XmlStatics.XML_A_ID_REF, acc.getIdref());
 		elemNew.setAttribute(XmlStatics.XML_A_NAME, acc.getName());
 		elemNew.setAttribute(XmlStatics.XML_A_GNAME, acc.getGivenName());
 		elemNew.setAttribute(XmlStatics.XML_A_MNAME, acc.getMiddleName());
@@ -160,6 +163,7 @@ public class Model2Xml {
 
 	private void buildApp(final Element elem, final OtfApplication app) {
 		final Element elemNew = doc.createElement(XmlStatics.XML_E_APP);
+		elemNew.setAttribute(XmlStatics.XML_A_ID_REF, app.getIdref());
 		elemNew.setAttribute(XmlStatics.XML_A_NAME, app.getName());
 		addNotEmptyAtt(app.getDescription(), XmlStatics.XML_A_DESC, elemNew);
 		elemNew.setAttribute(XmlStatics.XML_A_STAT, app.getStatus().toString());
@@ -171,8 +175,10 @@ public class Model2Xml {
 
 	private void buildAccStore(final Element elem, final OtfAccountStore st) {
 		final Element elemNew = doc.createElement(XmlStatics.XML_E_ACS);
+		elemNew.setAttribute(XmlStatics.XML_A_ID_REF, st.getIdref());
 		elemNew.setAttribute(XmlStatics.XML_A_NAME, st.getName());
 		elemNew.setAttribute(XmlStatics.XML_A_ACCS_TYPE, st.getType());
+		elemNew.setAttribute(XmlStatics.XML_A_STAT, st.getStatus().toString());
 		elem.appendChild(elemNew);
 	}
 

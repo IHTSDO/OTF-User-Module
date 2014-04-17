@@ -83,6 +83,7 @@ public class Xml2Model {
 
 	private OtfDirectory buildDir(final Element elem) {
 		OtfDirectory dir = new OtfDirectory();
+		dir.setIdref(elem.getAttribute(XmlStatics.XML_A_ID_REF));
 		dir.setName(elem.getAttribute(XmlStatics.XML_A_NAME));
 		dir.setDescription(elem.getAttribute(XmlStatics.XML_A_DESC));
 		dir.setStatus(elem.getAttribute(XmlStatics.XML_A_STAT));
@@ -117,6 +118,7 @@ public class Xml2Model {
 
 	private OtfGroup buildGroup(final Element elem) {
 		OtfGroup grp = new OtfGroup();
+		grp.setIdref(elem.getAttribute(XmlStatics.XML_A_ID_REF));
 		grp.setName(elem.getAttribute(XmlStatics.XML_A_NAME));
 		grp.setDescription(elem.getAttribute(XmlStatics.XML_A_DESC));
 		grp.setStatus(elem.getAttribute(XmlStatics.XML_A_STAT));
@@ -178,6 +180,7 @@ public class Xml2Model {
 
 	private OtfAccount buildAccount(final Element elem) {
 		OtfAccount acc = new OtfAccount();
+		acc.setIdref(elem.getAttribute(XmlStatics.XML_A_ID_REF));
 		acc.setName(elem.getAttribute(XmlStatics.XML_A_NAME));
 		acc.setGivenName(elem.getAttribute(XmlStatics.XML_A_GNAME));
 		acc.setMiddleName(elem.getAttribute(XmlStatics.XML_A_MNAME));
@@ -237,6 +240,7 @@ public class Xml2Model {
 
 	private OtfApplication buildApp(final Element elem) {
 		OtfApplication app = new OtfApplication();
+		app.setIdref(elem.getAttribute(XmlStatics.XML_A_ID_REF));
 		app.setName(elem.getAttribute(XmlStatics.XML_A_NAME));
 		app.setDescription(elem.getAttribute(XmlStatics.XML_A_DESC));
 		app.setStatus(elem.getAttribute(XmlStatics.XML_A_STAT));
@@ -252,8 +256,10 @@ public class Xml2Model {
 
 	private OtfAccountStore buildAccountStore(final Element elem) {
 		OtfAccountStore oAs = new OtfAccountStore();
+		oAs.setIdref(elem.getAttribute(XmlStatics.XML_A_ID_REF));
 		oAs.setName(elem.getAttribute(XmlStatics.XML_A_NAME));
 		oAs.setType(elem.getAttribute(XmlStatics.XML_A_ACCS_TYPE));
+		oAs.setStatus(elem.getAttribute(XmlStatics.XML_A_STAT));
 		return oAs;
 
 	}

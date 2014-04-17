@@ -26,6 +26,7 @@ public class XmlStatics {
 	public static String XML_A_ACCS_TYPE = "type";
 	public static String XML_A_STAT = "status";
 	public static String XML_A_NAME = "name";
+	public static String XML_A_ID_REF = "idref";
 	public static String XML_A_DESC = "description";
 	public static String XML_A_EMAIL = "email";
 	public static String XML_A_VAL = "value";

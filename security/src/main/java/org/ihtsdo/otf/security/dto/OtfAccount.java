@@ -15,4 +15,14 @@ public class OtfAccount extends OftAccountMin {
 	public final void setCustData(final OtfCustomData custDataIn) {
 		custData = custDataIn;
 	}
+
+	@Override
+	public String toString() {
+
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append("Account:\n").append(super.toString()).append("\n");
+		sbuild.append(custData.toString());
+		return sbuild.toString();
+
+	}
 }

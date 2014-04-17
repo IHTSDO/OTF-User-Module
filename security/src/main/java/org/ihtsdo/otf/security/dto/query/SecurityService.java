@@ -6,6 +6,8 @@ import java.util.logging.Logger;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.ihtsdo.otf.security.UserSecurityHandler;
+import org.ihtsdo.otf.security.dto.OftAccountMin;
+import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.query.queries.AppPermGroupsQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.AppUsersListQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.AppsListQueryDTO;
@@ -29,14 +31,58 @@ public class SecurityService {
 	private final ObjectMapper mapper = new ObjectMapper();
 
 	// QueryNames
+	public static final String GET_USER_BY_NAME_AUTH = "getUserByNameAuth";
+	// Single Arg
 	public static final String GET_MEMBERS = "getMembers";
 	public static final String GET_USERS = "getUsers";
+	public static final String GET_APPS = "getApps";
+	public static final String MEMBERS = "members";
+	public static final String USERS = "users";
+	public static final String APPS = "apps";
+	public static final String PERMS = "perms";
+
+	// REST URLS
+	// 0 Args - 1 node:
+	// getMembers
+	// /members
+
+	// getUsers
+	// /users
+
+	// getApps
+	// /apps
+
+	// 1 arg - 2 Nodes:
+
+	// getUserByName
+	// /users/{username}
+
+	// 1 arg 3 nodes:
+	// getUserMemberships
+	// /users/{username}/members
+
+	// getUserApps
+	// /users/{username}/apps
+
+	// getAppUsers
+
+	// /apps/{appname}/users
+
+	// 2 arg 3 nodes or 4.
+	// getAppPermGroups App name Group name (optional)
+	// /apps/{appname}/perms/{group}
+
+	// 3 arg 5 or 6 nodes
+
+	// getUserAppPerms (Member Optional)
+
+	// /users/{username}/apps/{appname}/members/{membername}
+
 	public static final String GET_USER_BY_NAME = "getUserByName";
 	public static final String GET_USER_MEMBERSHIPS = "getUserMemberships";
 	public static final String GET_USER_APP_PERMS = "getUserAppPerms";
 	public static final String GET_APP_PERM_GROUPS = "getAppPermGroups";
 
-	public static final String GET_APPS = "getApps";
 	public static final String GET_USER_APPS = "getUserApps";
 	public static final String GET_APP_USERS = "getAppUsers";
 
@@ -82,11 +128,17 @@ public class SecurityService {
 			retVal = getApps();
 			break;
 
-		case GET_USER_BY_NAME:
+		case GET_USER_BY_NAME_AUTH:
 			if (stringOK(username) && stringOK(password)) {
 				retVal = getUserByName(username, password);
 			}
 			break;
+		case GET_USER_BY_NAME:
+			if (stringOK(username)) {
+				retVal = getUserByName(username);
+			}
+			break;
+
 		case GET_USER_MEMBERSHIPS:
 			if (stringOK(username)) {
 				retVal = getUserMemberships(username);
@@ -167,6 +219,21 @@ public class SecurityService {
 		String json = getJSonFromObject(ubn);
 		// LOG.info("JSON = " + json);
 		return json;
+
+	}
+
+	public final String getUserByName(final String username) {
+
+		OtfAccount oacc = ush.getUserSecurity().getUserAccountByName(username);
+
+		if (oacc != null) {
+			OftAccountMin user = new OftAccountMin(oacc);
+			String json = getJSonFromObject(user);
+			// LOG.info("JSON = " + json);
+			return json;
+		}
+
+		return null;
 
 	}
 

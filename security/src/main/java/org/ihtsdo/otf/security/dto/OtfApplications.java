@@ -1,6 +1,9 @@
 package org.ihtsdo.otf.security.dto;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class OtfApplications {
@@ -22,6 +25,18 @@ public class OtfApplications {
 
 	public final OtfApplication getAppByName(final String name) {
 		return applications.get(name);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sbuild = new StringBuilder();
+		List<String> keys = new ArrayList<String>(applications.keySet());
+		Collections.sort(keys);
+		for (String key : keys) {
+			sbuild.append(applications.get(key).toString()).append("\n");
+		}
+		return sbuild.toString();
+
 	}
 
 }

@@ -52,4 +52,15 @@ public class OtfAccountStore extends OtfBaseName {
 		return getType().equals(XmlStatics.DIR);
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append("AccountStore: ").append("Type:").append(type)
+				.append(", Priority:").append(priority)
+				.append(", DefaultGroupStore:").append(defaultGroupStore)
+				.append(", DefaultAccountStore:").append(defaultAccountStore)
+				.append(", ");
+		sbuild.append(super.toString());
+		return sbuild.toString();
+	}
 }

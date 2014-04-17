@@ -56,4 +56,13 @@ public class OtfDirectory extends OtfBaseAccountStore {
 		allAccounts = allAccountsIn;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append("Directory:\n");
+		sbuild.append(super.toString());
+		sbuild.append(groups.toString());
+		return sbuild.toString();
+
+	}
 }

@@ -1,6 +1,7 @@
 package org.ihtsdo.otf.security.stormpath;
 
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.OtfAccountStore;
@@ -10,6 +11,7 @@ import org.ihtsdo.otf.security.dto.OtfCustomField;
 import org.ihtsdo.otf.security.dto.OtfDirectory;
 import org.ihtsdo.otf.security.dto.OtfGroup;
 import org.ihtsdo.otf.security.dto.UserSecurity;
+import org.ihtsdo.otf.security.xml.Xml2Model;
 import org.ihtsdo.otf.security.xml.XmlStatics;
 
 import com.stormpath.sdk.account.Account;
@@ -29,8 +31,8 @@ public class Storm2Model {
 	 * logger.
 	 * </p>
 	 */
-	// private static final Logger LOG = Logger.getLogger(Xml2Model.class
-	// .getName());
+	private static final Logger LOG = Logger.getLogger(Xml2Model.class
+			.getName());
 
 	private UserSecurity userSecurity;
 	private final StormPathBaseDTO spbd;
@@ -62,6 +64,7 @@ public class Storm2Model {
 
 	private OtfDirectory buildDirectory(final Directory dir) {
 		OtfDirectory oDir = new OtfDirectory();
+		oDir.setIdref(dir.getHref());
 		oDir.setName(dir.getName());
 		oDir.setDescription(dir.getDescription());
 		oDir.setStatus(dir.getStatus().toString());
@@ -82,7 +85,7 @@ public class Storm2Model {
 
 	private OtfGroup buildGroup(final Group grp) {
 		OtfGroup ogrp = new OtfGroup();
-
+		ogrp.setIdref(grp.getHref());
 		ogrp.setName(grp.getName());
 		ogrp.setStatus(grp.getStatus().toString());
 
@@ -106,6 +109,7 @@ public class Storm2Model {
 	private OtfAccount buildAccount(final Account acc) {
 		// boolean log = acc.getUsername().equalsIgnoreCase("bob");
 		OtfAccount oacc = new OtfAccount();
+		oacc.setIdref(acc.getHref());
 		oacc.setName(acc.getUsername());
 		oacc.setEmail(acc.getEmail());
 		oacc.setGivenName(acc.getGivenName());
@@ -114,6 +118,10 @@ public class Storm2Model {
 		oacc.setStatus(acc.getStatus().toString());
 		Map<String, Object> cd = spbd.getCustomData(acc.getCustomData()
 				.getHref());
+
+		// LOG.info("Account href = : " + acc.getHref());
+		// LOG.info("oacc = : " + oacc);
+
 		// if (log) {
 		// LOG.info("Account: " + acc);
 		// LOG.info("buildAccount1 cd size " + cd.size());
@@ -146,6 +154,7 @@ public class Storm2Model {
 
 	private OtfApplication buildApp(final Application app) {
 		OtfApplication oapp = new OtfApplication();
+		oapp.setIdref(app.getHref());
 		oapp.setName(app.getName());
 		oapp.setDescription(app.getDescription());
 		oapp.setStatus(app.getStatus().toString());
@@ -174,15 +183,19 @@ public class Storm2Model {
 			Directory dir = (Directory) accountStore1;
 			// LOG.info("DIR NAME =" + dir.getName());
 			OtfAccountStore oAs = new OtfAccountStore();
+			oAs.setIdref(dir.getHref());
 			oAs.setName(dir.getName());
 			oAs.setType(XmlStatics.DIR);
+			oAs.setStatus(dir.getStatus().toString());
 			return oAs;
 		} else {
 			Group grp = (Group) accountStore1;
 			// LOG.info("DIR NAME =" + dir.getName());
 			OtfAccountStore oAs = new OtfAccountStore();
+			oAs.setIdref(grp.getHref());
 			oAs.setName(grp.getName());
 			oAs.setType(XmlStatics.GRP);
+			oAs.setStatus(grp.getStatus().toString());
 			return oAs;
 		}
 

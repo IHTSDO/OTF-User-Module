@@ -35,7 +35,8 @@ public class StormTest {
 		rebuild();
 		// clearSP();
 		// Xml2Storm(false);
-		// storm2Xml(true);
+		storm2Xml(true);
+		stormToString(true);
 
 	}
 
@@ -48,6 +49,16 @@ public class StormTest {
 	private void rebuild() {
 		clearSP();
 		build();
+	}
+
+	private String stormToString(final boolean log) {
+		String ustr = getSpu().getUserSecurity().toString();
+		if (log) {
+			LOG.info("Storm as String : \n" + ustr);
+			LOG.info(UserSecurityCompare.remSpaceLineEnds(ustr));
+		}
+
+		return ustr;
 	}
 
 	private void storm2Xml(final boolean log) {

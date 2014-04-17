@@ -166,4 +166,16 @@ public class UserSecurity {
 		return null;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append("UserSecurity:\n");
+		sbuild.append("Directories:\n");
+		sbuild.append(getDirs().toString());
+		sbuild.append("Applications:\n");
+		sbuild.append(getApps().toString());
+		return sbuild.toString();
+
+	}
+
 }

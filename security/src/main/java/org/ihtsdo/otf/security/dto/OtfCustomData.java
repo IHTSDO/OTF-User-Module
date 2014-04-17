@@ -1,6 +1,7 @@
 package org.ihtsdo.otf.security.dto;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,4 +93,19 @@ public class OtfCustomData {
 
 		return false;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append("CustomFields:\n");
+		List<String> keys = new ArrayList<String>(custFields.keySet());
+		Collections.sort(keys);
+		for (String key : keys) {
+			sbuild.append(custFields.get(key).toString()).append("\n");
+		}
+
+		return sbuild.toString();
+
+	}
+
 }

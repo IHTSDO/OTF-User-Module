@@ -1,9 +1,25 @@
 package org.ihtsdo.otf.security.dto;
 
+import java.util.UUID;
+import java.util.logging.Logger;
+
 public abstract class OtfBaseName {
+
+	/**
+	 * <p>
+	 * logger.
+	 * </p>
+	 */
+	private static final Logger LOG = Logger.getLogger(OtfBaseName.class
+			.getName());
 
 	protected String name;
 	private Status status;
+	private String idref;
+	private String id;
+
+	// public static String ID_UUID_PREFIX = "UUID_";
+	// public static final String URL_REF_SEP = "://";
 
 	public String getName() {
 		return name;
@@ -32,6 +48,38 @@ public abstract class OtfBaseName {
 				// Ignore as will be set to enabled by default
 			}
 		}
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append("Name:").append(name).append(", idRef:")
+				.append(getIdref()).append(", id:").append(getId())
+				.append(", Status:").append(status);
+		return sbuild.toString();
+	}
+
+	public final String getIdref() {
+		if (idref == null) {
+			idref = "";
+		}
+		return idref;
+	}
+
+	public final void setIdref(String idrefIn) {
+		idref = idrefIn;
+	}
+
+	public final String getId() {
+		if (id == null) {
+			id = new StringBuilder().append(UUID.randomUUID().toString())
+					.toString();
+		}
+		return id;
+	}
+
+	public final void setId(String idIn) {
+		id = idIn;
 	}
 
 }

@@ -1,6 +1,12 @@
 package org.ihtsdo.otf.security.dto;
 
 public class OftAccountMin extends OtfBaseName {
+
+	private String email;
+	private String givenName;
+	private String middleName;
+	private String surname;
+
 	public OftAccountMin() {
 		super();
 	}
@@ -12,13 +18,10 @@ public class OftAccountMin extends OtfBaseName {
 		givenName = orig.getGivenName();
 		middleName = orig.getMiddleName();
 		surname = orig.getSurname();
+		setIdref(orig.getIdref());
+		setId(orig.getId());
 		setStatus(orig.getStatus().toString());
 	}
-
-	private String email;
-	private String givenName;
-	private String middleName;
-	private String surname;
 
 	@Override
 	public final String getName() {
@@ -64,6 +67,18 @@ public class OftAccountMin extends OtfBaseName {
 
 	public final void setSurname(final String surnameIn) {
 		surname = surnameIn;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append("idRef:").append(getIdref()).append(", GivenName:")
+				.append(givenName).append(", MiddleName:").append(middleName)
+				.append(", Surname:").append(surname).append(", Email:")
+				.append(email).append(", Status:")
+				.append(getStatus().toString());
+		return sbuild.toString();
+
 	}
 
 }
