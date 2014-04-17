@@ -38,7 +38,7 @@ img {
 
 #contentBox {
     text-align: center;
-    width: 50%;
+    width: 100%;
     margin: auto;
     margin-top: 50px;
     color: black;
@@ -46,7 +46,17 @@ img {
     border: thick black solid;
 }
 
+        table.sampleNoBorder {
+        width: 100%;
+            border-width: 0px;
+            border-style: none;
+            border-color: blue;
+            border-collapse: separate;
+            background-color: rgb(255, 255, 240);
+        }
+
         table.sample {
+        width: 100%;
             border-width: 1px;
             border-style: outset;
             border-color: blue;
@@ -66,6 +76,28 @@ img {
             border-width: 1px;
             padding: 1px;
             border-style: none;
-            border-color: blue;
+            border-color: green;
             background-color: rgb(255, 255, 240);
         }
+        
+
+tr.green>td{
+border-top:1pt solid green;
+}
+        
+a:link {fill:blue; }
+a:visited {fill:purple;}
+
+.pseudoLabel{font-weight: bold; font-size: 12pt;}
+.pseudoLabel_Large{font-weight: bold; font-size: 14pt;}
+.docTitle{font-size:18.0pt;font-family:Arial;color:darkblue;font-weight: bold;text-align:center;}      
+.docBoldBlue{color:darkblue;font-weight: bold;text-align:left;}
+.docSubTitle{font-size:14.0pt;font-family:Arial;color:darkblue;font-weight: bold;text-align:center;}
+.docSubSubTitle{font-size:12.0pt;color:darkblue;font-weight: bold;text-align:left;}  
+
+.docSubTitleRed{font-size:14.0pt;font-family:Arial;color:red;font-weight: bold;text-align:center;}
+
+.centered {text-align:center;}
+
+.w100{width:100%}
+.w75{width:75%}
