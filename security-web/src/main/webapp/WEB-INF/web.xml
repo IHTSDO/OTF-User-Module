@@ -49,11 +49,13 @@
 			<param-name>StormPathUserSecurity.apiKey.secret</param-name>
 			<param-value>ORDQyayhl1wmFputDIrEh8xIKi4amFGGcKsF9zn94L0</param-value>
 		</init-param>	
+		
+		<!--  <load-on-startup>1</load-on-startup> -->
 
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>SecurityQuery</servlet-name>
-		<url-pattern>/query/*</url-pattern>
+		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
 
 
