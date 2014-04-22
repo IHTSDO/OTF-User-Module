@@ -3,6 +3,8 @@ package org.ihtsdo.otf.security.dto;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 public abstract class OtfBaseName {
 
 	/**
@@ -15,6 +17,7 @@ public abstract class OtfBaseName {
 
 	protected String name;
 	private Status status;
+	@JsonIgnore
 	private String idref;
 	private String id;
 

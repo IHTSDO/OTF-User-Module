@@ -158,6 +158,7 @@ public class SecurityServlet extends HttpServlet {
 		hr = request;
 
 		// AUTHUSER
+		handleGetRequest(request, response);
 
 	}
 

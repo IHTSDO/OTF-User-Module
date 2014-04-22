@@ -13,3 +13,67 @@ Web app example - > git
 
 "I think we just need a shiro config pointing to Adam's REST interface in every application and shiro on the classpath. 
 The application will use shiro to authenticate and for authorisation - we only talk to shiro. What shiro and the API do "
+
+
+Simple page > user login > simple page if login = false - user must be SP Admin at mo...create admin App
+
+Applications  Users  Members
+
+
+Add
+Choose > Edit  Only Enable or disable no delete
+
+
+/Rest URL? 
+POST
+
+GETS
+/apps > :List apps  > /apps/ID  select app
+/users > :List users /users/ID 
+/members /members/ID
+
+name or ID?
+
+If name is unique...unique test? 
+
+Hold list of app names, member names & user names as lists so as to check unique? - & speed up transfer
+
+test for not unique?
+
+for new... /X/@
+
+
+settings add admin group.
+
+
+put model into cache
+
+
+users: custom fields - drop downs
+LI with URLs within <li> <a> </a> </li>
+Group users / Letters , Members, App/Role
+
+
+
+Top screen  /apps /users /members
+
+Split screen
+            |
+<li>/x/id     relevant screen + post submit > to /x/id
+</li>     
+
+
+controller jsp works splits first part and second part? tree screen splits 1st part and form screen the second?
+
+scroll list
+
+#scrollable-content {
+  height: 180px;
+  overflow: auto;
+  background-color: blue;
+}
+
+#footer {
+  height: 20px;
+  background-color: green;
+}
