@@ -1,2 +1,6 @@
 
-<jsp:forward page="./query"/>
+<%System.out.println("Index jsp loaded");%>
+
+
+
+<jsp:forward page="./userAdmin"/>

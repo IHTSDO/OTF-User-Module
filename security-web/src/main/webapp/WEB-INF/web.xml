@@ -3,8 +3,51 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-	<display-name>OTF Security</display-name>
 
+	<display-name>OTF Security</display-name>
+	<context-param>
+		<param-name>UserSecurityHandler-XML</param-name>
+		<param-value>XmlUserSecurity</param-value>
+	</context-param>
+	<context-param>
+		<param-name>XmlUserSecurity.class</param-name>
+		<param-value>org.ihtsdo.otf.security.xml.XmlUserSecurity</param-value>
+	</context-param>
+	<context-param>
+		<param-name>XmlUserSecurity.configFile</param-name>
+		<param-value>D:/Data/git/OTF-User-Module/security/TextFiles/Example.xml</param-value>
+	</context-param>
+	<!-- <context-param> <param-name>UserSecurityHandler</param-name> <param-value>StormPathUserSecurity</param-value> 
+		</context-param> -->
+	<context-param>
+		<param-name>UserSecurityHandler</param-name>
+		<param-value>XmlUserSecurity</param-value>
+	</context-param>
+	<context-param>
+		<param-name>StormPathUserSecurity.class</param-name>
+		<param-value>org.ihtsdo.otf.security.stormpath.StormPathUserSecurity</param-value>
+	</context-param>
+	<context-param>
+		<param-name>StormPathUserSecurity.keyPath</param-name>
+		<param-value>C:/Users/adamf/stormpath/apiKey.properties</param-value>
+	</context-param>
+	<context-param>
+		<param-name>StormPathUserSecurity.apiKey.id</param-name>
+		<param-value>2ZCPRU919FXQYF49HRUXK8905</param-value>
+	</context-param>
+	<context-param>
+		<param-name>StormPathUserSecurity.apiKey.secret</param-name>
+		<param-value>ORDQyayhl1wmFputDIrEh8xIKi4amFGGcKsF9zn94L0</param-value>
+	</context-param>
+
+	<filter>
+		<filter-name>cors</filter-name>
+		<filter-class>org.ihtsdo.otf.security.web.CorsFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>cors</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 
 	<servlet>
 		<servlet-name>SecurityQuery</servlet-name>
@@ -12,51 +55,45 @@
 			org.ihtsdo.otf.security.web.SecurityServlet
 		</servlet-class>
 		<init-param>
-			<param-name>debug</param-name>
-			<param-value>true</param-value>
-			<description>Do we startup in debug mode?</description>
+			<param-name>BASEURL</param-name>
+			<param-value>query</param-value>
+			<description>The base URL for the servlet</description>
 		</init-param>
-		
-		<init-param>
-			<param-name>UserSecurityHandler-XML</param-name>
-			<param-value>XmlUserSecurity</param-value>
-		</init-param>
-		<init-param>
-			<param-name>XmlUserSecurity.class</param-name>
-			<param-value>org.ihtsdo.otf.security.xml.XmlUserSecurity</param-value>
-		</init-param>
-		<init-param>
-			<param-name>XmlUserSecurity.configFile</param-name>
-			<param-value>D:/Data/git/OTF-User-Module/security/TextFiles/Example.xml</param-value>
-		</init-param>
-		<init-param>
-			<param-name>UserSecurityHandler</param-name>
-			<param-value>StormPathUserSecurity</param-value>
-		</init-param>
-		<init-param>
-			<param-name>StormPathUserSecurity.class</param-name>
-			<param-value>org.ihtsdo.otf.security.stormpath.StormPathUserSecurity</param-value>
-		</init-param>
-		<init-param>
-			<param-name>StormPathUserSecurity.keyPath</param-name>
-			<param-value>C:/Users/adamf/stormpath/apiKey.properties</param-value>
-		</init-param>
-		<init-param>
-			<param-name>StormPathUserSecurity.apiKey.id</param-name>
-			<param-value>2ZCPRU919FXQYF49HRUXK8905</param-value>
-		</init-param>		
-		<init-param>
-			<param-name>StormPathUserSecurity.apiKey.secret</param-name>
-			<param-value>ORDQyayhl1wmFputDIrEh8xIKi4amFGGcKsF9zn94L0</param-value>
-		</init-param>	
-		
-		<!--  <load-on-startup>1</load-on-startup> -->
-
+		<!-- <init-param> <param-name>debug</param-name> <param-value>true</param-value> 
+			<description>Do we startup in debug mode?</description> </init-param> -->
+		<!-- <load-on-startup>1</load-on-startup> -->
 	</servlet>
+	<servlet>
+		<servlet-name>SecurityAdmin</servlet-name>
+		<servlet-class>
+			org.ihtsdo.otf.security.web.SecurityAdminServlet
+		</servlet-class>
+		<init-param>
+			<param-name>BASEURL</param-name>
+			<param-value>admin</param-value>
+			<description>The base URL for the servlet</description>
+		</init-param>
+		<!-- <init-param> <param-name>debug</param-name> <param-value>true</param-value> 
+			<description>Do we startup in debug mode?</description> </init-param> -->
+		<!-- <load-on-startup>1</load-on-startup> -->
+	</servlet>
+	
 	<servlet-mapping>
 		<servlet-name>SecurityQuery</servlet-name>
 		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
+	
+	<!--  <servlet-mapping>
+		<servlet-name>SecurityQuery</servlet-name>
+		<url-pattern>/query/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>SecurityAdmin</servlet-name>
+		<url-pattern>/admin/*</url-pattern>
+	</servlet-mapping> -->
+
+	<!-- <welcome-file-list> <welcome-file>index.jsp</welcome-file> </welcome-file-list> -->
 
 
 	<!-- <error-page> <error-code>500</error-code> <location>/error.jsp</location> 

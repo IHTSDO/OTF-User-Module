@@ -169,7 +169,7 @@
 			</td>
 		</tr>
 		<tr class="green">
-			<td><span class="docSubSubTitle">User App Permissions:</span></td>
+			<td><span class="docSubSubTitle">User App Groups:</span></td>
 			<td><%=edto.getRestLink("users/##user/apps/##app")%></td>
 			<td>
 				<form name="UserAppPermform" action="<%=edto.getAction()%>"
@@ -198,7 +198,7 @@
 		</tr>
 
 		<tr class="green">
-			<td><span class="docSubSubTitle">User App Permissions By
+			<td><span class="docSubSubTitle">User App Groups By
 					Member:</span></td>
 			<td><%=edto
 					.getRestLink("users/##user/apps/##app/members/##member")%></td>
