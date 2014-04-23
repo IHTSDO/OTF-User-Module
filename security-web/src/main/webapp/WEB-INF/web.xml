@@ -13,12 +13,14 @@
 		<param-name>XmlUserSecurity.class</param-name>
 		<param-value>org.ihtsdo.otf.security.xml.XmlUserSecurity</param-value>
 	</context-param>
-	<context-param>
+	<!--<context-param>
 		<param-name>XmlUserSecurity.configFile</param-name>
 		<param-value>D:/Data/git/OTF-User-Module/security/TextFiles/Example.xml</param-value>
-	</context-param>
-	<!-- <context-param> <param-name>UserSecurityHandler</param-name> <param-value>StormPathUserSecurity</param-value> 
-		</context-param> -->
+	</context-param>-->
+	 <context-param> 
+	 <param-name>UserSecurityHandler</param-name> 
+	 <param-value>StormPathUserSecurity</param-value> 
+	</context-param> 
 	<context-param>
 		<param-name>UserSecurityHandler</param-name>
 		<param-value>XmlUserSecurity</param-value>
@@ -44,10 +46,10 @@
 		<filter-name>cors</filter-name>
 		<filter-class>org.ihtsdo.otf.security.web.CorsFilter</filter-class>
 	</filter>
-	<!--  <filter-mapping>
+	 <filter-mapping>
 		<filter-name>cors</filter-name>
 		<url-pattern>/*</url-pattern>
-	</filter-mapping> -->
+	</filter-mapping>
 
 	<servlet>
 		<servlet-name>SecurityQuery</servlet-name>
