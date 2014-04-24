@@ -30,6 +30,9 @@ public class ExampleDto {
 
 	private String contextPath;
 
+	private String urlNorm = "/security-web/query/";
+	private String urlDev = "/security-web-dev/query/";
+
 	public ExampleDto(HttpServletRequest requestIn) {
 		super();
 		request = requestIn;
@@ -76,8 +79,7 @@ public class ExampleDto {
 
 	private String getLocalContextRestURL(String templateRestUrl) {
 		StringBuilder sbuild = new StringBuilder();
-		sbuild.append(getAction()).append("/")
-				.append(getRestURL(templateRestUrl));
+		sbuild.append(getAction()).append(getRestURL(templateRestUrl));
 		return sbuild.toString();
 
 	}
@@ -144,9 +146,9 @@ public class ExampleDto {
 				// System.out.println("getAction contextPath = " + contextPath);
 				// action = "/security-web";
 				if (contextPath.endsWith("dev")) {
-					setAction("/security-web-dev");
+					setAction(getUrlDev());
 				} else {
-					setAction("/security-web");
+					setAction(getUrlNorm());
 				}
 			}
 		}
@@ -298,6 +300,22 @@ public class ExampleDto {
 
 	public final void setContextPath(String contextpathIn) {
 		contextPath = contextpathIn;
+	}
+
+	public final String getUrlNorm() {
+		return urlNorm;
+	}
+
+	public final void setUrlNorm(String urlNormIn) {
+		urlNorm = urlNormIn;
+	}
+
+	public final String getUrlDev() {
+		return urlDev;
+	}
+
+	public final void setUrlDev(String urlDevIn) {
+		urlDev = urlDevIn;
 	}
 
 }

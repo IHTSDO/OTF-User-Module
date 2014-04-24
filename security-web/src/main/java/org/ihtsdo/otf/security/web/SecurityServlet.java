@@ -110,8 +110,8 @@ public class SecurityServlet extends AbstractSecurityServlet {
 	protected void handleGetRequest(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException,
 			IOException {
-		LOG.info("handleGetRequest");
-		System.out.println("handleGetRequest");
+		// LOG.info("handleGetRequest");
+		// System.out.println("handleGetRequest");
 		setHr(request);
 
 		String urlS = request.getRequestURI();
@@ -141,7 +141,7 @@ public class SecurityServlet extends AbstractSecurityServlet {
 			// setRedirect(getNamedParam(REDIRECT, hr));
 			redirect = getNamedParam(REDIRECT, hr);
 			// LOG.info("redirect = " + redirect);
-			String json = handleQuery(hr);
+			String json = handleQuery(hr, response);
 			if (!stringOK(json)) {
 				json = "NO RESPONSE";
 			}
@@ -149,7 +149,7 @@ public class SecurityServlet extends AbstractSecurityServlet {
 				hr.setAttribute(JSON, json);
 				final String context = getNamedParam(CON_PATH, hr);
 				if (stringOK(context)) {
-					LOG.info("Context = " + context);
+					// LOG.info("Context = " + context);
 					final RequestDispatcher reqd = sc.getServletContext()
 							.getContext(context).getRequestDispatcher(redirect);
 					reqd.forward(request, response);
@@ -169,7 +169,8 @@ public class SecurityServlet extends AbstractSecurityServlet {
 		}
 	}
 
-	private final String handleQuery(final HttpServletRequest request) {
+	private final String handleQuery(final HttpServletRequest request,
+			final HttpServletResponse response) {
 		final String queryName = getNamedParam(QUERY_NAME, request);
 		boolean isQuery = stringOK(queryName);
 
@@ -178,6 +179,13 @@ public class SecurityServlet extends AbstractSecurityServlet {
 			final SecurityQueryDTO sqd = new SecurityQueryDTO(queryName, args);
 			// LOG.info("SQD \n" + getSecServ().GetJSonFromObject(sqd));
 			String rval = getJSonFromSqd(sqd);
+			if (sqd.getQueryName()
+					.equals(SecurityService.GET_USER_BY_NAME_AUTH)
+					&& !stringOK(rval)) {
+				// LOG.info("setting status to 401");
+				response.setStatus(401);
+			}
+
 			if (stringOK(rval)) {
 				return rval;
 			}
@@ -345,14 +353,16 @@ public class SecurityServlet extends AbstractSecurityServlet {
 			final String rval = getSecServ().getQueryResultFromQueryDTO(sqd);
 
 			if (sqd.getQueryName()
-					.equals(SecurityService.GET_USER_BY_NAME_AUTH)
-					&& stringOK(rval)) {
-				hr.getSession().setAttribute(SecurityService.USER_NAME,
-						sqd.getArgs().get(SecurityService.USER_NAME));
+					.equals(SecurityService.GET_USER_BY_NAME_AUTH)) {
 				// rem password
 				sqd.getArgs().put(SecurityService.PASSWORD, "*******");
-			}
 
+				if (stringOK(rval)) {
+					hr.getSession().setAttribute(SecurityService.USER_NAME,
+							sqd.getArgs().get(SecurityService.USER_NAME));
+
+				}
+			}
 			// hr.setAttribute(SecurityService.USER_NAME, hr.getSession()
 			// .getAttribute(SecurityService.USER_NAME));
 

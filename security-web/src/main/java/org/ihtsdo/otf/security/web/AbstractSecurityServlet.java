@@ -2,6 +2,8 @@ package org.ihtsdo.otf.security.web;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -103,7 +105,7 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 	public void doPost(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException,
 			IOException {
-		LOG.info("doPost called path info = " + request.getPathInfo());
+		// LOG.info("doPost called path info = " + request.getPathInfo());
 		// logParameters(request);
 		setUrlNodes(request);
 		handlePostRequest(request, response);
@@ -114,7 +116,7 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 	protected void doGet(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException,
 			IOException {
-		LOG.info("doGet called path info = " + request.getPathInfo());
+		// LOG.info("doGet called path info = " + request.getPathInfo());
 		setUrlNodes(request);
 		handleGetRequest(request, response);
 
@@ -129,13 +131,60 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 			IOException;
 
 	protected final String getContextFreeUrl(final HttpServletRequest request) {
-		String urlS = request.getRequestURI();
-		String contextP = request.getContextPath();
-		String noContext = urlS.substring(contextP.length());
-		if (noContext.startsWith("/")) {
-			return noContext.substring(1);
+		// String urlS = request.getRequestURI();
+		// String contextP = request.getContextPath();
+		String pathI = request.getPathInfo();
+
+		// LOG.info("urlS = " + urlS);
+		// LOG.info("contextP = " + contextP);
+		// LOG.info("pathI = " + pathI);
+
+		// String noContext = urlS.substring(contextP.length());
+		if (pathI.startsWith("/")) {
+			return pathI.substring(1);
 		}
-		return noContext;
+		return pathI;
+	}
+
+	protected final String getContextUrl(final HttpServletRequest request) {
+		String urlS = request.getRequestURI();
+		String pathI = request.getPathInfo();
+
+		String decPath;
+		String decUrl;
+		// rem %20
+		try {
+			decPath = URLDecoder.decode(pathI, "UTF-8");
+			decUrl = URLDecoder.decode(urlS, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+
+			// try the basic
+			decPath = pathI.replaceAll("%20", "");
+			decUrl = urlS.replaceAll("%20", "");
+		}
+
+		// LOG.info("getContextUrl pathI = " + pathI);
+		// LOG.info("getContextUrl decPath = " + decPath);
+		// LOG.info("getContextUrl urlS = " + urlS);
+		// LOG.info("getContextUrl decUrl = " + decUrl);
+
+		String context = "";
+		if (decPath == null || decPath.length() == 0 || decPath.equals("/")) {
+			return context;
+		} else {
+			int chop = decUrl.indexOf(decPath);
+			if (chop > 0) {
+				context = urlS.substring(0, chop);
+			}
+		}
+		LOG.info("getContextUrl context = " + context);
+
+		if (context.endsWith("/")) {
+			return context;
+		} else {
+			return context + "/";
+		}
+
 	}
 
 	protected final String getContentAsString(final HttpServletRequest request) {
@@ -285,31 +334,8 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 	}
 
 	public void setRedirect(String redirectIn) {
-
-		// If http assume full url is set
-		// if (redirectIn.startsWith("http")) {
-		// redirect = redirectIn;
-		// } else {
-		// // Assume on the same instance but different web app
-		// String rq = hr.getRequestURL().toString();
-		// String loccp = sc.getServletContext().getContextPath();
-		// int in = rq.indexOf(loccp);
-		// String baseUrl = rq.substring(0, in);
-		// LOG.info("baseUrl = " + baseUrl);
-		//
-		// LOG.info("hr url = " + hr.getRequestURL());
-		// if (redirectIn.startsWith("/")) {
-		// redirect = new StringBuilder().append(baseUrl)
-		// .append(redirectIn).toString();
-		// } else {
-		// redirect = new StringBuilder().append(baseUrl).append('/')
-		// .append(redirectIn).toString();
-		// }
-		// }
-
 		redirect = redirectIn;
-
-		LOG.info("setRedirect redirect = " + redirect);
+		// LOG.info("setRedirect redirect = " + redirect);
 	}
 
 	public final Properties getParamsProps() {
@@ -346,9 +372,9 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 	public final String[] setUrlNodes(final String urlS) {
 		urlNodes = urlS.split("/");
-		for (String s : urlNodes) {
-			LOG.info("setUrlNodes val = " + s);
-		}
+		// for (String s : urlNodes) {
+		// LOG.info("setUrlNodes val = " + s);
+		// }
 		return urlNodes;
 	}
 
@@ -364,7 +390,7 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 		if (baseUrl == null) {
 			baseUrl = getParamsProps().getProperty(BASEURL);
-			LOG.info("getBaseUrl baseUrl = " + baseUrl);
+			// LOG.info("getBaseUrl baseUrl = " + baseUrl);
 		}
 		return baseUrl;
 	}

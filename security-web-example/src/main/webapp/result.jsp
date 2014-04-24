@@ -15,6 +15,8 @@
 	String json = (String)request.getAttribute("json");
 	String query = (String)request.getAttribute("jsonQuery");
 	String user = (String)request.getAttribute("username");
+	
+	//System.out.println("Status = "+response.getStatus());
 	%>
 
 	

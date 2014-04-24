@@ -6,6 +6,9 @@ import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.AbstractUserSecurityHandler;
 import org.ihtsdo.otf.security.dto.OtfAccount;
+import org.ihtsdo.otf.security.dto.OtfApplication;
+import org.ihtsdo.otf.security.dto.OtfDirectory;
+import org.ihtsdo.otf.security.dto.OtfGroup;
 import org.ihtsdo.otf.security.dto.UserSecurity;
 
 import com.stormpath.sdk.account.Account;
@@ -171,6 +174,24 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 
 	public final void setProps(final Properties propsIn) {
 		props = propsIn;
+	}
+
+	@Override
+	public boolean addUpdateAccount(OtfAccount accIn, OtfDirectory parentIn) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean addUpdateMember(OtfGroup grpIn) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean addUpdateApp(OtfApplication appIn) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

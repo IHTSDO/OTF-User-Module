@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.ihtsdo.otf.security.dto.OtfAccount;
+import org.ihtsdo.otf.security.dto.OtfApplication;
+import org.ihtsdo.otf.security.dto.OtfDirectory;
+import org.ihtsdo.otf.security.dto.OtfGroup;
 import org.ihtsdo.otf.security.dto.UserSecurity;
 
 public interface UserSecurityHandler {
@@ -21,5 +24,11 @@ public interface UserSecurityHandler {
 	void reload();
 
 	void buildUserSecurity() throws Exception;
+
+	boolean addUpdateAccount(OtfAccount acc, OtfDirectory parent);
+
+	boolean addUpdateMember(OtfGroup grp);
+
+	boolean addUpdateApp(OtfApplication app);
 
 }

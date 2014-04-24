@@ -122,7 +122,7 @@ public class UserSecurity {
 
 		if (members.size() == 0) {
 			// Get members dir
-			OtfDirectory mDirectory = getDirs().getDirByName(getMembersApp());
+			OtfDirectory mDirectory = getMembersDir();
 			if (mDirectory != null) {
 				// getAll groups within
 				for (OtfGroup grp : mDirectory.getGroups().getGroups().values()) {
@@ -134,6 +134,10 @@ public class UserSecurity {
 		}
 
 		return members;
+	}
+
+	public final OtfDirectory getMembersDir() {
+		return getDirs().getDirByName(getMembersApp());
 	}
 
 	public final Collection<OtfAccount> getUsers() {

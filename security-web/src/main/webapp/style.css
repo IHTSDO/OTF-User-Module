@@ -5,6 +5,11 @@
 .row {
   display: table-row;
 }
+.topRow {
+  display: table-cell;
+  width: 33%;
+}
+
 .columnLeft {
   display: table-cell;
   width: 20%;

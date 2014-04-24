@@ -8,6 +8,9 @@ import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.AbstractUserSecurityHandler;
 import org.ihtsdo.otf.security.dto.OtfAccount;
+import org.ihtsdo.otf.security.dto.OtfApplication;
+import org.ihtsdo.otf.security.dto.OtfDirectory;
+import org.ihtsdo.otf.security.dto.OtfGroup;
 import org.ihtsdo.otf.security.xml.base.XMLUtil;
 import org.w3c.dom.Document;
 
@@ -146,6 +149,31 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 		}
 
 		return null;
+	}
+
+	@Override
+	public boolean addUpdateAccount(OtfAccount accIn, OtfDirectory parentIn) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean addUpdateMember(OtfGroup grpIn) {
+		// get members parent dir
+		OtfDirectory mDirectory = getUserSecurity().getMembersDir();
+		if (stringOK(grpIn.getName())) {
+			mDirectory.getGroups().getGroups().put(grpIn.getName(), grpIn);
+		} else {
+
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean addUpdateApp(OtfApplication appIn) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

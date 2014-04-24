@@ -64,4 +64,8 @@ public abstract class AbstractUserSecurityHandler implements
 		getUserSecurity();
 	}
 
+	public static final boolean stringOK(final String toCheck) {
+		return toCheck != null && toCheck.length() > 0;
+	}
+
 }

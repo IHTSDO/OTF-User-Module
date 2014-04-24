@@ -185,8 +185,9 @@ public class SecurityService {
 
 	public final String getUsers() {
 
+		LOG.info("ush = " + ush);
 		UsersListQueryDTO ulq = new UsersListQueryDTO(ush);
-		// LOG.info("ulq size = " + ulq.getUsers().size());
+		LOG.info("ulq size = " + ulq.getUsers().size());
 		String json = getJSonFromObject(ulq);
 		// LOG.info("JSON = " + json);
 		return json;
@@ -216,6 +217,11 @@ public class SecurityService {
 	public final String getUserByName(final String username,
 			final String password) {
 		UserByNameQueryDTO ubn = new UserByNameQueryDTO(ush, username, password);
+		if (ubn.getUser() == null) {
+			LOG.info("ubn.getUser() == null");
+			return null;
+		}
+
 		String json = getJSonFromObject(ubn);
 		// LOG.info("JSON = " + json);
 		return json;

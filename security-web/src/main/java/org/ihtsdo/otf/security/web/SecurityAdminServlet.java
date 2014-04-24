@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,12 +34,39 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 
 	private String treeHtml;
 	public static final String TREE = "TreeHTML";
+	public static final String FORM = "FormHTML";
 	public static final String DEF_REDIR = "/tree.jsp";
 
 	private String treetype;
 
-	public final String getMembersTreeHtml() {
-		return getList("Members", SecurityService.MEMBERS, getMembers());
+	@Override
+	protected void handlePostRequest(HttpServletRequest requestIn,
+			HttpServletResponse responseIn) throws ServletException,
+			IOException {
+		setHr(requestIn);
+		// LOG.info("handlePostRequest");
+	}
+
+	@Override
+	protected void handleGetRequest(HttpServletRequest requestIn,
+			HttpServletResponse responseIn) throws ServletException,
+			IOException {
+		setHr(requestIn);
+		// System.out.println("handleGetRequest");
+		String curl = getContextUrl(requestIn);
+		hr.getSession().setAttribute(BASEURL, curl);
+		// LOG.info("handleGetRequest curl = " + curl);
+		hr.getSession().setAttribute(TREE, getTreeHtml(curl));
+		hr.getSession().setAttribute(FORM, getForm());
+		setRedirect("/index-admin.jsp");
+		final RequestDispatcher reqd = sc.getServletContext()
+				.getRequestDispatcher(redirect);
+		reqd.forward(requestIn, responseIn);
+
+	}
+
+	public final String getMembersTreeHtml(final String path) {
+		return getList("Members", path + SecurityService.MEMBERS, getMembers());
 	}
 
 	public final List<String> getMembers() {
@@ -62,37 +90,41 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		return ulq.getApps();
 	}
 
-	public final String getUsersTreeHtml() {
-		return getList("Users", SecurityService.USERS, getUsers());
+	public final String getUsersTreeHtml(final String path) {
+		return getList("Users", path + SecurityService.USERS, getUsers());
 	}
 
-	public final String getAppsTreeHtml() {
-		return getList("Applications", SecurityService.APPS, getApps());
+	public final String getAppsTreeHtml(final String path) {
+		return getList("Applications", path + SecurityService.APPS, getApps());
 	}
 
 	public final String getList(String title, String baseUrl, List<String> vals) {
 		StringBuilder sbuild = new StringBuilder();
-		sbuild.append("<h5>").append(title).append("</h5>");
+		sbuild.append("<h1 class=\"blue\">").append(title).append("</h1>");
 		sbuild.append("<ul>");
 
 		for (String val : vals) {
 			sbuild.append("<li><a title=\"").append(val).append("\" href=\"")
-					.append(baseUrl).append("/").append(val)
-					.append("</a></li>");
+					.append(baseUrl).append("/").append(val).append("\">")
+					.append(val).append("</a></li>");
 		}
 		sbuild.append("</ul>");
 		return sbuild.toString();
 	}
 
-	public final String getTreeHtml() {
-		if (treeHtml == null || isLoadTree()) {
+	public final String getTreeHtml(final String path) {
+		// LOG.info("getTreeHtml path = " + path);
+		if (isLoadTree()) {
 			switch (getTreetype()) {
 			case SecurityService.MEMBERS:
-				treeHtml = getMembersTreeHtml();
+				treeHtml = getMembersTreeHtml(path);
+				break;
 			case SecurityService.USERS:
-				treeHtml = getUsersTreeHtml();
+				treeHtml = getUsersTreeHtml(path);
+				break;
 			case SecurityService.APPS:
-				treeHtml = getAppsTreeHtml();
+				treeHtml = getAppsTreeHtml(path);
+				break;
 			default:
 				treeHtml = "<div class=\"error\">no type set</div>";
 			}
@@ -104,35 +136,6 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		treeHtml = treeHtmlIn;
 	}
 
-	@Override
-	protected void handlePostRequest(HttpServletRequest requestIn,
-			HttpServletResponse responseIn) throws ServletException,
-			IOException {
-		setHr(requestIn);
-		System.out.println("handlePostRequest");
-		LOG.info("handlePostRequest");
-
-	}
-
-	@Override
-	protected void handleGetRequest(HttpServletRequest requestIn,
-			HttpServletResponse responseIn) throws ServletException,
-			IOException {
-		setHr(requestIn);
-		System.out.println("handleGetRequest");
-		LOG.info("handleGetRequest");
-
-		hr.getSession().setAttribute(TREE, getTreeHtml());
-
-		// response.sendRedirect("index.jsp");
-
-		// setRedirect("index-admin.jsp");
-		// final RequestDispatcher reqd = sc.getServletContext()
-		// .getRequestDispatcher(redirect);
-		// reqd.forward(requestIn, responseIn);
-
-	}
-
 	public final String getTreetype() {
 		if (treetype == null) {
 			treetype = "";
@@ -141,12 +144,10 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 	}
 
 	public final void setTreetype(String treetypeIn) {
-		LOG.info("setTreetype to " + treetypeIn);
 		treetype = treetypeIn;
 	}
 
 	public final boolean isLoadTree() {
-
 		String type = getUrlNodes()[0];
 		if (stringOK(treetype) && treetype.equals(type)) {
 			return false;
@@ -154,6 +155,63 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			setTreetype(type);
 			return true;
 		}
+	}
+
+	public final String getForm() {
+		switch (getUrlNodes()[0]) {
+		case SecurityService.MEMBERS:
+			return getMemberForm();
+		case SecurityService.USERS:
+			return getUserForm();
+		case SecurityService.APPS:
+			return getAppForm();
+		default:
+			return getEmptyForm();
+		}
+	}
+
+	public final String getEmptyForm() {
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append("<h1 class=\"blue\">No record selected</h1>");
+		return sbuild.toString();
+	}
+
+	public final String getUserForm() {
+		StringBuilder sbuild = new StringBuilder();
+
+		if (getUrlNodes().length > 1) {
+			String val = getUrlNodes()[1];
+			sbuild.append("<h1 class=\"blue\">Edit User selected ").append(val)
+					.append("</h1>");
+		} else {
+			sbuild.append("<h1 class=\"blue\">Create New User</h1>");
+		}
+		return sbuild.toString();
+	}
+
+	public final String getMemberForm() {
+		StringBuilder sbuild = new StringBuilder();
+		if (getUrlNodes().length > 1) {
+			String val = getUrlNodes()[1];
+			sbuild.append("<h1 class=\"blue\">Edit Member selected ")
+					.append(val).append("</h1>");
+		} else {
+			sbuild.append("<h1 class=\"blue\">Create New Member</h1>");
+		}
+		return sbuild.toString();
+	}
+
+	public final String getAppForm() {
+		StringBuilder sbuild = new StringBuilder();
+		if (getUrlNodes().length > 1) {
+			String val = getUrlNodes()[1];
+			sbuild.append("<h1 class=\"blue\">Edit App selected ").append(val)
+					.append("</h1>");
+		} else {
+			sbuild.append("<h1 class=\"blue\">Create New App</h1>");
+		}
+
+		return sbuild.toString();
 	}
 
 }

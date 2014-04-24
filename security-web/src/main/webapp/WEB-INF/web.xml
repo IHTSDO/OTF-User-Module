@@ -17,14 +17,14 @@
 		<param-name>XmlUserSecurity.configFile</param-name>
 		<param-value>D:/Data/git/OTF-User-Module/security/TextFiles/Example.xml</param-value>
 	</context-param>
-	 <context-param> 
+	 <!--  <context-param> 
 	 <param-name>UserSecurityHandler</param-name> 
 	 <param-value>StormPathUserSecurity</param-value> 
-	</context-param> 
-	<!--  <context-param>
+	</context-param> -->
+	<context-param>
 		<param-name>UserSecurityHandler</param-name>
 		<param-value>XmlUserSecurity</param-value>
-	</context-param> -->
+	</context-param> 
 	<context-param>
 		<param-name>StormPathUserSecurity.class</param-name>
 		<param-value>org.ihtsdo.otf.security.stormpath.StormPathUserSecurity</param-value>
@@ -80,12 +80,12 @@
 		<!-- <load-on-startup>1</load-on-startup> -->
 	</servlet>
 	
-	<servlet-mapping>
+	<!--  <servlet-mapping>
 		<servlet-name>SecurityQuery</servlet-name>
 		<url-pattern>/*</url-pattern>
-	</servlet-mapping>
+	</servlet-mapping> -->
 	
-	<!--  <servlet-mapping>
+	<servlet-mapping>
 		<servlet-name>SecurityQuery</servlet-name>
 		<url-pattern>/query/*</url-pattern>
 	</servlet-mapping>
@@ -93,7 +93,7 @@
 	<servlet-mapping>
 		<servlet-name>SecurityAdmin</servlet-name>
 		<url-pattern>/admin/*</url-pattern>
-	</servlet-mapping> -->
+	</servlet-mapping>
 
 	<!-- <welcome-file-list> <welcome-file>index.jsp</welcome-file> </welcome-file-list> -->
 

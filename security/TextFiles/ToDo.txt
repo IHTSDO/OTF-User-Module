@@ -77,3 +77,9 @@ scroll list
   height: 20px;
   background-color: green;
 }
+
+If no id then new
+enable/disable
+start with members simply add ? edit ?
+
+get parent > add to 
