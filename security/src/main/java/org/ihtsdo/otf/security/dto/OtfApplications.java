@@ -27,6 +27,15 @@ public class OtfApplications {
 		return applications.get(name);
 	}
 
+	public boolean appExists(String appName) {
+		for (String key : applications.keySet()) {
+			if (key.equalsIgnoreCase(appName)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sbuild = new StringBuilder();

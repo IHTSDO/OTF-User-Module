@@ -31,4 +31,32 @@ public class OtfApplication extends OtfBaseNameDesc {
 
 	}
 
+	@Override
+	public void processParams(Map<String, String> paramsIn) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void addTableRows() {
+		super.addTableRows();
+		// getTableRows().add(getHtmlRowTextInput("Name:", getName()));
+
+	}
+
+	@Override
+	public String getTableTitle() {
+		if (isNew()) {
+			return "Add New Application";
+		} else {
+			return "Update Application : " + getName();
+		}
+	}
+
+	@Override
+	public void addHiddenRows() {
+		// TODO Auto-generated method stub
+
+	}
+
 }

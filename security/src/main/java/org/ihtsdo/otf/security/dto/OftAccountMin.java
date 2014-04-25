@@ -1,11 +1,18 @@
 package org.ihtsdo.otf.security.dto;
 
+import java.util.Map;
+
 public class OftAccountMin extends OtfBaseName {
 
 	private String email;
 	private String givenName;
 	private String middleName;
 	private String surname;
+
+	public static final String EMAIL_NAME = "Email:";
+	public static final String GIVEN_NAME = "Given Name:";
+	public static final String MID_NAME = "Middle Name:";
+	public static final String SUR_NAME = "Surname:";
 
 	public OftAccountMin() {
 		super();
@@ -26,12 +33,15 @@ public class OftAccountMin extends OtfBaseName {
 	@Override
 	public final String getName() {
 		if (name == null || name.length() == 0) {
-			name = email;
+			name = getEmail();
 		}
 		return name;
 	}
 
 	public final String getEmail() {
+		if (email == null) {
+			email = "";
+		}
 		return email;
 	}
 
@@ -51,6 +61,9 @@ public class OftAccountMin extends OtfBaseName {
 	}
 
 	public final String getMiddleName() {
+		if (middleName == null) {
+			middleName = "";
+		}
 		return middleName;
 	}
 
@@ -78,6 +91,37 @@ public class OftAccountMin extends OtfBaseName {
 				.append(email).append(", Status:")
 				.append(getStatus().toString());
 		return sbuild.toString();
+
+	}
+
+	@Override
+	public void processParams(Map<String, String> paramsIn) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void addTableRows() {
+		super.addTableRows();
+		getTableRows().add(getHtmlRowTextInput(EMAIL_NAME, getEmail()));
+		getTableRows().add(getHtmlRowTextInput(GIVEN_NAME, getGivenName()));
+		getTableRows().add(getHtmlRowTextInput(MID_NAME, getMiddleName()));
+		getTableRows().add(getHtmlRowTextInput(SUR_NAME, getSurname()));
+
+	}
+
+	@Override
+	public String getTableTitle() {
+		if (isNew()) {
+			return "Add new User";
+		} else {
+			return "Update user " + getName();
+		}
+	}
+
+	@Override
+	public void addHiddenRows() {
+		super.addHiddenRows();
 
 	}
 

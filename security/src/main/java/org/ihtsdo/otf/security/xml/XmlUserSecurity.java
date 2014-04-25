@@ -21,7 +21,7 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 	public static final String CONF_PROPS_FN = "configFile";
 
 	private final Xml2Model xml2Mod = new Xml2Model();
-	private final Model2Xml Mod2Xml = new Model2Xml();
+	private final Model2Xml mod2Xml = new Model2Xml();
 
 	/**
 	 * <p>
@@ -37,7 +37,7 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 	//
 	// }
 
-	public XmlUserSecurity(Properties propsIn) {
+	public XmlUserSecurity(final Properties propsIn) {
 		super();
 		try {
 			init(propsIn);
@@ -54,54 +54,54 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 	}
 
 	@Override
-	public void init(Properties propsIn) throws Exception {
+	public final void init(final Properties propsIn) throws Exception {
 		setConfigFN(propsIn.getProperty(CONF_PROPS_FN));
 		buildUserSecurity();
 	}
 
 	@Override
-	public void buildUserSecurity() throws Exception {
+	public final void buildUserSecurity() throws Exception {
 		initFromFile();
 	}
 
-	public void initFromFile() throws Exception {
+	public final void initFromFile() throws Exception {
 		init(configFN);
 	}
 
-	public void initFromDoc(final Document confDoc) throws Exception {
+	public final void initFromDoc(final Document confDoc) throws Exception {
 		setUserSecurity(xml2Mod.build(confDoc));
 	}
 
-	public void initFromXMLString(final String confXML) throws Exception {
+	public final void initFromXMLString(final String confXML) throws Exception {
 		final Document confDoc = XMLUtil.getDocumentFromXMLString(confXML,
 				false);
 		setUserSecurity(xml2Mod.build(confDoc));
 	}
 
-	public final void init(final String configFN) throws Exception {
-		final File confile = new File(configFN);
+	public final void init(final String configFnIn) throws Exception {
+		final File confile = new File(configFnIn);
 		if (confile.exists() && !confile.isDirectory() && confile.canRead()) {
-			final Document confDoc = XMLUtil.getDocument(configFN);
+			final Document confDoc = XMLUtil.getDocument(configFnIn);
 			setUserSecurity(xml2Mod.build(confDoc));
 		} else {
 			LOG.severe("Something is wrong with the file you have specified file = "
-					+ configFN);
+					+ configFnIn);
 			throw new Exception(
 					"Config File specified but Not found config file = "
-							+ configFN);
+							+ configFnIn);
 		}
 
 	}
 
-	public Document getXMLFromUserSecurity() {
-		return Mod2Xml.getXML(getUserSecurity());
+	public final Document getXMLFromUserSecurity() {
+		return mod2Xml.getXML(getUserSecurity());
 	}
 
-	public String getXMLFromUserSecurityAsString() {
+	public final String getXMLFromUserSecurityAsString() {
 		return XMLUtil.writeXMLToString(getXMLFromUserSecurity());
 	}
 
-	public String getXMLFromUserSecurityAsStringSortByName() {
+	public final String getXMLFromUserSecurityAsStringSortByName() {
 
 		getSortXsltFn();
 		String xml = getXMLFromUserSecurityAsString();
@@ -119,15 +119,15 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 		// TODO: Write out to file.
 	}
 
-	public String getConfigFN() {
+	public final String getConfigFN() {
 		return configFN;
 	}
 
-	public void setConfigFN(String configFNIn) {
+	public final void setConfigFN(final String configFNIn) {
 		configFN = configFNIn;
 	}
 
-	public String getSortXsltFn() {
+	public final String getSortXsltFn() {
 		if (sortXsltFn == null || sortXsltFn.length() == 0) {
 			URL fn = getClass().getResource("/xslt/SortName.xslt");
 			sortXsltFn = fn.toString();
@@ -135,45 +135,41 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 		return sortXsltFn;
 	}
 
-	public void setSortXsltFn(String sortXsltFnIn) {
+	public final void setSortXsltFn(final String sortXsltFnIn) {
 		sortXsltFn = sortXsltFnIn;
 	}
 
 	@Override
-	public OtfAccount authAccount(String acNameIn, String pwIn) {
+	public final OtfAccount authAccount(final String acNameIn, final String pwIn) {
 		// Really for use in testing - simply check if password is defaultPw and
 		// that user account exists.
 
 		if (pwIn.equals(getUserSecurity().getDefaultpw())) {
-			return getUserSecurity().getUserAccountByName(acNameIn);
+			return getUserSecurity().getUserAccountByName(acNameIn, "*");
 		}
 
 		return null;
 	}
 
 	@Override
-	public boolean addUpdateAccount(OtfAccount accIn, OtfDirectory parentIn) {
-		// TODO Auto-generated method stub
-		return false;
+	public final String addUpdateMemberLocal(final OtfGroup grpIn,
+			final OtfDirectory mDirectoryIn, final boolean isNewIn) {
+		// Nothing to do as the entire model is written out.
+		return null;
 	}
 
 	@Override
-	public boolean addUpdateMember(OtfGroup grpIn) {
-		// get members parent dir
-		OtfDirectory mDirectory = getUserSecurity().getMembersDir();
-		if (stringOK(grpIn.getName())) {
-			mDirectory.getGroups().getGroups().put(grpIn.getName(), grpIn);
-		} else {
-
-		}
-
-		return false;
+	public final String addUpdateAppLocal(final OtfApplication appIn,
+			final boolean isNewIn) {
+		// Nothing to do as the entire model is written out.
+		return null;
 	}
 
 	@Override
-	public boolean addUpdateApp(OtfApplication appIn) {
-		// TODO Auto-generated method stub
-		return false;
+	public final String addUpdateAccountLocal(final OtfAccount accIn,
+			final OtfDirectory parentIn, final boolean isNewIn) {
+		// Nothing to do as the entire model is written out.
+		return null;
 	}
 
 }

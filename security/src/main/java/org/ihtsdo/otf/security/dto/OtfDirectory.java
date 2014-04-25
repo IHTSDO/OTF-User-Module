@@ -65,4 +65,25 @@ public class OtfDirectory extends OtfBaseAccountStore {
 		return sbuild.toString();
 
 	}
+
+	@Override
+	public void processParams(Map<String, String> paramsIn) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public String getTableTitle() {
+		if (isNew()) {
+			return "Add New:";
+		} else {
+			return "Update:";
+		}
+	}
+
+	@Override
+	public void addHiddenRows() {
+		// TODO Auto-generated method stub
+
+	}
 }

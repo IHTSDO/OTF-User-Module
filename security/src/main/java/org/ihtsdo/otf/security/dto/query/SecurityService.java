@@ -230,7 +230,8 @@ public class SecurityService {
 
 	public final String getUserByName(final String username) {
 
-		OtfAccount oacc = ush.getUserSecurity().getUserAccountByName(username);
+		OtfAccount oacc = ush.getUserSecurity().getUserAccountByName(username,
+				"*");
 
 		if (oacc != null) {
 			OftAccountMin user = new OftAccountMin(oacc);

@@ -1,11 +1,13 @@
 package org.ihtsdo.otf.security.dto;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-public abstract class OtfBaseName {
+public abstract class OtfBaseName extends OtfBaseWeb {
 
 	/**
 	 * <p>
@@ -20,11 +22,39 @@ public abstract class OtfBaseName {
 	@JsonIgnore
 	private String idref;
 	private String id;
+	private List<String> statvals;
 
-	// public static String ID_UUID_PREFIX = "UUID_";
-	// public static final String URL_REF_SEP = "://";
+	public static final String NAME_NAME = "Name:";
+	public static final String STATUS_NAME = "Status:";
+
+	@Override
+	public String getHtmlForm() {
+		return super.getHtmlForm();
+	}
+
+	@Override
+	public void addTableRows() {
+
+		getTableRows().add(getHtmlRowTextInput(NAME_NAME, getName()));
+		getTableRows().add(
+				getHtmlRowOptions(STATUS_NAME, getStatvals(), getStatus()
+						.toString(), STATUS_NAME));
+	}
+
+	@Override
+	public void addHiddenRows() {
+
+		// first add the name of the class
+		getHiddenRows().add(
+				getHtmlInputHidden(getClass().getName(), INPUT_KEY_NAME));
+		// add id if set
+		getHiddenRows().add(getHtmlInputHidden(getIdIfSet(), "id"));
+	}
 
 	public String getName() {
+		if (name == null) {
+			name = "";
+		}
 		return name;
 	}
 
@@ -73,6 +103,18 @@ public abstract class OtfBaseName {
 		idref = idrefIn;
 	}
 
+	public boolean isNew() {
+		return id == null;
+	}
+
+	public final String getIdIfSet() {
+		if (isNew()) {
+			return "";
+		} else {
+			return getId();
+		}
+	}
+
 	public final String getId() {
 		if (id == null) {
 			id = new StringBuilder().append(UUID.randomUUID().toString())
@@ -83,6 +125,21 @@ public abstract class OtfBaseName {
 
 	public final void setId(String idIn) {
 		id = idIn;
+	}
+
+	public final List<String> getStatvals() {
+		if (statvals == null) {
+
+			statvals = new ArrayList<String>();
+			statvals.add(Status.DISABLED.toString());
+			statvals.add(Status.ENABLED.toString());
+			// statvals.add(Status.UNVERIFIED.toString());
+		}
+		return statvals;
+	}
+
+	public final void setStatvals(List<String> statvalsIn) {
+		statvals = statvalsIn;
 	}
 
 }

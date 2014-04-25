@@ -35,7 +35,8 @@ public class UserByNameQueryDTO extends AbstractSecurityQuery {
 				oacc = ush.authAccount(userName, pw);
 			}
 			if (pw == null || pw.length() == 0) {
-				oacc = ush.getUserSecurity().getUserAccountByName(userName);
+				oacc = ush.getUserSecurity()
+						.getUserAccountByName(userName, "*");
 			}
 			if (oacc != null) {
 				user = new OftAccountMin(oacc);

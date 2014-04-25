@@ -31,6 +31,36 @@
 				<account name="Peggy" email="peggy@test.com" givenName="Peggy"
 					surname="Sue" />
 				<account email="justEmail@test.com" />
+
+
+				<account name="Dane Admin" email="henrik1@sparklingideas.co.uk"
+					givenName="Dane" surname="Admin">
+					<customField value="APP:Refset:Admin:DK" />
+					<customField value="MEMBER:DK" />
+				</account>
+
+				<account name="Dane Editor" email="henrik2@sparklingideas.co.uk"
+					givenName="Dane" surname="Editor">
+					<customField value="APP:Refset:Editor:DK" />
+					<customField value="MEMBER:DK" />
+				</account>
+				<account name="Dane Reader" email="henrik3@sparklingideas.co.uk"
+					givenName="Dane" surname="Reader">
+					<customField value="APP:Refset:Reader:DK" />
+					<customField value="MEMBER:DK" />
+				</account>
+				<account name="Dane Journalist" email="henrik4@sparklingideas.co.uk"
+					givenName="Dane" surname="Journalist">
+					<customField value="APP:Refset:Journalist:DK" />
+					<customField value="MEMBER:DK" />
+				</account>
+				<account name="Brit-Dane Admin" email="henrik5@sparklingideas.co.uk"
+					givenName="Brit-Dane" surname="Admin">
+					<customField value="APP:Refset:Admin:DK" />
+					<customField value="MEMBER:DK" />
+					<customField value="APP:Refset:Admin:UK" />
+					<customField value="MEMBER:UK" />
+				</account>
 			</accounts>
 		</directory>
 		<directory name="Members" description="List of IHTSDO Members">
@@ -84,9 +114,9 @@
 		<directory name="Refset Directory">
 			<groups>
 				<group name="Admin" />
-				<group name="Owner" />
-				<group name="Designer" />
-				<group name="Reviewer" />
+				<group name="Editor" />
+				<group name="Journalist" />
+				<group name="Reader" />
 			</groups>
 		</directory>
 	</directories>

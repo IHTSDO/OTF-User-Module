@@ -1,5 +1,7 @@
 package org.ihtsdo.otf.security.dto;
 
+import java.util.Map;
+
 public class OtfAccount extends OftAccountMin {
 	public OtfAccount() {
 		super();
@@ -25,4 +27,11 @@ public class OtfAccount extends OftAccountMin {
 		return sbuild.toString();
 
 	}
+
+	@Override
+	public void processParams(Map<String, String> paramsIn) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

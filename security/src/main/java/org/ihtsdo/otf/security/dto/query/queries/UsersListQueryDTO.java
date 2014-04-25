@@ -23,7 +23,7 @@ public class UsersListQueryDTO extends AbstractSecurityQuery {
 		if (users == null || users.size() == 0) {
 			if (ush != null) {
 				users = (List<OftAccountMin>) ush.getUserSecurity()
-						.getMinUsers();
+						.getMinUsers("*");
 			} else {
 				users = new ArrayList<OftAccountMin>();
 			}

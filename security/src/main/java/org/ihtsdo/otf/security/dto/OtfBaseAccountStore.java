@@ -4,6 +4,11 @@ public abstract class OtfBaseAccountStore extends OtfBaseNameDesc {
 
 	private OtfAccounts accounts = new OtfAccounts();
 
+	@Override
+	public String getHtmlForm() {
+		return super.getHtmlForm();
+	}
+
 	public final OtfAccounts getAccounts() {
 		return accounts;
 	}

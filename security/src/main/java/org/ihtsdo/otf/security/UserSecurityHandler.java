@@ -25,10 +25,10 @@ public interface UserSecurityHandler {
 
 	void buildUserSecurity() throws Exception;
 
-	boolean addUpdateAccount(OtfAccount acc, OtfDirectory parent);
+	String addUpdateAccount(OtfAccount acc, OtfDirectory parent);
 
-	boolean addUpdateMember(OtfGroup grp);
+	String addUpdateMember(OtfGroup grp);
 
-	boolean addUpdateApp(OtfApplication app);
+	String addUpdateApp(OtfApplication app);
 
 }

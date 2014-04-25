@@ -33,7 +33,8 @@ public class UserByNameFullQueryDTO extends AbstractSecurityQuery {
 				user = ush.authAccount(userName, pw);
 			}
 			if (pw == null || pw.length() == 0) {
-				user = ush.getUserSecurity().getUserAccountByName(userName);
+				user = ush.getUserSecurity()
+						.getUserAccountByName(userName, "*");
 			}
 
 		}

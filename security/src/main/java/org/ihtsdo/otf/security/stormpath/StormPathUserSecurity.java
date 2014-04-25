@@ -16,6 +16,8 @@ import com.stormpath.sdk.application.Application;
 import com.stormpath.sdk.application.ApplicationList;
 import com.stormpath.sdk.authc.AuthenticationRequest;
 import com.stormpath.sdk.authc.UsernamePasswordRequest;
+import com.stormpath.sdk.directory.Directory;
+import com.stormpath.sdk.group.Group;
 import com.stormpath.sdk.resource.ResourceException;
 
 public class StormPathUserSecurity extends AbstractUserSecurityHandler {
@@ -146,7 +148,7 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 		// CustomData cd = spdb.
 
 		if (acc != null) {
-			return getUserSecurity().getUserAccountByName(acNameIn);
+			return getUserSecurity().getUserAccountByName(acNameIn, "*");
 		}
 		return null;
 	}
@@ -177,21 +179,48 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 	}
 
 	@Override
-	public boolean addUpdateAccount(OtfAccount accIn, OtfDirectory parentIn) {
-		// TODO Auto-generated method stub
-		return false;
+	public final String addUpdateMemberLocal(final OtfGroup grpIn,
+			final OtfDirectory mDirectoryIn, final boolean isNewIn) {
+		Directory mdir = storm2Mod.getDirByName(mDirectoryIn.getName());
+		if (mdir == null) {
+			return DIR_NOT_FOUND;
+		}
+		if (isNewIn) {
+			mod2Storm.buildGroup(grpIn, null, mdir);
+		} else {
+			Group remoteG = storm2Mod.getGrpByName(grpIn.getName(), mdir);
+			mod2Storm.buildGroup(grpIn, remoteG, mdir);
+		}
+		return null;
 	}
 
 	@Override
-	public boolean addUpdateMember(OtfGroup grpIn) {
-		// TODO Auto-generated method stub
-		return false;
+	public final String addUpdateAppLocal(final OtfApplication appIn,
+			final boolean isNewIn) {
+
+		if (isNewIn) {
+			mod2Storm.buildApp(appIn, null);
+		} else {
+			Application app = storm2Mod.getAppByName(appIn.getName());
+			mod2Storm.buildApp(appIn, app);
+		}
+
+		return null;
 	}
 
 	@Override
-	public boolean addUpdateApp(OtfApplication appIn) {
-		// TODO Auto-generated method stub
-		return false;
+	public final String addUpdateAccountLocal(final OtfAccount accIn,
+			final OtfDirectory parentIn, final boolean isNewIn) {
+
+		Directory mdir = storm2Mod.getDirByName(parentIn.getName());
+
+		if (isNewIn) {
+			mod2Storm.buildAccount(accIn, null, mdir);
+		} else {
+			Account acc = storm2Mod.getAccountByName(accIn.getName(), mdir);
+			mod2Storm.buildAccount(accIn, null, mdir);
+		}
+		return null;
 	}
 
 }

@@ -31,7 +31,7 @@ public class UserMembersListQueryDTO extends AbstractSecurityQuery {
 		if (members.size() == 0) {
 			if (ush != null) {
 				OtfAccount oacc = ush.getUserSecurity().getUserAccountByName(
-						userName);
+						userName, "*");
 				if (oacc != null) {
 					List<OtfCustomField> mems = oacc.getCustData().getMembers();
 					for (OtfCustomField cf : mems) {

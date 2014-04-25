@@ -99,7 +99,10 @@ public class Model2Storm {
 				.values()) {
 			boolean found = false;
 			for (Directory directory : directories) {
+				LOG.info("buildDirs directory.getName() = "
+						+ directory.getName());
 				if (directory.getName().equals(oDir.getName())) {
+					LOG.info("buildDirs oDir.getName() = " + oDir.getName());
 					buildDirectory(oDir, directory);
 					found = true;
 				}
@@ -169,7 +172,7 @@ public class Model2Storm {
 
 	}
 
-	private void buildGroup(final OtfGroup ogrp, Group grp, final Directory dir) {
+	public void buildGroup(final OtfGroup ogrp, Group grp, final Directory dir) {
 		if (ogrp == null && grp == null) {
 			LOG.severe("buildGroup all is null");
 			return;
@@ -241,7 +244,7 @@ public class Model2Storm {
 		}
 	}
 
-	private void buildAccount(final OtfAccount oacc, Account acc,
+	public void buildAccount(final OtfAccount oacc, Account acc,
 			final AccountStore accSt) {
 		boolean log = false;
 
@@ -372,7 +375,7 @@ public class Model2Storm {
 		}
 	}
 
-	private void buildApp(final OtfApplication oApp, Application app) {
+	public void buildApp(final OtfApplication oApp, Application app) {
 		if (oApp == null && app == null) {
 			LOG.severe("buildApp all is null");
 			return;
@@ -391,40 +394,47 @@ public class Model2Storm {
 				app = spbd.getClient().instantiate(Application.class);
 				app.setName(oApp.getName());
 				app.setDescription(oApp.getDescription());
-				// Get list of accountStores
-
-				// Build App with default DIR
-				// spbd.getTenant().createApplication(
-				// Applications.newCreateRequestFor(app).createDirectory()
-				// .build());
 
 				// TODO: NOTE not creating groups. This is on purpose as we do
 				// not require groups and it makes the coding and logic simpler.
 
-				DirectoryList dl = spbd.getTenant().getDirectories();
+				// Get list of accountStores
+				int accStores = oApp.getAccountStores().size();
 
-				spbd.getTenant().createApplication(
-						Applications.newCreateRequestFor(app).build());
-				boolean isDefStore = true;
-				int i = 0;
-				for (OtfAccountStore oAst : oApp.getAccountStores().values()) {
-					String name = oAst.getName();
+				if (accStores == 0) {
+					// Build App with default DIR
+					spbd.getTenant().createApplication(
+							Applications.newCreateRequestFor(app)
+									.createDirectory().build());
+				}
 
-					for (Directory dir : dl) {
-						if (dir.getName().equals(name)) {
-							AccountStoreMapping accountStoreMapping = spbd
-									.getClient().instantiate(
-											AccountStoreMapping.class);
-							accountStoreMapping.setAccountStore(dir);
-							accountStoreMapping.setApplication(app);
-							accountStoreMapping
-									.setDefaultAccountStore(isDefStore);
-							accountStoreMapping
-									.setDefaultGroupStore(isDefStore);
-							accountStoreMapping.setListIndex(i);
-							app.createAccountStoreMapping(accountStoreMapping);
-							isDefStore = false;
-							i++;
+				if (accStores > 0) {
+					DirectoryList dl = spbd.getTenant().getDirectories();
+
+					spbd.getTenant().createApplication(
+							Applications.newCreateRequestFor(app).build());
+					boolean isDefStore = true;
+					int i = 0;
+					for (OtfAccountStore oAst : oApp.getAccountStores()
+							.values()) {
+						String name = oAst.getName();
+
+						for (Directory dir : dl) {
+							if (dir.getName().equals(name)) {
+								AccountStoreMapping accountStoreMapping = spbd
+										.getClient().instantiate(
+												AccountStoreMapping.class);
+								accountStoreMapping.setAccountStore(dir);
+								accountStoreMapping.setApplication(app);
+								accountStoreMapping
+										.setDefaultAccountStore(isDefStore);
+								accountStoreMapping
+										.setDefaultGroupStore(isDefStore);
+								accountStoreMapping.setListIndex(i);
+								app.createAccountStoreMapping(accountStoreMapping);
+								isDefStore = false;
+								i++;
+							}
 						}
 					}
 				}

@@ -62,6 +62,46 @@ public class Storm2Model {
 		}
 	}
 
+	public final Directory getDirByName(final String dirName) {
+		DirectoryList directories = spbd.getTenant().getDirectories();
+		for (Directory dir : directories) {
+			if (dir.getName().equals(dirName)) {
+				return dir;
+			}
+		}
+		return null;
+	}
+
+	public final Group getGrpByName(final String grpName, final Directory dir) {
+		GroupList groups = dir.getGroups();
+		for (Group group : groups) {
+			if (group.getName().equals(grpName)) {
+				return group;
+			}
+		}
+		return null;
+	}
+
+	public final Account getAccountByName(final String name, final Directory dir) {
+		for (Account acc : dir.getAccounts()) {
+			if (acc.getUsername().equals(name)) {
+				return acc;
+			}
+		}
+		return null;
+	}
+
+	public final Application getAppByName(final String name) {
+		ApplicationList apps = spbd.getTenant().getApplications();
+		for (Application app : apps) {
+			if (app.getName().equals(name)) {
+				return app;
+			}
+		}
+
+		return null;
+	}
+
 	private OtfDirectory buildDirectory(final Directory dir) {
 		OtfDirectory oDir = new OtfDirectory();
 		oDir.setIdref(dir.getHref());

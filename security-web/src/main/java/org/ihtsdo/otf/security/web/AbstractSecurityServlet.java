@@ -177,7 +177,7 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 				context = urlS.substring(0, chop);
 			}
 		}
-		LOG.info("getContextUrl context = " + context);
+		// LOG.info("getContextUrl context = " + context);
 
 		if (context.endsWith("/")) {
 			return context;

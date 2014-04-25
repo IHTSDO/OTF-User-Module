@@ -21,6 +21,15 @@ public class OtfGroups {
 		return groups.get(name);
 	}
 
+	public boolean groupExists(String grpName) {
+		for (String key : groups.keySet()) {
+			if (key.equalsIgnoreCase(grpName)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sbuild = new StringBuilder();

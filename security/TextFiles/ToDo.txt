@@ -78,8 +78,19 @@ scroll list
   background-color: green;
 }
 
+<textarea rows="4" cols="50"></textarea>
+It is equivalent to:
+
+textarea {
+    width: 50em;
+    height: 4em;
+}
+
 If no id then new
 enable/disable
 start with members simply add ? edit ?
 
 get parent > add to 
+
+
+Password - user change - page etc.

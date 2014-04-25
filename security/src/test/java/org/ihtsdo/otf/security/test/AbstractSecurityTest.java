@@ -119,7 +119,7 @@ public abstract class AbstractSecurityTest {
 		List<OftAccountMin> user2 = SecurityClient.getUsers(json);
 
 		int jsonI = user2.size();
-		int origI = getUsh().getUserSecurity().getUsers().size();
+		int origI = getUsh().getUserSecurity().getUsers("*").size();
 
 		assertEquals(getNumUsers(), origI);
 		assertEquals(origI, jsonI);
@@ -129,7 +129,7 @@ public abstract class AbstractSecurityTest {
 	@Test
 	public final void testAccount() {
 		OtfAccount testAcc = getUsh().getUserSecurity().getUserAccountByName(
-				TEST_USER);
+				TEST_USER, "*");
 		assertNotNull(testAcc);
 		if (testAcc != null) {
 			// LOG.info("User name = " + testAcc.getName());
@@ -178,7 +178,7 @@ public abstract class AbstractSecurityTest {
 	public final void testAccountMembers() {
 		List<String> members = new ArrayList<String>();
 		OtfAccount oacc = getUsh().getUserSecurity().getUserAccountByName(
-				TEST_USER);
+				TEST_USER, "*");
 		if (oacc != null) {
 			List<OtfCustomField> mems = oacc.getCustData().getMembers();
 			for (OtfCustomField cf : mems) {
@@ -203,7 +203,7 @@ public abstract class AbstractSecurityTest {
 	public final void testAccountApps() {
 		List<String> members = new ArrayList<String>();
 		OtfAccount oacc = getUsh().getUserSecurity().getUserAccountByName(
-				TEST_USER);
+				TEST_USER, "*");
 		if (oacc != null) {
 			List<OtfCustomField> mems = oacc.getCustData().getApps();
 			for (OtfCustomField cf : mems) {

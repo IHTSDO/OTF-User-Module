@@ -1,6 +1,7 @@
 package org.ihtsdo.otf.security.stormpath;
 
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import com.stormpath.sdk.client.Client;
 import com.stormpath.sdk.directory.CustomData;
@@ -13,8 +14,8 @@ public class StormPathBaseDTO {
 	 * logger.
 	 * </p>
 	 */
-	// private static final Logger LOG = Logger.getLogger(StormPathBaseDTO.class
-	// .getName());
+	private static final Logger LOG = Logger.getLogger(StormPathBaseDTO.class
+			.getName());
 
 	private Client client;
 	private Tenant tenant;
@@ -63,6 +64,7 @@ public class StormPathBaseDTO {
 	}
 
 	public final CustomData getCustomData(final String href) {
+		// LOG.info("getCustomData href = " + href);
 		return getClient().getResource(href, CustomData.class);
 	}
 

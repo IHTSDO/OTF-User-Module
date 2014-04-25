@@ -32,12 +32,18 @@ public class StormTest {
 	private void init() {
 
 		// build();
-		rebuild();
+		// rebuild();
 		// clearSP();
 		// Xml2Storm(false);
+		// rebuildSpFromXML();
 		storm2Xml(true);
 		stormToString(true);
 
+	}
+
+	private void rebuildSpFromXML() {
+		clearSP();
+		Xml2Storm(false);
 	}
 
 	private void build() {

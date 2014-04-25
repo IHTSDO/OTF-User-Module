@@ -17,14 +17,14 @@
 		<param-name>XmlUserSecurity.configFile</param-name>
 		<param-value>D:/Data/git/OTF-User-Module/security/TextFiles/Example.xml</param-value>
 	</context-param>
-	 <context-param> 
+	<!--  <context-param> 
 	 <param-name>UserSecurityHandler</param-name> 
 	 <param-value>StormPathUserSecurity</param-value> 
-	</context-param> 
-	 <!-- <context-param>
+	</context-param>  -->
+	 <context-param>
 		<param-name>UserSecurityHandler</param-name>
 		<param-value>XmlUserSecurity</param-value>
-	</context-param> -->
+	</context-param>
 	<context-param>
 		<param-name>StormPathUserSecurity.class</param-name>
 		<param-value>org.ihtsdo.otf.security.stormpath.StormPathUserSecurity</param-value>

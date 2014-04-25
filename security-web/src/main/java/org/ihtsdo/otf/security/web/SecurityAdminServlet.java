@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ihtsdo.otf.security.dto.OftAccountMin;
+import org.ihtsdo.otf.security.dto.OtfAccount;
+import org.ihtsdo.otf.security.dto.OtfApplication;
+import org.ihtsdo.otf.security.dto.OtfGroup;
 import org.ihtsdo.otf.security.dto.query.SecurityService;
 import org.ihtsdo.otf.security.dto.query.queries.AppsListQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.MembersListQueryDTO;
@@ -44,7 +47,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			HttpServletResponse responseIn) throws ServletException,
 			IOException {
 		setHr(requestIn);
-		// LOG.info("handlePostRequest");
+		logParameters(requestIn);
 	}
 
 	@Override
@@ -177,41 +180,57 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 	}
 
 	public final String getUserForm() {
-		StringBuilder sbuild = new StringBuilder();
+		OtfAccount oacc = null;
 
 		if (getUrlNodes().length > 1) {
 			String val = getUrlNodes()[1];
-			sbuild.append("<h1 class=\"blue\">Edit User selected ").append(val)
-					.append("</h1>");
-		} else {
-			sbuild.append("<h1 class=\"blue\">Create New User</h1>");
+			oacc = getUsh().getUserSecurity().getUserAccountByName(val, "*");
+			if (oacc != null) {
+				oacc.getId();
+				oacc.setAction(getContextUrl(getHr()));
+				return oacc.getRHS();
+			}
 		}
-		return sbuild.toString();
+		if (oacc == null) {
+			oacc = new OtfAccount();
+		}
+		return oacc.getRHS();
+
 	}
 
 	public final String getMemberForm() {
-		StringBuilder sbuild = new StringBuilder();
+
+		OtfGroup member = null;
 		if (getUrlNodes().length > 1) {
 			String val = getUrlNodes()[1];
-			sbuild.append("<h1 class=\"blue\">Edit Member selected ")
-					.append(val).append("</h1>");
-		} else {
-			sbuild.append("<h1 class=\"blue\">Create New Member</h1>");
+			member = getUsh().getUserSecurity().getMemberByName(val);
+			if (member != null) {
+				member.getId();
+				member.setAction(getContextUrl(getHr()));
+				return member.getRHS();
+			}
 		}
-		return sbuild.toString();
+		if (member == null) {
+			member = new OtfGroup();
+		}
+		return member.getRHS();
 	}
 
 	public final String getAppForm() {
-		StringBuilder sbuild = new StringBuilder();
+		OtfApplication oacc = null;
 		if (getUrlNodes().length > 1) {
 			String val = getUrlNodes()[1];
-			sbuild.append("<h1 class=\"blue\">Edit App selected ").append(val)
-					.append("</h1>");
-		} else {
-			sbuild.append("<h1 class=\"blue\">Create New App</h1>");
+			oacc = getUsh().getUserSecurity().getApps().getAppByName(val);
+			if (oacc != null) {
+				oacc.getId();
+				oacc.setAction(getContextUrl(getHr()));
+				return oacc.getRHS();
+			}
 		}
-
-		return sbuild.toString();
+		if (oacc == null) {
+			oacc = new OtfApplication();
+		}
+		return oacc.getRHS();
 	}
 
 }

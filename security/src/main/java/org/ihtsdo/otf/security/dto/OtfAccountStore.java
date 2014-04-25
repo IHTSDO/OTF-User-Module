@@ -1,5 +1,7 @@
 package org.ihtsdo.otf.security.dto;
 
+import java.util.Map;
+
 import org.ihtsdo.otf.security.xml.XmlStatics;
 
 public class OtfAccountStore extends OtfBaseName {
@@ -62,5 +64,32 @@ public class OtfAccountStore extends OtfBaseName {
 				.append(", ");
 		sbuild.append(super.toString());
 		return sbuild.toString();
+	}
+
+	@Override
+	public void processParams(Map<String, String> paramsIn) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void addTableRows() {
+		super.addTableRows();
+
+	}
+
+	@Override
+	public String getTableTitle() {
+		if (isNew()) {
+			return "Add New:";
+		} else {
+			return "Update:";
+		}
+	}
+
+	@Override
+	public void addHiddenRows() {
+		super.addHiddenRows();
+
 	}
 }

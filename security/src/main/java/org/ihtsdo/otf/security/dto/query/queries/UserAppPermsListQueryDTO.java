@@ -52,7 +52,7 @@ public class UserAppPermsListQueryDTO extends AbstractSecurityQuery {
 		if (perms.size() == 0) {
 			if (ush != null) {
 				OtfAccount oacc = ush.getUserSecurity().getUserAccountByName(
-						userName);
+						userName, "*");
 				if (oacc != null) {
 					List<OtfCustomField> operms = oacc.getCustData().getApps();
 					for (OtfCustomField cf : operms) {

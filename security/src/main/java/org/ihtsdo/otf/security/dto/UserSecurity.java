@@ -35,6 +35,8 @@ public class UserSecurity {
 
 	private List<String> members;
 
+	private Map<String, OtfAccount> allAccounts;
+
 	public final String getDefaultpw() {
 		if (!stringOK(defaultpw)) {
 			defaultpw = getSettings().get(OtfCustomFieldSetting.DEFPW).getVal()
@@ -127,7 +129,6 @@ public class UserSecurity {
 				// getAll groups within
 				for (OtfGroup grp : mDirectory.getGroups().getGroups().values()) {
 					members.add(grp.getName());
-					// LOG.info("adding memeber : " + grp.getName());
 				}
 			}
 			Collections.sort(members);
@@ -136,22 +137,72 @@ public class UserSecurity {
 		return members;
 	}
 
+	public final OtfGroup getMemberByName(final String name) {
+		OtfDirectory mDirectory = getMembersDir();
+		if (mDirectory != null) {
+			for (OtfGroup grp : mDirectory.getGroups().getGroups().values()) {
+				if (grp.getName().equals(name)) {
+					return grp;
+				}
+			}
+		}
+		return null;
+
+	}
+
 	public final OtfDirectory getMembersDir() {
 		return getDirs().getDirByName(getMembersApp());
 	}
 
-	public final Collection<OtfAccount> getUsers() {
-		// Get members dir
-		OtfDirectory uDirectory = getDirs().getDirByName(getUsersApp());
-		if (uDirectory != null) {
-			return uDirectory.getAllAccounts().values();
+	public final Collection<OtfAccount> getUsers(final String dirname) {
+		if (dirname == null) {
+			// Get members dir
+			return getUsersbyDir(getUsersApp());
+		}
+		if (dirname.equals("*")) {
+			return getAllUsers();
+		}
 
+		return getUsersbyDir(dirname);
+
+	}
+
+	public final Collection<OtfAccount> getAllUsers() {
+		return getAllAccounts().values();
+	}
+
+	public final Collection<OtfAccount> getUsersbyDir(final String dirName) {
+		OtfDirectory uDirectory = getDirs().getDirByName(dirName);
+		if (uDirectory != null) {
+			return getUsersByDir(uDirectory);
 		}
 		return null;
 	}
 
-	public final Collection<OftAccountMin> getMinUsers() {
-		Collection<OtfAccount> users = getUsers();
+	public final Collection<OtfAccount> getUsersByDir(final OtfDirectory dirIn) {
+		if (dirIn != null) {
+			return dirIn.getAllAccounts().values();
+		}
+		return null;
+	}
+
+	public final Collection<String> getDirNamesForUser(final String username) {
+		ArrayList<String> dirs = new ArrayList<String>();
+
+		for (OtfDirectory dir : getDirs().getDirectories().values()) {
+			if (dir.getAccounts().getAccounts().size() > 0) {
+				for (OtfAccount user : dir.getAccounts().getAccounts().values()) {
+					if (user.getName().equals(username)) {
+						dirs.add(dir.getName());
+					}
+				}
+			}
+		}
+		return dirs;
+	}
+
+	public final Collection<OftAccountMin> getMinUsers(final String dirName) {
+		Collection<OtfAccount> users = getUsers(dirName);
 		Collection<OftAccountMin> usersMin = new ArrayList<OftAccountMin>();
 		if (users != null) {
 			for (OtfAccount user : users) {
@@ -161,8 +212,9 @@ public class UserSecurity {
 		return usersMin;
 	}
 
-	public final OtfAccount getUserAccountByName(final String name) {
-		for (OtfAccount acc : getUsers()) {
+	public final OtfAccount getUserAccountByName(final String name,
+			final String dirName) {
+		for (OtfAccount acc : getUsers(dirName)) {
 			if (acc.getName().equalsIgnoreCase(name)) {
 				return acc;
 			}
@@ -180,6 +232,40 @@ public class UserSecurity {
 		sbuild.append(getApps().toString());
 		return sbuild.toString();
 
+	}
+
+	public final Map<String, OtfAccount> getAllAccounts() {
+		if (allAccounts == null) {
+			allAccounts = new HashMap<String, OtfAccount>();
+			for (OtfDirectory dir : getDirs().getDirectories().values()) {
+				if (dir.getAccounts().getAccounts().size() > 0) {
+					for (OtfAccount user : dir.getAccounts().getAccounts()
+							.values()) {
+						allAccounts.put(user.getName(), user);
+					}
+				}
+			}
+
+		}
+		return allAccounts;
+	}
+
+	public final void setAllAccounts(final Map<String, OtfAccount> allAccountsIn) {
+		allAccounts = allAccountsIn;
+	}
+
+	public final void resetAllAccounts() {
+		setAllAccounts(null);
+		getAllAccounts();
+	}
+
+	public final boolean accountExists(final String accName) {
+		for (String key : getAllAccounts().keySet()) {
+			if (key.equalsIgnoreCase(accName)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
