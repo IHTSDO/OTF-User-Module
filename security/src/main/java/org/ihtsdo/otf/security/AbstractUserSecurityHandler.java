@@ -38,6 +38,8 @@ public abstract class AbstractUserSecurityHandler implements
 	@Override
 	public abstract void init(Properties propsIn) throws Exception;
 
+	public abstract void localReload();
+
 	@Override
 	public abstract void buildUserSecurity() throws Exception;
 
@@ -63,6 +65,12 @@ public abstract class AbstractUserSecurityHandler implements
 		ObjectCache.INSTANCE.put(getKey(), userSecurityIn);
 	}
 
+	public void removeUserSecurity() {
+		userSecurity = null;
+		ObjectCache.INSTANCE.remove(getKey());
+
+	}
+
 	private String getKey() {
 		return new StringBuilder().append(USH_KEY).append("-")
 				.append(getClass().getName()).toString();
@@ -70,7 +78,8 @@ public abstract class AbstractUserSecurityHandler implements
 
 	@Override
 	public final void reload() {
-		userSecurity = null;
+		removeUserSecurity();
+		localReload();
 		try {
 			buildUserSecurity();
 		} catch (Exception e) {
@@ -84,7 +93,6 @@ public abstract class AbstractUserSecurityHandler implements
 	public final String addUpdateAccount(final OtfAccount accIn,
 			OtfDirectory parentIn) {
 		boolean isNew = accIn.isNew();
-		LOG.info("addUpdateApp is new = " + isNew);
 
 		if (isNew && getUserSecurity().accountExists(accIn.getName())) {
 			// names must be unique
@@ -115,7 +123,6 @@ public abstract class AbstractUserSecurityHandler implements
 		OtfDirectory mDirectory = getUserSecurity().getMembersDir();
 		// is new
 		boolean isNew = grpIn.isNew();
-		LOG.info("addUpdateMember is new = " + isNew);
 
 		if (isNew && mDirectory.getGroups().groupExists(grpIn.getName())) {
 			// names must be unique
@@ -128,8 +135,6 @@ public abstract class AbstractUserSecurityHandler implements
 	@Override
 	public final String addUpdateApp(final OtfApplication appIn) {
 		boolean isNew = appIn.isNew();
-		LOG.info("addUpdateApp is new = " + isNew);
-
 		if (isNew && getUserSecurity().getApps().appExists(appIn.getName())) {
 			// names must be unique
 			return NAME_NOT_UNIQUE;

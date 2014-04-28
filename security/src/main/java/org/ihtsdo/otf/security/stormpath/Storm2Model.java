@@ -51,12 +51,18 @@ public class Storm2Model {
 		userSecurity = new UserSecurity();
 		buildDirs();
 		buildApps();
-
 	}
 
 	private void buildDirs() {
 		DirectoryList directories = spbd.getTenant().getDirectories();
 		for (Directory directory : directories) {
+			// if (directory.getName().equalsIgnoreCase("Test1")) {
+			// LOG.info("directory" + directory);
+			// Directory directory2 = spbd.getClient().getResource(
+			// directory.getHref(), Directory.class);
+			// LOG.info("directory2" + directory2);
+			// }
+
 			OtfDirectory odir = buildDirectory(directory);
 			userSecurity.getDirs().getDirectories().put(odir.getName(), odir);
 		}
@@ -102,7 +108,10 @@ public class Storm2Model {
 		return null;
 	}
 
-	private OtfDirectory buildDirectory(final Directory dir) {
+	private OtfDirectory buildDirectory(final Directory dirIn) {
+
+		final Directory dir = spbd.getResourceByHref_Directory(dirIn.getHref());
+
 		OtfDirectory oDir = new OtfDirectory();
 		oDir.setIdref(dir.getHref());
 		oDir.setName(dir.getName());
@@ -123,7 +132,10 @@ public class Storm2Model {
 		return oDir;
 	}
 
-	private OtfGroup buildGroup(final Group grp) {
+	private OtfGroup buildGroup(final Group grpIn) {
+
+		final Group grp = spbd.getResourceByHref_Group(grpIn.getHref());
+
 		OtfGroup ogrp = new OtfGroup();
 		ogrp.setIdref(grp.getHref());
 		ogrp.setName(grp.getName());
@@ -134,8 +146,8 @@ public class Storm2Model {
 			ogrp.getAccounts().getAccounts().put(oacc.getName(), oacc);
 		}
 
-		Map<String, Object> cd = spbd.getCustomData(grp.getCustomData()
-				.getHref());
+		Map<String, Object> cd = spbd.getResourceByHref_CustomData(grp
+				.getCustomData().getHref());
 		for (String key : cd.keySet()) {
 			if (!OtfCustomData.getReservedWords().contains(key)) {
 				String val = cd.get(key).toString();
@@ -146,8 +158,22 @@ public class Storm2Model {
 		return ogrp;
 	}
 
-	private OtfAccount buildAccount(final Account acc) {
-		// boolean log = acc.getUsername().equalsIgnoreCase("bob");
+	private OtfAccount buildAccount(final Account accIn) {
+		// boolean log = acc.getUsername().equalsIgnoreCase("Bob");
+		// if (log) {
+		// LOG.info("acc = " + acc);
+		// LOG.info("acc middlename= " + acc.getMiddleName());
+		// LOG.info("Account href = : " + acc.getHref());
+		//
+		// Account acc2 = spbd.getClient().getResource(acc.getHref(),
+		// Account.class);
+		//
+		// LOG.info("acc2 = " + acc2);
+		// LOG.info("acc2 middlename= " + acc2.getMiddleName());
+		// }
+
+		final Account acc = spbd.getResourceByHref_Account(accIn.getHref());
+
 		OtfAccount oacc = new OtfAccount();
 		oacc.setIdref(acc.getHref());
 		oacc.setName(acc.getUsername());
@@ -156,8 +182,8 @@ public class Storm2Model {
 		oacc.setMiddleName(acc.getMiddleName());
 		oacc.setSurname(acc.getSurname());
 		oacc.setStatus(acc.getStatus().toString());
-		Map<String, Object> cd = spbd.getCustomData(acc.getCustomData()
-				.getHref());
+		Map<String, Object> cd = spbd.getResourceByHref_CustomData(acc
+				.getCustomData().getHref());
 
 		// LOG.info("Account href = : " + acc.getHref());
 		// LOG.info("oacc = : " + oacc);
@@ -192,7 +218,10 @@ public class Storm2Model {
 		}
 	}
 
-	private OtfApplication buildApp(final Application app) {
+	private OtfApplication buildApp(final Application appIn) {
+
+		final Application app = spbd.getResourceByHref_App(appIn.getHref());
+
 		OtfApplication oapp = new OtfApplication();
 		oapp.setIdref(app.getHref());
 		oapp.setName(app.getName());

@@ -3,8 +3,12 @@ package org.ihtsdo.otf.security.stormpath;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import com.stormpath.sdk.account.Account;
+import com.stormpath.sdk.application.Application;
 import com.stormpath.sdk.client.Client;
 import com.stormpath.sdk.directory.CustomData;
+import com.stormpath.sdk.directory.Directory;
+import com.stormpath.sdk.group.Group;
 import com.stormpath.sdk.tenant.Tenant;
 
 public class StormPathBaseDTO {
@@ -63,11 +67,6 @@ public class StormPathBaseDTO {
 		tenant = client.getCurrentTenant();
 	}
 
-	public final CustomData getCustomData(final String href) {
-		// LOG.info("getCustomData href = " + href);
-		return getClient().getResource(href, CustomData.class);
-	}
-
 	public final Client getClient() {
 		return client;
 	}
@@ -111,4 +110,24 @@ public class StormPathBaseDTO {
 		settingsProps = settingsPropsIn;
 	}
 
+	public final CustomData getResourceByHref_CustomData(final String href) {
+		// LOG.info("getCustomData href = " + href);
+		return getClient().getResource(href, CustomData.class);
+	}
+
+	public final Account getResourceByHref_Account(final String href) {
+		return getClient().getResource(href, Account.class);
+	}
+
+	public final Directory getResourceByHref_Directory(final String href) {
+		return getClient().getResource(href, Directory.class);
+	}
+
+	public final Group getResourceByHref_Group(final String href) {
+		return getClient().getResource(href, Group.class);
+	}
+
+	public final Application getResourceByHref_App(final String href) {
+		return getClient().getResource(href, Application.class);
+	}
 }

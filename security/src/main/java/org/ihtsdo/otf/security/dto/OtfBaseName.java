@@ -103,10 +103,12 @@ public abstract class OtfBaseName extends OtfBaseWeb {
 		idref = idrefIn;
 	}
 
+	@JsonIgnore
 	public boolean isNew() {
 		return id == null;
 	}
 
+	@JsonIgnore
 	public final String getIdIfSet() {
 		if (isNew()) {
 			return "";
@@ -115,6 +117,7 @@ public abstract class OtfBaseName extends OtfBaseWeb {
 		}
 	}
 
+	@JsonIgnore
 	public final String getId() {
 		if (id == null) {
 			id = new StringBuilder().append(UUID.randomUUID().toString())
@@ -127,6 +130,7 @@ public abstract class OtfBaseName extends OtfBaseWeb {
 		id = idIn;
 	}
 
+	@JsonIgnore
 	public final List<String> getStatvals() {
 		if (statvals == null) {
 

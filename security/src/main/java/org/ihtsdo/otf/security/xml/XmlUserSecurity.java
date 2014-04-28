@@ -172,4 +172,10 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 		return null;
 	}
 
+	@Override
+	public void localReload() {
+		// TODO Auto-generated method stub
+
+	}
+
 }

@@ -223,4 +223,10 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 		return null;
 	}
 
+	@Override
+	public void localReload() {
+		spbd = null;
+		mod2Storm = null;
+	}
+
 }

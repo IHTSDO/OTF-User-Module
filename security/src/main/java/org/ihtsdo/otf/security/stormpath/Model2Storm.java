@@ -204,7 +204,7 @@ public class Model2Storm {
 			buildAccounts(ogrp, grp);
 			// add customFields
 			if (ogrp.getCustData().getCustFields().size() > 0) {
-				CustomData cd = spbd.getCustomData(grp.getCustomData()
+				CustomData cd = spbd.getResourceByHref_CustomData(grp.getCustomData()
 						.getHref());
 				buildCustomData(ogrp.getCustData().getCustFields(), cd);
 				cd.save();
@@ -258,7 +258,7 @@ public class Model2Storm {
 			acc.setUsername(oacc.getName());
 			acc.setEmail(oacc.getEmail());
 			if (oacc.getCustData().getCustFields().size() > 0) {
-				CustomData cd = spbd.getCustomData(acc.getCustomData()
+				CustomData cd = spbd.getResourceByHref_CustomData(acc.getCustomData()
 						.getHref());
 				buildCustomData(oacc.getCustData().getCustFields(), cd);
 				cd.save();
