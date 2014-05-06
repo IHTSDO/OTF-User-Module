@@ -31,17 +31,17 @@
 	</context-param>
 	<context-param>
 		<param-name>StormPathUserSecurity.keyPath</param-name>
-		<!--  <param-value>C:/Users/adamf/stormpath/apiKey.properties</param-value> -->
-		<param-value>/opt/api/apiKey.properties</param-value>
+		<!-- <param-value>C:/Users/adamf/stormpath/apiKey.properties</param-value> -->
+		<param-value>/opt/api/apiKey.properties</param-value> 
 	</context-param>
-	<context-param>
+	<!-- <context-param>
 		<param-name>StormPathUserSecurity.apiKey.id</param-name>
 		<param-value>SOME LONG ID</param-value>
 	</context-param>
 	<context-param>
 		<param-name>StormPathUserSecurity.apiKey.secret</param-name>
 		<param-value>SOME LONG SECRET</param-value>
-	</context-param>
+	</context-param> -->
 
 		<filter>
 		<filter-name>cors</filter-name>
