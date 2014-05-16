@@ -1406,13 +1406,6 @@ public final class XMLUtil {
 		return renderer;
 	}
 
-	/**
-	 * All the standard parameters must be set in the properties file
-	 * 
-	 * @param renderer
-	 * @param params
-	 * @return
-	 */
 	public static Transformer setStdTransParamsProps(
 			final Transformer renderer, final Properties params) {
 

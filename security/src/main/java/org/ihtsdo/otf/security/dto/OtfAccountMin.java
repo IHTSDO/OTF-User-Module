@@ -2,7 +2,9 @@ package org.ihtsdo.otf.security.dto;
 
 import java.util.Map;
 
-public class OftAccountMin extends OtfBaseName {
+import org.codehaus.jackson.annotate.JsonIgnore;
+
+public class OtfAccountMin extends OtfBaseName {
 
 	private String email;
 	private String givenName;
@@ -14,11 +16,11 @@ public class OftAccountMin extends OtfBaseName {
 	public static final String MID_NAME = "Middle Name:";
 	public static final String SUR_NAME = "Surname:";
 
-	public OftAccountMin() {
+	public OtfAccountMin() {
 		super();
 	}
 
-	public OftAccountMin(final OftAccountMin orig) {
+	public OtfAccountMin(final OtfAccountMin orig) {
 		super();
 		name = orig.getName();
 		email = orig.getEmail();
@@ -123,6 +125,12 @@ public class OftAccountMin extends OtfBaseName {
 	public void addHiddenRows() {
 		super.addHiddenRows();
 
+	}
+
+	@Override
+	@JsonIgnore
+	public String getHtmlForm(String formName) {
+		return super.getHtmlForm(formName);
 	}
 
 }

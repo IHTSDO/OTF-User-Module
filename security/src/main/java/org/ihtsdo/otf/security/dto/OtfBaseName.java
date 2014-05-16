@@ -2,34 +2,23 @@ package org.ihtsdo.otf.security.dto;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import java.util.logging.Logger;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-public abstract class OtfBaseName extends OtfBaseWeb {
-
-	/**
-	 * <p>
-	 * logger.
-	 * </p>
-	 */
-	private static final Logger LOG = Logger.getLogger(OtfBaseName.class
-			.getName());
+public abstract class OtfBaseName extends OtfBaseId implements
+		Comparable<OtfBaseName> {
 
 	protected String name;
 	private Status status;
-	@JsonIgnore
-	private String idref;
-	private String id;
+
 	private List<String> statvals;
 
 	public static final String NAME_NAME = "Name:";
 	public static final String STATUS_NAME = "Status:";
 
 	@Override
-	public String getHtmlForm() {
-		return super.getHtmlForm();
+	public String getHtmlForm(String formName) {
+		return super.getHtmlForm(formName);
 	}
 
 	@Override
@@ -43,12 +32,7 @@ public abstract class OtfBaseName extends OtfBaseWeb {
 
 	@Override
 	public void addHiddenRows() {
-
-		// first add the name of the class
-		getHiddenRows().add(
-				getHtmlInputHidden(getClass().getName(), INPUT_KEY_NAME));
-		// add id if set
-		getHiddenRows().add(getHtmlInputHidden(getIdIfSet(), "id"));
+		super.addHiddenRows();
 	}
 
 	public String getName() {
@@ -92,44 +76,6 @@ public abstract class OtfBaseName extends OtfBaseWeb {
 		return sbuild.toString();
 	}
 
-	public final String getIdref() {
-		if (idref == null) {
-			idref = "";
-		}
-		return idref;
-	}
-
-	public final void setIdref(String idrefIn) {
-		idref = idrefIn;
-	}
-
-	@JsonIgnore
-	public boolean isNew() {
-		return id == null;
-	}
-
-	@JsonIgnore
-	public final String getIdIfSet() {
-		if (isNew()) {
-			return "";
-		} else {
-			return getId();
-		}
-	}
-
-	@JsonIgnore
-	public final String getId() {
-		if (id == null) {
-			id = new StringBuilder().append(UUID.randomUUID().toString())
-					.toString();
-		}
-		return id;
-	}
-
-	public final void setId(String idIn) {
-		id = idIn;
-	}
-
 	@JsonIgnore
 	public final List<String> getStatvals() {
 		if (statvals == null) {
@@ -144,6 +90,12 @@ public abstract class OtfBaseName extends OtfBaseWeb {
 
 	public final void setStatvals(List<String> statvalsIn) {
 		statvals = statvalsIn;
+	}
+
+	@Override
+	public int compareTo(OtfBaseName toComp) {
+		return getName().toLowerCase()
+				.compareTo(toComp.getName().toLowerCase());
 	}
 
 }

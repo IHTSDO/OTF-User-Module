@@ -182,8 +182,12 @@ public class Storm2Model {
 		oacc.setMiddleName(acc.getMiddleName());
 		oacc.setSurname(acc.getSurname());
 		oacc.setStatus(acc.getStatus().toString());
-		Map<String, Object> cd = spbd.getResourceByHref_CustomData(acc
-				.getCustomData().getHref());
+		String cdHref = acc.getCustomData().getHref();
+		Map<String, Object> cd = spbd.getResourceByHref_CustomData(cdHref);
+
+		if (cd != null) {
+			oacc.getCustData().setIdref(cdHref);
+		}
 
 		// LOG.info("Account href = : " + acc.getHref());
 		// LOG.info("oacc = : " + oacc);

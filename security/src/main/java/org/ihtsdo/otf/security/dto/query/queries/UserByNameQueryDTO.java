@@ -1,13 +1,13 @@
 package org.ihtsdo.otf.security.dto.query.queries;
 
 import org.ihtsdo.otf.security.UserSecurityHandler;
-import org.ihtsdo.otf.security.dto.OftAccountMin;
+import org.ihtsdo.otf.security.dto.OtfAccountMin;
 import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.query.AbstractSecurityQuery;
 
 public class UserByNameQueryDTO extends AbstractSecurityQuery {
 
-	private OftAccountMin user;
+	private OtfAccountMin user;
 	private String userName;
 	private String pw;
 
@@ -26,7 +26,7 @@ public class UserByNameQueryDTO extends AbstractSecurityQuery {
 		pw = pwIn;
 	}
 
-	public final OftAccountMin getUser() {
+	public final OtfAccountMin getUser() {
 		if (user == null) {
 			OtfAccount oacc = null;
 			// if pw is set
@@ -39,13 +39,13 @@ public class UserByNameQueryDTO extends AbstractSecurityQuery {
 						.getUserAccountByName(userName, "*");
 			}
 			if (oacc != null) {
-				user = new OftAccountMin(oacc);
+				user = new OtfAccountMin(oacc);
 			}
 		}
 		return user;
 	}
 
-	public final void setUser(final OftAccountMin userIn) {
+	public final void setUser(final OtfAccountMin userIn) {
 		user = userIn;
 	}
 

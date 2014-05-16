@@ -1,6 +1,7 @@
 .container {
 	display: table;
 	width: 100%;
+	margin: 10px 0px 10px 0px;
 }
 
 .row {
@@ -10,6 +11,9 @@
 .topRow {
 	display: table-cell;
 	width: 33%;
+	font-size: 18px;
+	color: darkblue;
+	font-weight: bold;
 }
 
 .columnLeft {
@@ -129,7 +133,7 @@ h1.blue {
 	color: #003366;
 	border-bottom: 1px solid #3c78b5;
 	padding: 2px;
-	margin: 36px 0px 4px 0px;
+	margin: 0px 0px 0px 0px;
 }
 
 h2.blue {
@@ -140,5 +144,9 @@ h2.blue {
 	color: #003366;
 	border-bottom: 1px solid #3c78b5;
 	padding: 2px;
-	margin: 36px 0px 4px 0px;
+	margin: 0px 0px 0px 0px;
+}
+
+.formDiv{
+border:2px solid lightgreen;
 }

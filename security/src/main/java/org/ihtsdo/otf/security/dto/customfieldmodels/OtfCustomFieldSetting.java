@@ -1,6 +1,7 @@
 package org.ihtsdo.otf.security.dto.customfieldmodels;
 
 import org.ihtsdo.otf.security.dto.OtfCustomField;
+import org.ihtsdo.otf.security.dto.OtfCustomField.CustomType;
 
 public class OtfCustomFieldSetting extends OtfCustomFieldKeyVal {
 
@@ -8,8 +9,18 @@ public class OtfCustomFieldSetting extends OtfCustomFieldKeyVal {
 	public static final String USERS = "users";
 	public static final String MEMBERS = "members";
 
-	public OtfCustomFieldSetting(final String[] valsIn) {
-		super(valsIn);
-		type = OtfCustomField.CustomType.SETTING;
+	public OtfCustomFieldSetting() {
+		super();
 	}
+
+	public OtfCustomFieldSetting(final String keyIn, final String[] valsIn) {
+		super(keyIn, valsIn);
+	}
+
+	@Override
+	public CustomType getType() {
+		type = OtfCustomField.CustomType.SETTING;
+		return type;
+	}
+
 }

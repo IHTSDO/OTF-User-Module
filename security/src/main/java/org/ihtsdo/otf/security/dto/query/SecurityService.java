@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.ihtsdo.otf.security.UserSecurityHandler;
-import org.ihtsdo.otf.security.dto.OftAccountMin;
+import org.ihtsdo.otf.security.dto.OtfAccountMin;
 import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.query.queries.AppPermGroupsQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.AppUsersListQueryDTO;
@@ -40,6 +40,7 @@ public class SecurityService {
 	public static final String USERS = "users";
 	public static final String APPS = "apps";
 	public static final String PERMS = "perms";
+	public static final String SETTINGS = "settings";
 
 	// REST URLS
 	// 0 Args - 1 node:
@@ -234,7 +235,7 @@ public class SecurityService {
 				"*");
 
 		if (oacc != null) {
-			OftAccountMin user = new OftAccountMin(oacc);
+			OtfAccountMin user = new OtfAccountMin(oacc);
 			String json = getJSonFromObject(user);
 			// LOG.info("JSON = " + json);
 			return json;

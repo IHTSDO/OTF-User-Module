@@ -1,6 +1,7 @@
 package org.ihtsdo.otf.security.dto;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -48,7 +49,30 @@ public abstract class OtfBaseWeb {
 
 	public static final String HTML_INPUT_SUBMIT = "<input type=\"submit\" class=\"base_web_submit\" name=\"submit\" value=\"<%=VALUE%>\">";
 	public static final String HTML_INPUT_TEXT_AREA = "<textarea class=\"base_web_textarea\" name=\"<%=TITLE%>\"><%=VALUE%></textarea>";
-	public static final String HTML_FORM_HEAD = "<form name=\"UserManform\" action=\"<%=VALUE%>\" method=\"post\">";
+	public static final String HTML_FORM_HEAD = "<form name=\"<%=TITLE%>\" action=\"<%=VALUE%>\" method=\"post\">";
+	public static final String HTML_FORM_HEAD_ID = "<form id=\"<%=TITLE%>\" action=\"<%=VALUE%>\" method=\"post\">";
+	public static final String HTML_FORM_CLOSE = "</form>";
+
+	public static final String HTML_DIV_HIDDEN = "<div id=\"<%=VALUE%>\" style=\"display: none;\">";
+
+	public static final String HTML_FORM_DIV_HEAD = "<div class=\"formDiv\">";
+	public static final String HTML_DIV_CLOSE = "</div>";
+
+	public static final String HTML_FORM_TITLE = "<h1 class=\"blue\">";
+	public static final String HTML_FORM_TITLE_CLOSE = "</h1>";
+
+	public static final String HTML_SUB_FORM_TITLE = "<h2 class=\"blue\">";
+	public static final String HTML_SUB_FORM_TITLE_CLOSE = "</h2>";
+
+	public static final String HTML_DIV_CONTAINER = "<div class=\"container\">";
+	public static final String HTML_DIV_ROW = "<div class=\"row\">";
+	public static final String HTML_DIV_COL_LEFT = "<div class=\"columnLeft\">";
+	public static final String HTML_DIV_COL_RIGHT = "<div class=\"columnRight\">";
+
+	public static final String HTML_REM_PARENT_BTN = "<input type=\"button\" value=\"Remove\" onclick=\"$(this).parent().remove();\">";
+	public static final String HTML_ADD_ROW_BTN = "<input type=\"button\" value=\"<%=TITLE%>\" onclick=\"<%=VALUE%>\">";
+
+	public static final String JS_ADD_ROW = "jQuery('#<%=TITLE%>').append(document.getElementById('<%=VALUE%>').innerHTML);";
 
 	public static final String INPUT_KEY_NAME = "Input_Key";
 
@@ -61,47 +85,111 @@ public abstract class OtfBaseWeb {
 	@JsonIgnore
 	public abstract String getTableTitle();
 
+	public static final String getRepeatingSubForms(String title,
+			Collection<? extends OtfBaseWeb> items) {
+		StringBuilder sbuild = new StringBuilder();
+		// sbuild.append(getSubForm(title));
+		// getTableSubview
+		for (OtfBaseWeb obw : items) {
+			sbuild.append(obw.getRHS());
+		}
+		return getTableSubview(getForm(title), sbuild.toString());
+
+	}
+
+	public static final String getTableSubview(String leftContent,
+			String rightContent) {
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append(HTML_DIV_CONTAINER).append(HTML_DIV_ROW)
+				.append(HTML_DIV_COL_LEFT);
+		sbuild.append(leftContent).append(HTML_DIV_CLOSE)
+				.append(HTML_DIV_COL_RIGHT);
+		sbuild.append(rightContent).append(HTML_DIV_CLOSE)
+				.append(HTML_DIV_CLOSE).append(HTML_DIV_CLOSE);
+		return sbuild.toString();
+	}
+
+	public static final String getSubForm(String content) {
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append(HTML_SUB_FORM_TITLE).append(content)
+				.append(HTML_SUB_FORM_TITLE_CLOSE);
+		return sbuild.toString();
+	}
+
+	public static final String getForm(String content) {
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append(HTML_FORM_TITLE).append(content)
+				.append(HTML_FORM_TITLE_CLOSE);
+		return sbuild.toString();
+	}
+
 	// /remember to add hidden field inc id
 	@JsonIgnore
-	protected String getHtmlForm() {
+	protected String getHtmlForm(String formName) {
 		// clear rows
 		clearRows();
 		// get rows
 		addTableRows();
 		addHiddenRows();
 		StringBuilder sbuild = new StringBuilder();
-		sbuild.append(getHtmlFormHead(getAction())).append("\n");
+		sbuild.append(getHtmlFormHead(formName, getAction())).append("\n");
 		for (String hidden : getHiddenRows()) {
 			sbuild.append(hidden).append("\n");
 		}
-		sbuild.append(getHtmlTable("", getTableRows())).append("\n");
+		sbuild.append(getHtmlTable("", getTableRows(), true)).append("\n");
 
-		sbuild.append("</form>");
-		return sbuild.toString();
+		sbuild.append(HTML_FORM_CLOSE);
+		return getFormDiv(sbuild.toString());
 	}
 
 	@JsonIgnore
 	public final String getRHS() {
 		StringBuilder sbuild = new StringBuilder();
-		sbuild.append("<h1 class=\"blue\">").append(getTableTitle())
-				.append("</h1>");
-		sbuild.append(getHtmlForm());
+		sbuild.append(getForm(getTableTitle()));
+		sbuild.append(getHtmlForm(getTableTitle()));
 
+		return sbuild.toString();
+	}
+
+	@JsonIgnore
+	public final String getSubFormHead(String title) {
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append(getSubForm(title));
 		return sbuild.toString();
 	}
 
 	public final String getHtmlForm(String action, String inputKey,
-			String content) {
+			String content, String formName) {
 		StringBuilder sbuild = new StringBuilder();
-		sbuild.append(getHtmlFormHead(action)).append("\n");
+		sbuild.append(getHtmlFormHead(formName, action)).append("\n");
 		sbuild.append(getHtmlInputHidden(inputKey, INPUT_KEY_NAME))
 				.append("\n");
 		sbuild.append(content).append("\n");
-		sbuild.append("</form>");
-		return sbuild.toString();
+		sbuild.append(HTML_FORM_CLOSE);
+		return getFormDiv(sbuild.toString());
 	}
 
-	public final String getHtmlTable(final String thead, List<String> rows) {
+	public final String getFormDiv(String html) {
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append(HTML_FORM_DIV_HEAD);
+		sbuild.append(html);
+		sbuild.append(HTML_DIV_CLOSE);
+		return sbuild.toString();
+
+	}
+
+	public final String getHiddenDiv(String html, String id) {
+		StringBuilder sbuild = new StringBuilder();
+
+		sbuild.append(replaceJspValue(HTML_DIV_HIDDEN, id));
+		sbuild.append(html);
+		sbuild.append(HTML_DIV_CLOSE);
+		return sbuild.toString();
+
+	}
+
+	public final String getHtmlTable(final String thead, List<String> rows,
+			boolean addSubmit) {
 		StringBuilder sbuild = new StringBuilder();
 		if (thead != null && thead.length() > 0) {
 			sbuild.append(getHtmlDiv(thead, CSS_TABLE_HEAD)).append("\n");
@@ -109,7 +197,9 @@ public abstract class OtfBaseWeb {
 		for (String row : rows) {
 			sbuild.append(row).append("\n");
 		}
-		sbuild.append(getHtmlRowSubmit(getTableTitle()));
+		if (addSubmit) {
+			sbuild.append(getHtmlRowSubmit(getTableTitle()));
+		}
 		return getHtmlDiv(sbuild.toString(), CSS_TABLE);
 	}
 
@@ -137,6 +227,13 @@ public abstract class OtfBaseWeb {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append(getHtmlDiv("", CSS_TABLE_CELL_LABEL));
 		sbuild.append(getHtmlDiv(getHtmlInputSubmit(value), CSS_TEXT_SUBMIT));
+		return getHtmlDiv(sbuild.toString(), CSS_TABLE_ROW);
+	}
+
+	public final String getHtmlRowPlainText(String label, String value) {
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append(getHtmlLabelCell(label)).append("\n");
+		sbuild.append(getHtmlInputCell(value)).append("\n");
 		return getHtmlDiv(sbuild.toString(), CSS_TABLE_ROW);
 	}
 
@@ -206,8 +303,12 @@ public abstract class OtfBaseWeb {
 		return replaceJspTitleValue(HTML_INPUT_HIDDEN, value, title);
 	}
 
-	public final String getHtmlFormHead(final String value) {
-		return replaceJspValue(HTML_FORM_HEAD, value);
+	public final String getHtmlFormHead(final String title, final String value) {
+		return replaceJspTitleValue(HTML_FORM_HEAD, value, title);
+	}
+
+	public final String getHtmlFormHeadId(final String title, final String value) {
+		return replaceJspTitleValue(HTML_FORM_HEAD_ID, value, title);
 	}
 
 	public final String getHtmlInputTextArea(final String value,
@@ -224,6 +325,26 @@ public abstract class OtfBaseWeb {
 		sbuild.append("<div class=\"").append(cssClass).append("\">");
 		sbuild.append(content).append("</div>");
 		return sbuild.toString();
+	}
+
+	public final String getHtmlAddRowBtn(String btnTitle, String onClickAction) {
+		// LOG.info("getHtmlAddRowBtn title = " + btnTitle + " onClickAction = "
+		// + onClickAction);
+		return replaceJspTitleValue(HTML_ADD_ROW_BTN, onClickAction, btnTitle);
+	}
+
+	public final String getJavaScriptAddRow(String formID, String hiddenhtml) {
+		// LOG.info("getJavaScriptAddRow formID = " + formID + " rowToAppend = "
+		// + rowToAppend);
+		return replaceJspTitleValue(JS_ADD_ROW, hiddenhtml, formID);
+
+	}
+
+	public final String getHtmlRemBtnAction(String content, String cssClass) {
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append(content);
+		sbuild.append(HTML_REM_PARENT_BTN);
+		return getHtmlDiv(sbuild.toString(), cssClass);
 	}
 
 	public final String replaceJspTitleValue(String in, String replVal,

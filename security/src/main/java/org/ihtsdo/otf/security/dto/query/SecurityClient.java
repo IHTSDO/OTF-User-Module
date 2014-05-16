@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.ihtsdo.otf.security.dto.OftAccountMin;
+import org.ihtsdo.otf.security.dto.OtfAccountMin;
 import org.ihtsdo.otf.security.dto.query.queries.AppPermDTO;
 import org.ihtsdo.otf.security.dto.query.queries.AppPermGroupsQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.AppUsersListQueryDTO;
@@ -33,7 +33,7 @@ public class SecurityClient {
 		return null;
 	}
 
-	public static List<OftAccountMin> getUsers(final String json) {
+	public static List<OtfAccountMin> getUsers(final String json) {
 		try {
 			UsersListQueryDTO ulq = MAPPER.readValue(json,
 					UsersListQueryDTO.class);
@@ -57,7 +57,7 @@ public class SecurityClient {
 		return null;
 	}
 
-	public static OftAccountMin getUserByName(final String json) {
+	public static OtfAccountMin getUserByName(final String json) {
 		try {
 			UserByNameQueryDTO ulq = MAPPER.readValue(json,
 					UserByNameQueryDTO.class);

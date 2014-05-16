@@ -39,7 +39,9 @@ public class OtfCustomField {
 		/** An Application. */
 		APP,
 		/** An Setting. */
-		SETTING
+		SETTING,
+		/** An Setting. */
+		KEY_VAL
 	}
 
 	public OtfCustomField() {
@@ -95,16 +97,16 @@ public class OtfCustomField {
 		}
 		switch (type) {
 		case APP:
-			setModel(new OtfCustomFieldApplication(vals));
+			setModel(new OtfCustomFieldApplication(key, vals));
 			break;
 		case MEMBER:
-			setModel(new OtfCustomFieldMember(vals));
+			setModel(new OtfCustomFieldMember(key, vals));
 			break;
 		case PERM:
-			setModel(new OtfCustomFieldPerm(vals));
+			setModel(new OtfCustomFieldPerm(key, vals));
 			break;
 		case SETTING:
-			setModel(new OtfCustomFieldSetting(vals));
+			setModel(new OtfCustomFieldSetting(key, vals));
 			break;
 		default:
 			// do nothing
@@ -145,7 +147,6 @@ public class OtfCustomField {
 			}
 		}
 		return sb.toString();
-
 	}
 
 	public CustomType getType() {

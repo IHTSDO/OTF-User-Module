@@ -1,18 +1,41 @@
 package org.ihtsdo.otf.security.dto;
 
 import java.util.Map;
+import java.util.logging.Logger;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldPerm;
 
 public class OtfGroup extends OtfBaseAccountStore {
 
-	private OtfCustomData custData = new OtfCustomData();
+	private OtfCustomData custData = new OtfCustomData(
+			OtfCustomData.CustomParentType.GROUP);
+	/**
+	 * <p>
+	 * logger.
+	 * </p>
+	 */
+	private static final Logger LOG = Logger
+			.getLogger(OtfGroup.class.getName());
+
+	private boolean showCustData = true;
+	private String grpDesc = "Role/Group";
 
 	public OtfGroup() {
 		super();
 	}
 
 	@Override
-	public String getHtmlForm() {
-		return super.getHtmlForm();
+	@JsonIgnore
+	public String getHtmlForm(String formName) {
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append(super.getHtmlForm(formName));
+		if (!isNew() && showCustData) {
+			getCustData().setModels(null);
+			getCustData().getModels().add(new OtfCustomFieldPerm());
+			sbuild.append(getCustData().getHtmlForm(formName));
+		}
+		return sbuild.toString();
 	}
 
 	@Override
@@ -21,6 +44,10 @@ public class OtfGroup extends OtfBaseAccountStore {
 	}
 
 	public final OtfCustomData getCustData() {
+		// LOG.info("group getCustData href = " + custData.getIdref());
+		// if (!stringOK(custData.getIdref())) {
+		// new Exception().printStackTrace();
+		// }
 		return custData;
 	}
 
@@ -46,17 +73,41 @@ public class OtfGroup extends OtfBaseAccountStore {
 
 	@Override
 	public String getTableTitle() {
+		StringBuilder sbuild = new StringBuilder();
 		if (isNew()) {
-			return "Add New:";
+			sbuild.append("Add New ");
 		} else {
-			return "Update:";
+			sbuild.append("Update ");
 		}
+		sbuild.append(getGrpDesc());
+		sbuild.append(": ");
+
+		if (!isNew()) {
+			sbuild.append(getName());
+		}
+		return sbuild.toString();
 	}
 
 	@Override
 	public void addHiddenRows() {
 		super.addHiddenRows();
 
+	}
+
+	public final boolean isShowCustData() {
+		return showCustData;
+	}
+
+	public final void setShowCustData(boolean showCustDataIn) {
+		showCustData = showCustDataIn;
+	}
+
+	public final String getGrpDesc() {
+		return grpDesc;
+	}
+
+	public final void setGrpDesc(String grpDescIn) {
+		grpDesc = grpDescIn;
 	}
 
 }

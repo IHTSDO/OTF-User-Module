@@ -7,16 +7,17 @@ String context = session.getAttribute("BASEURL").toString();;
 <title>IHTSDO OTF User Management Admin</title>
 </head>
 <body>
- <!--  <script src="jquery.js"></script> -->
-<script>
+<script src="<%= request.getContextPath()%>/jquery-2.1.0.js" type="text/javascript"></script> 
 
-</script>
+
+
 	<h1 class="blue">IHTSDO OTF User Management Admin</h1>
 <div class="container">	
 	<div class="row">
 	<div class="topRow"><a href="<%=context%>users">Users</a></div>
 	<div class="topRow"><a href="<%=context%>apps">Apps</a></div>
 	<div class="topRow"><a href="<%=context%>members">Members</a></div>
+	<div class="topRow"><a href="<%=context%>settings">Settings</a></div>
 	</div>
 </div>	
 	<div class="container">

@@ -8,8 +8,8 @@ public abstract class OtfBaseNameDesc extends OtfBaseName {
 	public static final String DESC_NAME = "Description:";
 
 	@Override
-	public String getHtmlForm() {
-		return super.getHtmlForm();
+	public String getHtmlForm(String formName) {
+		return super.getHtmlForm(formName);
 	}
 
 	@Override

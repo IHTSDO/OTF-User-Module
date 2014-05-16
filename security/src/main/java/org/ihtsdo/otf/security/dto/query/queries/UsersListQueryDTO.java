@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ihtsdo.otf.security.UserSecurityHandler;
-import org.ihtsdo.otf.security.dto.OftAccountMin;
+import org.ihtsdo.otf.security.dto.OtfAccountMin;
 import org.ihtsdo.otf.security.dto.query.AbstractSecurityQuery;
 
 public class UsersListQueryDTO extends AbstractSecurityQuery {
 
-	private List<OftAccountMin> users;
+	private List<OtfAccountMin> users;
 
 	public UsersListQueryDTO() {
 		super();
@@ -19,19 +19,19 @@ public class UsersListQueryDTO extends AbstractSecurityQuery {
 		super(userSecurityIn);
 	}
 
-	public final List<OftAccountMin> getUsers() {
+	public final List<OtfAccountMin> getUsers() {
 		if (users == null || users.size() == 0) {
 			if (ush != null) {
-				users = (List<OftAccountMin>) ush.getUserSecurity()
+				users = (List<OtfAccountMin>) ush.getUserSecurity()
 						.getMinUsers("*");
 			} else {
-				users = new ArrayList<OftAccountMin>();
+				users = new ArrayList<OtfAccountMin>();
 			}
 		}
 		return users;
 	}
 
-	public final void setUsers(final List<OftAccountMin> usersIn) {
+	public final void setUsers(final List<OtfAccountMin> usersIn) {
 		users = usersIn;
 	}
 

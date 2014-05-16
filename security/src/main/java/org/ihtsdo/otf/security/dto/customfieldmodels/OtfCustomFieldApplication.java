@@ -1,6 +1,10 @@
 package org.ihtsdo.otf.security.dto.customfieldmodels;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.ihtsdo.otf.security.dto.OtfCustomField;
+import org.ihtsdo.otf.security.dto.OtfCustomField.CustomType;
 
 public class OtfCustomFieldApplication extends OtfCustomFieldModel {
 
@@ -16,9 +20,14 @@ public class OtfCustomFieldApplication extends OtfCustomFieldModel {
 	private String role;
 	private String member;
 
-	public OtfCustomFieldApplication(final String[] valsIn) {
-		super(valsIn);
-		type = OtfCustomField.CustomType.APP;
+	public OtfCustomFieldApplication() {
+		super();
+
+	}
+
+	public OtfCustomFieldApplication(final String keyIn, final String[] valsIn) {
+		super(keyIn, valsIn);
+
 	}
 
 	@Override
@@ -71,6 +80,33 @@ public class OtfCustomFieldApplication extends OtfCustomFieldModel {
 
 	public final void setMember(final String memberIn) {
 		member = memberIn;
+	}
+
+	@Override
+	public String getCollectionTitle() {
+		// TODO Auto-generated method stub
+		return "Application Roles";
+	}
+
+	@Override
+	public String getNewTitle() {
+		// TODO Auto-generated method stub
+		return "Add new Application Role";
+	}
+
+	@Override
+	public Map<String, String> getLabelValuesMap() {
+		Map<String, String> retval = new HashMap<String, String>();
+		retval.put("App:", getHtmlTextInput("App", getApp()));
+		retval.put("Role:", getHtmlTextInput("Role", getRole()));
+		retval.put("Member:", getHtmlTextInput("KeyValVal", getMember()));
+		return retval;
+	}
+
+	@Override
+	public CustomType getType() {
+		type = OtfCustomField.CustomType.APP;
+		return type;
 	}
 
 }

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.UserSecurityHandler;
-import org.ihtsdo.otf.security.dto.OftAccountMin;
+import org.ihtsdo.otf.security.dto.OtfAccountMin;
 import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.OtfCustomData;
 import org.ihtsdo.otf.security.dto.OtfCustomField;
@@ -116,7 +116,7 @@ public abstract class AbstractSecurityTest {
 		String json = secS.getUsers();
 		// LOG.info("users JSON = " + json);
 
-		List<OftAccountMin> user2 = SecurityClient.getUsers(json);
+		List<OtfAccountMin> user2 = SecurityClient.getUsers(json);
 
 		int jsonI = user2.size();
 		int origI = getUsh().getUserSecurity().getUsers("*").size();
@@ -150,7 +150,7 @@ public abstract class AbstractSecurityTest {
 		// LOG.info("test acc JSON = " + json);
 
 		String name = "";
-		OftAccountMin user = SecurityClient.getUserByName(json);
+		OtfAccountMin user = SecurityClient.getUserByName(json);
 		if (user != null) {
 			name = user.getName();
 		}

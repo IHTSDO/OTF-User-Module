@@ -127,7 +127,8 @@ public class Xml2Model {
 		List<Element> namedChildren = XMLUtil.getChildElemsListByName(
 				XmlStatics.XML_E_CUSTD, elem);
 		for (Element el : namedChildren) {
-			OtfCustomData cust = buildCustData(el);
+			OtfCustomData cust = buildCustData(el,
+					OtfCustomData.CustomParentType.GROUP);
 			grp.setCustData(cust);
 		}
 
@@ -151,8 +152,9 @@ public class Xml2Model {
 
 	}
 
-	private OtfCustomData buildCustData(final Element elem) {
-		OtfCustomData custData = new OtfCustomData();
+	private OtfCustomData buildCustData(final Element elem,
+			OtfCustomData.CustomParentType parentType) {
+		OtfCustomData custData = new OtfCustomData(parentType);
 		// CustomFields
 
 		List<Element> namedChildren = XMLUtil.getChildElemsListByName(
@@ -193,7 +195,8 @@ public class Xml2Model {
 		List<Element> namedChildren = XMLUtil.getChildElemsListByName(
 				XmlStatics.XML_E_CUSTD, elem);
 		for (Element el : namedChildren) {
-			OtfCustomData cust = buildCustData(el);
+			OtfCustomData cust = buildCustData(el,
+					OtfCustomData.CustomParentType.ACCOUNT);
 			acc.setCustData(cust);
 		}
 

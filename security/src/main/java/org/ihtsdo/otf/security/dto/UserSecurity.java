@@ -24,18 +24,20 @@ public class UserSecurity {
 	private static final Logger LOG = Logger.getLogger(UserSecurity.class
 			.getName());
 
+	private OtfCachedListsDTO cachedListMaps = new OtfCachedListsDTO();
+
 	private OtfDirectories dirs = new OtfDirectories();
 	private OtfApplications apps = new OtfApplications();
 	private String defaultpw;
 	private String usersApp;
 	private String membersApp;
-	private final Map<String, OtfCustomFieldSetting> settings = new HashMap<String, OtfCustomFieldSetting>();
 
 	public static final String SETTINGS = "OTFSettings";
 
-	private List<String> members;
-
-	private Map<String, OtfAccount> allAccounts;
+	// private List<String> members;
+	// private Map<String, OtfAccount> allAccounts;
+	// private final Map<String, OtfCustomFieldSetting> settings = new
+	// HashMap<String, OtfCustomFieldSetting>();
 
 	public final String getDefaultpw() {
 		if (!stringOK(defaultpw)) {
@@ -90,7 +92,10 @@ public class UserSecurity {
 	}
 
 	public final Map<String, OtfCustomFieldSetting> getSettings() {
-		if (settings.size() == 0) {
+		Map<String, OtfCustomFieldSetting> settings = getCachedListMaps()
+				.getSettingsMap();
+		if (settings == null || settings.size() == 0) {
+			settings = new HashMap<String, OtfCustomFieldSetting>();
 			// Get settings dir
 			OtfDirectory setDirectory = getDirs().getDirByName(SETTINGS);
 			// get settings group
@@ -102,27 +107,76 @@ public class UserSecurity {
 						.getModel();
 				settings.put(cfSet.getKey(), cfSet);
 			}
+			setSettings(settings);
 		}
 		// LOG.info("Settings = \n");
 		// for (String key : settings.keySet()) {
 		// LOG.info("Key = " + key);
 		// LOG.info("Vals = " + settings.get(key));
-		//
 		// }
 		return settings;
+	}
+
+	public final void setSettings(Map<String, OtfCustomFieldSetting> settingsIn) {
+		getCachedListMaps().setSettingsMap(settingsIn);
 	}
 
 	public final boolean stringOK(final String chk) {
 		return chk != null && chk.length() > 0;
 	}
 
-	public final List<String> getMembers() {
+	public final List<OtfGroup> getGroupsByAppName(String appname) {
+		OtfApplication app = getApps().getAppByName(appname);
+		return getGroupsByApp(app);
+	}
 
-		if (members == null) {
-			members = new ArrayList<String>();
+	public final List<OtfGroup> getGroupsByApp(OtfApplication app) {
+		List<OtfGroup> groups = new ArrayList<OtfGroup>();
+		for (OtfAccountStore acs : app.getAccountStores().values()) {
+			if (acs.isDir()) {
+				String dirName = acs.getName();
+				OtfDirectory dir = getDirs().getDirByName(dirName);
+
+				for (OtfGroup grp : dir.getGroups().getGroups().values()) {
+					grp.getId();
+					groups.add(grp);
+				}
+			}
+		}
+		return groups;
+
+	}
+
+	public final Map<String, List<String>> getAppsMap() {
+		Map<String, List<String>> appsMap = getCachedListMaps().getAppsMap();
+		if (appsMap == null) {
+			appsMap = new HashMap<String, List<String>>();
+			for (OtfApplication app : getApps().getApplications().values()) {
+				List<String> grpNames = new ArrayList<String>();
+				List<OtfGroup> grps = getGroupsByApp(app);
+				for (OtfGroup grp : grps) {
+					grpNames.add(grp.getName());
+				}
+				Collections.sort(grpNames);
+				appsMap.put(app.getName(), grpNames);
+			}
+			setAppsMap(appsMap);
 		}
 
-		if (members.size() == 0) {
+		return appsMap;
+	}
+
+	public final void setAppsMap(Map<String, List<String>> appsMap) {
+		getCachedListMaps().setAppsMap(appsMap);
+	}
+
+	public final List<String> getMembers() {
+		List<String> members = getCachedListMaps().getMembersList();
+		if (members == null) {
+			members = new ArrayList<String>();
+			// }
+
+			// if (members.size() == 0) {
 			// Get members dir
 			OtfDirectory mDirectory = getMembersDir();
 			if (mDirectory != null) {
@@ -132,9 +186,14 @@ public class UserSecurity {
 				}
 			}
 			Collections.sort(members);
+			setMembers(members);
 		}
 
 		return members;
+	}
+
+	public final void setMembers(List<String> membersIn) {
+		getCachedListMaps().setMembersList(membersIn);
 	}
 
 	public final OtfGroup getMemberByName(final String name) {
@@ -201,12 +260,12 @@ public class UserSecurity {
 		return dirs;
 	}
 
-	public final Collection<OftAccountMin> getMinUsers(final String dirName) {
+	public final Collection<OtfAccountMin> getMinUsers(final String dirName) {
 		Collection<OtfAccount> users = getUsers(dirName);
-		Collection<OftAccountMin> usersMin = new ArrayList<OftAccountMin>();
+		Collection<OtfAccountMin> usersMin = new ArrayList<OtfAccountMin>();
 		if (users != null) {
 			for (OtfAccount user : users) {
-				usersMin.add((new OftAccountMin(user)));
+				usersMin.add((new OtfAccountMin(user)));
 			}
 		}
 		return usersMin;
@@ -235,6 +294,8 @@ public class UserSecurity {
 	}
 
 	public final Map<String, OtfAccount> getAllAccounts() {
+		Map<String, OtfAccount> allAccounts = getCachedListMaps()
+				.getAllAccountsMap();
 		if (allAccounts == null) {
 			allAccounts = new HashMap<String, OtfAccount>();
 			for (OtfDirectory dir : getDirs().getDirectories().values()) {
@@ -245,13 +306,13 @@ public class UserSecurity {
 					}
 				}
 			}
-
+			setAllAccounts(allAccounts);
 		}
 		return allAccounts;
 	}
 
 	public final void setAllAccounts(final Map<String, OtfAccount> allAccountsIn) {
-		allAccounts = allAccountsIn;
+		getCachedListMaps().setAllAccountsMap(allAccountsIn);
 	}
 
 	public final void resetAllAccounts() {
@@ -266,6 +327,14 @@ public class UserSecurity {
 			}
 		}
 		return false;
+	}
+
+	public final OtfCachedListsDTO getCachedListMaps() {
+		return cachedListMaps;
+	}
+
+	public final void setCachedListMaps(OtfCachedListsDTO cachedListMapsIn) {
+		cachedListMaps = cachedListMapsIn;
 	}
 
 }
