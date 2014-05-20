@@ -13,10 +13,12 @@ public class OtfCachedListsDTO {
 	public static final String SETTINGS_MAP = "Settings_Map";
 	public static final String MEMBERS_LIST = "Members_List";
 	public static final String ACCOUNTS_LIST = "Accounts_List";
+	public static final String APPS_NOT_USER_MEM_LIST = "AppNotUserMember_List";
 
 	// private Map<String, OtfCustomFieldSetting> settings = new HashMap<String,
 	// OtfCustomFieldSetting>();
-	// private List<String> members;
+	// private List<String> appsNotUserMemberList;
+
 	// private Map<String, OtfAccount> allAccounts;
 	// private Map<String, List<String>> appsMap;
 
@@ -55,6 +57,7 @@ public class OtfCachedListsDTO {
 	}
 
 	public final Map<String, List<String>> getAppsMap() {
+		@SuppressWarnings("unchecked")
 		Map<String, List<String>> appsMap = (Map<String, List<String>>) ObjectCache.INSTANCE
 				.get(APPS_MAP);
 		return appsMap;
@@ -62,6 +65,19 @@ public class OtfCachedListsDTO {
 
 	public final void setAppsMap(Map<String, List<String>> appsMapIn) {
 		ObjectCache.INSTANCE.put(APPS_MAP, appsMapIn);
+	}
+
+	public final List<String> getAppsNotUserMemberList() {
+		@SuppressWarnings("unchecked")
+		List<String> appsNotUserMemberList = (List<String>) ObjectCache.INSTANCE
+				.get(APPS_NOT_USER_MEM_LIST);
+		return appsNotUserMemberList;
+	}
+
+	public final void setAppsNotUserMemberList(
+			List<String> appsNotUserMemberListIn) {
+		ObjectCache.INSTANCE.put(APPS_NOT_USER_MEM_LIST,
+				appsNotUserMemberListIn);
 	}
 
 }

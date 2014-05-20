@@ -27,7 +27,7 @@ public abstract class OtfBaseName extends OtfBaseId implements
 		getTableRows().add(getHtmlRowTextInput(NAME_NAME, getName()));
 		getTableRows().add(
 				getHtmlRowOptions(STATUS_NAME, getStatvals(), getStatus()
-						.toString(), STATUS_NAME));
+						.toString(), STATUS_NAME, null, null));
 	}
 
 	@Override

@@ -63,6 +63,9 @@ public abstract class AbstractUserSecurityHandler implements
 	@Override
 	public final void setUserSecurity(final UserSecurity userSecurityIn) {
 		ObjectCache.INSTANCE.put(getKey(), userSecurityIn);
+		if (userSecurityIn != null) {
+			userSecurityIn.initCachedValues();
+		}
 	}
 
 	public void removeUserSecurity() {

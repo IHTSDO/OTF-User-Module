@@ -1,6 +1,5 @@
 package org.ihtsdo.otf.security.dto.customfieldmodels;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.ihtsdo.otf.security.dto.OtfCustomField;
@@ -25,14 +24,16 @@ public class OtfCustomFieldPerm extends OtfCustomFieldKeyVal {
 	@Override
 	public final String getNewTitle() {
 		// TODO Auto-generated method stub
-		return "Add New Permissions";
+		return "Add New Permission";
 	}
 
 	@Override
 	public Map<String, String> getLabelValuesMap() {
-		Map<String, String> retval = new HashMap<String, String>();
-		retval.put("Name:", getHtmlTextInput("PermissionName", getKey()));
-		retval.put("Value:", getHtmlTextInput("PermissionValue", getVal()));
+		Map<String, String> retval = getStdLabelValuesMap();
+		retval.put("Name:",
+				getObw().getHtmlInputText("PermissionName", getKey()));
+		retval.put("Value:",
+				getObw().getHtmlInputText("PermissionValue", getVal()));
 		return retval;
 	}
 

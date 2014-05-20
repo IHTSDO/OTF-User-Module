@@ -1,12 +1,12 @@
 package org.ihtsdo.otf.security.dto.customfieldmodels;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import org.ihtsdo.otf.security.dto.OtfCustomData;
 import org.ihtsdo.otf.security.dto.OtfCustomField;
 import org.ihtsdo.otf.security.dto.OtfCustomField.CustomType;
 
-public class OtfCustomFieldApplication extends OtfCustomFieldModel {
+public class OtfCustomFieldApplication extends OtfCustomFieldCachedVals {
 
 	/**
 	 * <p>
@@ -19,6 +19,8 @@ public class OtfCustomFieldApplication extends OtfCustomFieldModel {
 	private String app;
 	private String role;
 	private String member;
+
+	private final String rolesName = "Roles";
 
 	public OtfCustomFieldApplication() {
 		super();
@@ -94,12 +96,24 @@ public class OtfCustomFieldApplication extends OtfCustomFieldModel {
 		return "Add new Application Role";
 	}
 
+	private final String getReplaceRoleJs() {
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append("replaceRole(this,").append("'")
+				.append(HIDDEN_DIV_ROLES_ID).append("',").append("'")
+				.append(".").append(OtfCustomData.cssClass).append("',")
+				.append("'").append("select[name=").append(rolesName)
+				.append("]'").append(")");
+		return sbuild.toString();
+	}
+
 	@Override
 	public Map<String, String> getLabelValuesMap() {
-		Map<String, String> retval = new HashMap<String, String>();
-		retval.put("App:", getHtmlTextInput("App", getApp()));
-		retval.put("Role:", getHtmlTextInput("Role", getRole()));
-		retval.put("Member:", getHtmlTextInput("KeyValVal", getMember()));
+		Map<String, String> retval = getStdLabelValuesMap();
+		retval.put("App:", getAppsOptionsSelect(getApp(), getReplaceRoleJs()));
+		retval.put("Role:",
+				getRolesOptionsSelect(getRole(), getApp(), rolesName, null));
+		retval.put("Member:", getMemberOptionsSelect(getMember()));
+
 		return retval;
 	}
 

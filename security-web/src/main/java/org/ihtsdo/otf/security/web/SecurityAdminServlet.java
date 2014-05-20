@@ -2,7 +2,6 @@ package org.ihtsdo.otf.security.web;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -90,35 +89,33 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		return usersL;
 	}
 
-	public final List<String> getAppsNotMembersOrUsers() {
-		Collection<String> all = getAppNames();
-		List<String> notMemUser = new ArrayList<String>();
-		if (all != null && all.size() > 0) {
-			Map<String, OtfCustomFieldSetting> settings = getSettings();
-			String users = "";
-			String members = "";
-			OtfCustomFieldSetting user = settings.get(SecurityService.USERS);
-			if (user != null) {
-				users = user.getVal();
-			}
-			OtfCustomFieldSetting mem = settings.get(SecurityService.MEMBERS);
-			if (mem != null) {
-				members = mem.getVal();
-			}
-
-			for (String appname : all) {
-				boolean remove = appname.equals(users)
-						|| appname.equals(members);
-				if (!remove) {
-					notMemUser.add(appname);
-				}
-			}
-
-		}
-
-		return notMemUser;
-
-	}
+	// public final List<String> getAppsNotMembersOrUsers() {
+	// Collection<String> all = getAppNames();
+	// List<String> notMemUser = new ArrayList<String>();
+	// if (all != null && all.size() > 0) {
+	// Map<String, OtfCustomFieldSetting> settings = getSettings();
+	// String users = "";
+	// String members = "";
+	// OtfCustomFieldSetting user = settings.get(SecurityService.USERS);
+	// if (user != null) {
+	// users = user.getVal();
+	// }
+	// OtfCustomFieldSetting mem = settings.get(SecurityService.MEMBERS);
+	// if (mem != null) {
+	// members = mem.getVal();
+	// }
+	//
+	// for (String appname : all) {
+	// boolean remove = appname.equals(users)
+	// || appname.equals(members);
+	// if (!remove) {
+	// notMemUser.add(appname);
+	// }
+	// }
+	//
+	// }
+	// return notMemUser;
+	// }
 
 	public final Map<String, OtfCustomFieldSetting> getSettings() {
 		return getUsh().getUserSecurity().getSettings();
@@ -129,8 +126,8 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 	}
 
 	public final String getAppsTreeHtml(final String path) {
-		return getList("Applications", path + SecurityService.APPS,
-				getAppsNotMembersOrUsers());
+		return getList("Applications", path + SecurityService.APPS, getUsh()
+				.getUserSecurity().getAppsNotMembersOrUsers());
 	}
 
 	public final String getList(String title, String baseUrl, List<String> vals) {
@@ -307,10 +304,6 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 
 	public final Map<String, List<String>> getApps() {
 		return getUsh().getUserSecurity().getAppsMap();
-	}
-
-	public final Collection<String> getAppNames() {
-		return getApps().keySet();
 	}
 
 	// public final List<String> getAppsL() {

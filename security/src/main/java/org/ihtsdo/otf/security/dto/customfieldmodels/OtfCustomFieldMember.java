@@ -1,17 +1,13 @@
 package org.ihtsdo.otf.security.dto.customfieldmodels;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.ihtsdo.otf.security.dto.OtfCustomField;
 import org.ihtsdo.otf.security.dto.OtfCustomField.CustomType;
 
-public class OtfCustomFieldMember extends OtfCustomFieldModel {
+public class OtfCustomFieldMember extends OtfCustomFieldCachedVals {
 
 	private String val;
-	private List<String> members;
 
 	public OtfCustomFieldMember() {
 		super();
@@ -44,17 +40,6 @@ public class OtfCustomFieldMember extends OtfCustomFieldModel {
 		setVal(vals[1]);
 	}
 
-	public final List<String> getMembers() {
-		if (members == null) {
-			members = new ArrayList<String>();
-		}
-		return members;
-	}
-
-	public final void setMembers(List<String> membersIn) {
-		members = membersIn;
-	}
-
 	@Override
 	public String getCollectionTitle() {
 		// TODO Auto-generated method stub
@@ -69,8 +54,8 @@ public class OtfCustomFieldMember extends OtfCustomFieldModel {
 
 	@Override
 	public Map<String, String> getLabelValuesMap() {
-		Map<String, String> retval = new HashMap<String, String>();
-		retval.put("Member:", getHtmlTextInput("Member", getVal()));
+		Map<String, String> retval = getStdLabelValuesMap();
+		retval.put("Member:", getMemberOptionsSelect(getVal()));
 		return retval;
 	}
 

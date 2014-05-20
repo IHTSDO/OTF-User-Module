@@ -1,6 +1,5 @@
 package org.ihtsdo.otf.security.dto.customfieldmodels;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.ihtsdo.otf.security.dto.OtfCustomField;
@@ -34,9 +33,10 @@ public class OtfCustomFieldBasic extends OtfCustomFieldModel {
 
 	@Override
 	public Map<String, String> getLabelValuesMap() {
-		Map<String, String> retval = new HashMap<String, String>();
-		retval.put("ID:", getHtmlTextInput("ID", getKey()));
-		retval.put("Value:", getHtmlTextInput("Value", getValFromVals()));
+		Map<String, String> retval = getStdLabelValuesMap();
+		retval.put("ID:", getObw().getHtmlInputText("ID", getKey()));
+		retval.put("Value:",
+				getObw().getHtmlInputText("Value", getValFromVals()));
 		return retval;
 	}
 

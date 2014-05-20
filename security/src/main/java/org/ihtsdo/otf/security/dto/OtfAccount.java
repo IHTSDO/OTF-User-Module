@@ -72,7 +72,7 @@ public class OtfAccount extends OtfAccountMin {
 	public String getHtmlForm(String formName) {
 
 		StringBuilder sbuild = new StringBuilder();
-		sbuild.append(super.getHtmlForm(formName));
+		// sbuild.append(super.getHtmlForm(formName));
 		// add the hidden fields
 
 		//
@@ -80,7 +80,8 @@ public class OtfAccount extends OtfAccountMin {
 		getCustData().getModels().add(new OtfCustomFieldMember());
 		getCustData().getModels().add(new OtfCustomFieldApplication());
 
-		sbuild.append(getCustData().getHtmlForm(formName));
+		sbuild.append(super.getHtmlForm(formName,
+				getCustData().getHtmlForm(formName)));
 
 		return sbuild.toString();
 	}

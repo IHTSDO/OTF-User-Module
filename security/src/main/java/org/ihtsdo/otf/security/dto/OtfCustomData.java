@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldApplication;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldBasic;
@@ -38,7 +37,7 @@ public class OtfCustomData extends OtfBaseId {
 	private final Map<String, OtfCustomField> custFields = new HashMap<String, OtfCustomField>();
 
 	private CustomParentType parentType;
-	private String cssClass = "std";
+	public static String cssClass = "CustomDataTable";
 	private List<OtfCustomFieldModel> models = new ArrayList<OtfCustomFieldModel>();
 
 	public final CustomParentType getParentType() {
@@ -209,7 +208,12 @@ public class OtfCustomData extends OtfBaseId {
 	}
 
 	private String getAppsForm() {
-		return getCdForm(new OtfCustomFieldApplication(), getApps());
+
+		StringBuilder sbuild = new StringBuilder();
+		OtfCustomFieldApplication cfa = new OtfCustomFieldApplication();
+		sbuild.append(cfa.getHiddenDivRoleOptions());
+		sbuild.append(getCdForm(cfa, getApps()));
+		return sbuild.toString();
 	}
 
 	private String getPermsForm() {
@@ -225,16 +229,15 @@ public class OtfCustomData extends OtfBaseId {
 		StringBuilder sbuild = new StringBuilder();
 		// getLabelValuesMap()
 
-		// TODO Remove
-		String emptyRow = getCDTable(cfType.getLabelValuesMap());
-		if (emptyRow == null) {
-			LOG.info("empty row = null");
-			emptyRow = "";
-		}
+		// String emptyRow = getCDTable(cfType.getLabelValuesMap());
+		// if (emptyRow == null) {
+		// LOG.info("empty row = null");
+		// emptyRow = "";
+		// }
 
-		String incRemBtn = getHtmlRemBtnAction(emptyRow, cssClass);
-		LOG.info("getCdForm incRemBtn = " + incRemBtn);
-		String result = StringEscapeUtils.escapeHtml4(incRemBtn);
+		// String incRemBtn = getHtmlRemBtnAction(emptyRow, cssClass);
+		// LOG.info("getCdForm incRemBtn = " + incRemBtn);
+		// String result = StringEscapeUtils.escapeHtml4(incRemBtn);
 		// Add heading
 		sbuild.append(getSubFormHead(cfType.getCollectionTitle()));
 
@@ -251,7 +254,13 @@ public class OtfCustomData extends OtfBaseId {
 		// getHtmlAddRowBtn(String btnTitle, String onClickAction)
 
 		sbuild.append(getHtmlAddRowBtn(cfType.getNewTitle(), js));
-		sbuild.append(getHtmlFormHeadId(id, getAction())).append("\n");
+
+		// sbuild.append(getHtmlFormHeadId(id, cfType.getNewTitle(),
+		// getAction()))
+		// .append("\n");
+
+		sbuild.append(getHtmlDivHeadId(id, cfType.getNewTitle())).append("\n");
+
 		for (OtfCustomField cf : cfields) {
 			String row = getCDTable(cf.getModel().getLabelValuesMap());
 			// LOG.info("getCdForm row = " + row);
@@ -259,7 +268,8 @@ public class OtfCustomData extends OtfBaseId {
 		}
 
 		// Add AddRow Button
-		sbuild.append(HTML_FORM_CLOSE);
+		// sbuild.append(HTML_FORM_CLOSE);
+		sbuild.append(HTML_DIV_CLOSE);
 		return getFormDiv(sbuild.toString());
 	}
 

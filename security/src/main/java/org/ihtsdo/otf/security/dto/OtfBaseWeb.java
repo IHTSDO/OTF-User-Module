@@ -32,6 +32,7 @@ public abstract class OtfBaseWeb {
 
 	public static final String JSP_TITLE = "<%=TITLE%>";
 	public static final String JSP_VALUE = "<%=VALUE%>";
+	public static final String JSP_ID = "<%=ID%>";
 	public static final String JSP_SUBMIT_BUTTON = "<%=SUBMIT_TEXT%>";
 
 	public static final String CSS_TEXT_INPUT = "base_web_text_input";
@@ -50,10 +51,12 @@ public abstract class OtfBaseWeb {
 	public static final String HTML_INPUT_SUBMIT = "<input type=\"submit\" class=\"base_web_submit\" name=\"submit\" value=\"<%=VALUE%>\">";
 	public static final String HTML_INPUT_TEXT_AREA = "<textarea class=\"base_web_textarea\" name=\"<%=TITLE%>\"><%=VALUE%></textarea>";
 	public static final String HTML_FORM_HEAD = "<form name=\"<%=TITLE%>\" action=\"<%=VALUE%>\" method=\"post\">";
-	public static final String HTML_FORM_HEAD_ID = "<form id=\"<%=TITLE%>\" action=\"<%=VALUE%>\" method=\"post\">";
+	public static final String HTML_FORM_HEAD_ID = "<form id=\"<%=ID%>\" name=\"<%=TITLE%>\" action=\"<%=VALUE%>\" method=\"post\">";
 	public static final String HTML_FORM_CLOSE = "</form>";
 
 	public static final String HTML_DIV_HIDDEN = "<div id=\"<%=VALUE%>\" style=\"display: none;\">";
+
+	public static final String HTML_DIV_SUB_HEAD_ID = "<div class=\"subformDiv\" id=\"<%=ID%>\" title=\"<%=TITLE%>\" >";
 
 	public static final String HTML_FORM_DIV_HEAD = "<div class=\"formDiv\">";
 	public static final String HTML_DIV_CLOSE = "</div>";
@@ -143,6 +146,24 @@ public abstract class OtfBaseWeb {
 	}
 
 	@JsonIgnore
+	protected String getHtmlForm(String formName, String htmlToAppend) {
+		// clear rows
+		clearRows();
+		// get rows
+		addTableRows();
+		addHiddenRows();
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append(getHtmlFormHead(formName, getAction())).append("\n");
+		for (String hidden : getHiddenRows()) {
+			sbuild.append(hidden).append("\n");
+		}
+		sbuild.append(getHtmlTable("", getTableRows(), true)).append("\n");
+		sbuild.append(htmlToAppend);
+		sbuild.append(HTML_FORM_CLOSE);
+		return getFormDiv(sbuild.toString());
+	}
+
+	@JsonIgnore
 	public final String getRHS() {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append(getForm(getTableTitle()));
@@ -162,7 +183,7 @@ public abstract class OtfBaseWeb {
 			String content, String formName) {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append(getHtmlFormHead(formName, action)).append("\n");
-		sbuild.append(getHtmlInputHidden(inputKey, INPUT_KEY_NAME))
+		sbuild.append(getHtmlInputHidden(INPUT_KEY_NAME, inputKey))
 				.append("\n");
 		sbuild.append(content).append("\n");
 		sbuild.append(HTML_FORM_CLOSE);
@@ -240,7 +261,7 @@ public abstract class OtfBaseWeb {
 	public final String getHtmlRowTextInput(String label, String value) {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append(getHtmlLabelCell(label)).append("\n");
-		sbuild.append(getHtmlInputCell(getHtmlInputText(value, label))).append(
+		sbuild.append(getHtmlInputCell(getHtmlInputText(label, value))).append(
 				"\n");
 		return getHtmlDiv(sbuild.toString(), CSS_TABLE_ROW);
 	}
@@ -255,19 +276,38 @@ public abstract class OtfBaseWeb {
 	}
 
 	public final String getHtmlRowOptions(String label, List<String> vals,
-			String selval, String name) {
+			String selval, String name, String onclickJS, String id) {
 		StringBuilder sbuild = new StringBuilder();
-		sbuild.append(getHtmlLabelCell(label)).append("\n");
-		sbuild.append(getHtmlInputCell(getHtmlOptions(vals, selval, name)))
-				.append("\n");
+		if (stringOK(label)) {
+			sbuild.append(getHtmlLabelCell(label)).append("\n");
+		}
+		sbuild.append(
+				getHtmlInputCell(getHtmlOptions(vals, selval, name, onclickJS,
+						id))).append("\n");
 		return getHtmlDiv(sbuild.toString(), CSS_TABLE_ROW);
 	}
 
+	// public final String getHtmlRowOptionsNoLabel(List<String> vals,
+	// String selval, String name) {
+	// StringBuilder sbuild = new StringBuilder();
+	// sbuild.append(getHtmlInputCell(getHtmlOptions(vals, selval, name)))
+	// .append("\n");
+	// return getHtmlDiv(sbuild.toString(), CSS_TABLE_ROW);
+	// }
+
 	public final String getHtmlOptions(List<String> vals, String selval,
-			String name) {
+			String name, String onclickJS, String id) {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append("<select class=\"").append(CSS_SELECT)
-				.append("\" name=\"").append(name).append("\">");
+				.append("\" name=\"").append(name).append("\"");
+
+		if (stringOK(id)) {
+			sbuild.append(" id=\"").append(id).append("\"");
+		}
+		if (stringOK(onclickJS)) {
+			sbuild.append(" onchange=\"").append(onclickJS).append("\"");
+		}
+		sbuild.append(" >");
 		for (String cell : vals) {
 			sbuild.append(getHtmlOption(cell, selval)).append("\n");
 		}
@@ -294,12 +334,12 @@ public abstract class OtfBaseWeb {
 		return getHtmlDiv(value, CSS_TABLE_CELL_INPUT);
 	}
 
-	public final String getHtmlInputText(final String value, final String title) {
+	public final String getHtmlInputText(final String title, final String value) {
 		return replaceJspTitleValue(HTML_INPUT_TEXT, value, title);
 	}
 
-	public final String getHtmlInputHidden(final String value,
-			final String title) {
+	public final String getHtmlInputHidden(final String title,
+			final String value) {
 		return replaceJspTitleValue(HTML_INPUT_HIDDEN, value, title);
 	}
 
@@ -307,8 +347,13 @@ public abstract class OtfBaseWeb {
 		return replaceJspTitleValue(HTML_FORM_HEAD, value, title);
 	}
 
-	public final String getHtmlFormHeadId(final String title, final String value) {
-		return replaceJspTitleValue(HTML_FORM_HEAD_ID, value, title);
+	public final String getHtmlFormHeadId(final String id, final String title,
+			final String value) {
+		return replaceJspTitleValueId(HTML_FORM_HEAD_ID, value, title, id);
+	}
+
+	public final String getHtmlDivHeadId(final String id, final String title) {
+		return replaceJspTitleId(HTML_DIV_SUB_HEAD_ID, id, title);
 	}
 
 	public final String getHtmlInputTextArea(final String value,
@@ -353,12 +398,28 @@ public abstract class OtfBaseWeb {
 		return replaceJspTitle(val, replTitle);
 	}
 
+	public final String replaceJspTitleId(String in, String replId,
+			String replTitle) {
+		String val = replaceJspId(in, replId);
+		return replaceJspTitle(val, replTitle);
+	}
+
+	public final String replaceJspTitleValueId(String in, String replVal,
+			String replTitle, String replId) {
+		String val = replaceJspTitleValue(in, replVal, replTitle);
+		return replaceJspId(val, replId);
+	}
+
 	public final String replaceJspValue(String in, String replVal) {
 		return replaceStr(JSP_VALUE, replVal, in);
 	}
 
 	public final String replaceJspTitle(String in, String replVal) {
 		return replaceStr(JSP_TITLE, replVal, in);
+	}
+
+	public final String replaceJspId(String in, String replVal) {
+		return replaceStr(JSP_ID, replVal, in);
 	}
 
 	public final String replaceStr(final String target,
@@ -420,6 +481,10 @@ public abstract class OtfBaseWeb {
 
 	public final void setAction(String actionIn) {
 		action = actionIn;
+	}
+
+	public static final boolean stringOK(final String toCheck) {
+		return toCheck != null && toCheck.length() > 0;
 	}
 
 }

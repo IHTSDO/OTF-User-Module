@@ -56,18 +56,12 @@ public abstract class OtfBaseId extends OtfBaseWeb {
 		id = idIn;
 	}
 
-	@JsonIgnore
-	public static final boolean stringOK(final String toCheck) {
-		return toCheck != null && toCheck.length() > 0;
-	}
-
 	@Override
 	public void addHiddenRows() {
 		// first add the name of the class
 		getHiddenRows().add(
-				getHtmlInputHidden(getClass().getName(), INPUT_KEY_NAME));
+				getHtmlInputHidden(INPUT_KEY_NAME, getClass().getName()));
 		// add id if set
-		getHiddenRows().add(getHtmlInputHidden(getIdIfSet(), "id"));
+		getHiddenRows().add(getHtmlInputHidden("id", getIdIfSet()));
 	}
-
 }

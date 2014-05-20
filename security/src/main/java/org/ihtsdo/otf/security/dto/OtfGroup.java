@@ -29,11 +29,15 @@ public class OtfGroup extends OtfBaseAccountStore {
 	@JsonIgnore
 	public String getHtmlForm(String formName) {
 		StringBuilder sbuild = new StringBuilder();
-		sbuild.append(super.getHtmlForm(formName));
+
 		if (!isNew() && showCustData) {
 			getCustData().setModels(null);
 			getCustData().getModels().add(new OtfCustomFieldPerm());
-			sbuild.append(getCustData().getHtmlForm(formName));
+			// sbuild.append(getCustData().getHtmlForm(formName));
+			sbuild.append(super.getHtmlForm(formName, getCustData()
+					.getHtmlForm(formName)));
+		} else {
+			sbuild.append(super.getHtmlForm(formName));
 		}
 		return sbuild.toString();
 	}

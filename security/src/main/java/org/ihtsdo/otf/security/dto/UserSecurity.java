@@ -39,6 +39,16 @@ public class UserSecurity {
 	// private final Map<String, OtfCustomFieldSetting> settings = new
 	// HashMap<String, OtfCustomFieldSetting>();
 
+	public final void initCachedValues() {
+		// LOG.info("initCachedValues called");
+		getAllAccounts();
+		getAppsMap();
+		getMembers();
+		getSettings();
+		getAppsNotMembersOrUsers();
+
+	}
+
 	public final String getDefaultpw() {
 		if (!stringOK(defaultpw)) {
 			defaultpw = getSettings().get(OtfCustomFieldSetting.DEFPW).getVal()
@@ -171,6 +181,7 @@ public class UserSecurity {
 	}
 
 	public final List<String> getMembers() {
+		// LOG.info("GET MEMBERS");
 		List<String> members = getCachedListMaps().getMembersList();
 		if (members == null) {
 			members = new ArrayList<String>();
@@ -293,6 +304,48 @@ public class UserSecurity {
 
 	}
 
+	public final OtfCachedListsDTO getCachedListMaps() {
+		return cachedListMaps;
+	}
+
+	public final void setCachedListMaps(OtfCachedListsDTO cachedListMapsIn) {
+		cachedListMaps = cachedListMapsIn;
+	}
+
+	public final Collection<String> getAppNames() {
+		return getAppsMap().keySet();
+	}
+
+	public final List<String> getAppsNotMembersOrUsers() {
+
+		List<String> appsNotMembersOrUsers = getCachedListMaps()
+				.getAppsNotUserMemberList();
+		if (appsNotMembersOrUsers == null) {
+			Collection<String> all = getAppNames();
+			appsNotMembersOrUsers = new ArrayList<String>();
+			if (all != null && all.size() > 0) {
+				// Map<String, OtfCustomFieldSetting> settings = getSettings();
+				String users = getUsersApp();
+				String members = getMembersApp();
+				for (String appname : all) {
+					boolean remove = appname.equals(users)
+							|| appname.equals(members);
+					if (!remove) {
+						appsNotMembersOrUsers.add(appname);
+					}
+				}
+
+			}
+			setAppsNotMembersOrUsers(appsNotMembersOrUsers);
+		}
+		return appsNotMembersOrUsers;
+	}
+
+	public final void setAppsNotMembersOrUsers(
+			List<String> appsNotMembersOrUsersIn) {
+		getCachedListMaps().setAppsNotUserMemberList(appsNotMembersOrUsersIn);
+	}
+
 	public final Map<String, OtfAccount> getAllAccounts() {
 		Map<String, OtfAccount> allAccounts = getCachedListMaps()
 				.getAllAccountsMap();
@@ -327,14 +380,6 @@ public class UserSecurity {
 			}
 		}
 		return false;
-	}
-
-	public final OtfCachedListsDTO getCachedListMaps() {
-		return cachedListMaps;
-	}
-
-	public final void setCachedListMaps(OtfCachedListsDTO cachedListMapsIn) {
-		cachedListMaps = cachedListMapsIn;
 	}
 
 }
