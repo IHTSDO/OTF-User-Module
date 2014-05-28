@@ -6,8 +6,8 @@ import java.util.logging.Logger;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.ihtsdo.otf.security.UserSecurityHandler;
-import org.ihtsdo.otf.security.dto.OtfAccountMin;
 import org.ihtsdo.otf.security.dto.OtfAccount;
+import org.ihtsdo.otf.security.dto.OtfAccountMin;
 import org.ihtsdo.otf.security.dto.query.queries.AppPermGroupsQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.AppUsersListQueryDTO;
 import org.ihtsdo.otf.security.dto.query.queries.AppsListQueryDTO;
@@ -36,6 +36,7 @@ public class SecurityService {
 	public static final String GET_MEMBERS = "getMembers";
 	public static final String GET_USERS = "getUsers";
 	public static final String GET_APPS = "getApps";
+	// Screens
 	public static final String MEMBERS = "members";
 	public static final String USERS = "users";
 	public static final String APPS = "apps";

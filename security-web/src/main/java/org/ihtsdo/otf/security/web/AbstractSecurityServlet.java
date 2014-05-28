@@ -146,6 +146,16 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 		return pathI;
 	}
 
+	protected final String getDecString(String toDec) {
+		String dec = null;
+		try {
+			dec = URLDecoder.decode(toDec, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			dec = toDec.replaceAll("%20", "");
+		}
+		return dec;
+	}
+
 	protected final String getContextUrl(final HttpServletRequest request) {
 		String urlS = request.getRequestURI();
 		String pathI = request.getPathInfo();
@@ -153,15 +163,9 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 		String decPath;
 		String decUrl;
 		// rem %20
-		try {
-			decPath = URLDecoder.decode(pathI, "UTF-8");
-			decUrl = URLDecoder.decode(urlS, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
 
-			// try the basic
-			decPath = pathI.replaceAll("%20", "");
-			decUrl = urlS.replaceAll("%20", "");
-		}
+		decPath = getDecString(pathI);
+		decUrl = getDecString(urlS);
 
 		// LOG.info("getContextUrl pathI = " + pathI);
 		// LOG.info("getContextUrl decPath = " + decPath);

@@ -27,6 +27,15 @@ public class OtfApplications {
 		return applications.get(name);
 	}
 
+	public final OtfApplication getAppById(final String id) {
+		for (OtfApplication app : applications.values()) {
+			if (app.getIdIfSet().equals(id)) {
+				return app;
+			}
+		}
+		return null;
+	}
+
 	public boolean appExists(String appName) {
 		for (String key : applications.keySet()) {
 			if (key.equalsIgnoreCase(appName)) {

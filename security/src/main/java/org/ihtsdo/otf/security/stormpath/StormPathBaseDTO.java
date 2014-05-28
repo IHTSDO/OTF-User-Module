@@ -1,6 +1,10 @@
 package org.ihtsdo.otf.security.stormpath;
 
+import static com.stormpath.sdk.cache.Caches.forResource;
+import static com.stormpath.sdk.cache.Caches.newCacheManager;
+
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import com.stormpath.sdk.account.Account;
@@ -62,7 +66,23 @@ public class StormPathBaseDTO {
 					"API props is null settingsProps = " + settingsProps);
 		}
 
-		client = getOtfCb().build();
+		client = getOtfCb().setCacheManager(
+				newCacheManager()
+						.withDefaultTimeToLive(1, TimeUnit.DAYS)
+						// general default
+						.withDefaultTimeToIdle(2, TimeUnit.HOURS)
+						// general default
+						.withCache(
+								forResource(Account.class)
+										// Account-specific cache settings
+										.withTimeToLive(1, TimeUnit.HOURS)
+										.withTimeToIdle(30, TimeUnit.MINUTES))
+						.withCache(forResource(Group.class) // Group-specific
+															// cache settings
+								.withTimeToLive(2, TimeUnit.HOURS)).build() // build
+																			// the
+																			// CacheManager
+				).build();
 
 		tenant = client.getCurrentTenant();
 	}

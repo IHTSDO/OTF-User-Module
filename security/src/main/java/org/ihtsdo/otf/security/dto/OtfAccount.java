@@ -1,11 +1,13 @@
 package org.ihtsdo.otf.security.dto;
 
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldApplication;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldMember;
+import org.ihtsdo.otf.security.dto.query.SecurityService;
 
 public class OtfAccount extends OtfAccountMin {
 	/**
@@ -46,9 +48,10 @@ public class OtfAccount extends OtfAccountMin {
 	}
 
 	@Override
-	public void processParams(Map<String, String> paramsIn) {
-		// TODO Auto-generated method stub
-
+	public Map<String, List<String>> processParams(Map<String, String> paramsIn) {
+		LOG.info("ACCOUNT: ");
+		printParams();
+		return errors;
 	}
 
 	@Override
@@ -74,16 +77,38 @@ public class OtfAccount extends OtfAccountMin {
 		StringBuilder sbuild = new StringBuilder();
 		// sbuild.append(super.getHtmlForm(formName));
 		// add the hidden fields
-
+		OtfCustomFieldMember cfm = new OtfCustomFieldMember();
+		OtfCustomFieldApplication cfa = new OtfCustomFieldApplication();
 		//
 		getCustData().setModels(null);
-		getCustData().getModels().add(new OtfCustomFieldMember());
-		getCustData().getModels().add(new OtfCustomFieldApplication());
+		getCustData().getModels().add(cfm);
+		getCustData().getModels().add(cfa);
+
+		sbuild.append(cfa.getHiddenDivRoleOptions());
+		// sbuild.append(getHiddenDiv(
+		// getHtmlRemBtnAction(getCDTable(cfa.getLabelValuesMap()),
+		// getCustData().getCssClass()), cfa.getNewFormId()));
+		//
+		// sbuild.append(getHiddenDiv(
+		// getHtmlRemBtnAction(getCDTable(cfm.getLabelValuesMap()),
+		// getCustData().getCssClass()), cfm.getNewFormId()));
 
 		sbuild.append(super.getHtmlForm(formName,
 				getCustData().getHtmlForm(formName)));
 
 		return sbuild.toString();
+	}
+
+	@Override
+	@JsonIgnore
+	public String getInputKey() {
+		return SecurityService.USERS;
+	}
+
+	@Override
+	public void setValsFromParams() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

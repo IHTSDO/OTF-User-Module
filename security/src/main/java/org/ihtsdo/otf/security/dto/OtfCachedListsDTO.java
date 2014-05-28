@@ -15,12 +15,16 @@ public class OtfCachedListsDTO {
 	public static final String ACCOUNTS_LIST = "Accounts_List";
 	public static final String APPS_NOT_USER_MEM_LIST = "AppNotUserMember_List";
 
+	public static final String ADMIN_CONTEXT_URL = "OtfAdminServletContextUrl";
+
 	// private Map<String, OtfCustomFieldSetting> settings = new HashMap<String,
 	// OtfCustomFieldSetting>();
 	// private List<String> appsNotUserMemberList;
 
 	// private Map<String, OtfAccount> allAccounts;
 	// private Map<String, List<String>> appsMap;
+
+	// private String adminServletContextUrl;
 
 	public final Map<String, OtfCustomFieldSetting> getSettingsMap() {
 		@SuppressWarnings("unchecked")
@@ -78,6 +82,14 @@ public class OtfCachedListsDTO {
 			List<String> appsNotUserMemberListIn) {
 		ObjectCache.INSTANCE.put(APPS_NOT_USER_MEM_LIST,
 				appsNotUserMemberListIn);
+	}
+
+	public final String getAdminServletContextUrl() {
+		return (String) ObjectCache.INSTANCE.get(ADMIN_CONTEXT_URL);
+	}
+
+	public final void setAdminServletContextUrl(String adminServletContextUrlIn) {
+		ObjectCache.INSTANCE.put(ADMIN_CONTEXT_URL, adminServletContextUrlIn);
 	}
 
 }

@@ -1,6 +1,7 @@
 package org.ihtsdo.otf.security.web;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,9 +16,16 @@ import javax.servlet.http.HttpServletResponse;
 import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.OtfAccountMin;
 import org.ihtsdo.otf.security.dto.OtfApplication;
+import org.ihtsdo.otf.security.dto.OtfBaseId;
 import org.ihtsdo.otf.security.dto.OtfBaseWeb;
+import org.ihtsdo.otf.security.dto.OtfBasicWeb;
+import org.ihtsdo.otf.security.dto.OtfCustomData;
+import org.ihtsdo.otf.security.dto.OtfCustomField;
 import org.ihtsdo.otf.security.dto.OtfGroup;
 import org.ihtsdo.otf.security.dto.OtfSettings;
+import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldApplication;
+import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldMember;
+import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldPerm;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldSetting;
 import org.ihtsdo.otf.security.dto.query.SecurityService;
 import org.ihtsdo.otf.security.dto.query.queries.UsersListQueryDTO;
@@ -42,6 +50,8 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 	public static final String FORM = "FormHTML";
 	public static final String DEF_REDIR = "/tree.jsp";
 
+	public static final String NEW_FORM = "/newForm/";
+
 	// public static Map<String, List<String>> apps;
 	// public static List<String> members;
 
@@ -52,7 +62,18 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			HttpServletResponse responseIn) throws ServletException,
 			IOException {
 		setHr(requestIn);
-		logParameters(requestIn);
+		// logParameters(requestIn);
+		OtfBaseWeb obw = handlePostAction(requestIn, responseIn);
+
+		if (obw.getErrors().size() == 0) {
+			loadScreen(requestIn, responseIn, null);
+		} else {
+			obw.setAction(getDecString(getHr().getRequestURI()));
+			loadScreen(requestIn, responseIn, obw);
+		}
+
+		// TODO - make sure values carry through
+		// e.g. change name of mapping app find all refs and change that.
 	}
 
 	@Override
@@ -60,17 +81,44 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			HttpServletResponse responseIn) throws ServletException,
 			IOException {
 		setHr(requestIn);
-		// System.out.println("handleGetRequest");
+
+		String decPath = getDecString(requestIn.getPathInfo());
+
+		if (decPath.startsWith(NEW_FORM)) {
+			// getUrlNodes();
+			// LOG.info("New Form val = " + getUrlNodes()[1]);
+			String retval = getNewForm();
+			// LOG.info("New Form retval = " + retval);
+
+			responseIn.setContentType("application/html");
+			final PrintWriter out = responseIn.getWriter();
+			out.write(retval);
+
+		} else {
+			loadScreen(requestIn, responseIn, null);
+		}
+
+	}
+
+	private void loadScreen(HttpServletRequest requestIn,
+			HttpServletResponse responseIn, OtfBaseWeb obw)
+			throws ServletException, IOException {
 		String curl = getContextUrl(requestIn);
+		getUsh().getUserSecurity().getCachedListMaps()
+				.setAdminServletContextUrl(curl);
 		hr.getSession().setAttribute(BASEURL, curl);
-		// LOG.info("handleGetRequest curl = " + curl);
+		// LOG.info("loadScreen curl = " + curl);
 		hr.getSession().setAttribute(TREE, getTreeHtml(curl));
-		hr.getSession().setAttribute(FORM, getForm());
+		if (obw == null) {
+			hr.getSession().setAttribute(FORM, getForm());
+		} else {
+			LOG.info("using obw errs size = " + obw.getErrors().size());
+			hr.getSession().setAttribute(FORM, obw.getRHS());
+		}
 		setRedirect("/index-admin.jsp");
 		final RequestDispatcher reqd = sc.getServletContext()
 				.getRequestDispatcher(redirect);
 		reqd.forward(requestIn, responseIn);
-
 	}
 
 	public final String getMembersTreeHtml(final String path) {
@@ -144,6 +192,100 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		return sbuild.toString();
 	}
 
+	protected OtfBaseWeb handlePostAction(HttpServletRequest requestIn,
+			HttpServletResponse responseIn) throws ServletException,
+			IOException {
+
+		String inputKey = getNamedParam(OtfBaseWeb.INPUT_KEY_NAME, requestIn);
+		String id = getNamedParam(OtfBaseId.ID_KEY, requestIn);
+		LOG.info("InputKey = " + inputKey);
+		LOG.info("id = " + id);
+
+		// OtfAccount SecurityService.USERS
+		// OtfApplication SecurityService.APPS
+		// OtfSettings SecurityService.SETTINGS
+		//
+		// OtfGroup getGrptype() TYPE_MEMBER TYPE_SETTING TYPE_NORMAL
+		// OtfBaseId getClass().getName();
+
+		// logParameters(requestIn);
+
+		OtfBaseWeb obw = getWebObjectFromId(inputKey, id);
+		LOG.info("obw = " + obw);
+		handleParams(requestIn, responseIn, obw);
+		return obw;
+
+	}
+
+	private OtfBaseWeb getWebObjectFromId(String inputKey, String id) {
+
+		boolean exists = stringOK(id);
+
+		switch (inputKey) {
+
+		case SecurityService.USERS:
+			LOG.info("ACCOUNT");
+			if (exists) {
+				return getUsh().getUserSecurity().getUserAccountById(id, "*");
+			} else {
+				return new OtfAccount();
+			}
+		case SecurityService.APPS:
+			LOG.info("APP");
+			if (exists) {
+				return getUsh().getUserSecurity().getApps().getAppById(id);
+			} else {
+				return new OtfApplication();
+			}
+		case SecurityService.SETTINGS:
+			LOG.info("SETTING");
+			return new OtfSettings(getSettings());
+		case OtfGroup.TYPE_NORMAL:
+			LOG.info("GROUP : NORMAL");
+			if (exists) {
+				LOG.info("Group");
+				return new OtfGroup();
+			} else {
+				return new OtfGroup();
+			}
+		case OtfGroup.TYPE_MEMBER:
+			LOG.info("GROUP : MEMBER");
+			if (exists) {
+				return getUsh().getUserSecurity().getMemberById(id);
+			} else {
+				return new OtfGroup();
+			}
+
+		case OtfGroup.TYPE_SETTING:
+			LOG.info("GROUP : SETTING");
+			return new OtfSettings(getSettings());
+
+		default:
+			LOG.info(" no handler found for input Key = " + inputKey);
+			return null;
+		}
+	}
+
+	protected void handleParams(HttpServletRequest requestIn,
+			HttpServletResponse responseIn, OtfBaseWeb webObject)
+			throws ServletException, IOException {
+
+		Map<String, String> paramsMap = getFiltParamsAsHM(requestIn);
+		webObject.setParams(paramsMap);
+		webObject.processParams(paramsMap);
+
+		// LOG.info("Errs size = " + webObject.getErrors().size());
+
+		if (webObject.getErrors().size() == 0) {
+			// update
+
+		}
+		if (webObject.getErrors().size() > 0) {
+			webObject.logErrors();
+		}
+
+	}
+
 	public final String getTreeHtml(final String path) {
 		// LOG.info("getTreeHtml path = " + path);
 		if (isLoadTree()) {
@@ -192,6 +334,29 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		}
 	}
 
+	public final String getNewForm() {
+		try {
+			OtfCustomField.CustomType cf = OtfCustomField.CustomType
+					.valueOf(getUrlNodes()[1]);
+			switch (cf) {
+			case PERM:
+				return new OtfBasicWeb().getNewCfModelElement(
+						new OtfCustomFieldPerm(), OtfCustomData.cssClass);
+			case MEMBER:
+				return new OtfBasicWeb().getNewCfModelElement(
+						new OtfCustomFieldMember(), OtfCustomData.cssClass);
+			case APP:
+				return new OtfBasicWeb()
+						.getNewCfModelElement(new OtfCustomFieldApplication(),
+								OtfCustomData.cssClass);
+			default:
+				return "";
+			}
+		} catch (java.lang.IllegalArgumentException iae) {
+			return "";
+		}
+	}
+
 	public final String getForm() {
 		switch (getUrlNodes()[0]) {
 		case SecurityService.MEMBERS:
@@ -215,6 +380,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 
 	public final String getSettingsForm() {
 		OtfSettings otfSett = new OtfSettings(getSettings());
+		otfSett.setAction(getDecString(getHr().getRequestURI()));
 		return otfSett.getRHS();
 	}
 
@@ -226,14 +392,13 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			oacc = getUsh().getUserSecurity().getUserAccountByName(val, "*");
 			if (oacc != null) {
 				oacc.getId();
-				oacc.setAction(getContextUrl(getHr()));
 				// return oacc.getRHS();
 			}
 		}
 		if (oacc == null) {
 			oacc = new OtfAccount();
 		}
-
+		oacc.setAction(getDecString(getHr().getRequestURI()));
 		// make sure the lists have been built.
 		getUsh().getUserSecurity().getCachedListMaps().getMembersList();
 		getUsh().getUserSecurity().getCachedListMaps().getAppsMap();
@@ -249,15 +414,18 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			member = getUsh().getUserSecurity().getMemberByName(val);
 			if (member != null) {
 				member.getId();
-				member.setAction(getContextUrl(getHr()));
 				// return member.getRHS();
 			}
 		}
 		if (member == null) {
 			member = new OtfGroup();
 		}
-		member.setShowCustData(false);
-		member.setGrpDesc("Member");
+
+		member.setAction(getDecString(getHr().getRequestURI()));
+		member.setGrptype(OtfGroup.TYPE_MEMBER);
+
+		// member.setShowCustData(false);
+		// member.setGrpDesc("Member");
 		return member.getRHS();
 	}
 
@@ -268,14 +436,15 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			oacc = getUsh().getUserSecurity().getApps().getAppByName(val);
 			if (oacc != null) {
 				oacc.getId();
-				oacc.setAction(getContextUrl(getHr()));
+				// oacc.setAction(getContextUrl(getHr()));
+
 				// return oacc.getRHS();
 			}
 		}
 		if (oacc == null) {
 			oacc = new OtfApplication();
 		}
-
+		oacc.setAction(getDecString(getHr().getRequestURI()));
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append(oacc.getRHS());
 
@@ -284,8 +453,21 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			List<OtfGroup> grps = getUsh().getUserSecurity()
 					.getGroupsByAppName(oacc.getName());
 
+			String action = getDecString(getHr().getRequestURI());
+			// LOG.info("grp action = " + action);
+			for (OtfGroup grp : grps) {
+				grp.setAction(action);
+				grp.getId();
+			}
+
 			// add a new grp
 			OtfGroup newGrp = new OtfGroup();
+			newGrp.setAction(action);
+
+			// Set it's dir parent to the same as the
+			String dirname = getUsh().getUserSecurity()
+					.getDirsByAppName(oacc.getName()).iterator().next();
+			newGrp.setParentDirName(dirname);
 			grps.add(newGrp);
 
 			Collections.sort(grps);

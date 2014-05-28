@@ -14,6 +14,8 @@ public abstract class OtfBaseId extends OtfBaseWeb {
 	private static final Logger LOG = Logger.getLogger(OtfBaseName.class
 			.getName());
 
+	public static String ID_KEY = "id";
+
 	@JsonIgnore
 	private String idref;
 	private String id;
@@ -31,6 +33,11 @@ public abstract class OtfBaseId extends OtfBaseWeb {
 
 	@JsonIgnore
 	public boolean isNew() {
+		// LOG.info("IS_NEW param  = " + getParams());
+		// if (getParams() != null) {
+		// LOG.info("IS_NEW param size = " + getParams().size());
+		// }
+
 		return id == null;
 	}
 
@@ -59,9 +66,21 @@ public abstract class OtfBaseId extends OtfBaseWeb {
 	@Override
 	public void addHiddenRows() {
 		// first add the name of the class
-		getHiddenRows().add(
-				getHtmlInputHidden(INPUT_KEY_NAME, getClass().getName()));
+		getHiddenRows().add(getHtmlInputHidden(INPUT_KEY_NAME, getInputKey()));
 		// add id if set
-		getHiddenRows().add(getHtmlInputHidden("id", getIdIfSet()));
+		getHiddenRows().add(getHtmlInputHidden(ID_KEY, getIdIfSet()));
+	}
+
+	public String getInputKey() {
+		return getClass().getName();
+	}
+
+	public String getIDFromParams() {
+		return getParams().get(ID_KEY);
+	}
+
+	@Override
+	public void setValsFromParams() {
+
 	}
 }

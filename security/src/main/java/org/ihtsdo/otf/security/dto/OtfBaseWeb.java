@@ -2,11 +2,13 @@ package org.ihtsdo.otf.security.dto;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldModel;
 
 public abstract class OtfBaseWeb {
 	/**
@@ -26,6 +28,8 @@ public abstract class OtfBaseWeb {
 	@JsonIgnore
 	private String action;
 
+	protected Map<String, List<String>> errors = new HashMap<String, List<String>>();
+
 	public static final String FORM_NAME = "FormName";
 
 	public static final String JSP_FORM_NAME = "<%=FORM_NAME%>";
@@ -36,6 +40,8 @@ public abstract class OtfBaseWeb {
 	public static final String JSP_SUBMIT_BUTTON = "<%=SUBMIT_TEXT%>";
 
 	public static final String CSS_TEXT_INPUT = "base_web_text_input";
+	public static final String CSS_TEXT_INPUT_ERROR = "base_web_text_input_error";
+
 	public static final String CSS_TEXT_AREA = "base_web_textarea";
 	public static final String CSS_TEXT_SUBMIT = "base_web_submit";
 	public static final String CSS_SELECT = "base_web_select";
@@ -46,9 +52,9 @@ public abstract class OtfBaseWeb {
 	public static final String CSS_TABLE_CELL_INPUT = "base_web_table_cell_input";
 
 	public static final String HTML_INPUT_HIDDEN = "<input type=\"hidden\" name=\"<%=TITLE%>\" value=\"<%=VALUE%>\" />";
-	public static final String HTML_INPUT_TEXT = "<input type=\"text\" class=\"base_web_text_input\" name=\"<%=TITLE%>\" value=\"<%=VALUE%>\">";
+	public static final String HTML_INPUT_TEXT = "<input type=\"text\" class=\"base_web_text_input\" name=\"<%=TITLE%>\" value=\"<%=VALUE%>\"/>";
 
-	public static final String HTML_INPUT_SUBMIT = "<input type=\"submit\" class=\"base_web_submit\" name=\"submit\" value=\"<%=VALUE%>\">";
+	public static final String HTML_INPUT_SUBMIT = "<input type=\"submit\" class=\"base_web_submit\" name=\"submit\" value=\"<%=VALUE%>\"/>";
 	public static final String HTML_INPUT_TEXT_AREA = "<textarea class=\"base_web_textarea\" name=\"<%=TITLE%>\"><%=VALUE%></textarea>";
 	public static final String HTML_FORM_HEAD = "<form name=\"<%=TITLE%>\" action=\"<%=VALUE%>\" method=\"post\">";
 	public static final String HTML_FORM_HEAD_ID = "<form id=\"<%=ID%>\" name=\"<%=TITLE%>\" action=\"<%=VALUE%>\" method=\"post\">";
@@ -57,6 +63,7 @@ public abstract class OtfBaseWeb {
 	public static final String HTML_DIV_HIDDEN = "<div id=\"<%=VALUE%>\" style=\"display: none;\">";
 
 	public static final String HTML_DIV_SUB_HEAD_ID = "<div class=\"subformDiv\" id=\"<%=ID%>\" title=\"<%=TITLE%>\" >";
+	public static final String HTML_DIV_ERRORS = "<div class=\"errortooltip\" >";
 
 	public static final String HTML_FORM_DIV_HEAD = "<div class=\"formDiv\">";
 	public static final String HTML_DIV_CLOSE = "</div>";
@@ -76,14 +83,20 @@ public abstract class OtfBaseWeb {
 	public static final String HTML_ADD_ROW_BTN = "<input type=\"button\" value=\"<%=TITLE%>\" onclick=\"<%=VALUE%>\">";
 
 	public static final String JS_ADD_ROW = "jQuery('#<%=TITLE%>').append(document.getElementById('<%=VALUE%>').innerHTML);";
+	public static final String JS_ADD_ROW_AJAX = "$.get('<%=VALUE%>', function(data) {$('#<%=TITLE%>').append(data);});";
+
+	public static final String JS_MOUSEOVER_ERR = "$.get('<%=VALUE%>', function(data) {$('#<%=TITLE%>').append(data);});";
 
 	public static final String INPUT_KEY_NAME = "Input_Key";
 
-	public abstract void processParams(Map<String, String> params);
+	public abstract Map<String, List<String>> processParams(
+			Map<String, String> params);
 
 	public abstract void addTableRows();
 
 	public abstract void addHiddenRows();
+
+	public abstract void setValsFromParams();
 
 	@JsonIgnore
 	public abstract String getTableTitle();
@@ -98,6 +111,27 @@ public abstract class OtfBaseWeb {
 		}
 		return getTableSubview(getForm(title), sbuild.toString());
 
+	}
+
+	public final void printParams() {
+		if (params != null) {
+			LOG.info("Printing Params \n");
+			for (String key : params.keySet()) {
+				String val = params.get(key);
+				LOG.info("Key = " + key + " Val = " + val);
+			}
+		}
+	}
+
+	public static final String getErrorsDiv(List<String> errors) {
+		StringBuilder sbuild = new StringBuilder();
+
+		sbuild.append(HTML_DIV_ERRORS);
+		for (String error : errors) {
+			sbuild.append(error).append("<br/>");
+		}
+		sbuild.append(HTML_DIV_CLOSE);
+		return sbuild.toString();
 	}
 
 	public static final String getTableSubview(String leftContent,
@@ -258,11 +292,22 @@ public abstract class OtfBaseWeb {
 		return getHtmlDiv(sbuild.toString(), CSS_TABLE_ROW);
 	}
 
-	public final String getHtmlRowTextInput(String label, String value) {
+	public final String getHtmlRowTextInput(String label, String value,
+			List<String> errors) {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append(getHtmlLabelCell(label)).append("\n");
-		sbuild.append(getHtmlInputCell(getHtmlInputText(label, value))).append(
-				"\n");
+		String inputT = getHtmlInputText(label, value);
+		if (errors != null && errors.size() > 0) {
+			LOG.info("errors found for label " + label);
+			// set inputT to error condition and add mouse over jsscript
+			// String toRepl = CSS_TEXT_INPUT+"\"";
+			// StringBuilder sbuild1 = new StringBuilder();
+			// sbuild1.append(CSS_TEXT_INPUT_ERROR).append("\" ").append(str);
+			inputT = inputT.replace(CSS_TEXT_INPUT, CSS_TEXT_INPUT_ERROR);
+			inputT = inputT + "\n" + getErrorsDiv(errors);
+			LOG.info("inputT = " + inputT);
+		}
+		sbuild.append(getHtmlInputCell(inputT)).append("\n");
 		return getHtmlDiv(sbuild.toString(), CSS_TABLE_ROW);
 	}
 
@@ -378,10 +423,18 @@ public abstract class OtfBaseWeb {
 		return replaceJspTitleValue(HTML_ADD_ROW_BTN, onClickAction, btnTitle);
 	}
 
-	public final String getJavaScriptAddRow(String formID, String hiddenhtml) {
+	public final String getJavaScriptAddRow(String formID, String getUrl) {
 		// LOG.info("getJavaScriptAddRow formID = " + formID + " rowToAppend = "
 		// + rowToAppend);
-		return replaceJspTitleValue(JS_ADD_ROW, hiddenhtml, formID);
+		// return replaceJspTitleValue(JS_ADD_ROW, hiddenhtml, formID);
+		return replaceJspTitleValue(JS_ADD_ROW_AJAX, getUrl, formID);
+
+	}
+
+	public final String getNewCfModelElement(OtfCustomFieldModel cfm,
+			String cssClass) {
+		return getHtmlRemBtnAction(getCDTable(cfm.getLabelValuesMap()),
+				cssClass);
 
 	}
 
@@ -420,6 +473,15 @@ public abstract class OtfBaseWeb {
 
 	public final String replaceJspId(String in, String replVal) {
 		return replaceStr(JSP_ID, replVal, in);
+	}
+
+	public final String getCDTable(Map<String, String> rowsMap) {
+		List<String> rows = new ArrayList<String>();
+		for (String key : rowsMap.keySet()) {
+			String content = rowsMap.get(key);
+			rows.add(getHtmlRowPlainText(key, content));
+		}
+		return getHtmlTable("", rows, false);
 	}
 
 	public final String replaceStr(final String target,
@@ -485,6 +547,50 @@ public abstract class OtfBaseWeb {
 
 	public static final boolean stringOK(final String toCheck) {
 		return toCheck != null && toCheck.length() > 0;
+	}
+
+	public final Map<String, List<String>> getErrors() {
+		return errors;
+	}
+
+	public final void setErrors(Map<String, List<String>> errorsIn) {
+		errors = errorsIn;
+	}
+
+	public final void logErrors() {
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append("Log Errors :\n");
+		for (String key : errors.keySet()) {
+			sbuild.append("Input Control name = ").append(key).append("\n");
+			for (String msg : errors.get(key)) {
+				sbuild.append("Error Message = ").append(msg).append("\n");
+			}
+		}
+		LOG.info(sbuild.toString());
+	}
+
+	public final void addError(String webName, String errormessage) {
+		List<String> erWn = errors.get(webName);
+		if (erWn == null) {
+			erWn = new ArrayList<String>();
+		}
+		erWn.add(errormessage);
+		errors.put(webName, erWn);
+	}
+
+	public void checkWebFieldNotEmpty(String toCheck, String webName) {
+		if (!stringOK(toCheck)) {
+			addError(webName, "Can't be empty");
+		}
+	}
+
+	public void checkWebFieldInList(String toCheck, String webName,
+			List<String> vals, boolean inList, String err_msg) {
+		boolean listContains = vals.contains(toCheck);
+		boolean err = (listContains != inList);
+		if (err) {
+			addError(webName, err_msg);
+		}
 	}
 
 }

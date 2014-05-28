@@ -1,6 +1,7 @@
 package org.ihtsdo.otf.security.dto;
 
 import java.util.UUID;
+import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldApplication;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldMember;
@@ -15,8 +16,8 @@ public class OtfCustomField {
 	 * logger.
 	 * </p>
 	 */
-	// private static final Logger LOG = Logger.getLogger(OtfCustomField.class
-	// .getName());
+	private static final Logger LOG = Logger.getLogger(OtfCustomField.class
+			.getName());
 
 	private String key;
 	private String value;
@@ -89,7 +90,7 @@ public class OtfCustomField {
 	}
 
 	public void analyseValue() {
-
+		// LOG.info("analyseValue key = " + key);
 		// Split val
 		vals = getValue().split(SEP);
 		if (vals.length > 0) {

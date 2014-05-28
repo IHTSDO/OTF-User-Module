@@ -1,5 +1,6 @@
 package org.ihtsdo.otf.security.dto;
 
+import java.util.List;
 import java.util.Map;
 
 public abstract class OtfBaseNameDesc extends OtfBaseName {
@@ -40,7 +41,13 @@ public abstract class OtfBaseNameDesc extends OtfBaseName {
 	}
 
 	@Override
-	public void processParams(Map<String, String> paramsIn) {
+	public Map<String, List<String>> processParams(Map<String, String> paramsIn) {
+		return errors;
+
+	}
+
+	@Override
+	public void setValsFromParams() {
 		// TODO Auto-generated method stub
 
 	}

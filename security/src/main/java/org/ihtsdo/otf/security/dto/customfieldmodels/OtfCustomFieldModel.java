@@ -2,6 +2,7 @@ package org.ihtsdo.otf.security.dto.customfieldmodels;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.ihtsdo.otf.security.dto.OtfBasicWeb;
 import org.ihtsdo.otf.security.dto.OtfCustomField;
@@ -12,6 +13,8 @@ public abstract class OtfCustomFieldModel {
 	protected String key;
 	protected OtfCustomField.CustomType type;
 	private OtfBasicWeb obw;
+	public static final String SEP = "-xxx-";
+	public static final String NEW_FORM_URL = "newForm/";
 
 	public OtfCustomFieldModel() {
 		super();
@@ -35,6 +38,8 @@ public abstract class OtfCustomFieldModel {
 	public abstract Map<String, String> getLabelValuesMap();
 
 	public abstract OtfCustomField.CustomType getType();
+
+	public abstract String getNewFormURLWithContext();
 
 	public final String[] getVals() {
 		if (vals == null || vals.length == 0) {
@@ -90,6 +95,30 @@ public abstract class OtfCustomFieldModel {
 
 	public static final boolean stringOK(final String toCheck) {
 		return toCheck != null && toCheck.length() > 0;
+	}
+
+	public String getNewFormId() {
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append(getClass().getName()).append(".newForm");
+		return sbuild.toString();
+	}
+
+	public String getNewFormURL() {
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append(NEW_FORM_URL).append(getType().name());
+		return sbuild.toString();
+	}
+
+	public String getUniqueControlName(String controlName, String id) {
+		if (id == null) {
+			id = getId();
+		}
+		return new StringBuilder().append(controlName).append(SEP).append(id)
+				.toString();
+	}
+
+	public static final String getId() {
+		return UUID.randomUUID().toString();
 	}
 
 }

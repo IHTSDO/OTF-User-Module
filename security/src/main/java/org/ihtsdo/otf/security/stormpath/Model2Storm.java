@@ -186,7 +186,6 @@ public class Model2Storm {
 		} else {
 			if (grp == null) {
 				// Add new
-
 				grp = spbd.getClient().instantiate(Group.class);
 				grp.setName(ogrp.getName());
 				grp.setDescription(ogrp.getDescription());
@@ -204,8 +203,8 @@ public class Model2Storm {
 			buildAccounts(ogrp, grp);
 			// add customFields
 			if (ogrp.getCustData().getCustFields().size() > 0) {
-				CustomData cd = spbd.getResourceByHref_CustomData(grp.getCustomData()
-						.getHref());
+				CustomData cd = spbd.getResourceByHref_CustomData(grp
+						.getCustomData().getHref());
 				buildCustomData(ogrp.getCustData().getCustFields(), cd);
 				cd.save();
 			}
@@ -258,8 +257,8 @@ public class Model2Storm {
 			acc.setUsername(oacc.getName());
 			acc.setEmail(oacc.getEmail());
 			if (oacc.getCustData().getCustFields().size() > 0) {
-				CustomData cd = spbd.getResourceByHref_CustomData(acc.getCustomData()
-						.getHref());
+				CustomData cd = spbd.getResourceByHref_CustomData(acc
+						.getCustomData().getHref());
 				buildCustomData(oacc.getCustData().getCustFields(), cd);
 				cd.save();
 			}

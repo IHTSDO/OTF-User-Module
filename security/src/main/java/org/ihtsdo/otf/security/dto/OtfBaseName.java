@@ -24,7 +24,9 @@ public abstract class OtfBaseName extends OtfBaseId implements
 	@Override
 	public void addTableRows() {
 
-		getTableRows().add(getHtmlRowTextInput(NAME_NAME, getName()));
+		getTableRows().add(
+				getHtmlRowTextInput(NAME_NAME, getName(),
+						getErrors().get(NAME_NAME)));
 		getTableRows().add(
 				getHtmlRowOptions(STATUS_NAME, getStatvals(), getStatus()
 						.toString(), STATUS_NAME, null, null));
@@ -71,7 +73,7 @@ public abstract class OtfBaseName extends OtfBaseId implements
 	public String toString() {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append("Name:").append(name).append(", idRef:")
-				.append(getIdref()).append(", id:").append(getId())
+				.append(getIdref()).append(", id:").append(getIdIfSet())
 				.append(", Status:").append(status);
 		return sbuild.toString();
 	}
@@ -96,6 +98,12 @@ public abstract class OtfBaseName extends OtfBaseId implements
 	public int compareTo(OtfBaseName toComp) {
 		return getName().toLowerCase()
 				.compareTo(toComp.getName().toLowerCase());
+	}
+
+	@Override
+	public void setValsFromParams() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

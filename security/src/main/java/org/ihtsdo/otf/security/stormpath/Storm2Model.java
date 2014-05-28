@@ -122,6 +122,7 @@ public class Storm2Model {
 
 		for (Group group : groups) {
 			OtfGroup ogroup = buildGroup(group);
+			ogroup.setParentDirName(dir.getName());
 			oDir.getGroups().getGroups().put(ogroup.getName(), ogroup);
 		}
 		for (Account acc : dir.getAccounts()) {

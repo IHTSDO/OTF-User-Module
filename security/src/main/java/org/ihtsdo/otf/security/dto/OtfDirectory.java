@@ -1,6 +1,7 @@
 package org.ihtsdo.otf.security.dto;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class OtfDirectory extends OtfBaseAccountStore {
@@ -67,9 +68,8 @@ public class OtfDirectory extends OtfBaseAccountStore {
 	}
 
 	@Override
-	public void processParams(Map<String, String> paramsIn) {
-		// TODO Auto-generated method stub
-
+	public Map<String, List<String>> processParams(Map<String, String> paramsIn) {
+		return errors;
 	}
 
 	@Override
@@ -83,6 +83,12 @@ public class OtfDirectory extends OtfBaseAccountStore {
 
 	@Override
 	public void addHiddenRows() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setValsFromParams() {
 		// TODO Auto-generated method stub
 
 	}

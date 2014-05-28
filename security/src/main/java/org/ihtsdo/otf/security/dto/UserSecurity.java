@@ -140,6 +140,18 @@ public class UserSecurity {
 		return getGroupsByApp(app);
 	}
 
+	public final List<String> getDirsByAppName(String appname) {
+		List<String> dirs = new ArrayList<String>();
+		for (OtfAccountStore acs : getApps().getAppByName(appname)
+				.getAccountStores().values()) {
+			if (acs.isDir()) {
+				dirs.add(acs.getName());
+			}
+		}
+
+		return dirs;
+	}
+
 	public final List<OtfGroup> getGroupsByApp(OtfApplication app) {
 		List<OtfGroup> groups = new ArrayList<OtfGroup>();
 		for (OtfAccountStore acs : app.getAccountStores().values()) {
@@ -149,6 +161,7 @@ public class UserSecurity {
 
 				for (OtfGroup grp : dir.getGroups().getGroups().values()) {
 					grp.getId();
+					grp.setParentDirName(dirName);
 					groups.add(grp);
 				}
 			}
@@ -212,6 +225,19 @@ public class UserSecurity {
 		if (mDirectory != null) {
 			for (OtfGroup grp : mDirectory.getGroups().getGroups().values()) {
 				if (grp.getName().equals(name)) {
+					return grp;
+				}
+			}
+		}
+		return null;
+
+	}
+
+	public final OtfGroup getMemberById(final String id) {
+		OtfDirectory mDirectory = getMembersDir();
+		if (mDirectory != null) {
+			for (OtfGroup grp : mDirectory.getGroups().getGroups().values()) {
+				if (grp.getIdIfSet().equals(id)) {
 					return grp;
 				}
 			}
@@ -286,6 +312,16 @@ public class UserSecurity {
 			final String dirName) {
 		for (OtfAccount acc : getUsers(dirName)) {
 			if (acc.getName().equalsIgnoreCase(name)) {
+				return acc;
+			}
+		}
+		return null;
+	}
+
+	public final OtfAccount getUserAccountById(final String id,
+			final String dirName) {
+		for (OtfAccount acc : getUsers(dirName)) {
+			if (acc.getId().equalsIgnoreCase(id)) {
 				return acc;
 			}
 		}

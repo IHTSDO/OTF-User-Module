@@ -68,6 +68,18 @@
 	width: 100%;
 }
 
+.base_web_text_input_error {
+	width: 100%;
+	background-color: red;
+}
+
+.errortooltip {
+	display: none;
+	border: 1px solid #F00;
+	width: 150px;
+	color: red;
+}
+
 .table {
 	display: table;
 	width: 100%;
@@ -147,6 +159,6 @@ h2.blue {
 	margin: 0px 0px 0px 0px;
 }
 
-.formDiv{
-border:2px solid lightgreen;
+.formDiv {
+	border: 2px solid lightgreen;
 }

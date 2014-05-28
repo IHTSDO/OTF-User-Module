@@ -20,7 +20,9 @@ public class OtfCustomFieldApplication extends OtfCustomFieldCachedVals {
 	private String role;
 	private String member;
 
-	private final String rolesName = "Roles";
+	public static final String APP_ROLE_APP = "AppRole-App";
+	public static final String APP_ROLE_ROLE = "AppRole-Role";
+	public static final String APP_ROLE_MEMBER = "AppRole-Member";
 
 	public OtfCustomFieldApplication() {
 		super();
@@ -96,12 +98,12 @@ public class OtfCustomFieldApplication extends OtfCustomFieldCachedVals {
 		return "Add new Application Role";
 	}
 
-	private final String getReplaceRoleJs() {
+	private final String getReplaceRoleJs(String roleName) {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append("replaceRole(this,").append("'")
 				.append(HIDDEN_DIV_ROLES_ID).append("',").append("'")
 				.append(".").append(OtfCustomData.cssClass).append("',")
-				.append("'").append("select[name=").append(rolesName)
+				.append("'").append("select[name=").append(roleName)
 				.append("]'").append(")");
 		return sbuild.toString();
 	}
@@ -109,10 +111,16 @@ public class OtfCustomFieldApplication extends OtfCustomFieldCachedVals {
 	@Override
 	public Map<String, String> getLabelValuesMap() {
 		Map<String, String> retval = getStdLabelValuesMap();
-		retval.put("App:", getAppsOptionsSelect(getApp(), getReplaceRoleJs()));
+
+		String id = getId();
+		String appId = getUniqueControlName(APP_ROLE_APP, id);
+		String roleId = getUniqueControlName(APP_ROLE_ROLE, id);
+		String memId = getUniqueControlName(APP_ROLE_MEMBER, id);
+		retval.put("App:",
+				getAppsOptionsSelect(getApp(), getReplaceRoleJs(roleId), appId));
 		retval.put("Role:",
-				getRolesOptionsSelect(getRole(), getApp(), rolesName, null));
-		retval.put("Member:", getMemberOptionsSelect(getMember()));
+				getRolesOptionsSelect(getRole(), getApp(), roleId, null));
+		retval.put("Member:", getMemberOptionsSelect(getMember(), memId));
 
 		return retval;
 	}

@@ -5,7 +5,7 @@ import java.util.Map;
 import org.ihtsdo.otf.security.dto.OtfCustomField;
 import org.ihtsdo.otf.security.dto.OtfCustomField.CustomType;
 
-public class OtfCustomFieldBasic extends OtfCustomFieldModel {
+public class OtfCustomFieldBasic extends OtfCustomFieldCachedVals {
 
 	@Override
 	public void model2Vals() {

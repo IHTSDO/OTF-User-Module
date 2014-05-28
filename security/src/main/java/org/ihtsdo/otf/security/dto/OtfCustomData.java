@@ -151,9 +151,8 @@ public class OtfCustomData extends OtfBaseId {
 	}
 
 	@Override
-	public void processParams(Map<String, String> paramsIn) {
-		// TODO Auto-generated method stub
-
+	public Map<String, List<String>> processParams(Map<String, String> paramsIn) {
+		return errors;
 	}
 
 	@Override
@@ -209,11 +208,12 @@ public class OtfCustomData extends OtfBaseId {
 
 	private String getAppsForm() {
 
-		StringBuilder sbuild = new StringBuilder();
-		OtfCustomFieldApplication cfa = new OtfCustomFieldApplication();
-		sbuild.append(cfa.getHiddenDivRoleOptions());
-		sbuild.append(getCdForm(cfa, getApps()));
-		return sbuild.toString();
+		// StringBuilder sbuild = new StringBuilder();
+		// OtfCustomFieldApplication cfa = new OtfCustomFieldApplication();
+		// // sbuild.append(cfa.getHiddenDivRoleOptions());
+		// sbuild.append(getCdForm(cfa, getApps()));
+		// return sbuild.toString();
+		return getCdForm(new OtfCustomFieldApplication(), getApps());
 	}
 
 	private String getPermsForm() {
@@ -243,12 +243,12 @@ public class OtfCustomData extends OtfBaseId {
 
 		String id = UUID.randomUUID().toString();
 
-		sbuild.append(getHiddenDiv(
-				getHtmlRemBtnAction(getCDTable(cfType.getLabelValuesMap()),
-						cssClass), cfType.getClass().getName()));
+		// sbuild.append(getHiddenDiv(
+		// getHtmlRemBtnAction(getCDTable(cfType.getLabelValuesMap()),
+		// cssClass), cfType.getNewFormId()));
 
 		// getJavaScriptAddRow(String formID, String rowToAppend)
-		String js = getJavaScriptAddRow(id, cfType.getClass().getName());
+		String js = getJavaScriptAddRow(id, cfType.getNewFormURLWithContext());
 		// LOG.info("getCdForm js = " + js);
 
 		// getHtmlAddRowBtn(String btnTitle, String onClickAction)
@@ -281,16 +281,6 @@ public class OtfCustomData extends OtfBaseId {
 		cssClass = cssClassIn;
 	}
 
-	public final String getCDTable(Map<String, String> rowsMap) {
-
-		List<String> rows = new ArrayList<String>();
-		for (String key : rowsMap.keySet()) {
-			String content = rowsMap.get(key);
-			rows.add(getHtmlRowPlainText(key, content));
-		}
-		return getHtmlTable("", rows, false);
-	}
-
 	public final List<OtfCustomFieldModel> getModels() {
 		if (models == null) {
 			models = new ArrayList<OtfCustomFieldModel>();
@@ -300,5 +290,11 @@ public class OtfCustomData extends OtfBaseId {
 
 	public final void setModels(List<OtfCustomFieldModel> modelsIn) {
 		models = modelsIn;
+	}
+
+	@Override
+	public void setValsFromParams() {
+		// TODO Auto-generated method stub
+
 	}
 }

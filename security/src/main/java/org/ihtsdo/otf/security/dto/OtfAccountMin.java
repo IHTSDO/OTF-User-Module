@@ -1,5 +1,6 @@
 package org.ihtsdo.otf.security.dto;
 
+import java.util.List;
 import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -97,18 +98,25 @@ public class OtfAccountMin extends OtfBaseName {
 	}
 
 	@Override
-	public void processParams(Map<String, String> paramsIn) {
-		// TODO Auto-generated method stub
-
+	public Map<String, List<String>> processParams(Map<String, String> paramsIn) {
+		return errors;
 	}
 
 	@Override
 	public void addTableRows() {
 		super.addTableRows();
-		getTableRows().add(getHtmlRowTextInput(EMAIL_NAME, getEmail()));
-		getTableRows().add(getHtmlRowTextInput(GIVEN_NAME, getGivenName()));
-		getTableRows().add(getHtmlRowTextInput(MID_NAME, getMiddleName()));
-		getTableRows().add(getHtmlRowTextInput(SUR_NAME, getSurname()));
+		getTableRows().add(
+				getHtmlRowTextInput(EMAIL_NAME, getEmail(),
+						getErrors().get(EMAIL_NAME)));
+		getTableRows().add(
+				getHtmlRowTextInput(GIVEN_NAME, getGivenName(), getErrors()
+						.get(GIVEN_NAME)));
+		getTableRows().add(
+				getHtmlRowTextInput(MID_NAME, getMiddleName(),
+						getErrors().get(MID_NAME)));
+		getTableRows().add(
+				getHtmlRowTextInput(SUR_NAME, getSurname(),
+						getErrors().get(SUR_NAME)));
 
 	}
 
@@ -131,6 +139,12 @@ public class OtfAccountMin extends OtfBaseName {
 	@JsonIgnore
 	public String getHtmlForm(String formName) {
 		return super.getHtmlForm(formName);
+	}
+
+	@Override
+	public void setValsFromParams() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

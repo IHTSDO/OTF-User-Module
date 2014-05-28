@@ -30,10 +30,15 @@ public class OtfCustomFieldPerm extends OtfCustomFieldKeyVal {
 	@Override
 	public Map<String, String> getLabelValuesMap() {
 		Map<String, String> retval = getStdLabelValuesMap();
-		retval.put("Name:",
-				getObw().getHtmlInputText("PermissionName", getKey()));
-		retval.put("Value:",
-				getObw().getHtmlInputText("PermissionValue", getVal()));
+		String id = getId();
+		retval.put(
+				"Name:",
+				getObw().getHtmlInputText(
+						getUniqueControlName("PermissionName", id), getKey()));
+		retval.put(
+				"Value:",
+				getObw().getHtmlInputText(
+						getUniqueControlName("PermissionValue", id), getVal()));
 		return retval;
 	}
 

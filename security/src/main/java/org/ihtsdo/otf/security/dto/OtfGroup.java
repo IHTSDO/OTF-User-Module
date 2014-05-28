@@ -1,5 +1,6 @@
 package org.ihtsdo.otf.security.dto;
 
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -19,7 +20,16 @@ public class OtfGroup extends OtfBaseAccountStore {
 			.getLogger(OtfGroup.class.getName());
 
 	private boolean showCustData = true;
-	private String grpDesc = "Role/Group";
+	private String grpDesc = null;
+	private String grptype = null;
+	// The name of the parent directory
+	private String parentDirName;
+
+	public static final String TYPE_MEMBER = "group_member";
+	public static final String TYPE_SETTING = "group_setting";
+	public static final String TYPE_NORMAL = "group_group";
+
+	public static final String PARENT_DIR_NAME = "parentDir";
 
 	public OtfGroup() {
 		super();
@@ -66,13 +76,13 @@ public class OtfGroup extends OtfBaseAccountStore {
 		sbuild.append(super.toString());
 		sbuild.append(custData.toString());
 		return sbuild.toString();
-
 	}
 
 	@Override
-	public void processParams(Map<String, String> paramsIn) {
-		// TODO Auto-generated method stub
-
+	public Map<String, List<String>> processParams(Map<String, String> paramsIn) {
+		LOG.info("GROUP: ");
+		printParams();
+		return errors;
 	}
 
 	@Override
@@ -95,7 +105,8 @@ public class OtfGroup extends OtfBaseAccountStore {
 	@Override
 	public void addHiddenRows() {
 		super.addHiddenRows();
-
+		getHiddenRows().add(
+				getHtmlInputHidden(PARENT_DIR_NAME, getParentDirName()));
 	}
 
 	public final boolean isShowCustData() {
@@ -107,11 +118,63 @@ public class OtfGroup extends OtfBaseAccountStore {
 	}
 
 	public final String getGrpDesc() {
+		if (grpDesc == null) {
+			getGrptype();
+		}
+		// LOG.info("getGrpDesc " + grpDesc);
 		return grpDesc;
 	}
 
 	public final void setGrpDesc(String grpDescIn) {
+		// LOG.info("setGrpDesc " + grpDescIn);
 		grpDesc = grpDescIn;
+	}
+
+	@Override
+	@JsonIgnore
+	public String getInputKey() {
+		return getGrptype();
+	}
+
+	public final String getParentDirName() {
+		if (parentDirName == null) {
+			parentDirName = "";
+		}
+		return parentDirName;
+	}
+
+	public final void setParentDirName(String parentDirNameIn) {
+		parentDirName = parentDirNameIn;
+	}
+
+	public final String getGrptype() {
+		if (grptype == null) {
+			setGrptype(TYPE_NORMAL);
+		}
+		return grptype;
+	}
+
+	public final void setGrptype(String grptypeIn) {
+		grptype = grptypeIn;
+		// LOG.info("setGrptype grptype = " + grptype);
+		switch (grptype) {
+		case TYPE_MEMBER:
+			setShowCustData(false);
+			setGrpDesc("Member");
+			break;
+		case TYPE_SETTING:
+			setGrpDesc("Settings");
+			break;
+		default:
+			grptype = TYPE_NORMAL;
+			setGrpDesc("Role/Group");
+		}
+	}
+
+	@Override
+	public void setValsFromParams() {
+		// TODO Auto-generated method stub
+
 	}
 
 }
