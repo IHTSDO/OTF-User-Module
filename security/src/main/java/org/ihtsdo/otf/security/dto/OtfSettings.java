@@ -1,5 +1,7 @@
 package org.ihtsdo.otf.security.dto;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -38,10 +40,28 @@ public class OtfSettings extends OtfBaseId {
 	}
 
 	@Override
-	public Map<String, List<String>> processParams(Map<String, String> paramsIn) {
+	public final Map<String, List<String>> processParams(
+			Map<String, String> paramsIn) {
 		LOG.info("SETTINGS: ");
 		printParams();
+		resetErrors();
+		validateParams(paramsIn);
+		// If no errors then update
+		if (errors.size() == 0) {
+			LOG.info("Before " + this.toString());
+			setDefPw(paramsIn.get(DEF_PW_LABEL));
+			setMembers(paramsIn.get(MEMBER_APP_LABEL));
+			setUsers(paramsIn.get(USER_APP_LABEL));
 
+			setSettingsFromFields();
+			LOG.info("After " + this.toString());
+		}
+
+		return errors;
+	}
+
+	@Override
+	public void validateParams(Map<String, String> paramsIn) {
 		String defpIn = paramsIn.get(DEF_PW_LABEL);
 		String membIn = paramsIn.get(MEMBER_APP_LABEL);
 		String usersIn = paramsIn.get(USER_APP_LABEL);
@@ -67,15 +87,15 @@ public class OtfSettings extends OtfBaseId {
 		checkWebFieldInList(usersIn, USER_APP_LABEL, appNames, true,
 				"Users App must exist as an application");
 		// LOG.info("Errors 2 size = " + errors.size());
-		return errors;
 	}
 
 	@Override
 	public void addTableRows() {
 
-		LOG.info("addTableRows getTableRows() size = " + getTableRows().size());
-		LOG.info("addTableRows getTableRows() getErrors() size = "
-				+ getErrors().size());
+		// LOG.info("addTableRows getTableRows() size = " +
+		// getTableRows().size());
+		// LOG.info("addTableRows getTableRows() getErrors() size = "
+		// + getErrors().size());
 		getTableRows().add(
 				getHtmlRowTextInput(DEF_PW_LABEL, getDefPw(),
 						getErrors().get(DEF_PW_LABEL)));
@@ -105,16 +125,16 @@ public class OtfSettings extends OtfBaseId {
 		settings = settingsIn;
 
 		defPw = getSettings().get(OtfCustomFieldSetting.DEFPW).getVal().trim();
-
 		users = getSettings().get(OtfCustomFieldSetting.USERS).getVal().trim();
 		members = getSettings().get(OtfCustomFieldSetting.MEMBERS).getVal()
 				.trim();
 	}
 
 	public final void setSettingsFromFields() {
-		settings.put(OtfCustomFieldSetting.DEFPW, getDefPwField());
-		settings.put(OtfCustomFieldSetting.USERS, getUsersField());
-		settings.put(OtfCustomFieldSetting.MEMBERS, getMemberField());
+		getSettings().get(OtfCustomFieldSetting.DEFPW).updateVal(getDefPw());
+		getSettings().get(OtfCustomFieldSetting.USERS).updateVal(getUsers());
+		getSettings().get(OtfCustomFieldSetting.MEMBERS)
+				.updateVal(getMembers());
 	}
 
 	public final String getDefPw() {
@@ -128,13 +148,6 @@ public class OtfSettings extends OtfBaseId {
 		defPw = defPwIn;
 	}
 
-	public final OtfCustomFieldSetting getDefPwField() {
-		OtfCustomFieldSetting ocfs = new OtfCustomFieldSetting();
-		ocfs.setKey(OtfCustomFieldSetting.DEFPW);
-		ocfs.setVal(getDefPw());
-		return ocfs;
-	}
-
 	public final String getUsers() {
 		if (users == null) {
 			users = "";
@@ -144,13 +157,6 @@ public class OtfSettings extends OtfBaseId {
 
 	public final void setUsers(String usersIn) {
 		users = usersIn;
-	}
-
-	public final OtfCustomFieldSetting getUsersField() {
-		OtfCustomFieldSetting ocfs = new OtfCustomFieldSetting();
-		ocfs.setKey(OtfCustomFieldSetting.USERS);
-		ocfs.setVal(getUsers());
-		return ocfs;
 	}
 
 	public final String getMembers() {
@@ -164,13 +170,6 @@ public class OtfSettings extends OtfBaseId {
 		members = membersIn;
 	}
 
-	public final OtfCustomFieldSetting getMemberField() {
-		OtfCustomFieldSetting ocfs = new OtfCustomFieldSetting();
-		ocfs.setKey(OtfCustomFieldSetting.MEMBERS);
-		ocfs.setVal(getMembers());
-		return ocfs;
-	}
-
 	@Override
 	@JsonIgnore
 	public String getInputKey() {
@@ -180,6 +179,20 @@ public class OtfSettings extends OtfBaseId {
 	@Override
 	public void setValsFromParams() {
 		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append("Settings CustomFields:\n");
+		List<String> keys = new ArrayList<String>(settings.keySet());
+		Collections.sort(keys);
+		for (String key : keys) {
+			sbuild.append("Cust Field Key = ").append(key).append("\n");
+			sbuild.append(settings.get(key).toString()).append("\n");
+		}
+		return sbuild.toString();
 
 	}
 

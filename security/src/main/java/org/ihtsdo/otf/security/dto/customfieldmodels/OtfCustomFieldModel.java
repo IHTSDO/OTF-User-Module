@@ -2,15 +2,24 @@ package org.ihtsdo.otf.security.dto.customfieldmodels;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
+import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.dto.OtfBasicWeb;
 import org.ihtsdo.otf.security.dto.OtfCustomField;
 
 public abstract class OtfCustomFieldModel {
 
+	/**
+	 * <p>
+	 * logger.
+	 * </p>
+	 */
+	private static final Logger LOG = Logger
+			.getLogger(OtfCustomFieldModel.class.getName());
+
 	protected String[] vals;
 	protected String key;
+	// protected String id;
 	protected OtfCustomField.CustomType type;
 	private OtfBasicWeb obw;
 	public static final String SEP = "-xxx-";
@@ -55,7 +64,8 @@ public abstract class OtfCustomFieldModel {
 	@Override
 	public final String toString() {
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i <= vals.length - 1; i++) {
+		sb.append("Cust FieldModel Key = ").append(getKey()).append("\n");
+		for (int i = 0; i <= getVals().length - 1; i++) {
 			sb.append(i).append(" : ").append(vals[i]).append("\n");
 		}
 		return sb.toString();
@@ -111,14 +121,21 @@ public abstract class OtfCustomFieldModel {
 
 	public String getUniqueControlName(String controlName, String id) {
 		if (id == null) {
-			id = getId();
+			id = getKey();
 		}
 		return new StringBuilder().append(controlName).append(SEP).append(id)
 				.toString();
 	}
 
-	public static final String getId() {
-		return UUID.randomUUID().toString();
-	}
+	// public final String getId() {
+	// if (id == null) {
+	// id = UUID.randomUUID().toString();
+	// }
+	// return id;
+	// }
+	//
+	// public final void setId(String idIn) {
+	// id = idIn;
+	// }
 
 }

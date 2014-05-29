@@ -1,5 +1,7 @@
 package org.ihtsdo.otf.security.dto;
 
+import java.util.Map;
+
 public abstract class OtfBaseAccountStore extends OtfBaseNameDesc {
 
 	private OtfAccounts accounts = new OtfAccounts();
@@ -24,6 +26,11 @@ public abstract class OtfBaseAccountStore extends OtfBaseNameDesc {
 		sbuild.append(accounts.toString());
 		return sbuild.toString();
 
+	}
+
+	@Override
+	public void validateParams(Map<String, String> paramsIn) {
+		super.validateParams(paramsIn);
 	}
 
 }

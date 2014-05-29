@@ -1,10 +1,12 @@
 package org.ihtsdo.otf.security.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldBasic;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldPerm;
 
 public class OtfGroup extends OtfBaseAccountStore {
@@ -82,7 +84,35 @@ public class OtfGroup extends OtfBaseAccountStore {
 	public Map<String, List<String>> processParams(Map<String, String> paramsIn) {
 		LOG.info("GROUP: ");
 		printParams();
+		validateParams(paramsIn);
 		return errors;
+	}
+
+	@Override
+	public void validateParams(Map<String, String> paramsIn) {
+		resetErrors();
+		super.validateParams(paramsIn);
+		OtfCustomFieldBasic cfb = new OtfCustomFieldBasic();
+		// Check if changed
+		String nameIn = paramsIn.get(NAME_NAME);
+		// Only check if changed
+		if (!nameIn.equals(getName())) {
+			List<String> names = new ArrayList<String>();
+			LOG.info("GrpType = " + getGrptype());
+			if (getGrptype().equals(TYPE_MEMBER)) {
+				names = cfb.getMembers();
+			}
+			if (getGrptype().equals(TYPE_NORMAL)) {
+				LOG.info("getParentDirName = " + getParentDirName());
+				names = cfb.getRolesByDir(getParentDirName());
+				LOG.info("names size = " + names.size());
+			}
+			checkWebFieldInList(nameIn, NAME_NAME, names, false,
+					"Name must be unique");
+		}
+
+		LOG.info("OtfGroup validate num errs = " + getErrors().size());
+
 	}
 
 	@Override
@@ -173,7 +203,6 @@ public class OtfGroup extends OtfBaseAccountStore {
 
 	@Override
 	public void setValsFromParams() {
-		// TODO Auto-generated method stub
 
 	}
 

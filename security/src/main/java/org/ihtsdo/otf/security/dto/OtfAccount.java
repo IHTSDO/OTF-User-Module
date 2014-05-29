@@ -51,6 +51,9 @@ public class OtfAccount extends OtfAccountMin {
 	public Map<String, List<String>> processParams(Map<String, String> paramsIn) {
 		LOG.info("ACCOUNT: ");
 		printParams();
+		validateParams(paramsIn);
+
+		// TODO remember to reload any cached account data
 		return errors;
 	}
 
@@ -109,6 +112,11 @@ public class OtfAccount extends OtfAccountMin {
 	public void setValsFromParams() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void validateParams(Map<String, String> paramsIn) {
+		super.validateParams(paramsIn);
 	}
 
 }

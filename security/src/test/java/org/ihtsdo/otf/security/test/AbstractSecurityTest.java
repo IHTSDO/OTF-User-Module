@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.UserSecurityHandler;
-import org.ihtsdo.otf.security.dto.OtfAccountMin;
 import org.ihtsdo.otf.security.dto.OtfAccount;
+import org.ihtsdo.otf.security.dto.OtfAccountMin;
 import org.ihtsdo.otf.security.dto.OtfCustomData;
 import org.ihtsdo.otf.security.dto.OtfCustomField;
 import org.ihtsdo.otf.security.dto.query.SecurityClient;
@@ -78,7 +78,7 @@ public abstract class AbstractSecurityTest {
 	@Test
 	public final void testNumSettings() {
 		assertEquals(getNumSettings(), getUsh().getUserSecurity().getSettings()
-				.size());
+				.getSettings().size());
 	}
 
 	@Test

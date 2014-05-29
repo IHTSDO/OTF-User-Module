@@ -74,6 +74,12 @@ public class OtfAccountStore extends OtfBaseName {
 	}
 
 	@Override
+	public void validateParams(Map<String, String> paramsIn) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
 	public void addTableRows() {
 		super.addTableRows();
 

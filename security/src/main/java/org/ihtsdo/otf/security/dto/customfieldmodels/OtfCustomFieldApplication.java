@@ -26,12 +26,10 @@ public class OtfCustomFieldApplication extends OtfCustomFieldCachedVals {
 
 	public OtfCustomFieldApplication() {
 		super();
-
 	}
 
 	public OtfCustomFieldApplication(final String keyIn, final String[] valsIn) {
 		super(keyIn, valsIn);
-
 	}
 
 	@Override
@@ -112,7 +110,7 @@ public class OtfCustomFieldApplication extends OtfCustomFieldCachedVals {
 	public Map<String, String> getLabelValuesMap() {
 		Map<String, String> retval = getStdLabelValuesMap();
 
-		String id = getId();
+		String id = getKey();
 		String appId = getUniqueControlName(APP_ROLE_APP, id);
 		String roleId = getUniqueControlName(APP_ROLE_ROLE, id);
 		String memId = getUniqueControlName(APP_ROLE_MEMBER, id);

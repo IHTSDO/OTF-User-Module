@@ -73,6 +73,12 @@ public class OtfDirectory extends OtfBaseAccountStore {
 	}
 
 	@Override
+	public void validateParams(Map<String, String> paramsIn) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
 	public String getTableTitle() {
 		if (isNew()) {
 			return "Add New:";

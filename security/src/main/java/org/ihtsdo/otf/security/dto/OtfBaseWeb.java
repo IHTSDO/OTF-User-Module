@@ -92,6 +92,8 @@ public abstract class OtfBaseWeb {
 	public abstract Map<String, List<String>> processParams(
 			Map<String, String> params);
 
+	public abstract void validateParams(Map<String, String> params);
+
 	public abstract void addTableRows();
 
 	public abstract void addHiddenRows();
@@ -298,14 +300,10 @@ public abstract class OtfBaseWeb {
 		sbuild.append(getHtmlLabelCell(label)).append("\n");
 		String inputT = getHtmlInputText(label, value);
 		if (errors != null && errors.size() > 0) {
-			LOG.info("errors found for label " + label);
-			// set inputT to error condition and add mouse over jsscript
-			// String toRepl = CSS_TEXT_INPUT+"\"";
-			// StringBuilder sbuild1 = new StringBuilder();
-			// sbuild1.append(CSS_TEXT_INPUT_ERROR).append("\" ").append(str);
+			// LOG.info("errors found for label " + label);
 			inputT = inputT.replace(CSS_TEXT_INPUT, CSS_TEXT_INPUT_ERROR);
 			inputT = inputT + "\n" + getErrorsDiv(errors);
-			LOG.info("inputT = " + inputT);
+			// LOG.info("inputT = " + inputT);
 		}
 		sbuild.append(getHtmlInputCell(inputT)).append("\n");
 		return getHtmlDiv(sbuild.toString(), CSS_TABLE_ROW);
@@ -567,6 +565,10 @@ public abstract class OtfBaseWeb {
 			}
 		}
 		LOG.info(sbuild.toString());
+	}
+
+	public final void resetErrors() {
+		errors = new HashMap<String, List<String>>();
 	}
 
 	public final void addError(String webName, String errormessage) {

@@ -26,7 +26,6 @@ import org.ihtsdo.otf.security.dto.OtfSettings;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldApplication;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldMember;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldPerm;
-import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldSetting;
 import org.ihtsdo.otf.security.dto.query.SecurityService;
 import org.ihtsdo.otf.security.dto.query.queries.UsersListQueryDTO;
 
@@ -64,7 +63,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		setHr(requestIn);
 		// logParameters(requestIn);
 		OtfBaseWeb obw = handlePostAction(requestIn, responseIn);
-
+		LOG.info("obw3 = " + obw + " num errs = " + obw.getErrors().size());
 		if (obw.getErrors().size() == 0) {
 			loadScreen(requestIn, responseIn, null);
 		} else {
@@ -109,12 +108,13 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		hr.getSession().setAttribute(BASEURL, curl);
 		// LOG.info("loadScreen curl = " + curl);
 		hr.getSession().setAttribute(TREE, getTreeHtml(curl));
-		if (obw == null) {
-			hr.getSession().setAttribute(FORM, getForm());
-		} else {
-			LOG.info("using obw errs size = " + obw.getErrors().size());
-			hr.getSession().setAttribute(FORM, obw.getRHS());
-		}
+		hr.getSession().setAttribute(FORM, getForm());
+		// if (obw == null) {
+		// hr.getSession().setAttribute(FORM, getForm());
+		// } else {
+		// LOG.info("using obw errs size = " + obw.getErrors().size());
+		// hr.getSession().setAttribute(FORM, obw.getRHS());
+		// }
 		setRedirect("/index-admin.jsp");
 		final RequestDispatcher reqd = sc.getServletContext()
 				.getRequestDispatcher(redirect);
@@ -165,9 +165,13 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 	// return notMemUser;
 	// }
 
-	public final Map<String, OtfCustomFieldSetting> getSettings() {
+	public final OtfSettings getSettings() {
 		return getUsh().getUserSecurity().getSettings();
 	}
+
+	// public final Map<String, OtfCustomFieldSetting> getSettings() {
+	// return getUsh().getUserSecurity().getSettings();
+	// }
 
 	public final String getUsersTreeHtml(final String path) {
 		return getList("Users", path + SecurityService.USERS, getUsers());
@@ -211,8 +215,9 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		// logParameters(requestIn);
 
 		OtfBaseWeb obw = getWebObjectFromId(inputKey, id);
-		LOG.info("obw = " + obw);
+		LOG.info("obw = " + obw + " num errs = " + obw.getErrors().size());
 		handleParams(requestIn, responseIn, obw);
+		LOG.info("obw2 = " + obw + " num errs = " + obw.getErrors().size());
 		return obw;
 
 	}
@@ -220,7 +225,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 	private OtfBaseWeb getWebObjectFromId(String inputKey, String id) {
 
 		boolean exists = stringOK(id);
-
+		LOG.info("getWebObjectFromId is = " + id);
 		switch (inputKey) {
 
 		case SecurityService.USERS:
@@ -239,12 +244,12 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			}
 		case SecurityService.SETTINGS:
 			LOG.info("SETTING");
-			return new OtfSettings(getSettings());
+			return getSettings();
 		case OtfGroup.TYPE_NORMAL:
 			LOG.info("GROUP : NORMAL");
 			if (exists) {
 				LOG.info("Group");
-				return new OtfGroup();
+				return getUsh().getUserSecurity().getGroupById(id);
 			} else {
 				return new OtfGroup();
 			}
@@ -258,7 +263,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 
 		case OtfGroup.TYPE_SETTING:
 			LOG.info("GROUP : SETTING");
-			return new OtfSettings(getSettings());
+			return getSettings();
 
 		default:
 			LOG.info(" no handler found for input Key = " + inputKey);
@@ -278,10 +283,36 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 
 		if (webObject.getErrors().size() == 0) {
 			// update
+			updateFromWebObject(webObject);
 
 		}
 		if (webObject.getErrors().size() > 0) {
 			webObject.logErrors();
+		}
+
+	}
+
+	public void updateFromWebObject(OtfBaseWeb webObject) {
+		LOG.info("updateFromWebObject webObject type = "
+				+ webObject.getClass().getName());
+
+		if (webObject instanceof OtfSettings) {
+			LOG.info("is OtfSettings");
+			OtfSettings otfObj = (OtfSettings) webObject;
+		}
+		if (webObject instanceof OtfAccount) {
+			LOG.info("is OtfAccount");
+			OtfAccount otfObj = (OtfAccount) webObject;
+		}
+		if (webObject instanceof OtfApplication) {
+			LOG.info("is OtfApplication");
+			OtfApplication otfObj = (OtfApplication) webObject;
+		}
+		if (webObject instanceof OtfGroup) {
+			LOG.info("is OtfGroup");
+			OtfGroup otfObj = (OtfGroup) webObject;
+			LOG.info("Parent dir = " + otfObj.getParentDirName());
+
 		}
 
 	}
@@ -379,7 +410,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 	}
 
 	public final String getSettingsForm() {
-		OtfSettings otfSett = new OtfSettings(getSettings());
+		OtfSettings otfSett = getSettings();
 		otfSett.setAction(getDecString(getHr().getRequestURI()));
 		return otfSett.getRHS();
 	}
@@ -426,6 +457,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 
 		// member.setShowCustData(false);
 		// member.setGrpDesc("Member");
+		LOG.info("member errs = " + member.getErrors().size());
 		return member.getRHS();
 	}
 

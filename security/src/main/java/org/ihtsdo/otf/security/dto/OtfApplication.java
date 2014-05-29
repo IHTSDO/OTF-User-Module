@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldBasic;
 import org.ihtsdo.otf.security.dto.query.SecurityService;
 
 public class OtfApplication extends OtfBaseNameDesc {
@@ -47,8 +48,24 @@ public class OtfApplication extends OtfBaseNameDesc {
 	public Map<String, List<String>> processParams(Map<String, String> paramsIn) {
 		LOG.info("APPLICATION: ");
 		printParams();
+		validateParams(paramsIn);
 
 		return errors;
+	}
+
+	@Override
+	public void validateParams(Map<String, String> paramsIn) {
+		resetErrors();
+		super.validateParams(paramsIn);
+		OtfCustomFieldBasic cfb = new OtfCustomFieldBasic();
+		// Check if changed
+		String nameIn = paramsIn.get(NAME_NAME);
+		// Only check if changed
+		if (!nameIn.equals(getName())) {
+			List<String> appNames = cfb.getAppNames();
+			checkWebFieldInList(nameIn, NAME_NAME, appNames, false,
+					"Name must be unique");
+		}
 	}
 
 	@Override

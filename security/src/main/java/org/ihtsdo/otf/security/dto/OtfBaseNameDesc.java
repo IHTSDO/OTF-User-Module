@@ -47,6 +47,12 @@ public abstract class OtfBaseNameDesc extends OtfBaseName {
 	}
 
 	@Override
+	public void validateParams(Map<String, String> paramsIn) {
+		super.validateParams(paramsIn);
+
+	}
+
+	@Override
 	public void setValsFromParams() {
 		// TODO Auto-generated method stub
 

@@ -2,10 +2,20 @@ package org.ihtsdo.otf.security.dto;
 
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldBasic;
 
 public class OtfAccountMin extends OtfBaseName {
+
+	/**
+	 * <p>
+	 * logger.
+	 * </p>
+	 */
+	private static final Logger LOG = Logger.getLogger(OtfAccountMin.class
+			.getName());
 
 	private String email;
 	private String givenName;
@@ -99,7 +109,36 @@ public class OtfAccountMin extends OtfBaseName {
 
 	@Override
 	public Map<String, List<String>> processParams(Map<String, String> paramsIn) {
+
+		// Check if changed
+
+		// Email must be not empty and unique
+
 		return errors;
+	}
+
+	@Override
+	public void validateParams(Map<String, String> paramsIn) {
+		resetErrors();
+		super.validateParams(paramsIn);
+		OtfCustomFieldBasic cfb = new OtfCustomFieldBasic();
+		// Check if changed
+		String nameIn = paramsIn.get(NAME_NAME);
+		// Only check if changed
+		if (!nameIn.equals(getName())) {
+			List<String> uNames = cfb.getUsersList();
+			checkWebFieldInList(nameIn, NAME_NAME, uNames, false,
+					"Name must be unique");
+		}
+		// Email
+		String emailIn = paramsIn.get(EMAIL_NAME);
+		LOG.info("emailIn = " + emailIn);
+		if (!emailIn.equals(getEmail())) {
+			checkWebFieldNotEmpty(emailIn, EMAIL_NAME);
+			List<String> emailAddr = cfb.getUserEmailList();
+			checkWebFieldInList(emailIn, EMAIL_NAME, emailAddr, false,
+					"Email must be unique");
+		}
 	}
 
 	@Override

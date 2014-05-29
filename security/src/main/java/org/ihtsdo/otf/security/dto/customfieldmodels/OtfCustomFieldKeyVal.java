@@ -22,14 +22,14 @@ public class OtfCustomFieldKeyVal extends OtfCustomFieldCachedVals {
 	public final void model2Vals() {
 		vals = new String[3];
 		vals[0] = getType().name();
-		vals[1] = getKey();
+		vals[1] = getKeyVal();
 		vals[2] = getVal();
 
 	}
 
 	@Override
 	public final void modelFromVals() {
-		setKey(vals[1]);
+		setKeyVal(vals[1]);
 		setVal(vals[2]);
 	}
 
@@ -53,6 +53,12 @@ public class OtfCustomFieldKeyVal extends OtfCustomFieldCachedVals {
 
 	public final void setVal(final String valIn) {
 		val = valIn;
+	}
+
+	public final void updateVal(final String valIn) {
+		setVal(valIn);
+		model2Vals();
+
 	}
 
 	@Override

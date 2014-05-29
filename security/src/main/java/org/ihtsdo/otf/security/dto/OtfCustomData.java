@@ -156,6 +156,12 @@ public class OtfCustomData extends OtfBaseId {
 	}
 
 	@Override
+	public void validateParams(Map<String, String> paramsIn) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
 	public void addTableRows() {
 		// TODO Auto-generated method stub
 

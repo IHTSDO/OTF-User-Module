@@ -90,7 +90,7 @@ public class OtfCustomField {
 	}
 
 	public void analyseValue() {
-		// LOG.info("analyseValue key = " + key);
+		// LOG.info("analyseValue key = " + getKey());
 		// Split val
 		vals = getValue().split(SEP);
 		if (vals.length > 0) {
@@ -98,16 +98,16 @@ public class OtfCustomField {
 		}
 		switch (type) {
 		case APP:
-			setModel(new OtfCustomFieldApplication(key, vals));
+			setModel(new OtfCustomFieldApplication(getKey(), vals));
 			break;
 		case MEMBER:
-			setModel(new OtfCustomFieldMember(key, vals));
+			setModel(new OtfCustomFieldMember(getKey(), vals));
 			break;
 		case PERM:
-			setModel(new OtfCustomFieldPerm(key, vals));
+			setModel(new OtfCustomFieldPerm(getKey(), vals));
 			break;
 		case SETTING:
-			setModel(new OtfCustomFieldSetting(key, vals));
+			setModel(new OtfCustomFieldSetting(getKey(), vals));
 			break;
 		default:
 			// do nothing
@@ -119,7 +119,6 @@ public class OtfCustomField {
 		if (key == null || key.length() == 0) {
 			key = UUID.randomUUID().toString();
 		}
-
 		return key;
 	}
 
@@ -172,6 +171,8 @@ public class OtfCustomField {
 
 	public void setModel(OtfCustomFieldModel modelIn) {
 		model = modelIn;
+		// LOG.info("\n Model Type = " + model.getType() + " key = "
+		// + model.getKey() + " id = " + model.getId());
 	}
 
 	@Override

@@ -10,7 +10,9 @@ public class OtfCachedListsDTO {
 
 	// Keys for getting lists/Denormalized maps from cache.
 	public static final String APPS_MAP = "Apps_Map";
+	public static final String DIRS_MAP = "Dirs_Map";
 	public static final String SETTINGS_MAP = "Settings_Map";
+	public static final String SETTINGS = "Settings";
 	public static final String MEMBERS_LIST = "Members_List";
 	public static final String ACCOUNTS_LIST = "Accounts_List";
 	public static final String APPS_NOT_USER_MEM_LIST = "AppNotUserMember_List";
@@ -36,6 +38,15 @@ public class OtfCachedListsDTO {
 	public final void setSettingsMap(
 			Map<String, OtfCustomFieldSetting> settingsIn) {
 		ObjectCache.INSTANCE.put(SETTINGS_MAP, settingsIn);
+	}
+
+	public final void setSettings(OtfSettings settingsIn) {
+		ObjectCache.INSTANCE.put(SETTINGS, settingsIn);
+	}
+
+	public final OtfSettings getSettings() {
+		OtfSettings settings = (OtfSettings) ObjectCache.INSTANCE.get(SETTINGS);
+		return settings;
 	}
 
 	public final List<String> getMembersList() {
@@ -69,6 +80,17 @@ public class OtfCachedListsDTO {
 
 	public final void setAppsMap(Map<String, List<String>> appsMapIn) {
 		ObjectCache.INSTANCE.put(APPS_MAP, appsMapIn);
+	}
+
+	public final Map<String, List<String>> getDirsMap() {
+		@SuppressWarnings("unchecked")
+		Map<String, List<String>> dirsMap = (Map<String, List<String>>) ObjectCache.INSTANCE
+				.get(DIRS_MAP);
+		return dirsMap;
+	}
+
+	public final void setDirsMap(Map<String, List<String>> dirsMapIn) {
+		ObjectCache.INSTANCE.put(DIRS_MAP, dirsMapIn);
 	}
 
 	public final List<String> getAppsNotUserMemberList() {

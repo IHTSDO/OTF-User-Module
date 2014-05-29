@@ -2,11 +2,21 @@ package org.ihtsdo.otf.security.dto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 public abstract class OtfBaseName extends OtfBaseId implements
 		Comparable<OtfBaseName> {
+
+	/**
+	 * <p>
+	 * logger.
+	 * </p>
+	 */
+	private static final Logger LOG = Logger.getLogger(OtfBaseName.class
+			.getName());
 
 	protected String name;
 	private Status status;
@@ -102,8 +112,19 @@ public abstract class OtfBaseName extends OtfBaseId implements
 
 	@Override
 	public void setValsFromParams() {
-		// TODO Auto-generated method stub
+	}
 
+	@Override
+	public Map<String, List<String>> processParams(Map<String, String> paramsIn) {
+		return errors;
+	}
+
+	@Override
+	public void validateParams(Map<String, String> paramsIn) {
+		// Check Name not empty
+		LOG.info("validateParams paramsIn.get(NAME_NAME) = "
+				+ paramsIn.get(NAME_NAME));
+		checkWebFieldNotEmpty(paramsIn.get(NAME_NAME), NAME_NAME);
 	}
 
 }
