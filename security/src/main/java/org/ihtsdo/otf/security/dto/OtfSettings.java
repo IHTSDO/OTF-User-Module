@@ -2,6 +2,7 @@ package org.ihtsdo.otf.security.dto;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -29,61 +30,83 @@ public class OtfSettings extends OtfBaseId {
 	private String users;
 	private String members;
 
+	private OtfGroup grp;
+
 	public OtfSettings() {
 		super();
-
 	}
 
-	public OtfSettings(Map<String, OtfCustomFieldSetting> settingsIn) {
+	public OtfSettings(OtfGroup grpIn) {
 		super();
-		setSettings(settingsIn);
+		setGrp(grpIn);
+		setSettings();
 	}
 
-	@Override
-	public final Map<String, List<String>> processParams(
-			Map<String, String> paramsIn) {
-		LOG.info("SETTINGS: ");
-		printParams();
-		resetErrors();
-		validateParams(paramsIn);
-		// If no errors then update
-		if (errors.size() == 0) {
-			LOG.info("Before " + this.toString());
-			setDefPw(paramsIn.get(DEF_PW_LABEL));
-			setMembers(paramsIn.get(MEMBER_APP_LABEL));
-			setUsers(paramsIn.get(USER_APP_LABEL));
+	public void updateGrpSettings() {
 
-			setSettingsFromFields();
-			LOG.info("After " + this.toString());
+		for (String key : getSettings().keySet()) {
+			OtfCustomFieldSetting setF = getSettings().get(key);
+			OtfCustomField ocf = getGrp().getCustData().getCustFields()
+					.get(setF.getKey());
+			ocf.setValsFromModel();
+			ocf.setValueFromVals();
+
 		}
 
-		return errors;
+		// LOG.info("updateGrpSettings grp = " + getGrp());
+
+	}
+
+	private void setSettings() {
+		List<OtfCustomField> setList = getGrp().getCustData().getSettings();
+		for (OtfCustomField cf : setList) {
+			OtfCustomFieldSetting cfSet = (OtfCustomFieldSetting) cf.getModel();
+			getSettings().put(cfSet.getKeyVal(), cfSet);
+		}
+		setFieldsFromSettings();
 	}
 
 	@Override
-	public void validateParams(Map<String, String> paramsIn) {
-		String defpIn = paramsIn.get(DEF_PW_LABEL);
-		String membIn = paramsIn.get(MEMBER_APP_LABEL);
-		String usersIn = paramsIn.get(USER_APP_LABEL);
+	public final void processParams() {
+		// LOG.info("SETTINGS: ");
+		// printParams();
+		resetErrors();
+		validateParams();
+		// If no errors then update
+		if (errors.size() == 0) {
+			// LOG.info("Before " + this.toString());
+			setValsFromParams();
+			setSettingsFromFields();
+			// LOG.info("After " + this.toString());
+			updateGrpSettings();
+		}
 
-		LOG.info("defp = " + defpIn);
-		LOG.info("membIn = " + membIn);
-		LOG.info("usersIn = " + usersIn);
+	}
+
+	@Override
+	public void validateParams() {
+		String defpIn = getNotNullParam(DEF_PW_LABEL);
+		String membIn = getNotNullParam(MEMBER_APP_LABEL);
+		String usersIn = getNotNullParam(USER_APP_LABEL);
+
+		// LOG.info(" Settings validate defp = " + defpIn);
+		// LOG.info("membIn = " + membIn);
+		// LOG.info("usersIn = " + usersIn);
 
 		checkWebFieldNotEmpty(defpIn, DEF_PW_LABEL);
 		checkWebFieldNotEmpty(membIn, MEMBER_APP_LABEL);
 		checkWebFieldNotEmpty(usersIn, USER_APP_LABEL);
 
-		LOG.info("Errors 1 size = " + errors.size());
+		// LOG.info("Errors 1 size = " + errors.size());
 
 		// Check Password length etc
-
-		// Check memb in List
-
+		// TODO: FInd out how & where StormPath Sets it's pw length
+		// complexity/pattern etc & if this is available
+		// Check memb app in List
 		List<String> appNames = new OtfCustomFieldSetting().getAppNames();
-
 		checkWebFieldInList(membIn, MEMBER_APP_LABEL, appNames, true,
 				"Member App must exist as an application");
+		// Check user app in list.
 		checkWebFieldInList(usersIn, USER_APP_LABEL, appNames, true,
 				"Users App must exist as an application");
 		// LOG.info("Errors 2 size = " + errors.size());
@@ -118,12 +141,19 @@ public class OtfSettings extends OtfBaseId {
 	}
 
 	public final Map<String, OtfCustomFieldSetting> getSettings() {
+		if (settings == null) {
+			settings = new HashMap<String, OtfCustomFieldSetting>();
+		}
 		return settings;
 	}
 
 	public final void setSettings(Map<String, OtfCustomFieldSetting> settingsIn) {
 		settings = settingsIn;
+		setFieldsFromSettings();
 
+	}
+
+	private void setFieldsFromSettings() {
 		defPw = getSettings().get(OtfCustomFieldSetting.DEFPW).getVal().trim();
 		users = getSettings().get(OtfCustomFieldSetting.USERS).getVal().trim();
 		members = getSettings().get(OtfCustomFieldSetting.MEMBERS).getVal()
@@ -178,8 +208,9 @@ public class OtfSettings extends OtfBaseId {
 
 	@Override
 	public void setValsFromParams() {
-		// TODO Auto-generated method stub
-
+		setDefPw(getNotNullParam(DEF_PW_LABEL));
+		setMembers(getNotNullParam(MEMBER_APP_LABEL));
+		setUsers(getNotNullParam(USER_APP_LABEL));
 	}
 
 	@Override
@@ -194,6 +225,16 @@ public class OtfSettings extends OtfBaseId {
 		}
 		return sbuild.toString();
 
+	}
+
+	public final OtfGroup getGrp() {
+
+		return grp;
+	}
+
+	public final void setGrp(OtfGroup grpIn) {
+		grp = grpIn;
+		grp.setGrptype(OtfGroup.TYPE_SETTING);
 	}
 
 }

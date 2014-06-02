@@ -91,23 +91,23 @@ public class OtfCustomData extends OtfBaseId {
 	}
 
 	public final List<OtfCustomField> getDefaults() {
-		return getFieldsByType(OtfCustomField.CustomType.DEFAULT);
+		return getFieldsByType(OtfCustomField.CustomType.CD_TYPE);
 	}
 
 	public final List<OtfCustomField> getMembers() {
-		return getFieldsByType(OtfCustomField.CustomType.MEMBER);
+		return getFieldsByType(OtfCustomField.CustomType.CD_TYPE_MEMBER);
 	}
 
 	public final List<OtfCustomField> getPerms() {
-		return getFieldsByType(OtfCustomField.CustomType.PERM);
+		return getFieldsByType(OtfCustomField.CustomType.CD_TYPE_PERM);
 	}
 
 	public final List<OtfCustomField> getApps() {
-		return getFieldsByType(OtfCustomField.CustomType.APP);
+		return getFieldsByType(OtfCustomField.CustomType.CD_TYPE_APP);
 	}
 
 	public final List<OtfCustomField> getSettings() {
-		return getFieldsByType(OtfCustomField.CustomType.SETTING);
+		return getFieldsByType(OtfCustomField.CustomType.CD_TYPE_SETTING);
 	}
 
 	public final List<OtfCustomField> getAppsByAppName(final String appName) {
@@ -151,17 +151,6 @@ public class OtfCustomData extends OtfBaseId {
 	}
 
 	@Override
-	public Map<String, List<String>> processParams(Map<String, String> paramsIn) {
-		return errors;
-	}
-
-	@Override
-	public void validateParams(Map<String, String> paramsIn) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void addTableRows() {
 		// TODO Auto-generated method stub
 
@@ -193,11 +182,11 @@ public class OtfCustomData extends OtfBaseId {
 	public String getHtmlForm(OtfCustomFieldModel model) {
 
 		switch (model.getType()) {
-		case MEMBER:
+		case CD_TYPE_MEMBER:
 			return getMembersForm();
-		case PERM:
+		case CD_TYPE_PERM:
 			return getPermsForm();
-		case APP:
+		case CD_TYPE_APP:
 			return getAppsForm();
 		default:
 			return getDefaultForm();
@@ -300,6 +289,24 @@ public class OtfCustomData extends OtfBaseId {
 
 	@Override
 	public void setValsFromParams() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void processParams() {
+
+		for (String key : params.keySet()) {
+			// if string startsWith(OtfCustomField.CustomType.CD_TYPE
+			if (key.startsWith(OtfCustomField.CustomType.CD_TYPE.toString())) {
+
+			}
+		}
+
+	}
+
+	@Override
+	public void validateParams() {
 		// TODO Auto-generated method stub
 
 	}

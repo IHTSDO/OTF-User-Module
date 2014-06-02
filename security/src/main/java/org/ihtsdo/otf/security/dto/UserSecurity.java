@@ -50,6 +50,16 @@ public class UserSecurity {
 
 	}
 
+	public final void resetAllCachedValues() {
+		resetAllAccounts();
+		resetDirsMap();
+		resetAppsMap();
+		resetMembers();
+		resetSettings();
+		resetAppsNotMembersOrUsers();
+
+	}
+
 	public final String getDefaultpw() {
 		if (!stringOK(defaultpw)) {
 			defaultpw = getSettings().getSettings()
@@ -102,6 +112,11 @@ public class UserSecurity {
 		dirs = dirsIn;
 	}
 
+	public void resetSettings() {
+		getCachedListMaps().remSettings();
+		getSettings();
+	}
+
 	public final OtfSettings getSettings() {
 		OtfSettings settings = getCachedListMaps().getSettings();
 		if (settings == null) {
@@ -110,16 +125,8 @@ public class UserSecurity {
 			OtfDirectory setDirectory = getDirs().getDirByName(SETTINGS);
 			// get settings group
 			OtfGroup setgrp = setDirectory.getGroups().getGroupByName(SETTINGS);
-			// getSettings
-			LOG.info("Settings CD = " + setgrp.getCustData());
-
-			List<OtfCustomField> setList = setgrp.getCustData().getSettings();
-			for (OtfCustomField cf : setList) {
-				OtfCustomFieldSetting cfSet = (OtfCustomFieldSetting) cf
-						.getModel();
-				setMap.put(cfSet.getKeyVal(), cfSet);
-			}
-			settings = new OtfSettings(setMap);
+			setgrp.setParentDirName(SETTINGS);
+			settings = new OtfSettings(setgrp);
 			getCachedListMaps().setSettings(settings);
 		}
 		return settings;
@@ -128,39 +135,6 @@ public class UserSecurity {
 	public final void setSettings(OtfSettings settingsIn) {
 		getCachedListMaps().setSettings(settingsIn);
 	}
-
-	// public final Map<String, OtfCustomFieldSetting> getSettings() {
-	// Map<String, OtfCustomFieldSetting> settings = getCachedListMaps()
-	// .getSettingsMap();
-	// if (settings == null || settings.size() == 0) {
-	// settings = new HashMap<String, OtfCustomFieldSetting>();
-	// // Get settings dir
-	// OtfDirectory setDirectory = getDirs().getDirByName(SETTINGS);
-	// // get settings group
-	// OtfGroup setgrp = setDirectory.getGroups().getGroupByName(SETTINGS);
-	// // getSettings
-	// LOG.info("Settings CD = " + setgrp.getCustData());
-	//
-	// List<OtfCustomField> setList = setgrp.getCustData().getSettings();
-	// for (OtfCustomField cf : setList) {
-	// OtfCustomFieldSetting cfSet = (OtfCustomFieldSetting) cf
-	// .getModel();
-	// settings.put(cfSet.getKeyVal(), cfSet);
-	// }
-	// setSettings(settings);
-	// }
-	// // LOG.info("Settings = \n");
-	// // for (String key : settings.keySet()) {
-	// // LOG.info("Key = " + key);
-	// // LOG.info("Vals = " + settings.get(key));
-	// // }
-	// return settings;
-	// }
-	//
-	// public final void setSettings(Map<String, OtfCustomFieldSetting>
-	// settingsIn) {
-	// getCachedListMaps().setSettingsMap(settingsIn);
-	// }
 
 	public final boolean stringOK(final String chk) {
 		return chk != null && chk.length() > 0;
@@ -229,6 +203,11 @@ public class UserSecurity {
 		getCachedListMaps().setAppsMap(appsMap);
 	}
 
+	public final void resetAppsMap() {
+		getCachedListMaps().remAppsMap();
+		getAppsMap();
+	}
+
 	public final Map<String, List<String>> getDirsMap() {
 		Map<String, List<String>> dirsMap = getCachedListMaps().getDirsMap();
 		if (dirsMap == null) {
@@ -252,6 +231,11 @@ public class UserSecurity {
 		getCachedListMaps().setDirsMap(dirsMap);
 	}
 
+	public final void resetDirsMap() {
+		getCachedListMaps().remDirsMap();
+		getDirsMap();
+	}
+
 	public final List<String> getMembers() {
 		// LOG.info("GET MEMBERS");
 		List<String> members = getCachedListMaps().getMembersList();
@@ -266,6 +250,7 @@ public class UserSecurity {
 				// getAll groups within
 				for (OtfGroup grp : mDirectory.getGroups().getGroups().values()) {
 					members.add(grp.getName());
+					// LOG.info("Member grp = " + grp.getName());
 				}
 			}
 			Collections.sort(members);
@@ -277,6 +262,11 @@ public class UserSecurity {
 
 	public final void setMembers(List<String> membersIn) {
 		getCachedListMaps().setMembersList(membersIn);
+	}
+
+	public final void resetMembers() {
+		getCachedListMaps().remMembersList();
+		getMembers();
 	}
 
 	public final OtfGroup getMemberByName(final String name) {
@@ -321,6 +311,10 @@ public class UserSecurity {
 
 	public final OtfDirectory getMembersDir() {
 		return getDirs().getDirByName(getMembersApp());
+	}
+
+	public final OtfDirectory getUsersDir() {
+		return getDirs().getDirByName(getUsersApp());
 	}
 
 	public final Collection<OtfAccount> getUsers(final String dirname) {
@@ -455,6 +449,11 @@ public class UserSecurity {
 		getCachedListMaps().setAppsNotUserMemberList(appsNotMembersOrUsersIn);
 	}
 
+	public final void resetAppsNotMembersOrUsers() {
+		getCachedListMaps().remAppsNotUserMemberList();
+		getAppsNotMembersOrUsers();
+	}
+
 	public final Map<String, OtfAccount> getAllAccounts() {
 		Map<String, OtfAccount> allAccounts = getCachedListMaps()
 				.getAllAccountsMap();
@@ -478,7 +477,7 @@ public class UserSecurity {
 	}
 
 	public final void resetAllAccounts() {
-		setAllAccounts(null);
+		getCachedListMaps().remAllAccountsMap();
 		getAllAccounts();
 	}
 

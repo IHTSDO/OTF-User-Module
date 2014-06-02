@@ -83,7 +83,7 @@ public class OtfCustomFieldKeyVal extends OtfCustomFieldCachedVals {
 
 	@Override
 	public CustomType getType() {
-		type = OtfCustomField.CustomType.KEY_VAL;
+		type = OtfCustomField.CustomType.CD_TYPE_KEY_VAL;
 		return type;
 	}
 

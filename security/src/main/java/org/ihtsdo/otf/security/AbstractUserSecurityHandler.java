@@ -1,6 +1,5 @@
 package org.ihtsdo.otf.security;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -21,6 +20,9 @@ public abstract class AbstractUserSecurityHandler implements
 	public static final String NAME_NOT_UNIQUE = "Name is not unique";
 	public static final String DIR_NOT_FOUND = "Directory not found";
 
+	public static final String REMOTE_COMMIT_OK = "Remote Commit OK";
+	public static final String REMOTE_COMMIT_NOT_OK = "Remote Commit NOTOK";
+
 	/**
 	 * <p>
 	 * logger.
@@ -30,7 +32,7 @@ public abstract class AbstractUserSecurityHandler implements
 			.getLogger(AbstractUserSecurityHandler.class.getName());
 
 	@Override
-	public abstract void saveUserSecurity() throws IOException;
+	public abstract void saveUserSecurity() throws Exception;
 
 	@Override
 	public abstract OtfAccount authAccount(String acNameIn, String pwIn);
@@ -44,6 +46,9 @@ public abstract class AbstractUserSecurityHandler implements
 	public abstract void buildUserSecurity() throws Exception;
 
 	public abstract String addUpdateMemberLocal(OtfGroup grpIn,
+			OtfDirectory mDirectory, boolean isNew);
+
+	public abstract String addUpdateGroupLocal(OtfGroup grpIn,
 			OtfDirectory mDirectory, boolean isNew);
 
 	public abstract String addUpdateAppLocal(final OtfApplication appIn,
@@ -116,6 +121,10 @@ public abstract class AbstractUserSecurityHandler implements
 						dirnames.iterator().next());
 			}
 		}
+		if (parentIn == null) {
+			// use the std one in settings.
+			parentIn = getUserSecurity().getUsersDir();
+		}
 
 		return addUpdateAccountLocal(accIn, parentIn, isNew);
 	}
@@ -133,6 +142,25 @@ public abstract class AbstractUserSecurityHandler implements
 		}
 		mDirectory.getGroups().getGroups().put(grpIn.getName(), grpIn);
 		return addUpdateMemberLocal(grpIn, mDirectory, isNew);
+	}
+
+	@Override
+	public final String addUpdateGroup(final OtfGroup grpIn) {
+		String pDir = grpIn.getParentDirName();
+		LOG.info("addUpdateGroup parent dir = " + pDir);
+		LOG.info("Grp = " + grpIn);
+
+		boolean isNew = grpIn.isNew();
+		OtfDirectory mDirectory = getUserSecurity().getDirs()
+				.getDirByName(pDir);
+
+		return addUpdateGroupLocal(grpIn, mDirectory, isNew);
+
+	}
+
+	@Override
+	public final String addUpdateSettings(final OtfGroup grpIn) {
+		return null;
 	}
 
 	@Override

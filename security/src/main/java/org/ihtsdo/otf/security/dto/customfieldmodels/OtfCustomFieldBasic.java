@@ -54,7 +54,7 @@ public class OtfCustomFieldBasic extends OtfCustomFieldCachedVals {
 
 	@Override
 	public CustomType getType() {
-		type = OtfCustomField.CustomType.DEFAULT;
+		type = OtfCustomField.CustomType.CD_TYPE;
 		return type;
 	}
 

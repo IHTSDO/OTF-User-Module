@@ -19,7 +19,7 @@ public class OtfCustomFieldSetting extends OtfCustomFieldKeyVal {
 
 	@Override
 	public CustomType getType() {
-		type = OtfCustomField.CustomType.SETTING;
+		type = OtfCustomField.CustomType.CD_TYPE_SETTING;
 		return type;
 	}
 

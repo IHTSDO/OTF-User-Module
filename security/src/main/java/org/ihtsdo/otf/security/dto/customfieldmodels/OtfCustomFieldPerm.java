@@ -44,7 +44,7 @@ public class OtfCustomFieldPerm extends OtfCustomFieldKeyVal {
 
 	@Override
 	public CustomType getType() {
-		type = OtfCustomField.CustomType.PERM;
+		type = OtfCustomField.CustomType.CD_TYPE_PERM;
 		return type;
 	}
 }

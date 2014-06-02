@@ -1,9 +1,9 @@
 package org.ihtsdo.otf.security.xml;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.AbstractUserSecurityHandler;
@@ -114,9 +114,20 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 
 	}
 
+	private String saveUSToXML() {
+		try {
+			saveUserSecurity();
+		} catch (Exception e) {
+			LOG.log(Level.SEVERE, "Error Writing XML Model", e);
+			return REMOTE_COMMIT_NOT_OK + " " + e.getMessage();
+		}
+		return REMOTE_COMMIT_OK;
+	}
+
 	@Override
-	public void saveUserSecurity() throws IOException {
-		// TODO: Write out to file.
+	public void saveUserSecurity() throws Exception {
+		LOG.info("About to write to " + getConfigFN());
+		XMLUtil.writeXMLToFile(getXMLFromUserSecurity(), getConfigFN());
 	}
 
 	public final String getConfigFN() {
@@ -155,27 +166,37 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 	public final String addUpdateMemberLocal(final OtfGroup grpIn,
 			final OtfDirectory mDirectoryIn, final boolean isNewIn) {
 		// Nothing to do as the entire model is written out.
-		return null;
+		return saveUSToXML();
 	}
 
 	@Override
 	public final String addUpdateAppLocal(final OtfApplication appIn,
 			final boolean isNewIn) {
 		// Nothing to do as the entire model is written out.
-		return null;
+		return saveUSToXML();
 	}
 
 	@Override
 	public final String addUpdateAccountLocal(final OtfAccount accIn,
 			final OtfDirectory parentIn, final boolean isNewIn) {
 		// Nothing to do as the entire model is written out.
-		return null;
+		return saveUSToXML();
 	}
 
 	@Override
 	public void localReload() {
-		// TODO Auto-generated method stub
+		try {
+			buildUserSecurity();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
+	@Override
+	public String addUpdateGroupLocal(OtfGroup grpIn,
+			OtfDirectory mDirectoryIn, boolean isNewIn) {
+		return saveUSToXML();
 	}
 
 }

@@ -1,7 +1,5 @@
 package org.ihtsdo.otf.security.dto;
 
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -48,13 +46,13 @@ public class OtfAccount extends OtfAccountMin {
 	}
 
 	@Override
-	public Map<String, List<String>> processParams(Map<String, String> paramsIn) {
+	public void processParams() {
 		LOG.info("ACCOUNT: ");
 		printParams();
-		validateParams(paramsIn);
+		validateParams();
 
 		// TODO remember to reload any cached account data
-		return errors;
+		// return errors;
 	}
 
 	@Override
@@ -115,8 +113,8 @@ public class OtfAccount extends OtfAccountMin {
 	}
 
 	@Override
-	public void validateParams(Map<String, String> paramsIn) {
-		super.validateParams(paramsIn);
+	public void validateParams() {
+		super.validateParams();
 	}
 
 }

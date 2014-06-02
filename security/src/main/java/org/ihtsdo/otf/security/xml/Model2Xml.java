@@ -39,18 +39,11 @@ public class Model2Xml {
 	}
 
 	private void buildFromModel() {
-
+		doc = null;
 		final Element elem = getDoc().createElement(XmlStatics.XML_E_ROOT);
-		// elem.setAttribute(XmlStatics.XML_A_DEFPW,
-		// userSecurity.getDefaultpw());
-		// elem.setAttribute(XmlStatics.XML_A_USERS_APP,
-		// userSecurity.getUsersApp());
-		// elem.setAttribute(XmlStatics.XML_A_MEMBERS_APP,
-		// userSecurity.getMembersApp());
-
 		buildTopDirs(elem);
 		buildTopApps(elem);
-
+		// doc.importNode(elem, true);
 		doc.appendChild(elem);
 	}
 

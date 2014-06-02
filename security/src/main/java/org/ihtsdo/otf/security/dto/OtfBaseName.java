@@ -2,7 +2,6 @@ package org.ihtsdo.otf.security.dto;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -112,19 +111,20 @@ public abstract class OtfBaseName extends OtfBaseId implements
 
 	@Override
 	public void setValsFromParams() {
+		super.setValsFromParams();
+		setName(getNotNullParam(NAME_NAME));
+		setStatus(getNotNullParam(STATUS_NAME));
 	}
 
 	@Override
-	public Map<String, List<String>> processParams(Map<String, String> paramsIn) {
-		return errors;
+	public void processParams() {
+
 	}
 
 	@Override
-	public void validateParams(Map<String, String> paramsIn) {
+	public void validateParams() {
 		// Check Name not empty
-		LOG.info("validateParams paramsIn.get(NAME_NAME) = "
-				+ paramsIn.get(NAME_NAME));
-		checkWebFieldNotEmpty(paramsIn.get(NAME_NAME), NAME_NAME);
+		checkWebFieldNotEmpty(getNotNullParam(NAME_NAME), NAME_NAME);
 	}
 
 }

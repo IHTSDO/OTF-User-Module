@@ -2,6 +2,7 @@ package org.ihtsdo.otf.security.dto.customfieldmodels;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.dto.OtfBasicWeb;
@@ -24,6 +25,8 @@ public abstract class OtfCustomFieldModel {
 	private OtfBasicWeb obw;
 	public static final String SEP = "-xxx-";
 	public static final String NEW_FORM_URL = "newForm/";
+
+	// public static final String CD_FIELD = "XCD_FIELDX";
 
 	public OtfCustomFieldModel() {
 		super();
@@ -119,23 +122,25 @@ public abstract class OtfCustomFieldModel {
 		return sbuild.toString();
 	}
 
-	public String getUniqueControlName(String controlName, String id) {
-		if (id == null) {
+	public final String getUniqueControlName(final String controlName,
+			final String idIn) {
+		String id = idIn;
+		if (!stringOK(id)) {
 			id = getKey();
 		}
-		return new StringBuilder().append(controlName).append(SEP).append(id)
-				.toString();
+		if (!stringOK(id)) {
+			id = UUID.randomUUID().toString();
+		}
+		return new StringBuilder().append(getType()).append(SEP)
+				.append(controlName).append(SEP).append(id).toString();
+		// .append(SEP).append(CD_FIELD)
 	}
 
-	// public final String getId() {
-	// if (id == null) {
-	// id = UUID.randomUUID().toString();
-	// }
-	// return id;
-	// }
-	//
-	// public final void setId(String idIn) {
-	// id = idIn;
-	// }
+	public final static String[] paramKeyAsArray(String p_key) {
+		String[] keyAr = p_key.split(SEP);
+		LOG.info("KeyArr length = " + keyAr.length);
+
+		return keyAr;
+	}
 
 }

@@ -1,6 +1,5 @@
 package org.ihtsdo.otf.security;
 
-import java.io.IOException;
 import java.util.Properties;
 
 import org.ihtsdo.otf.security.dto.OtfAccount;
@@ -15,7 +14,7 @@ public interface UserSecurityHandler {
 
 	void setUserSecurity(UserSecurity userSecurityIn);
 
-	void saveUserSecurity() throws IOException;
+	void saveUserSecurity() throws Exception;
 
 	OtfAccount authAccount(String acName, String pw);
 
@@ -28,6 +27,10 @@ public interface UserSecurityHandler {
 	String addUpdateAccount(OtfAccount acc, OtfDirectory parent);
 
 	String addUpdateMember(OtfGroup grp);
+
+	String addUpdateSettings(OtfGroup grp);
+
+	String addUpdateGroup(OtfGroup grp);
 
 	String addUpdateApp(OtfApplication app);
 

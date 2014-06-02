@@ -1,11 +1,20 @@
 package org.ihtsdo.otf.security.dto.customfieldmodels;
 
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.dto.OtfCustomField;
 import org.ihtsdo.otf.security.dto.OtfCustomField.CustomType;
 
 public class OtfCustomFieldMember extends OtfCustomFieldCachedVals {
+
+	/**
+	 * <p>
+	 * logger.
+	 * </p>
+	 */
+	private static final Logger LOG = Logger
+			.getLogger(OtfCustomFieldApplication.class.getName());
 
 	private String val;
 
@@ -63,7 +72,7 @@ public class OtfCustomFieldMember extends OtfCustomFieldCachedVals {
 
 	@Override
 	public CustomType getType() {
-		type = OtfCustomField.CustomType.MEMBER;
+		type = OtfCustomField.CustomType.CD_TYPE_MEMBER;
 		return type;
 	}
 

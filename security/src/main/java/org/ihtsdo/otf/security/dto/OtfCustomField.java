@@ -22,7 +22,7 @@ public class OtfCustomField {
 	private String key;
 	private String value;
 	public static final String SEP = ":";
-	private CustomType type = CustomType.DEFAULT;
+	private CustomType type = CustomType.CD_TYPE;
 	private String[] vals;
 
 	private OtfCustomFieldModel model;
@@ -32,17 +32,39 @@ public class OtfCustomField {
 	 */
 	public static enum CustomType {
 		/** NO VALUE. */
-		DEFAULT,
+		CD_TYPE,
 		/** A Member */
-		MEMBER,
+		CD_TYPE_MEMBER,
 		/** A permission. */
-		PERM,
+		CD_TYPE_PERM,
 		/** An Application. */
-		APP,
+		CD_TYPE_APP,
 		/** An Setting. */
-		SETTING,
+		CD_TYPE_SETTING,
 		/** An Setting. */
-		KEY_VAL
+		CD_TYPE_KEY_VAL;
+
+		public static CustomType getCustomTypeByString(String tval) {
+			if (tval.equalsIgnoreCase(CD_TYPE_MEMBER.name())) {
+				return CD_TYPE_MEMBER;
+			}
+			if (tval.equalsIgnoreCase(CD_TYPE_PERM.name())) {
+				return CD_TYPE_PERM;
+			}
+			if (tval.equalsIgnoreCase(CD_TYPE_APP.name())) {
+				return CD_TYPE_APP;
+
+			}
+			if (tval.equalsIgnoreCase(CD_TYPE_SETTING.name())) {
+				return CD_TYPE_SETTING;
+			}
+			if (tval.equalsIgnoreCase(CD_TYPE_KEY_VAL.name())) {
+				return CD_TYPE_KEY_VAL;
+			} else {
+				return CD_TYPE;
+			}
+		}
+
 	}
 
 	public OtfCustomField() {
@@ -67,26 +89,7 @@ public class OtfCustomField {
 
 	private void setType() {
 		String tval = vals[0];
-		if (tval.equalsIgnoreCase(CustomType.MEMBER.name())) {
-			setType(CustomType.MEMBER);
-			return;
-		}
-		if (tval.equalsIgnoreCase(CustomType.PERM.name())) {
-			setType(CustomType.PERM);
-			return;
-		}
-		if (tval.equalsIgnoreCase(CustomType.APP.name())) {
-			setType(CustomType.APP);
-			return;
-
-		}
-		if (tval.equalsIgnoreCase(CustomType.SETTING.name())) {
-			setType(CustomType.SETTING);
-			return;
-		} else {
-			setType(CustomType.DEFAULT);
-		}
-
+		setType(CustomType.getCustomTypeByString(tval));
 	}
 
 	public void analyseValue() {
@@ -97,16 +100,16 @@ public class OtfCustomField {
 			setType();
 		}
 		switch (type) {
-		case APP:
+		case CD_TYPE_APP:
 			setModel(new OtfCustomFieldApplication(getKey(), vals));
 			break;
-		case MEMBER:
+		case CD_TYPE_MEMBER:
 			setModel(new OtfCustomFieldMember(getKey(), vals));
 			break;
-		case PERM:
+		case CD_TYPE_PERM:
 			setModel(new OtfCustomFieldPerm(getKey(), vals));
 			break;
-		case SETTING:
+		case CD_TYPE_SETTING:
 			setModel(new OtfCustomFieldSetting(getKey(), vals));
 			break;
 		default:
@@ -135,6 +138,17 @@ public class OtfCustomField {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	public void setValsFromModel() {
+		if (model != null) {
+			// model.model2Vals();
+			vals = model.getVals();
+		}
+	}
+
+	public void setValueFromVals() {
+		setValue(getValFromVals());
 	}
 
 	public String getValFromVals() {
@@ -180,7 +194,7 @@ public class OtfCustomField {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append("CustomField: ").append("key:").append(key)
 				.append(", value:").append(value);
+		// sbuild.append("\n val from Array =  ").append(getValFromVals());
 		return sbuild.toString();
-
 	}
 }

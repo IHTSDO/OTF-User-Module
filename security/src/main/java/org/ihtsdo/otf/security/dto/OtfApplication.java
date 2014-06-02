@@ -45,21 +45,20 @@ public class OtfApplication extends OtfBaseNameDesc {
 	}
 
 	@Override
-	public Map<String, List<String>> processParams(Map<String, String> paramsIn) {
+	public void processParams() {
 		LOG.info("APPLICATION: ");
 		printParams();
-		validateParams(paramsIn);
+		validateParams();
 
-		return errors;
 	}
 
 	@Override
-	public void validateParams(Map<String, String> paramsIn) {
+	public void validateParams() {
 		resetErrors();
-		super.validateParams(paramsIn);
+		super.validateParams();
 		OtfCustomFieldBasic cfb = new OtfCustomFieldBasic();
 		// Check if changed
-		String nameIn = paramsIn.get(NAME_NAME);
+		String nameIn = getNotNullParam(NAME_NAME);
 		// Only check if changed
 		if (!nameIn.equals(getName())) {
 			List<String> appNames = cfb.getAppNames();

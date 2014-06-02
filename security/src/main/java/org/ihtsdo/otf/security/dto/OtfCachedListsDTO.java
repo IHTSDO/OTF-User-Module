@@ -3,7 +3,6 @@ package org.ihtsdo.otf.security.dto;
 import java.util.List;
 import java.util.Map;
 
-import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldSetting;
 import org.ihtsdo.otf.security.objectcache.ObjectCache;
 
 public class OtfCachedListsDTO {
@@ -28,17 +27,18 @@ public class OtfCachedListsDTO {
 
 	// private String adminServletContextUrl;
 
-	public final Map<String, OtfCustomFieldSetting> getSettingsMap() {
-		@SuppressWarnings("unchecked")
-		Map<String, OtfCustomFieldSetting> settings = (Map<String, OtfCustomFieldSetting>) ObjectCache.INSTANCE
-				.get(SETTINGS_MAP);
-		return settings;
-	}
-
-	public final void setSettingsMap(
-			Map<String, OtfCustomFieldSetting> settingsIn) {
-		ObjectCache.INSTANCE.put(SETTINGS_MAP, settingsIn);
-	}
+	// public final Map<String, OtfCustomFieldSetting> getSettingsMap() {
+	// @SuppressWarnings("unchecked")
+	// Map<String, OtfCustomFieldSetting> settings = (Map<String,
+	// OtfCustomFieldSetting>) ObjectCache.INSTANCE
+	// .get(SETTINGS_MAP);
+	// return settings;
+	// }
+	//
+	// public final void setSettingsMap(
+	// Map<String, OtfCustomFieldSetting> settingsIn) {
+	// ObjectCache.INSTANCE.put(SETTINGS_MAP, settingsIn);
+	// }
 
 	public final void setSettings(OtfSettings settingsIn) {
 		ObjectCache.INSTANCE.put(SETTINGS, settingsIn);
@@ -47,6 +47,10 @@ public class OtfCachedListsDTO {
 	public final OtfSettings getSettings() {
 		OtfSettings settings = (OtfSettings) ObjectCache.INSTANCE.get(SETTINGS);
 		return settings;
+	}
+
+	public final void remSettings() {
+		ObjectCache.INSTANCE.remove(SETTINGS);
 	}
 
 	public final List<String> getMembersList() {
@@ -60,6 +64,10 @@ public class OtfCachedListsDTO {
 		ObjectCache.INSTANCE.put(MEMBERS_LIST, membersIn);
 	}
 
+	public final void remMembersList() {
+		ObjectCache.INSTANCE.remove(MEMBERS_LIST);
+	}
+
 	public final Map<String, OtfAccount> getAllAccountsMap() {
 		@SuppressWarnings("unchecked")
 		Map<String, OtfAccount> allAccounts = (Map<String, OtfAccount>) ObjectCache.INSTANCE
@@ -69,6 +77,10 @@ public class OtfCachedListsDTO {
 
 	public final void setAllAccountsMap(Map<String, OtfAccount> allAccountsIn) {
 		ObjectCache.INSTANCE.put(ACCOUNTS_LIST, allAccountsIn);
+	}
+
+	public final void remAllAccountsMap() {
+		ObjectCache.INSTANCE.remove(ACCOUNTS_LIST);
 	}
 
 	public final Map<String, List<String>> getAppsMap() {
@@ -82,6 +94,10 @@ public class OtfCachedListsDTO {
 		ObjectCache.INSTANCE.put(APPS_MAP, appsMapIn);
 	}
 
+	public final void remAppsMap() {
+		ObjectCache.INSTANCE.remove(APPS_MAP);
+	}
+
 	public final Map<String, List<String>> getDirsMap() {
 		@SuppressWarnings("unchecked")
 		Map<String, List<String>> dirsMap = (Map<String, List<String>>) ObjectCache.INSTANCE
@@ -91,6 +107,10 @@ public class OtfCachedListsDTO {
 
 	public final void setDirsMap(Map<String, List<String>> dirsMapIn) {
 		ObjectCache.INSTANCE.put(DIRS_MAP, dirsMapIn);
+	}
+
+	public final void remDirsMap() {
+		ObjectCache.INSTANCE.remove(DIRS_MAP);
 	}
 
 	public final List<String> getAppsNotUserMemberList() {
@@ -106,12 +126,20 @@ public class OtfCachedListsDTO {
 				appsNotUserMemberListIn);
 	}
 
+	public final void remAppsNotUserMemberList() {
+		ObjectCache.INSTANCE.remove(APPS_NOT_USER_MEM_LIST);
+	}
+
 	public final String getAdminServletContextUrl() {
 		return (String) ObjectCache.INSTANCE.get(ADMIN_CONTEXT_URL);
 	}
 
 	public final void setAdminServletContextUrl(String adminServletContextUrlIn) {
 		ObjectCache.INSTANCE.put(ADMIN_CONTEXT_URL, adminServletContextUrlIn);
+	}
+
+	public final void remAdminServletContextUrl() {
+		ObjectCache.INSTANCE.remove(ADMIN_CONTEXT_URL);
 	}
 
 }

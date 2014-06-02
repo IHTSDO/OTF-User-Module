@@ -2,7 +2,6 @@ package org.ihtsdo.otf.security.dto;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -76,36 +75,47 @@ public class OtfGroup extends OtfBaseAccountStore {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append("Group:\n");
 		sbuild.append(super.toString());
+		sbuild.append("Parent Dir = ").append(getParentDirName()).append("\n");
+		sbuild.append("GrpType =  = ").append(getGrptype()).append("\n");
 		sbuild.append(custData.toString());
 		return sbuild.toString();
 	}
 
 	@Override
-	public Map<String, List<String>> processParams(Map<String, String> paramsIn) {
-		LOG.info("GROUP: ");
+	public void processParams() {
+		// LOG.info("GROUP: ");
 		printParams();
-		validateParams(paramsIn);
-		return errors;
+		resetErrors();
+		validateParams();
+		// If no errors then update
+		if (errors.size() == 0) {
+			LOG.info("Before " + this.toString());
+			setValsFromParams();
+			LOG.info("After " + this.toString());
+
+		}
+
 	}
 
 	@Override
-	public void validateParams(Map<String, String> paramsIn) {
+	public void validateParams() {
 		resetErrors();
-		super.validateParams(paramsIn);
+		super.validateParams();
 		OtfCustomFieldBasic cfb = new OtfCustomFieldBasic();
 		// Check if changed
-		String nameIn = paramsIn.get(NAME_NAME);
+		String nameIn = getNotNullParam(NAME_NAME);
 		// Only check if changed
 		if (!nameIn.equals(getName())) {
 			List<String> names = new ArrayList<String>();
 			LOG.info("GrpType = " + getGrptype());
 			if (getGrptype().equals(TYPE_MEMBER)) {
 				names = cfb.getMembers();
+				LOG.info("members names size = " + names.size());
 			}
 			if (getGrptype().equals(TYPE_NORMAL)) {
 				LOG.info("getParentDirName = " + getParentDirName());
 				names = cfb.getRolesByDir(getParentDirName());
-				LOG.info("names size = " + names.size());
+				LOG.info("roles names size = " + names.size());
 			}
 			checkWebFieldInList(nameIn, NAME_NAME, names, false,
 					"Name must be unique");
@@ -203,7 +213,7 @@ public class OtfGroup extends OtfBaseAccountStore {
 
 	@Override
 	public void setValsFromParams() {
-
+		super.setValsFromParams();
 	}
 
 }

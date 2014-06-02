@@ -1,8 +1,5 @@
 package org.ihtsdo.otf.security.dto;
 
-import java.util.List;
-import java.util.Map;
-
 import org.ihtsdo.otf.security.xml.XmlStatics;
 
 public class OtfAccountStore extends OtfBaseName {
@@ -68,13 +65,12 @@ public class OtfAccountStore extends OtfBaseName {
 	}
 
 	@Override
-	public Map<String, List<String>> processParams(Map<String, String> paramsIn) {
+	public void processParams() {
 
-		return errors;
 	}
 
 	@Override
-	public void validateParams(Map<String, String> paramsIn) {
+	public void validateParams() {
 		// TODO Auto-generated method stub
 
 	}

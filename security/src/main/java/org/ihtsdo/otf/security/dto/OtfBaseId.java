@@ -33,12 +33,7 @@ public abstract class OtfBaseId extends OtfBaseWeb {
 
 	@JsonIgnore
 	public boolean isNew() {
-		// LOG.info("IS_NEW param  = " + getParams());
-		// if (getParams() != null) {
-		// LOG.info("IS_NEW param size = " + getParams().size());
-		// }
-
-		return id == null;
+		return !stringOK(id);
 	}
 
 	@JsonIgnore
@@ -75,12 +70,8 @@ public abstract class OtfBaseId extends OtfBaseWeb {
 		return getClass().getName();
 	}
 
-	public String getIDFromParams() {
-		return getParams().get(ID_KEY);
-	}
-
 	@Override
 	public void setValsFromParams() {
-
+		setId(getNotNullParam(ID_KEY));
 	}
 }

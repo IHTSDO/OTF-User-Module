@@ -20,7 +20,7 @@ public abstract class OtfBaseWeb {
 			.getName());
 
 	@JsonIgnore
-	private Map<String, String> params;
+	protected Map<String, String> params;
 	@JsonIgnore
 	private List<String> tableRows = new ArrayList<String>();
 	@JsonIgnore
@@ -89,10 +89,9 @@ public abstract class OtfBaseWeb {
 
 	public static final String INPUT_KEY_NAME = "Input_Key";
 
-	public abstract Map<String, List<String>> processParams(
-			Map<String, String> params);
+	public abstract void processParams();
 
-	public abstract void validateParams(Map<String, String> params);
+	public abstract void validateParams();
 
 	public abstract void addTableRows();
 
@@ -592,6 +591,16 @@ public abstract class OtfBaseWeb {
 		boolean err = (listContains != inList);
 		if (err) {
 			addError(webName, err_msg);
+		}
+	}
+
+	public final String getNotNullParam(String pname) {
+
+		String val = getParams().get(pname);
+		if (stringOK(val)) {
+			return val;
+		} else {
+			return "";
 		}
 	}
 

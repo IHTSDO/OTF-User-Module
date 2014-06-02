@@ -1,6 +1,7 @@
 package org.ihtsdo.otf.security.dto.customfieldmodels;
 
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.dto.OtfCustomData;
 import org.ihtsdo.otf.security.dto.OtfCustomField;
@@ -13,16 +14,16 @@ public class OtfCustomFieldApplication extends OtfCustomFieldCachedVals {
 	 * logger.
 	 * </p>
 	 */
-	// private static final Logger LOG = Logger
-	// .getLogger(OtfCustomFieldApplication.class.getName());
+	private static final Logger LOG = Logger
+			.getLogger(OtfCustomFieldApplication.class.getName());
 
 	private String app;
 	private String role;
 	private String member;
 
-	public static final String APP_ROLE_APP = "AppRole-App";
-	public static final String APP_ROLE_ROLE = "AppRole-Role";
-	public static final String APP_ROLE_MEMBER = "AppRole-Member";
+	public static final String APP_ROLE_APP = "App";
+	public static final String APP_ROLE_ROLE = "Role";
+	public static final String APP_ROLE_MEMBER = "Member";
 
 	public OtfCustomFieldApplication() {
 		super();
@@ -109,7 +110,6 @@ public class OtfCustomFieldApplication extends OtfCustomFieldCachedVals {
 	@Override
 	public Map<String, String> getLabelValuesMap() {
 		Map<String, String> retval = getStdLabelValuesMap();
-
 		String id = getKey();
 		String appId = getUniqueControlName(APP_ROLE_APP, id);
 		String roleId = getUniqueControlName(APP_ROLE_ROLE, id);
@@ -119,13 +119,12 @@ public class OtfCustomFieldApplication extends OtfCustomFieldCachedVals {
 		retval.put("Role:",
 				getRolesOptionsSelect(getRole(), getApp(), roleId, null));
 		retval.put("Member:", getMemberOptionsSelect(getMember(), memId));
-
 		return retval;
 	}
 
 	@Override
 	public CustomType getType() {
-		type = OtfCustomField.CustomType.APP;
+		type = OtfCustomField.CustomType.CD_TYPE_APP;
 		return type;
 	}
 

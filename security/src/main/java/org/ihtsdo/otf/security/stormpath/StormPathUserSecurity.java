@@ -1,6 +1,5 @@
 package org.ihtsdo.otf.security.stormpath;
 
-import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -103,7 +102,7 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 	}
 
 	@Override
-	public void saveUserSecurity() throws IOException {
+	public void saveUserSecurity() throws Exception {
 	}
 
 	public final Application getUsersApplication() {
@@ -227,6 +226,13 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 	public void localReload() {
 		spbd = null;
 		mod2Storm = null;
+	}
+
+	@Override
+	public String addUpdateGroupLocal(OtfGroup grpIn,
+			OtfDirectory mDirectoryIn, boolean isNewIn) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

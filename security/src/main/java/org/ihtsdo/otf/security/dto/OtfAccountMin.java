@@ -1,7 +1,6 @@
 package org.ihtsdo.otf.security.dto;
 
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -108,22 +107,22 @@ public class OtfAccountMin extends OtfBaseName {
 	}
 
 	@Override
-	public Map<String, List<String>> processParams(Map<String, String> paramsIn) {
+	public void processParams() {
 
 		// Check if changed
+		// setParams(paramsIn);
 
 		// Email must be not empty and unique
 
-		return errors;
 	}
 
 	@Override
-	public void validateParams(Map<String, String> paramsIn) {
+	public void validateParams() {
 		resetErrors();
-		super.validateParams(paramsIn);
+		super.validateParams();
 		OtfCustomFieldBasic cfb = new OtfCustomFieldBasic();
 		// Check if changed
-		String nameIn = paramsIn.get(NAME_NAME);
+		String nameIn = getNotNullParam(NAME_NAME);
 		// Only check if changed
 		if (!nameIn.equals(getName())) {
 			List<String> uNames = cfb.getUsersList();
@@ -131,7 +130,7 @@ public class OtfAccountMin extends OtfBaseName {
 					"Name must be unique");
 		}
 		// Email
-		String emailIn = paramsIn.get(EMAIL_NAME);
+		String emailIn = getNotNullParam(EMAIL_NAME);
 		LOG.info("emailIn = " + emailIn);
 		if (!emailIn.equals(getEmail())) {
 			checkWebFieldNotEmpty(emailIn, EMAIL_NAME);
@@ -182,7 +181,8 @@ public class OtfAccountMin extends OtfBaseName {
 
 	@Override
 	public void setValsFromParams() {
-		// TODO Auto-generated method stub
+		super.setValsFromParams();
+		// setDescription(getNotNullParam(DESC_NAME));
 
 	}
 
