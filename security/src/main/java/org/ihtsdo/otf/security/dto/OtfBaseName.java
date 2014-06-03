@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 public abstract class OtfBaseName extends OtfBaseId implements
@@ -94,7 +96,6 @@ public abstract class OtfBaseName extends OtfBaseId implements
 			statvals = new ArrayList<String>();
 			statvals.add(Status.DISABLED.toString());
 			statvals.add(Status.ENABLED.toString());
-			// statvals.add(Status.UNVERIFIED.toString());
 		}
 		return statvals;
 	}
@@ -110,19 +111,23 @@ public abstract class OtfBaseName extends OtfBaseId implements
 	}
 
 	@Override
-	public boolean equals(Object obj) { /* ... */
+	public boolean equals(Object obj) {
 
+		if (!(obj instanceof OtfBaseName))
+			return false;
+		if (obj == this)
+			return true;
 		// check class
 		if (!getClass().getName().equals(obj.getClass().getName())) {
 			return false;
 		}
-		// else check name
-		if (obj instanceof OtfBaseName) {
-			OtfBaseName bn = (OtfBaseName) obj;
-			return getName().equals(bn.getName());
-		}
+		OtfBaseName rhs = (OtfBaseName) obj;
+		return new EqualsBuilder().append(name, rhs.name).isEquals();
+	}
 
-		return false;
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17, 31).append(name).toHashCode();
 	}
 
 	@Override
