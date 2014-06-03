@@ -97,3 +97,5 @@ Password - user change - page etc.
 
 refresh/reload at /user /app/ /group level? How to handle the refresh across fidderent machines.
 token/shiro
+
+quick test of develop branch
