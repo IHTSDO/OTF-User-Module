@@ -110,6 +110,22 @@ public abstract class OtfBaseName extends OtfBaseId implements
 	}
 
 	@Override
+	public boolean equals(Object obj) { /* ... */
+
+		// check class
+		if (!getClass().getName().equals(obj.getClass().getName())) {
+			return false;
+		}
+		// else check name
+		if (obj instanceof OtfBaseName) {
+			OtfBaseName bn = (OtfBaseName) obj;
+			return getName().equals(bn.getName());
+		}
+
+		return false;
+	}
+
+	@Override
 	public void setValsFromParams() {
 		super.setValsFromParams();
 		setName(getNotNullParam(NAME_NAME));

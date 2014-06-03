@@ -2,6 +2,8 @@ package org.ihtsdo.otf.security.dto.query;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.ihtsdo.otf.security.dto.OtfAccountMin;
@@ -19,6 +21,9 @@ import org.ihtsdo.otf.security.dto.query.queries.UsersListQueryDTO;
 
 public class SecurityClient {
 
+	private static final Logger LOG = Logger.getLogger(SecurityClient.class
+			.getName());
+
 	private static final ObjectMapper MAPPER = new ObjectMapper();
 
 	public static List<String> getMembers(final String json) {
@@ -27,8 +32,8 @@ public class SecurityClient {
 					MembersListQueryDTO.class);
 			return mlq.getMembers();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 		return null;
 	}
@@ -39,8 +44,8 @@ public class SecurityClient {
 					UsersListQueryDTO.class);
 			return ulq.getUsers();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 		return null;
 	}
@@ -51,8 +56,8 @@ public class SecurityClient {
 					AppsListQueryDTO.class);
 			return mlq.getApps();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 		return null;
 	}
@@ -63,8 +68,8 @@ public class SecurityClient {
 					UserByNameQueryDTO.class);
 			return ulq.getUser();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 		return null;
 	}
@@ -75,8 +80,8 @@ public class SecurityClient {
 	// UserByNameFullQueryDTO.class);
 	// return ulq.getUser();
 	// } catch (IOException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
+	//
+	// LOG.log(Level.SEVERE, "An exception has occurred", e);
 	// }
 	// return null;
 	// }
@@ -87,8 +92,8 @@ public class SecurityClient {
 					AppUsersListQueryDTO.class);
 			return mlq.getAppUsers();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 		return null;
 	}
@@ -99,8 +104,8 @@ public class SecurityClient {
 					UserAppsListQueryDTO.class);
 			return mlq.getApps();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 		return null;
 	}
@@ -111,8 +116,8 @@ public class SecurityClient {
 					UserMembersListQueryDTO.class);
 			return mlq.getMembers();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 		return null;
 	}
@@ -123,8 +128,8 @@ public class SecurityClient {
 					UserAppPermsListQueryDTO.class);
 			return mlq.getPerms();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 		return null;
 	}
@@ -135,8 +140,8 @@ public class SecurityClient {
 					AppPermGroupsQueryDTO.class);
 			return mlq.getPerms();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 		return null;
 	}

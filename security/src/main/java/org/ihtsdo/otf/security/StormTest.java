@@ -1,6 +1,7 @@
 package org.ihtsdo.otf.security;
 
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.stormpath.StormPathBaseDTO;
@@ -79,8 +80,8 @@ public class StormTest {
 			}
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 
 	}
@@ -97,8 +98,8 @@ public class StormTest {
 			spu.sendUserSecuritytoStormPath(xmlUs.getUserSecurity());
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 
 	}
@@ -108,8 +109,8 @@ public class StormTest {
 		try {
 			spu.clearSP();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 	}
 
@@ -120,8 +121,8 @@ public class StormTest {
 					+ xmlUs.getXMLFromUserSecurityAsStringSortByName());
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 	}
 

@@ -1,6 +1,7 @@
 package org.ihtsdo.otf.security.test;
 
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.UserSecurityCompare;
@@ -34,7 +35,7 @@ public class SecurityTestXML extends AbstractSecurityTest {
 			LOG.info(UserSecurityCompare.remSpaceLineEnds(uStr));
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 
 	}

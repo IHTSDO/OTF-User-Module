@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -43,8 +45,8 @@ import org.xml.sax.InputSource;
 public class ProcessXSLT {
 
 	// private static final Log log = LogFactory.getLog(ProcessXSLT.class);
-	// private static final Logger LOG = Logger.getLogger(ProcessXSLT.class
-	// .getName());
+	private static final Logger LOG = Logger.getLogger(ProcessXSLT.class
+			.getName());
 
 	// private static ObjectCache oc = new ObjectCache();
 	/**
@@ -193,7 +195,7 @@ public class ProcessXSLT {
 			// *************");
 			// System.out.println("The result string is " + result);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 		return result;
 	}

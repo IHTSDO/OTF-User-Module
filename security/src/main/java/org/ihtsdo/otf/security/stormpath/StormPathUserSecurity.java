@@ -1,6 +1,7 @@
 package org.ihtsdo.otf.security.stormpath;
 
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.AbstractUserSecurityHandler;
@@ -50,8 +51,8 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 		try {
 			init(propsIn);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 
 	}

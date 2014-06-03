@@ -1,6 +1,8 @@
 package org.ihtsdo.otf.security.test;
 
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.UserSecurityHandler;
 import org.ihtsdo.otf.security.stormpath.StormPathBaseDTO;
@@ -16,9 +18,8 @@ public class SecurityTestStorm extends AbstractSecurityTest {
 	 * logger.
 	 * </p>
 	 */
-	// private static final Logger LOG =
-	// Logger.getLogger(SecurityTestStorm.class
-	// .getName());
+	private static final Logger LOG = Logger.getLogger(SecurityTestStorm.class
+			.getName());
 
 	private static String fn = "./TextFiles/Example.xml";
 	private static String apiKeyFile = "C:/Users/adamf/stormpath/apiKey.properties";
@@ -47,7 +48,7 @@ public class SecurityTestStorm extends AbstractSecurityTest {
 			// LOG.info("storm2Xml : \n"
 			// + xmlUs.getXMLFromUserSecurityAsStringSortByName());
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 	}
 

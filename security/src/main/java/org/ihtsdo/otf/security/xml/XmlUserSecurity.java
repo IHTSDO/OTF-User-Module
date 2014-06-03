@@ -42,8 +42,8 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 		try {
 			init(propsIn);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 
 	}
@@ -188,8 +188,8 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 		try {
 			buildUserSecurity();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 	}
 

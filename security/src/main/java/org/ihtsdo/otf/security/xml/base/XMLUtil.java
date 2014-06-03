@@ -478,7 +478,7 @@ public final class XMLUtil {
 				mDB.setErrorHandler(mErrorhandler);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.log(Level.SEVERE, "An exception has occurred", e);
 
 		}
 		return mDB;
@@ -833,7 +833,7 @@ public final class XMLUtil {
 					// +" attname = "+attrName);
 					/*
 					 * try { log.info(convertToStringLeaveCDATA(e));
-					 * }catch(Exception excep) { E.printStackTrace(); }
+					 * }catch(Exception excep) { LOG.log(Level.SEVERE, "An exception has occurred", e); }
 					 */
 					retV.add(val);
 				}
@@ -876,7 +876,7 @@ public final class XMLUtil {
 						// +" attrNames = "+attrNames);
 						/*
 						 * try { log.info(convertToStringLeaveCDATA(e));
-						 * }catch(Exception excep) { E.printStackTrace(); }
+						 * }catch(Exception excep) { LOG.log(Level.SEVERE, "An exception has occurred", e); }
 						 */
 						retV.add(val);
 					}

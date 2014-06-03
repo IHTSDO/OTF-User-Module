@@ -85,7 +85,7 @@ public class BasicXMLParser {
 		} catch (Exception e) {
 			// log.error("Exception = " + e.getMessage(),e);
 			// log.error("tag " + tag + " from " + xml);
-			e.printStackTrace();
+			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 
 		return retval;
@@ -132,7 +132,7 @@ public class BasicXMLParser {
 		} catch (Exception e) {
 			// log.error("Exception = " + e.getMessage(),e);
 			// log.error("tag " + tag + " from " + xml);
-			e.printStackTrace();
+			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 		return retval;
 
@@ -184,7 +184,7 @@ public class BasicXMLParser {
 		} catch (Exception e) {
 			// log.error("Exception = " + e.getMessage(),e);
 			// log.error("tag " + tag + " from " + xml);
-			e.printStackTrace();
+			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 
 		return vect;
@@ -230,7 +230,7 @@ public class BasicXMLParser {
 			// log.error("Exception = " + e.getMessage(),e);
 			LOG.log(Level.SEVERE, "Exception = " + e.getMessage(), e);
 			LOG.severe("tag " + tag + " from " + xml);
-			// e.printStackTrace();
+			// LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 		return retval;
 	}

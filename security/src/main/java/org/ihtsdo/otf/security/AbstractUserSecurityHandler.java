@@ -2,6 +2,7 @@ package org.ihtsdo.otf.security;
 
 import java.util.Collection;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.dto.OtfAccount;
@@ -91,8 +92,8 @@ public abstract class AbstractUserSecurityHandler implements
 		try {
 			buildUserSecurity();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 		getUserSecurity();
 	}
