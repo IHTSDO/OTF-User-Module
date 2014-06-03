@@ -71,6 +71,11 @@ public class OtfCustomFieldMember extends OtfCustomFieldCachedVals {
 	}
 
 	@Override
+	public void valFromParamDTO(OtfCustomFieldParamDTO ocfpIn) {
+		setVal(ocfpIn.getVal());
+	}
+
+	@Override
 	public CustomType getType() {
 		type = OtfCustomField.CustomType.CD_TYPE_MEMBER;
 		return type;

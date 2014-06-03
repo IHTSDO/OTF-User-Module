@@ -58,4 +58,10 @@ public class OtfCustomFieldBasic extends OtfCustomFieldCachedVals {
 		return type;
 	}
 
+	@Override
+	public void valFromParamDTO(OtfCustomFieldParamDTO ocfpIn) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

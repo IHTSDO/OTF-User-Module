@@ -1,14 +1,25 @@
 package org.ihtsdo.otf.security.dto.customfieldmodels;
 
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.dto.OtfCustomField;
 import org.ihtsdo.otf.security.dto.OtfCustomField.CustomType;
 
 public class OtfCustomFieldKeyVal extends OtfCustomFieldCachedVals {
+	/**
+	 * <p>
+	 * logger.
+	 * </p>
+	 */
+	private static final Logger LOG = Logger.getLogger(OtfCustomFieldPerm.class
+			.getName());
 
 	private String keyVal;
 	private String val;
+
+	public static final String KEY_NAME = "KeyValKey";
+	public static final String KEY_VAL = "KeyValVal";
 
 	public OtfCustomFieldKeyVal(final String keyIn, final String[] valsIn) {
 		super(keyIn, valsIn);
@@ -76,8 +87,8 @@ public class OtfCustomFieldKeyVal extends OtfCustomFieldCachedVals {
 	@Override
 	public Map<String, String> getLabelValuesMap() {
 		Map<String, String> retval = getStdLabelValuesMap();
-		retval.put("Key:", getObw().getHtmlInputText("KeyValKey", getKeyVal()));
-		retval.put("Value:", getObw().getHtmlInputText("KeyValVal", getVal()));
+		retval.put("Key:", getObw().getHtmlInputText(KEY_NAME, getKeyVal()));
+		retval.put("Value:", getObw().getHtmlInputText(KEY_VAL, getVal()));
 		return retval;
 	}
 
@@ -85,6 +96,21 @@ public class OtfCustomFieldKeyVal extends OtfCustomFieldCachedVals {
 	public CustomType getType() {
 		type = OtfCustomField.CustomType.CD_TYPE_KEY_VAL;
 		return type;
+	}
+
+	@Override
+	public void valFromParamDTO(OtfCustomFieldParamDTO ocfpIn) {
+		switch (ocfpIn.getLocalKey()) {
+		case KEY_NAME:
+			setKeyVal(ocfpIn.getVal());
+			break;
+		case KEY_VAL:
+			setVal(ocfpIn.getVal());
+			break;
+		default:
+			LOG.info("valFromParamDTO localKey not found and = "
+					+ ocfpIn.getLocalKey());
+		}
 	}
 
 }

@@ -36,12 +36,20 @@ public abstract class OtfCustomFieldModel {
 		super();
 		setKey(keyIn);
 		setVals(valsIn);
-		modelFromVals();
+		if (vals != null) {
+			modelFromVals();
+		}
+		if (vals == null) {
+			model2Vals();
+		}
+
 	}
 
 	public abstract void model2Vals();
 
 	public abstract void modelFromVals();
+
+	public abstract void valFromParamDTO(OtfCustomFieldParamDTO ocfp);
 
 	public abstract String getCollectionTitle();
 
@@ -134,13 +142,6 @@ public abstract class OtfCustomFieldModel {
 		return new StringBuilder().append(getType()).append(SEP)
 				.append(controlName).append(SEP).append(id).toString();
 		// .append(SEP).append(CD_FIELD)
-	}
-
-	public final static String[] paramKeyAsArray(String p_key) {
-		String[] keyAr = p_key.split(SEP);
-		LOG.info("KeyArr length = " + keyAr.length);
-
-		return keyAr;
 	}
 
 }

@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldApplication;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldMember;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldModel;
+import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldParamDTO;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldPerm;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldSetting;
 
@@ -99,6 +100,10 @@ public class OtfCustomField {
 		if (vals.length > 0) {
 			setType();
 		}
+		setModel();
+	}
+
+	public void setModel() {
 		switch (type) {
 		case CD_TYPE_APP:
 			setModel(new OtfCustomFieldApplication(getKey(), vals));
@@ -187,6 +192,17 @@ public class OtfCustomField {
 		model = modelIn;
 		// LOG.info("\n Model Type = " + model.getType() + " key = "
 		// + model.getKey() + " id = " + model.getId());
+	}
+
+	public void setModelvalFromParamDTO(OtfCustomFieldParamDTO ocfpIn) {
+
+		if (getModel() == null) {
+			setType(ocfpIn.getType());
+			setKey(ocfpIn.getId());
+			setModel();
+		}
+
+		getModel().valFromParamDTO(ocfpIn);
 	}
 
 	@Override

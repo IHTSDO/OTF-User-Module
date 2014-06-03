@@ -87,12 +87,15 @@ public class OtfGroup extends OtfBaseAccountStore {
 		printParams();
 		resetErrors();
 		validateParams();
+		if (getCustData() != null) {
+			custData.setParams(getParams());
+			custData.processParams();
+		}
 		// If no errors then update
 		if (errors.size() == 0) {
 			LOG.info("Before " + this.toString());
 			setValsFromParams();
 			LOG.info("After " + this.toString());
-
 		}
 
 	}

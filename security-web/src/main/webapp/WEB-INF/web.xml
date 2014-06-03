@@ -82,7 +82,7 @@
 		<!-- <load-on-startup>1</load-on-startup> -->
 	</servlet>
 	
-		<servlet-mapping>
+	<servlet-mapping>
 		<servlet-name>SecurityAdmin</servlet-name>
 		<url-pattern>/admin/*</url-pattern>
 	</servlet-mapping>

@@ -50,6 +50,10 @@ public class OtfAccount extends OtfAccountMin {
 		LOG.info("ACCOUNT: ");
 		printParams();
 		validateParams();
+		if (getCustData() != null) {
+			custData.setParams(getParams());
+			custData.processParams();
+		}
 
 		// TODO remember to reload any cached account data
 		// return errors;

@@ -123,6 +123,24 @@ public class OtfCustomFieldApplication extends OtfCustomFieldCachedVals {
 	}
 
 	@Override
+	public void valFromParamDTO(OtfCustomFieldParamDTO ocfpIn) {
+		switch (ocfpIn.getLocalKey()) {
+		case APP_ROLE_APP:
+			setApp((ocfpIn.getVal()));
+			break;
+		case APP_ROLE_ROLE:
+			setRole((ocfpIn.getVal()));
+			break;
+		case APP_ROLE_MEMBER:
+			setMember((ocfpIn.getVal()));
+			break;
+		default:
+			LOG.info("valFromParamDTO localKey not found and = "
+					+ ocfpIn.getLocalKey());
+		}
+	}
+
+	@Override
 	public CustomType getType() {
 		type = OtfCustomField.CustomType.CD_TYPE_APP;
 		return type;

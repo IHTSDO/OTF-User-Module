@@ -14,6 +14,7 @@ import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldApplication;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldBasic;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldMember;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldModel;
+import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldParamDTO;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldPerm;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldSetting;
 
@@ -289,17 +290,40 @@ public class OtfCustomData extends OtfBaseId {
 
 	@Override
 	public void setValsFromParams() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void processParams() {
 
+		List<OtfCustomFieldParamDTO> cfpList = new ArrayList<OtfCustomFieldParamDTO>();
 		for (String key : params.keySet()) {
 			// if string startsWith(OtfCustomField.CustomType.CD_TYPE
 			if (key.startsWith(OtfCustomField.CustomType.CD_TYPE.toString())) {
+				String val = params.get(key);
+				OtfCustomFieldParamDTO cfp = new OtfCustomFieldParamDTO(key,
+						val);
+				cfpList.add(cfp);
+			}
+			// LOG.info("cfpList size = " + cfpList.size());
+			// iterate seeing if cd id is in cust fields
+			for (OtfCustomFieldParamDTO cfp : cfpList) {
+				// See if the OftCustomField exists in getCustFields
+				if (getCustFields().containsKey(cfp.getId())) {
+					// LOG.info("Found key " + cfp.getId());
+					OtfCustomField oft = getCustFields().get(cfp.getId());
+					oft.setModelvalFromParamDTO(cfp);
+				} else {
+					// new
+					OtfCustomField oft = new OtfCustomField();
+					oft.setKey(cfp.getId());
+					oft.setModelvalFromParamDTO(cfp);
+				}
+			}
 
+			// iterate custfields
+			for (OtfCustomField ocf : getCustFields().values()) {
+				ocf.setValsFromModel();
+				ocf.setValueFromVals();
 			}
 		}
 
