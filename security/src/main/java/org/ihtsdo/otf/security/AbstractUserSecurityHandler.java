@@ -19,6 +19,7 @@ public abstract class AbstractUserSecurityHandler implements
 	private UserSecurity userSecurity;
 
 	public static final String NAME_NOT_UNIQUE = "Name is not unique";
+	public static final String NAME_NOT_SET = "Name is not set";
 	public static final String DIR_NOT_FOUND = "Directory not found";
 
 	public static final String REMOTE_COMMIT_OK = "Remote Commit OK";
@@ -107,6 +108,10 @@ public abstract class AbstractUserSecurityHandler implements
 			// names must be unique
 			return NAME_NOT_UNIQUE;
 		}
+		if (!stringOK(accIn.getName())) {
+			LOG.info("account " + NAME_NOT_SET);
+			return NAME_NOT_SET;
+		}
 
 		if (parentIn == null) {
 			Collection<String> dirnames = getUserSecurity().getDirNamesForUser(
@@ -127,6 +132,11 @@ public abstract class AbstractUserSecurityHandler implements
 			parentIn = getUserSecurity().getUsersDir();
 		}
 
+		if (isNew && parentIn != null) {
+			accIn.getId();
+			parentIn.getAccounts().getAccounts().put(accIn.getName(), accIn);
+		}
+
 		return addUpdateAccountLocal(accIn, parentIn, isNew);
 	}
 
@@ -141,6 +151,9 @@ public abstract class AbstractUserSecurityHandler implements
 			// names must be unique
 			return NAME_NOT_UNIQUE;
 		}
+		if (!stringOK(grpIn.getName())) {
+			return NAME_NOT_SET;
+		}
 		mDirectory.getGroups().getGroups().put(grpIn.getName(), grpIn);
 		return addUpdateMemberLocal(grpIn, mDirectory, isNew);
 	}
@@ -148,14 +161,33 @@ public abstract class AbstractUserSecurityHandler implements
 	@Override
 	public final String addUpdateGroup(final OtfGroup grpIn) {
 		String pDir = grpIn.getParentDirName();
-		LOG.info("addUpdateGroup parent dir = " + pDir);
-		LOG.info("Grp = " + grpIn);
+		// LOG.info("addUpdateGroup parent dir = " + pDir);
+		// LOG.info("addUpdateGroup Grp = " + grpIn);
 
 		boolean isNew = grpIn.isNew();
+
 		OtfDirectory mDirectory = getUserSecurity().getDirs()
 				.getDirByName(pDir);
+		LOG.info("addUpdateGroup mDirectory = " + mDirectory.getName());
 
-		return addUpdateGroupLocal(grpIn, mDirectory, isNew);
+		if (isNew && mDirectory.getGroups().groupExists(grpIn.getName())) {
+			// names must be unique
+			return NAME_NOT_UNIQUE;
+		}
+		if (!stringOK(grpIn.getName())) {
+			return NAME_NOT_SET;
+		}
+
+		if (isNew) {
+			// add to model
+			grpIn.getId();
+			mDirectory.getGroups().getGroups().put(grpIn.getName(), grpIn);
+		}
+
+		String rVal = addUpdateGroupLocal(grpIn, mDirectory, isNew);
+		LOG.info("rVal = " + rVal);
+
+		return rVal;
 
 	}
 
@@ -167,9 +199,34 @@ public abstract class AbstractUserSecurityHandler implements
 	@Override
 	public final String addUpdateApp(final OtfApplication appIn) {
 		boolean isNew = appIn.isNew();
+		LOG.info("addUpdateApp App isNew = " + isNew);
 		if (isNew && getUserSecurity().getApps().appExists(appIn.getName())) {
 			// names must be unique
 			return NAME_NOT_UNIQUE;
+		}
+
+		if (!stringOK(appIn.getName())) {
+			return NAME_NOT_SET;
+		}
+
+		if (isNew) {
+			// add to model
+			appIn.getId();
+			// add new Directory
+			OtfDirectory dir = new OtfDirectory();
+			dir.getId();
+			dir.setName(appIn.getName());
+			dir.setDescription("Auto created Directory for " + appIn.getName());
+			appIn.getAccountStores().put(dir.getName(), dir);
+
+			getUserSecurity().getDirs().getDirectories()
+					.put(dir.getName(), dir);
+
+			getUserSecurity().getApps().getApplications()
+					.put(appIn.getName(), appIn);
+
+			// Create a new dir?
+
 		}
 
 		return addUpdateAppLocal(appIn, isNew);

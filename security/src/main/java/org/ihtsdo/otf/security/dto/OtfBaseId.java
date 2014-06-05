@@ -47,7 +47,7 @@ public abstract class OtfBaseId extends OtfBaseWeb {
 
 	@JsonIgnore
 	public final String getId() {
-		if (id == null) {
+		if (id == null || id.isEmpty()) {
 			id = new StringBuilder().append(UUID.randomUUID().toString())
 					.toString();
 		}
@@ -61,9 +61,10 @@ public abstract class OtfBaseId extends OtfBaseWeb {
 	@Override
 	public void addHiddenRows() {
 		// first add the name of the class
-		getHiddenRows().add(getHtmlInputHidden(INPUT_KEY_NAME, getInputKey()));
+		getHiddenRows().put(INPUT_KEY_NAME,
+				getHtmlInputHidden(INPUT_KEY_NAME, getInputKey()));
 		// add id if set
-		getHiddenRows().add(getHtmlInputHidden(ID_KEY, getIdIfSet()));
+		getHiddenRows().put(ID_KEY, getHtmlInputHidden(ID_KEY, getIdIfSet()));
 	}
 
 	public String getInputKey() {

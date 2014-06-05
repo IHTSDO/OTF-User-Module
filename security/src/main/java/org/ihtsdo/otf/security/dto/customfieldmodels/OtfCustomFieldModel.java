@@ -134,14 +134,19 @@ public abstract class OtfCustomFieldModel {
 			final String idIn) {
 		String id = idIn;
 		if (!stringOK(id)) {
-			id = getKey();
-		}
-		if (!stringOK(id)) {
-			id = UUID.randomUUID().toString();
+			id = getId();
 		}
 		return new StringBuilder().append(getType()).append(SEP)
 				.append(controlName).append(SEP).append(id).toString();
 		// .append(SEP).append(CD_FIELD)
+	}
+
+	public final String getId() {
+		String id = getKey();
+		if (!stringOK(id)) {
+			id = UUID.randomUUID().toString();
+		}
+		return id;
 	}
 
 }

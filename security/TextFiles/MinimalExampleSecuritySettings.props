@@ -1,0 +1,21 @@
+
+# Security Service Properties File Minimal with options
+# The absolute minimum is a UserSecurityHandler set which exists in the
+# web.xml and it's config file
+
+# e.g.
+# UserSecurityHandler=StormPathUserSecurity
+# StormPathUserSecurity.keyPath=/opt/api/apiKey.properties
+
+# UserSecurityHandler
+UserSecurityHandler=XmlUserSecurity
+#UserSecurityHandler=StormPathUserSecurity
+
+# XML Security Handler
+XmlUserSecurity.configFile=D:/Data/git/OTF-User-Module/security/TextFiles/Example.xml
+
+# StormPath Security Handler
+#StormPathUserSecurity.keyPath=C:/Users/adamf/stormpath/apiKey.properties
+#StormPathUserSecurity.keyPath=/opt/api/apiKey.properties
+
+	

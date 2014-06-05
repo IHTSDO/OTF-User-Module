@@ -40,6 +40,8 @@ public class OtfCustomData extends OtfBaseId {
 	private CustomParentType parentType;
 	public static String cssClass = "CustomDataTable";
 	private List<OtfCustomFieldModel> models = new ArrayList<OtfCustomFieldModel>();
+	public static final String CD_KEY_ID_LIST = "Cd_Key_id_list";
+	public static final String CD_KEY_ID_LIST_SEP = ",";
 
 	public final CustomParentType getParentType() {
 		return parentType;
@@ -159,8 +161,16 @@ public class OtfCustomData extends OtfBaseId {
 
 	@Override
 	public void addHiddenRows() {
-		// TODO Auto-generated method stub
+		getHiddenRows().put(CD_KEY_ID_LIST,
+				getHtmlInputHidden(CD_KEY_ID_LIST, getCDKeyList()));
+	}
 
+	private String getCDKeyList() {
+		StringBuilder sbuild = new StringBuilder();
+		for (String key : custFields.keySet()) {
+			sbuild.append(key).append(CD_KEY_ID_LIST_SEP);
+		}
+		return sbuild.toString();
 	}
 
 	@Override
@@ -177,6 +187,7 @@ public class OtfCustomData extends OtfBaseId {
 		for (OtfCustomFieldModel model : getModels()) {
 			sbuild.append(getHtmlForm(model));
 		}
+		// LOG.info("getHtmlForm for = \n" + sbuild.toString());
 		return sbuild.toString();
 	}
 
@@ -292,10 +303,28 @@ public class OtfCustomData extends OtfBaseId {
 	public void setValsFromParams() {
 	}
 
+	private List<String> getInitalCdIdList(String fullVal) {
+		List<String> ids = new ArrayList<String>();
+
+		String[] vals = fullVal.split(CD_KEY_ID_LIST_SEP);
+		for (String val : vals) {
+			if (stringOK(val)) {
+				// LOG.info("Adding val " + val);
+				ids.add(val);
+			}
+		}
+
+		return ids;
+	}
+
 	@Override
 	public void processParams() {
-
+		// LOG.info("Entering CustData ProcessParams current cd = "
+		// + this.toString());
 		List<OtfCustomFieldParamDTO> cfpList = new ArrayList<OtfCustomFieldParamDTO>();
+		List<String> initialIds = new ArrayList<String>();
+		List<String> newIds = new ArrayList<String>();
+
 		for (String key : params.keySet()) {
 			// if string startsWith(OtfCustomField.CustomType.CD_TYPE
 			if (key.startsWith(OtfCustomField.CustomType.CD_TYPE.toString())) {
@@ -304,29 +333,45 @@ public class OtfCustomData extends OtfBaseId {
 						val);
 				cfpList.add(cfp);
 			}
+			if (key.equals(CD_KEY_ID_LIST)) {
+				initialIds = getInitalCdIdList(params.get(key));
+			}
 			// LOG.info("cfpList size = " + cfpList.size());
 			// iterate seeing if cd id is in cust fields
 			for (OtfCustomFieldParamDTO cfp : cfpList) {
 				// See if the OftCustomField exists in getCustFields
-				if (getCustFields().containsKey(cfp.getId())) {
+				String cfpId = cfp.getId();
+				newIds.add(cfpId);
+				if (getCustFields().containsKey(cfpId)) {
 					// LOG.info("Found key " + cfp.getId());
-					OtfCustomField oft = getCustFields().get(cfp.getId());
+					OtfCustomField oft = getCustFields().get(cfpId);
 					oft.setModelvalFromParamDTO(cfp);
 				} else {
 					// new
 					OtfCustomField oft = new OtfCustomField();
-					oft.setKey(cfp.getId());
+					oft.setKey(cfpId);
 					oft.setModelvalFromParamDTO(cfp);
+					getCustFields().put(cfpId, oft);
 				}
 			}
 
-			// iterate custfields
-			for (OtfCustomField ocf : getCustFields().values()) {
-				ocf.setValsFromModel();
-				ocf.setValueFromVals();
+		}
+		// Remove
+		// if id not in list.....
+		for (String initId : initialIds) {
+			if (!newIds.contains(initId)) {
+				// LOG.info("Removed CField found ID = " + initId);
+				getCustFields().remove(initId);
 			}
 		}
 
+		// iterate custfields updating from model
+		for (OtfCustomField ocf : getCustFields().values()) {
+			ocf.setValueFromModel();
+		}
+
+		// LOG.info("Leaving CustData ProcessParams current cd = "
+		// + this.toString());
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package org.ihtsdo.otf.security.web;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -56,6 +57,8 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 	public static final String CLASS = "class";
 	public static final String USER_SECURITY_HANDLER = "UserSecurityHandler";
 
+	public static final String SETTINGS_PROPS = "SecurityServiceProps";
+
 	protected String redirect;
 
 	protected ServletConfig sc;
@@ -99,6 +102,48 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 			// LOG.info("Adding init param name = " + name + " val = " + val);
 			getParamsProps().setProperty(name, val);
 		}
+
+		Properties cmdProps = getCmdEnvProps();
+		if (cmdProps != null) {
+			for (Object key : cmdProps.keySet()) {
+				String keyS = key.toString();
+				String val = cmdProps.getProperty(keyS);
+				getParamsProps().setProperty(keyS, val);
+			}
+		}
+	}
+
+	private Properties getCmdEnvProps() {
+
+		Properties setProps = null;
+		String setProp = null;
+
+		Properties sysProps = System.getProperties();
+		for (Object key : sysProps.keySet()) {
+			if (key.toString().equals(SETTINGS_PROPS)) {
+				setProp = sysProps.getProperty(key.toString());
+			}
+		}
+		if (setProp == null) {
+			Map<String, String> env = System.getenv();
+			for (String envName : env.keySet()) {
+				if (envName.equals(SETTINGS_PROPS)) {
+					setProp = env.get(envName);
+				}
+			}
+		}
+		if (setProp != null) {
+			LOG.info("Loading props from " + setProp);
+			try {
+				setProps = new Properties();
+				setProps.load(new FileInputStream(setProp));
+			} catch (IOException e) {
+				LOG.log(Level.SEVERE,
+						"Tried to load parameters properties files from \n"
+								+ setProp, e);
+			}
+		}
+		return setProps;
 	}
 
 	@Override
@@ -118,7 +163,10 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 			IOException {
 		// LOG.info("doGet called path info = " + request.getPathInfo());
 		setUrlNodes(request);
+		// LOG.info("doGet urlNodes = " + urlNodes);
+		// if (urlNodes != null) {
 		handleGetRequest(request, response);
+		// }
 
 	}
 
@@ -131,19 +179,24 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 			IOException;
 
 	protected final String getContextFreeUrl(final HttpServletRequest request) {
-		// String urlS = request.getRequestURI();
-		// String contextP = request.getContextPath();
-		String pathI = request.getPathInfo();
-
-		// LOG.info("urlS = " + urlS);
-		// LOG.info("contextP = " + contextP);
-		// LOG.info("pathI = " + pathI);
-
-		// String noContext = urlS.substring(contextP.length());
+		String pathI = getNotNullPath(request);
 		if (pathI.startsWith("/")) {
 			return pathI.substring(1);
 		}
 		return pathI;
+	}
+
+	protected String getNotNullPath(final HttpServletRequest request) {
+		// String urlS = request.getRequestURI();
+		// String contextP = request.getContextPath();
+		String pathI = request.getPathInfo();
+
+		if (pathI == null) {
+			return "/";
+		}
+
+		return pathI;
+
 	}
 
 	protected final String getDecString(String toDec) {
@@ -158,7 +211,7 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 	protected final String getContextUrl(final HttpServletRequest request) {
 		String urlS = request.getRequestURI();
-		String pathI = request.getPathInfo();
+		String pathI = getNotNullPath(request);
 
 		String decPath;
 		String decUrl;
@@ -371,14 +424,21 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 	public final String[] setUrlNodes(final HttpServletRequest request) {
 		String noContext = getContextFreeUrl(request);
+		// LOG.info("URL Nodes noContext = " + noContext);
+
 		return setUrlNodes(noContext);
 	}
 
 	public final String[] setUrlNodes(final String urlS) {
-		urlNodes = urlS.split("/");
-		// for (String s : urlNodes) {
-		// LOG.info("setUrlNodes val = " + s);
-		// }
+		if (stringOK(urlS)) {
+			urlNodes = urlS.split("/");
+		}
+
+		if (urlNodes == null) {
+			urlNodes = new String[1];
+			urlNodes[0] = "";
+		}
+
 		return urlNodes;
 	}
 

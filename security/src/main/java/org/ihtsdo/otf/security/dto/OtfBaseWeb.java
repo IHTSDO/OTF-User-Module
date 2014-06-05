@@ -3,6 +3,7 @@ package org.ihtsdo.otf.security.dto;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -22,9 +23,9 @@ public abstract class OtfBaseWeb {
 	@JsonIgnore
 	protected Map<String, String> params;
 	@JsonIgnore
-	private List<String> tableRows = new ArrayList<String>();
+	private LinkedHashSet<String> tableRows = new LinkedHashSet<String>();
 	@JsonIgnore
-	private List<String> hiddenRows = new ArrayList<String>();
+	private Map<String, String> hiddenRows = new HashMap<String, String>();
 	@JsonIgnore
 	private String action;
 
@@ -41,6 +42,8 @@ public abstract class OtfBaseWeb {
 
 	public static final String CSS_TEXT_INPUT = "base_web_text_input";
 	public static final String CSS_TEXT_INPUT_ERROR = "base_web_text_input_error";
+
+	public static final String INPUT_DISABLE = " readonly = \"readonly\" ";
 
 	public static final String CSS_TEXT_AREA = "base_web_textarea";
 	public static final String CSS_TEXT_SUBMIT = "base_web_submit";
@@ -171,7 +174,7 @@ public abstract class OtfBaseWeb {
 		addHiddenRows();
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append(getHtmlFormHead(formName, getAction())).append("\n");
-		for (String hidden : getHiddenRows()) {
+		for (String hidden : getHiddenRows().values()) {
 			sbuild.append(hidden).append("\n");
 		}
 		sbuild.append(getHtmlTable("", getTableRows(), true)).append("\n");
@@ -189,7 +192,7 @@ public abstract class OtfBaseWeb {
 		addHiddenRows();
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append(getHtmlFormHead(formName, getAction())).append("\n");
-		for (String hidden : getHiddenRows()) {
+		for (String hidden : getHiddenRows().values()) {
 			sbuild.append(hidden).append("\n");
 		}
 		sbuild.append(getHtmlTable("", getTableRows(), true)).append("\n");
@@ -244,22 +247,29 @@ public abstract class OtfBaseWeb {
 
 	}
 
-	public final String getHtmlTable(final String thead, List<String> rows,
+	public final String getHtmlTable(final String thead,
+			Collection<String> rows, boolean addSubmit) {
+		StringBuilder sbuild = new StringBuilder();
+		for (String row : rows) {
+			sbuild.append(row).append("\n");
+		}
+		return getHtmlTable(thead, sbuild.toString(), addSubmit);
+	}
+
+	public final String getHtmlTable(final String thead, final String rows,
 			boolean addSubmit) {
 		StringBuilder sbuild = new StringBuilder();
 		if (thead != null && thead.length() > 0) {
 			sbuild.append(getHtmlDiv(thead, CSS_TABLE_HEAD)).append("\n");
 		}
-		for (String row : rows) {
-			sbuild.append(row).append("\n");
-		}
+		sbuild.append(rows);
 		if (addSubmit) {
 			sbuild.append(getHtmlRowSubmit(getTableTitle()));
 		}
 		return getHtmlDiv(sbuild.toString(), CSS_TABLE);
 	}
 
-	public final String getHtmlRow(List<String> cells) {
+	public final String getHtmlRow(Collection<String> cells) {
 		StringBuilder sbuild = new StringBuilder();
 		for (String cell : cells) {
 			sbuild.append(cell).append("\n");
@@ -299,10 +309,10 @@ public abstract class OtfBaseWeb {
 		sbuild.append(getHtmlLabelCell(label)).append("\n");
 		String inputT = getHtmlInputText(label, value);
 		if (errors != null && errors.size() > 0) {
-			// LOG.info("errors found for label " + label);
+			LOG.info("errors found for label " + label);
 			inputT = inputT.replace(CSS_TEXT_INPUT, CSS_TEXT_INPUT_ERROR);
 			inputT = inputT + "\n" + getErrorsDiv(errors);
-			// LOG.info("inputT = " + inputT);
+			LOG.info("inputT = " + inputT);
 		}
 		sbuild.append(getHtmlInputCell(inputT)).append("\n");
 		return getHtmlDiv(sbuild.toString(), CSS_TABLE_ROW);
@@ -501,14 +511,14 @@ public abstract class OtfBaseWeb {
 		getHiddenRows();
 	}
 
-	public final List<String> getTableRows() {
+	public final LinkedHashSet<String> getTableRows() {
 		if (tableRows == null) {
-			tableRows = new ArrayList<String>();
+			tableRows = new LinkedHashSet<String>();
 		}
 		return tableRows;
 	}
 
-	public final void setTableRows(List<String> rowsIn) {
+	public final void setTableRows(LinkedHashSet<String> rowsIn) {
 		tableRows = rowsIn;
 	}
 
@@ -520,14 +530,14 @@ public abstract class OtfBaseWeb {
 		params = paramsIn;
 	}
 
-	public final List<String> getHiddenRows() {
+	public final Map<String, String> getHiddenRows() {
 		if (hiddenRows == null) {
-			hiddenRows = new ArrayList<String>();
+			hiddenRows = new HashMap<String, String>();
 		}
 		return hiddenRows;
 	}
 
-	public final void setHiddenRows(List<String> hiddenRowsIn) {
+	public final void setHiddenRows(Map<String, String> hiddenRowsIn) {
 		hiddenRows = hiddenRowsIn;
 	}
 
@@ -547,6 +557,9 @@ public abstract class OtfBaseWeb {
 	}
 
 	public final Map<String, List<String>> getErrors() {
+		if (errors == null) {
+			errors = new HashMap<String, List<String>>();
+		}
 		return errors;
 	}
 
@@ -567,10 +580,13 @@ public abstract class OtfBaseWeb {
 	}
 
 	public final void resetErrors() {
+		// LOG.info("Reset Errors called");
 		errors = new HashMap<String, List<String>>();
 	}
 
 	public final void addError(String webName, String errormessage) {
+		// LOG.info("addError webName = " + webName + " errmsg = " +
+		// errormessage);
 		List<String> erWn = errors.get(webName);
 		if (erWn == null) {
 			erWn = new ArrayList<String>();

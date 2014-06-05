@@ -3,7 +3,7 @@ package org.ihtsdo.otf.security.dto;
 import java.util.HashMap;
 import java.util.Map;
 
-public class OtfDirectory extends OtfBaseAccountStore {
+public class OtfDirectory extends OtfAccountStore {
 
 	private Map<String, OtfAccount> allAccounts;
 

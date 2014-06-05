@@ -64,7 +64,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		setHr(requestIn);
 		// logParameters(requestIn);
 		OtfBaseWeb obw = handlePostAction(requestIn, responseIn);
-		// LOG.info("obw3 = " + obw + " num errs = " + obw.getErrors().size());
+		LOG.info("obw3 = " + obw + " num errs = " + obw.getErrors().size());
 		if (obw.getErrors().size() == 0) {
 			// update remotely using obw
 			String ok = updateFromWebObject(obw);
@@ -129,6 +129,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			OtfGroup otfObj = (OtfGroup) webObject;
 			// LOG.info("Parent dir = " + otfObj.getParentDirName());
 			String retval = getUsh().addUpdateGroup(otfObj);
+
 			getUsh().getUserSecurity().resetDirsMap();
 			getUsh().getUserSecurity().resetMembers();
 			return retval;
@@ -143,7 +144,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			IOException {
 		setHr(requestIn);
 
-		String decPath = getDecString(requestIn.getPathInfo());
+		String decPath = getDecString(getNotNullPath(requestIn));
 
 		if (decPath.startsWith(NEW_FORM)) {
 			// getUrlNodes();
@@ -169,8 +170,24 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 				.setAdminServletContextUrl(curl);
 		hr.getSession().setAttribute(BASEURL, curl);
 		// LOG.info("loadScreen curl = " + curl);
+		boolean loadObw = false;
+		if (obw != null) {
+			if (obw instanceof OtfBaseId) {
+				OtfBaseId obi = (OtfBaseId) obw;
+				LOG.info("loadScreen obw isnew = = " + obi.isNew());
+				LOG.info("loadScreen obw errs = " + obw.getErrors().size());
+				loadObw = obi.isNew() && obw.getErrors().size() > 0;
+			}
+
+		}
+
+		if (loadObw) {
+			hr.getSession().setAttribute(FORM, obw.getRHS());
+		} else {
+			hr.getSession().setAttribute(FORM, getForm());
+		}
 		hr.getSession().setAttribute(TREE, getTreeHtml(curl));
-		hr.getSession().setAttribute(FORM, getForm());
+
 		// if (obw == null) {
 		// hr.getSession().setAttribute(FORM, getForm());
 		// } else {
@@ -232,7 +249,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		String inputKey = getNamedParam(OtfBaseWeb.INPUT_KEY_NAME, requestIn);
 		String id = getNamedParam(OtfBaseId.ID_KEY, requestIn);
 		// LOG.info("InputKey = " + inputKey);
-		// LOG.info("id = " + id);
+		LOG.info("handlePostAction id = " + id);
 
 		// OtfAccount SecurityService.USERS
 		// OtfApplication SecurityService.APPS
@@ -461,6 +478,8 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 
 		member.setAction(getDecString(getHr().getRequestURI()));
 		member.setGrptype(OtfGroup.TYPE_MEMBER);
+		member.setParentDirName(getUsh().getUserSecurity().getMembersDir()
+				.getName());
 		// LOG.info("member errs = " + member.getErrors().size());
 		return member.getRHS();
 	}

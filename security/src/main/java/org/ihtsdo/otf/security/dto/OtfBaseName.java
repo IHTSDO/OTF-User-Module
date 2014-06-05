@@ -35,9 +35,19 @@ public abstract class OtfBaseName extends OtfBaseId implements
 	@Override
 	public void addTableRows() {
 
-		getTableRows().add(
-				getHtmlRowTextInput(NAME_NAME, getName(),
-						getErrors().get(NAME_NAME)));
+		String nameRow = getHtmlRowTextInput(NAME_NAME, getName(), getErrors()
+				.get(NAME_NAME));
+
+		if (!isNew()) {
+			// Set to disabled
+			StringBuilder sbuild = new StringBuilder();
+			String toRepl = CSS_TEXT_INPUT + "\"";
+			String repl = sbuild.append(toRepl).append(INPUT_DISABLE)
+					.toString();
+			nameRow = nameRow.replace(toRepl, repl);
+		}
+
+		getTableRows().add(nameRow);
 		getTableRows().add(
 				getHtmlRowOptions(STATUS_NAME, getStatvals(), getStatus()
 						.toString(), STATUS_NAME, null, null));

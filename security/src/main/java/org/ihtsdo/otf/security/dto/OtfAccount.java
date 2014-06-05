@@ -46,20 +46,6 @@ public class OtfAccount extends OtfAccountMin {
 	}
 
 	@Override
-	public void processParams() {
-		LOG.info("ACCOUNT: ");
-		printParams();
-		validateParams();
-		if (getCustData() != null) {
-			custData.setParams(getParams());
-			custData.processParams();
-		}
-
-		// TODO remember to reload any cached account data
-		// return errors;
-	}
-
-	@Override
 	public void addTableRows() {
 		super.addTableRows();
 	}
@@ -72,7 +58,9 @@ public class OtfAccount extends OtfAccountMin {
 	@Override
 	public void addHiddenRows() {
 		super.addHiddenRows();
-
+		getCustData().setHiddenRows(getHiddenRows());
+		getCustData().addHiddenRows();
+		// getHiddenRows().addAll(getCustData().getHiddenRows());
 	}
 
 	@Override
@@ -111,8 +99,31 @@ public class OtfAccount extends OtfAccountMin {
 	}
 
 	@Override
+	public void processParams() {
+		// LOG.info("ACCOUNT: ");
+		// printParams();
+		resetErrors();
+		validateParams();
+		if (getCustData() != null) {
+			custData.setParams(getParams());
+			custData.processParams();
+		}
+		if (isNew()) {
+			// update the vals as object can be dumped
+			setValsFromParams();
+		} else {
+			// If no errors then update
+			if (errors.size() == 0) {
+				LOG.info("Before " + this.toString());
+				setValsFromParams();
+				LOG.info("After " + this.toString());
+			}
+		}
+	}
+
+	@Override
 	public void setValsFromParams() {
-		// TODO Auto-generated method stub
+		super.setValsFromParams();
 
 	}
 

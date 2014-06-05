@@ -42,7 +42,7 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 		try {
 			init(propsIn);
 		} catch (Exception e) {
-			
+
 			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 
@@ -172,7 +172,12 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 	@Override
 	public final String addUpdateAppLocal(final OtfApplication appIn,
 			final boolean isNewIn) {
-		// Nothing to do as the entire model is written out.
+
+		getUserSecurity().getApps().getApplications()
+				.put(appIn.getName(), appIn);
+
+		// Remember to create a new dir?
+
 		return saveUSToXML();
 	}
 
@@ -188,7 +193,6 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 		try {
 			buildUserSecurity();
 		} catch (Exception e) {
-			
 			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 	}

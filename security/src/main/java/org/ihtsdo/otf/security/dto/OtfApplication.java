@@ -48,7 +48,15 @@ public class OtfApplication extends OtfBaseNameDesc {
 	public void processParams() {
 		LOG.info("APPLICATION: ");
 		printParams();
+		resetErrors();
 		validateParams();
+
+		// If no errors then update
+		if (errors.size() == 0) {
+			LOG.info("Before " + this.toString());
+			setValsFromParams();
+			LOG.info("After " + this.toString());
+		}
 
 	}
 
@@ -97,8 +105,7 @@ public class OtfApplication extends OtfBaseNameDesc {
 
 	@Override
 	public void setValsFromParams() {
-		// TODO Auto-generated method stub
-
+		super.setValsFromParams();
 	}
 
 }

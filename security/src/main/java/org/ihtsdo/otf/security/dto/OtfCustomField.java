@@ -145,11 +145,23 @@ public class OtfCustomField {
 		this.value = value;
 	}
 
-	public void setValsFromModel() {
+	public void setValsFromModelVals() {
 		if (model != null) {
 			// model.model2Vals();
 			vals = model.getVals();
 		}
+	}
+
+	public void setValsFromModel() {
+		if (model != null) {
+			model.model2Vals();
+			vals = model.getVals();
+		}
+	}
+
+	public void setValueFromModel() {
+		setValsFromModel();
+		setValueFromVals();
 	}
 
 	public void setValueFromVals() {

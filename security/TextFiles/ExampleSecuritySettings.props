@@ -1,0 +1,21 @@
+
+# Security Service Properties File
+
+# UserSecurityHandler
+UserSecurityHandler=XmlUserSecurity
+#UserSecurityHandler=StormPathUserSecurity
+
+# XML User Security Handler
+UserSecurityHandler-XML=XmlUserSecurity
+XmlUserSecurity.class=org.ihtsdo.otf.security.xml.XmlUserSecurity
+XmlUserSecurity.configFile=D:/Data/git/OTF-User-Module/security/TextFiles/Example.xml
+
+# StormPath Security Handler
+StormPathUserSecurity.class=org.ihtsdo.otf.security.stormpath.StormPathUserSecurity
+
+StormPathUserSecurity.keyPath=C:/Users/adamf/stormpath/apiKey.properties
+#StormPathUserSecurity.keyPath=/opt/api/apiKey.properties
+
+#StormPathUserSecurity.apiKey.id=SOME LONG ID
+#StormPathUserSecurity.apiKey.secret=SOME LONG SECRET
+	

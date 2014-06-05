@@ -48,7 +48,7 @@ public class OtfSettings extends OtfBaseId {
 			OtfCustomFieldSetting setF = getSettings().get(key);
 			OtfCustomField ocf = getGrp().getCustData().getCustFields()
 					.get(setF.getKey());
-			ocf.setValsFromModel();
+			ocf.setValsFromModelVals();
 			ocf.setValueFromVals();
 
 		}

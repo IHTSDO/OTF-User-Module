@@ -8,7 +8,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldBasic;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldPerm;
 
-public class OtfGroup extends OtfBaseAccountStore {
+public class OtfGroup extends OtfAccountStore {
 
 	private OtfCustomData custData = new OtfCustomData(
 			OtfCustomData.CustomParentType.GROUP);
@@ -83,21 +83,25 @@ public class OtfGroup extends OtfBaseAccountStore {
 
 	@Override
 	public void processParams() {
-		// LOG.info("GROUP: ");
-		printParams();
+		LOG.info("GROUP: processParams");
+		// printParams();
 		resetErrors();
 		validateParams();
 		if (getCustData() != null) {
 			custData.setParams(getParams());
 			custData.processParams();
 		}
-		// If no errors then update
-		if (errors.size() == 0) {
-			LOG.info("Before " + this.toString());
+		if (isNew()) {
+			// update the vals as object can be dumped
 			setValsFromParams();
-			LOG.info("After " + this.toString());
+		} else {
+			// If no errors then update
+			if (errors.size() == 0) {
+				LOG.info("Before " + this.toString());
+				setValsFromParams();
+				LOG.info("After " + this.toString());
+			}
 		}
-
 	}
 
 	@Override
@@ -148,8 +152,11 @@ public class OtfGroup extends OtfBaseAccountStore {
 	@Override
 	public void addHiddenRows() {
 		super.addHiddenRows();
-		getHiddenRows().add(
+		getHiddenRows().put(PARENT_DIR_NAME,
 				getHtmlInputHidden(PARENT_DIR_NAME, getParentDirName()));
+
+		getCustData().setHiddenRows(getHiddenRows());
+		getCustData().addHiddenRows();
 	}
 
 	public final boolean isShowCustData() {
@@ -217,6 +224,7 @@ public class OtfGroup extends OtfBaseAccountStore {
 	@Override
 	public void setValsFromParams() {
 		super.setValsFromParams();
+		setParentDirName(getNotNullParam(PARENT_DIR_NAME));
 	}
 
 }

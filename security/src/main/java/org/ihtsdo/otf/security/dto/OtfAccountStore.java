@@ -2,15 +2,25 @@ package org.ihtsdo.otf.security.dto;
 
 import org.ihtsdo.otf.security.xml.XmlStatics;
 
-public class OtfAccountStore extends OtfBaseName {
+public class OtfAccountStore extends OtfBaseNameDesc {
 
 	private int priority = -1;
 	private boolean defaultGroupStore;
 	private boolean defaultAccountStore;
 	private String type;
 
+	private OtfAccounts accounts = new OtfAccounts();
+
 	public OtfAccountStore() {
 		super();
+	}
+
+	public final OtfAccounts getAccounts() {
+		return accounts;
+	}
+
+	public final void setAccounts(final OtfAccounts accountsIn) {
+		accounts = accountsIn;
 	}
 
 	public final int getPriority() {
@@ -61,6 +71,7 @@ public class OtfAccountStore extends OtfBaseName {
 				.append(", DefaultAccountStore:").append(defaultAccountStore)
 				.append(", ");
 		sbuild.append(super.toString());
+		sbuild.append(accounts.toString());
 		return sbuild.toString();
 	}
 
@@ -71,8 +82,7 @@ public class OtfAccountStore extends OtfBaseName {
 
 	@Override
 	public void validateParams() {
-		// TODO Auto-generated method stub
-
+		super.validateParams();
 	}
 
 	@Override
@@ -93,12 +103,15 @@ public class OtfAccountStore extends OtfBaseName {
 	@Override
 	public void addHiddenRows() {
 		super.addHiddenRows();
-
 	}
 
 	@Override
 	public void setValsFromParams() {
-		// TODO Auto-generated method stub
+		super.setValsFromParams();
+	}
 
+	@Override
+	public String getHtmlForm(String formName) {
+		return super.getHtmlForm(formName);
 	}
 }

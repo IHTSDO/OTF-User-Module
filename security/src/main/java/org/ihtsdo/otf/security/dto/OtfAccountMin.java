@@ -62,8 +62,8 @@ public class OtfAccountMin extends OtfBaseName {
 	}
 
 	public final String getGivenName() {
-		if (givenName == null || givenName.length() == 0) {
-			givenName = "NoGivenNameSet";
+		if (givenName == null) {
+			givenName = "";
 		}
 		return givenName;
 	}
@@ -84,8 +84,8 @@ public class OtfAccountMin extends OtfBaseName {
 	}
 
 	public final String getSurname() {
-		if (surname == null || surname.length() == 0) {
-			surname = getName();
+		if (surname == null) {
+			surname = "";
 		}
 		return surname;
 	}
@@ -97,6 +97,7 @@ public class OtfAccountMin extends OtfBaseName {
 	@Override
 	public String toString() {
 		StringBuilder sbuild = new StringBuilder();
+		sbuild.append(super.toString());
 		sbuild.append("idRef:").append(getIdref()).append(", GivenName:")
 				.append(givenName).append(", MiddleName:").append(middleName)
 				.append(", Surname:").append(surname).append(", Email:")
@@ -108,21 +109,29 @@ public class OtfAccountMin extends OtfBaseName {
 
 	@Override
 	public void processParams() {
-
-		// Check if changed
-		// setParams(paramsIn);
-
-		// Email must be not empty and unique
+		resetErrors();
+		validateParams();
+		if (isNew()) {
+			// update the vals as object can be dumped
+			setValsFromParams();
+		} else {
+			// If no errors then update
+			if (errors.size() == 0) {
+				LOG.info("Before " + this.toString());
+				setValsFromParams();
+				LOG.info("After " + this.toString());
+			}
+		}
 
 	}
 
 	@Override
 	public void validateParams() {
-		resetErrors();
 		super.validateParams();
 		OtfCustomFieldBasic cfb = new OtfCustomFieldBasic();
 		// Check if changed
 		String nameIn = getNotNullParam(NAME_NAME);
+		// LOG.info("NAME = " + nameIn);
 		// Only check if changed
 		if (!nameIn.equals(getName())) {
 			List<String> uNames = cfb.getUsersList();
@@ -131,13 +140,15 @@ public class OtfAccountMin extends OtfBaseName {
 		}
 		// Email
 		String emailIn = getNotNullParam(EMAIL_NAME);
-		LOG.info("emailIn = " + emailIn);
+		checkWebFieldNotEmpty(emailIn, EMAIL_NAME);
+		// LOG.info("emailIn = " + emailIn);
 		if (!emailIn.equals(getEmail())) {
-			checkWebFieldNotEmpty(emailIn, EMAIL_NAME);
+
 			List<String> emailAddr = cfb.getUserEmailList();
 			checkWebFieldInList(emailIn, EMAIL_NAME, emailAddr, false,
 					"Email must be unique");
 		}
+		LOG.info("leaving validateParams errors size = " + getErrors().size());
 	}
 
 	@Override
@@ -159,6 +170,15 @@ public class OtfAccountMin extends OtfBaseName {
 	}
 
 	@Override
+	public void setValsFromParams() {
+		super.setValsFromParams();
+		setEmail(getNotNullParam(EMAIL_NAME));
+		setGivenName(getNotNullParam(GIVEN_NAME));
+		setMiddleName(getNotNullParam(MID_NAME));
+		setSurname(getNotNullParam(SUR_NAME));
+	}
+
+	@Override
 	public String getTableTitle() {
 		if (isNew()) {
 			return "Add new User";
@@ -177,13 +197,6 @@ public class OtfAccountMin extends OtfBaseName {
 	@JsonIgnore
 	public String getHtmlForm(String formName) {
 		return super.getHtmlForm(formName);
-	}
-
-	@Override
-	public void setValsFromParams() {
-		super.setValsFromParams();
-		// setDescription(getNotNullParam(DESC_NAME));
-
 	}
 
 }

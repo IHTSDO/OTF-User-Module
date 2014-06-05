@@ -110,7 +110,7 @@ public class OtfCustomFieldApplication extends OtfCustomFieldCachedVals {
 	@Override
 	public Map<String, String> getLabelValuesMap() {
 		Map<String, String> retval = getStdLabelValuesMap();
-		String id = getKey();
+		String id = getId();
 		String appId = getUniqueControlName(APP_ROLE_APP, id);
 		String roleId = getUniqueControlName(APP_ROLE_ROLE, id);
 		String memId = getUniqueControlName(APP_ROLE_MEMBER, id);

@@ -1,6 +1,5 @@
 package org.ihtsdo.otf.security.dto;
 
-
 public abstract class OtfBaseNameDesc extends OtfBaseName {
 
 	private String description;

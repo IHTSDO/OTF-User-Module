@@ -7,14 +7,16 @@
 <group idref="" name="Admin" status="ENABLED"/>
 </groups>
 </directory>
+<directory idref="" name="Refset Directory" status="ENABLED">
+<groups>
+<group idref="" name="Journalist" status="ENABLED"/>
+<group idref="" name="Editor" status="ENABLED"/>
+<group idref="" name="Reader" status="ENABLED"/>
+<group idref="" name="Admin" status="ENABLED"/>
+</groups>
+</directory>
 <directory description="List of All OTF Users" idref="" name="OTF Users" status="ENABLED">
 <accounts>
-<account email="henrik4@sparklingideas.co.uk" givenName="Dane" idref="" middleName="" name="Dane Journalist" status="ENABLED" surname="Journalist">
-<customData>
-<customField key="29e60867-b8ef-42d7-b466-4cdb58200b89" value="CD_TYPE_APP:Refset:Journalist:DK"/>
-<customField key="85eea40d-4855-4807-989c-b61407879251" value="CD_TYPE_MEMBER:DK"/>
-</customData>
-</account>
 <account email="henrik2@sparklingideas.co.uk" givenName="Dane" idref="" middleName="" name="Dane Editor" status="ENABLED" surname="Editor">
 <customData>
 <customField key="1e4ab80a-3144-4c9d-bcbd-f640c6b04047" value="CD_TYPE_MEMBER:DK"/>
@@ -23,8 +25,31 @@
 </account>
 <account email="henrik1@sparklingideas.co.uk" givenName="Dane" idref="" middleName="" name="Dane Admin" status="ENABLED" surname="Admin">
 <customData>
-<customField key="a2cdd19a-be1b-40c1-ab58-650e07b98996" value="CD_TYPE_APP:Refset:Admin:DK"/>
 <customField key="95acd4ea-07c0-446e-ab96-83b0311b0e10" value="CD_TYPE_MEMBER:DK"/>
+<customField key="a2cdd19a-be1b-40c1-ab58-650e07b98996" value="CD_TYPE_APP:Refset:Admin:DK"/>
+</customData>
+</account>
+<account email="frank@test.com" givenName="Frank" idref="" middleName="Lee" name="Frank" status="ENABLED" surname="MyDear">
+<customData>
+<customField key="7a88adc5-4ae4-426f-9ccc-2bb1e9b69358" value="CD_TYPE_APP:Mapping:Specialist:*"/>
+</customData>
+</account>
+<account email="ada@t" givenName="Adam" idref="" middleName="Charles" name="Adam" status="ENABLED" surname="Flinton">
+<customData>
+<customField key="7d9fa337-9da4-4358-a21b-a89f755f3c32" value="CD_TYPE_APP:Editor:Admin:UK"/>
+<customField key="4e543bb0-ab7d-40f5-a4f0-5be317b9a213" value="CD_TYPE_MEMBER:NZ"/>
+</customData>
+</account>
+<account email="skippy@test.com" givenName="Skippy" idref="" middleName="the" name="Skippy" status="ENABLED" surname="Kangeroo">
+<customData>
+<customField key="852fee4d-5427-4bd7-a79d-568ec7d43fae" value="CD_TYPE_MEMBER:AUS"/>
+<customField key="c924c6c9-d90d-473e-a30f-3b57c88a3735" value="CD_TYPE_APP:Mapping:Specialist:AUS"/>
+</customData>
+</account>
+<account email="henrik4@sparklingideas.co.uk" givenName="Dane" idref="" middleName="" name="Dane Journalist" status="ENABLED" surname="Journalist">
+<customData>
+<customField key="29e60867-b8ef-42d7-b466-4cdb58200b89" value="CD_TYPE_APP:Refset:Journalist:DK"/>
+<customField key="85eea40d-4855-4807-989c-b61407879251" value="CD_TYPE_MEMBER:DK"/>
 </customData>
 </account>
 <account email="peggy@test.com" givenName="Peggy" idref="" middleName="" name="Peggy" status="ENABLED" surname="Sue"/>
@@ -45,16 +70,11 @@
 <account email="va@test.com" givenName="VA" idref="" middleName="Admin" name="VAAdmingroup" status="ENABLED" surname="Group"/>
 <account email="bob@test.com" givenName="Bob" idref="" middleName="" name="Bob" status="ENABLED" surname="Bobbin">
 <customData>
-<customField key="3645e9a1-f257-405b-8439-a9c787043b5b" value="CD_TYPE_APP:Release:Manager:UK"/>
-<customField key="e08dc86a-0996-4859-8e9c-2fdb13b7ff3a" value="CD_TYPE_MEMBER:INTL"/>
 <customField key="ed28c2ce-6e7c-4678-b2f8-da4773d46b24" value="CD_TYPE_MEMBER:UK"/>
-<customField key="7e7d427f-86c1-490d-b8c9-edec3e555de5" value="CD_TYPE_APP:Mapping:Specialist:INTL"/>
+<customField key="e08dc86a-0996-4859-8e9c-2fdb13b7ff3a" value="CD_TYPE_MEMBER:INTL"/>
+<customField key="3645e9a1-f257-405b-8439-a9c787043b5b" value="CD_TYPE_APP:Release:Manager:UK"/>
 <customField key="300d4a10-4ac5-4bd3-b38e-ad658831b220" value="CD_TYPE_APP:Mapping:Reviewer:DK"/>
-</customData>
-</account>
-<account email="frank@test.com" givenName="Frank" idref="" middleName="Lee" name="Frank" status="ENABLED" surname="MyDear">
-<customData>
-<customField key="7a88adc5-4ae4-426f-9ccc-2bb1e9b69358" value="CD_TYPE_APP:Mapping:Specialist:*"/>
+<customField key="7e7d427f-86c1-490d-b8c9-edec3e555de5" value="CD_TYPE_APP:Mapping:Specialist:INTL"/>
 </customData>
 </account>
 <account email="sven@test.com" givenName="Sven" idref="" middleName="" name="Sven" status="ENABLED" surname="Svenson">
@@ -65,20 +85,17 @@
 </account>
 <account email="sue@test.com" givenName="Sue" idref="" middleName="" name="Sue" status="ENABLED" surname="Ellen"/>
 <account email="justEmail@test.com" givenName="NoGivenNameSet" idref="" middleName="" name="justEmail@test.com" status="ENABLED" surname="justEmail@test.com"/>
-<account email="skippy@test.com" givenName="Skippy" idref="" middleName="the" name="Skippy" status="ENABLED" surname="Kangeroo">
-<customData>
-<customField key="852fee4d-5427-4bd7-a79d-568ec7d43fae" value="CD_TYPE_MEMBER:AUS"/>
-<customField key="c924c6c9-d90d-473e-a30f-3b57c88a3735" value="CD_TYPE_APP:Mapping:Specialist:AUS"/>
-</customData>
-</account>
 </accounts>
 </directory>
-<directory idref="" name="Refset Directory" status="ENABLED">
+<directory description="OTF User Mangement Settings" idref="" name="OTFSettings" status="ENABLED">
 <groups>
-<group idref="" name="Journalist" status="ENABLED"/>
-<group idref="" name="Editor" status="ENABLED"/>
-<group idref="" name="Reader" status="ENABLED"/>
-<group idref="" name="Admin" status="ENABLED"/>
+<group description="Used to store OTF Settings " idref="" name="OTFSettings" status="ENABLED">
+<customData>
+<customField key="957f86db-6e0d-4dc6-8a91-098f1f67a940" value="CD_TYPE_SETTING:users:OTF Users"/>
+<customField key="c0ec1ade-e19d-4a31-913b-39c6678690f4" value="CD_TYPE_SETTING:defaultpw:Sn0m3dDefPass1"/>
+<customField key="08869379-ab6f-4480-ac88-c2ab808f421e" value="CD_TYPE_SETTING:members:Members"/>
+</customData>
+</group>
 </groups>
 </directory>
 <directory description="List of IHTSDO Members" idref="" name="Members" status="ENABLED">
@@ -88,38 +105,9 @@
 <group idref="" name="AUS" status="ENABLED"/>
 <group description="International Edition" idref="" name="INTL" status="ENABLED"/>
 <group description="All - Used for when no member needed " idref="" name="*" status="ENABLED"/>
+<group description="some tm desc" idref="" name="TestMember" status="DISABLED"/>
 <group description="United Kingdom" idref="" name="UK" status="ENABLED"/>
 <group idref="" name="DK" status="ENABLED"/>
-</groups>
-</directory>
-<directory description="OTF User Mangement Settings" idref="" name="OTFSettings" status="ENABLED">
-<groups>
-<group description="Used to store OTF Settings " idref="" name="OTFSettings" status="ENABLED">
-<customData>
-<customField key="c0ec1ade-e19d-4a31-913b-39c6678690f4" value="CD_TYPE_SETTING:defaultpw:Sn0m3dDefPass"/>
-<customField key="957f86db-6e0d-4dc6-8a91-098f1f67a940" value="CD_TYPE_SETTING:users:OTF Users"/>
-<customField key="08869379-ab6f-4480-ac88-c2ab808f421e" value="CD_TYPE_SETTING:members:Members"/>
-</customData>
-</group>
-</groups>
-</directory>
-<directory idref="" name="Mapping Directory" status="ENABLED">
-<groups>
-<group description="The Administrator" idref="" name="Admin1" status="ENABLED">
-<customData>
-<customField key="49f8fffa-068b-43f3-a7fc-546a7ad413f3" value="CD_TYPE_PERM:cardinality:0"/>
-</customData>
-</group>
-<group description="The Reviewer" idref="" name="Reviewer" status="ENABLED">
-<customData>
-<customField key="4abaff6f-188c-4f51-acfa-2a377340596f" value="CD_TYPE_PERM:cardinality:2"/>
-</customData>
-</group>
-<group description="The Specialist" idref="" name="Specialist" status="ENABLED">
-<customData>
-<customField key="0d546b2d-5939-43fa-9cc4-b6d9c60db1cd" value="CD_TYPE_PERM:cardinality:1"/>
-</customData>
-</group>
 </groups>
 </directory>
 <directory idref="" name="Editor Directory" status="ENABLED">
@@ -130,6 +118,31 @@
 <group idref="" name="Admin" status="ENABLED"/>
 </groups>
 </directory>
+<directory idref="" name="Mapping Directory" status="ENABLED">
+<groups>
+<group description="The Reviewer" idref="" name="Reviewer" status="ENABLED">
+<customData>
+<customField key="4abaff6f-188c-4f51-acfa-2a377340596f" value="CD_TYPE_PERM:cardinality:2"/>
+</customData>
+</group>
+<group description="The Administrator" idref="" name="Admin1" status="ENABLED">
+<customData>
+<customField key="49f8fffa-068b-43f3-a7fc-546a7ad413f3" value="CD_TYPE_PERM:cardinality:0"/>
+<customField key="54ac8d36-3360-47ed-985c-e775da5c6a6c" value="CD_TYPE_PERM:PNAME:PVAL"/>
+</customData>
+</group>
+<group description="The Specialist" idref="" name="Specialist" status="ENABLED">
+<customData>
+<customField key="0d546b2d-5939-43fa-9cc4-b6d9c60db1cd" value="CD_TYPE_PERM:cardinality:1"/>
+</customData>
+</group>
+</groups>
+</directory>
+<directory description="Auto created Directory for TestApp" idref="" name="TestApp" status="ENABLED">
+<groups>
+<group idref="" name="SpecialRole" status="ENABLED"/>
+</groups>
+</directory>
 </directories>
 <applications>
 <application idref="" name="Release" status="ENABLED">
@@ -138,17 +151,20 @@
 <application idref="" name="Editor" status="ENABLED">
 <accountStore idref="" name="Editor Directory" status="ENABLED" type="dir"/>
 </application>
-<application description="Users Application" idref="" name="OTF Users" status="ENABLED">
-<accountStore idref="" name="OTF Users" status="ENABLED" type="dir"/>
-</application>
 <application idref="" name="Refset" status="ENABLED">
 <accountStore idref="" name="Refset Directory" status="ENABLED" type="dir"/>
+</application>
+<application description="Users Application" idref="" name="OTF Users" status="ENABLED">
+<accountStore idref="" name="OTF Users" status="ENABLED" type="dir"/>
 </application>
 <application description="Members Application" idref="" name="Members" status="ENABLED">
 <accountStore idref="" name="Members" status="ENABLED" type="dir"/>
 </application>
 <application idref="" name="Mapping" status="ENABLED">
 <accountStore idref="" name="Mapping Directory" status="ENABLED" type="dir"/>
+</application>
+<application idref="" name="TestApp" status="ENABLED">
+<accountStore idref="" name="TestApp" status="ENABLED" type="dir"/>
 </application>
 </applications>
 </userSecurity>

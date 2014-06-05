@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.OtfAccountStore;
 import org.ihtsdo.otf.security.dto.OtfApplication;
-import org.ihtsdo.otf.security.dto.OtfBaseAccountStore;
 import org.ihtsdo.otf.security.dto.OtfCustomData;
 import org.ihtsdo.otf.security.dto.OtfCustomField;
 import org.ihtsdo.otf.security.dto.OtfDirectory;
@@ -212,7 +211,7 @@ public class Model2Storm {
 
 	}
 
-	private void buildAccounts(final OtfBaseAccountStore oDir,
+	private void buildAccounts(final OtfAccountStore oDir,
 			final AccountStore accSt) {
 		AccountList accs = null;
 		SPAccountStoreVisitor spa = new SPAccountStoreVisitor();

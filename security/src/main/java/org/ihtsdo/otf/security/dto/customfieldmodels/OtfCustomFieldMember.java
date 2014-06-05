@@ -64,7 +64,7 @@ public class OtfCustomFieldMember extends OtfCustomFieldCachedVals {
 	@Override
 	public Map<String, String> getLabelValuesMap() {
 		Map<String, String> retval = getStdLabelValuesMap();
-		String id = getKey();
+		String id = getId();
 		String controlId = getUniqueControlName("Member", id);
 		retval.put("Member:", getMemberOptionsSelect(getVal(), controlId));
 		return retval;
