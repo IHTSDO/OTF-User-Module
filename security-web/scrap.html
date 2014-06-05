@@ -1,0 +1,371 @@
+<html>
+
+<head>
+<link rel="stylesheet" type="text/css" href="/security-web/style.css">
+<title>IHTSDO OTF User Management Admin</title>
+</head>
+<body>
+	<script src="/security-web/jquery-2.1.0.js" type="text/javascript"></script>
+
+
+
+	<h1 class="blue">IHTSDO OTF User Management Admin</h1>
+	<div class="container">
+		<div class="row">
+			<div class="topRow">
+				<a href="/security-web/admin/users">Users</a>
+			</div>
+			<div class="topRow">
+				<a href="/security-web/admin/apps">Apps</a>
+			</div>
+			<div class="topRow">
+				<a href="/security-web/admin/members">Members</a>
+			</div>
+			<div class="topRow">
+				<a href="/security-web/admin/settings">Settings</a>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div id="leftCol" class="columnLeft">
+				<h1 class="blue">Applications</h1>
+				<ul>
+					<li><a title="Release" href="/security-web/admin/apps/Release">Release</a></li>
+					<li><a title="Editor" href="/security-web/admin/apps/Editor">Editor</a></li>
+					<li><a title="Refset" href="/security-web/admin/apps/Refset">Refset</a></li>
+					<li><a title="Mapping" href="/security-web/admin/apps/Mapping">Mapping</a></li>
+				</ul>
+			</div>
+			<div id="rightCol" class="columnRight">
+				<h1 class="blue">Update Application : Mapping</h1>
+				<div class="formDiv">
+					<form name="Update Application : Mapping"
+						action="/security-web/admin/" method="post">
+						<div class="base_web_table">
+							<div class="base_web_table_row">
+								<div class="base_web_table_cell_label">Name:</div>
+								<div class="base_web_table_cell_input">
+									<input type="text" class="base_web_text_input" name="Name:"
+										value="Mapping">
+								</div>
+							</div>
+							<div class="base_web_table_row">
+								<div class="base_web_table_cell_label">Status:</div>
+								<div class="base_web_table_cell_input">
+									<select class="base_web_select" name="Status:"><option>DISABLED</option>
+										<option selected="selected">ENABLED</option>
+									</select>
+								</div>
+							</div>
+							<div class="base_web_table_row">
+								<div class="base_web_table_cell_label">Description:</div>
+								<div class="base_web_table_cell_input">
+									<textarea class="base_web_textarea" name="Description:"></textarea>
+								</div>
+							</div>
+							<div class="base_web_table_row">
+								<div class="base_web_table_cell_label"></div>
+								<div class="base_web_submit">
+									<input type="submit" class="base_web_submit" name="submit"
+										value="Update Application : Mapping">
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="container">
+					<div class="row">
+						<div class="columnLeft">
+							<h1 class="blue">Roles/Groups</h1>
+						</div>
+						<div class="columnRight">
+							<h1 class="blue">Add New Role/Group:</h1>
+							<div class="formDiv">
+								<form name="Add New Role/Group: " action="ActionNOTSet"
+									method="post">
+									<input type="hidden" name="Input_Key"
+										value="org.ihtsdo.otf.security.dto.OtfGroup" /> <input
+										type="hidden" name="id" value="" />
+									<div class="base_web_table">
+										<div class="base_web_table_row">
+											<div class="base_web_table_cell_label">Name:</div>
+											<div class="base_web_table_cell_input">
+												<input type="text" class="base_web_text_input" name="Name:"
+													value="">
+											</div>
+										</div>
+										<div class="base_web_table_row">
+											<div class="base_web_table_cell_label">Status:</div>
+											<div class="base_web_table_cell_input">
+												<select class="base_web_select" name="Status:"><option>DISABLED</option>
+													<option selected="selected">ENABLED</option>
+												</select>
+											</div>
+										</div>
+										<div class="base_web_table_row">
+											<div class="base_web_table_cell_label">Description:</div>
+											<div class="base_web_table_cell_input">
+												<textarea class="base_web_textarea" name="Description:"></textarea>
+											</div>
+										</div>
+										<div class="base_web_table_row">
+											<div class="base_web_table_cell_label"></div>
+											<div class="base_web_submit">
+												<input type="submit" class="base_web_submit" name="submit"
+													value="Add New Role/Group: ">
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+							<h1 class="blue">Update Role/Group: Admin</h1>
+							<div class="formDiv">
+								<form name="Update Role/Group: Admin" action="ActionNOTSet"
+									method="post">
+									<input type="hidden" name="Input_Key"
+										value="org.ihtsdo.otf.security.dto.OtfGroup" /> <input
+										type="hidden" name="id"
+										value="70a6ef7c-0f3d-44da-85f2-3f62c4b8fb4f" />
+									<div class="base_web_table">
+										<div class="base_web_table_row">
+											<div class="base_web_table_cell_label">Name:</div>
+											<div class="base_web_table_cell_input">
+												<input type="text" class="base_web_text_input" name="Name:"
+													value="Admin">
+											</div>
+										</div>
+										<div class="base_web_table_row">
+											<div class="base_web_table_cell_label">Status:</div>
+											<div class="base_web_table_cell_input">
+												<select class="base_web_select" name="Status:"><option>DISABLED</option>
+													<option selected="selected">ENABLED</option>
+												</select>
+											</div>
+										</div>
+										<div class="base_web_table_row">
+											<div class="base_web_table_cell_label">Description:</div>
+											<div class="base_web_table_cell_input">
+												<textarea class="base_web_textarea" name="Description:">The Administrator</textarea>
+											</div>
+										</div>
+										<div class="base_web_table_row">
+											<div class="base_web_table_cell_label"></div>
+											<div class="base_web_submit">
+												<input type="submit" class="base_web_submit" name="submit"
+													value="Update Role/Group: Admin">
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+							<div class="formDiv">
+								<h2 class="blue">Permissions</h2>
+								<input type="button" value="Add New Permissions"
+									onclick="jQuery('#e6d7672d-d597-4b58-827d-de6cd99b7c89').append('&lt;div class=&quot;std&quot;&gt;&lt;div class=&quot;base_web_table&quot;&gt;&lt;div class=&quot;base_web_table_row&quot;&gt;&lt;div class=&quot;base_web_table_cell_label&quot;&gt;Name:&lt;/div&gt;
+&lt;div class=&quot;base_web_table_cell_input&quot;&gt;&lt;input type=&quot;text&quot; class=&quot;base_web_text_input&quot; name=&quot;PermissionName&quot; value=&quot;&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;base_web_table_row&quot;&gt;&lt;div class=&quot;base_web_table_cell_label&quot;&gt;Value:&lt;/div&gt;
+&lt;div class=&quot;base_web_table_cell_input&quot;&gt;&lt;input type=&quot;text&quot; class=&quot;base_web_text_input&quot; name=&quot;PermissionValue&quot; value=&quot;&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;input type=&quot;button&quot; value=&quot;Remove&quot; onclick=&quot;$(this).parent().remove();&quot;&gt;&lt;/div&gt;');">
+								<form id="e6d7672d-d597-4b58-827d-de6cd99b7c89"
+									action="ActionNOTSet" method="post">
+									<div class="std">
+										<div class="base_web_table">
+											<div class="base_web_table_row">
+												<div class="base_web_table_cell_label">Name:</div>
+												<div class="base_web_table_cell_input">
+													<input type="text" class="base_web_text_input"
+														name="PermissionName" value="">
+												</div>
+											</div>
+											<div class="base_web_table_row">
+												<div class="base_web_table_cell_label">Value:</div>
+												<div class="base_web_table_cell_input">
+													<input type="text" class="base_web_text_input"
+														name="PermissionValue" value="">
+												</div>
+											</div>
+										</div>
+										<input type="button" value="Remove"
+											onclick="$(this).parent().remove();">
+									</div>
+									<div class="std">
+										<div class="base_web_table">
+											<div class="base_web_table_row">
+												<div class="base_web_table_cell_label">Name:</div>
+												<div class="base_web_table_cell_input">
+													<input type="text" class="base_web_text_input"
+														name="PermissionName" value="cardinality">
+												</div>
+											</div>
+											<div class="base_web_table_row">
+												<div class="base_web_table_cell_label">Value:</div>
+												<div class="base_web_table_cell_input">
+													<input type="text" class="base_web_text_input"
+														name="PermissionValue" value="0">
+												</div>
+											</div>
+										</div>
+										<input type="button" value="Remove"
+											onclick="$(this).parent().remove();">
+									</div>
+								</form>
+							</div>
+							<h1 class="blue">Update Role/Group: Reviewer</h1>
+							<div class="formDiv">
+								<form name="Update Role/Group: Reviewer" action="ActionNOTSet"
+									method="post">
+									<input type="hidden" name="Input_Key"
+										value="org.ihtsdo.otf.security.dto.OtfGroup" /> <input
+										type="hidden" name="id"
+										value="ac83f2df-824b-49cc-bc7b-262f46c2eaa5" />
+									<div class="base_web_table">
+										<div class="base_web_table_row">
+											<div class="base_web_table_cell_label">Name:</div>
+											<div class="base_web_table_cell_input">
+												<input type="text" class="base_web_text_input" name="Name:"
+													value="Reviewer">
+											</div>
+										</div>
+										<div class="base_web_table_row">
+											<div class="base_web_table_cell_label">Status:</div>
+											<div class="base_web_table_cell_input">
+												<select class="base_web_select" name="Status:"><option>DISABLED</option>
+													<option selected="selected">ENABLED</option>
+												</select>
+											</div>
+										</div>
+										<div class="base_web_table_row">
+											<div class="base_web_table_cell_label">Description:</div>
+											<div class="base_web_table_cell_input">
+												<textarea class="base_web_textarea" name="Description:">The Reviewer</textarea>
+											</div>
+										</div>
+										<div class="base_web_table_row">
+											<div class="base_web_table_cell_label"></div>
+											<div class="base_web_submit">
+												<input type="submit" class="base_web_submit" name="submit"
+													value="Update Role/Group: Reviewer">
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+							<div class="formDiv">
+								<h2 class="blue">Permissions</h2>
+								<input type="button" value="Add New Permissions"
+									onclick="jQuery('#9d0d6a37-9ed8-43cb-a17f-73f5dba5f1b4').append('&lt;div class=&quot;std&quot;&gt;&lt;div class=&quot;base_web_table&quot;&gt;&lt;div class=&quot;base_web_table_row&quot;&gt;&lt;div class=&quot;base_web_table_cell_label&quot;&gt;Name:&lt;/div&gt;
+&lt;div class=&quot;base_web_table_cell_input&quot;&gt;&lt;input type=&quot;text&quot; class=&quot;base_web_text_input&quot; name=&quot;PermissionName&quot; value=&quot;&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;base_web_table_row&quot;&gt;&lt;div class=&quot;base_web_table_cell_label&quot;&gt;Value:&lt;/div&gt;
+&lt;div class=&quot;base_web_table_cell_input&quot;&gt;&lt;input type=&quot;text&quot; class=&quot;base_web_text_input&quot; name=&quot;PermissionValue&quot; value=&quot;&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;input type=&quot;button&quot; value=&quot;Remove&quot; onclick=&quot;$(this).parent().remove();&quot;&gt;&lt;/div&gt;');">
+								<form id="9d0d6a37-9ed8-43cb-a17f-73f5dba5f1b4"
+									action="ActionNOTSet" method="post">
+									<div class="std">
+										<div class="base_web_table">
+											<div class="base_web_table_row">
+												<div class="base_web_table_cell_label">Name:</div>
+												<div class="base_web_table_cell_input">
+													<input type="text" class="base_web_text_input"
+														name="PermissionName" value="cardinality">
+												</div>
+											</div>
+											<div class="base_web_table_row">
+												<div class="base_web_table_cell_label">Value:</div>
+												<div class="base_web_table_cell_input">
+													<input type="text" class="base_web_text_input"
+														name="PermissionValue" value="2">
+												</div>
+											</div>
+										</div>
+										<input type="button" value="Remove"
+											onclick="$(this).parent().remove();">
+									</div>
+								</form>
+							</div>
+							<h1 class="blue">Update Role/Group: Specialist</h1>
+							<div class="formDiv">
+								<form name="Update Role/Group: Specialist" action="ActionNOTSet"
+									method="post">
+									<input type="hidden" name="Input_Key"
+										value="org.ihtsdo.otf.security.dto.OtfGroup" /> <input
+										type="hidden" name="id"
+										value="7b693e6d-3007-4d20-8639-e7b41efcc1ce" />
+									<div class="base_web_table">
+										<div class="base_web_table_row">
+											<div class="base_web_table_cell_label">Name:</div>
+											<div class="base_web_table_cell_input">
+												<input type="text" class="base_web_text_input" name="Name:"
+													value="Specialist">
+											</div>
+										</div>
+										<div class="base_web_table_row">
+											<div class="base_web_table_cell_label">Status:</div>
+											<div class="base_web_table_cell_input">
+												<select class="base_web_select" name="Status:"><option>DISABLED</option>
+													<option selected="selected">ENABLED</option>
+												</select>
+											</div>
+										</div>
+										<div class="base_web_table_row">
+											<div class="base_web_table_cell_label">Description:</div>
+											<div class="base_web_table_cell_input">
+												<textarea class="base_web_textarea" name="Description:">The Specialist</textarea>
+											</div>
+										</div>
+										<div class="base_web_table_row">
+											<div class="base_web_table_cell_label"></div>
+											<div class="base_web_submit">
+												<input type="submit" class="base_web_submit" name="submit"
+													value="Update Role/Group: Specialist">
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+							<div class="formDiv">
+								<h2 class="blue">Permissions</h2>
+								<input type="button" value="Add New Permissions"
+									onclick="jQuery('#b68d50f7-f340-4bca-a02f-fc19886eb71a').append('&lt;div class=&quot;std&quot;&gt;&lt;div class=&quot;base_web_table&quot;&gt;&lt;div class=&quot;base_web_table_row&quot;&gt;&lt;div class=&quot;base_web_table_cell_label&quot;&gt;Name:&lt;/div&gt;
+&lt;div class=&quot;base_web_table_cell_input&quot;&gt;&lt;input type=&quot;text&quot; class=&quot;base_web_text_input&quot; name=&quot;PermissionName&quot; value=&quot;&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;base_web_table_row&quot;&gt;&lt;div class=&quot;base_web_table_cell_label&quot;&gt;Value:&lt;/div&gt;
+&lt;div class=&quot;base_web_table_cell_input&quot;&gt;&lt;input type=&quot;text&quot; class=&quot;base_web_text_input&quot; name=&quot;PermissionValue&quot; value=&quot;&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;input type=&quot;button&quot; value=&quot;Remove&quot; onclick=&quot;$(this).parent().remove();&quot;&gt;&lt;/div&gt;');">
+								<form id="b68d50f7-f340-4bca-a02f-fc19886eb71a"
+									action="ActionNOTSet" method="post">
+									<div class="std">
+										<div class="base_web_table">
+											<div class="base_web_table_row">
+												<div class="base_web_table_cell_label">Name:</div>
+												<div class="base_web_table_cell_input">
+													<input type="text" class="base_web_text_input"
+														name="PermissionName" value="cardinality">
+												</div>
+											</div>
+											<div class="base_web_table_row">
+												<div class="base_web_table_cell_label">Value:</div>
+												<div class="base_web_table_cell_input">
+													<input type="text" class="base_web_text_input"
+														name="PermissionValue" value="1">
+												</div>
+											</div>
+										</div>
+										<input type="button" value="Remove"
+											onclick="$(this).parent().remove();">
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

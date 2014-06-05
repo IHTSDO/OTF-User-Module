@@ -1,0 +1,32 @@
+function getRandomNumber(range)
+{
+	return Math.floor(Math.random() * range);
+}
+
+function getRandomChar()
+{
+	var chars = "0123456789abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ";
+	return chars.substr( getRandomNumber(62), 1 );
+}
+
+function randomID(size)
+{
+	var str = "";
+	for(var i = 0; i < size; i++)
+	{
+		str += getRandomChar();
+	}
+	return str;
+}
+
+
+var rowNum = 0;
+function addRow(tableid,row) {
+	rowNum ++;
+	var row = '<p id="rowNum'+rowNum+'">Item quantity: <input type="text" name="qty[]" size="4" value="'+frm.add_qty.value+'"> Item name: <input type="text" name="name[]" value="'+frm.add_name.value+'"> <input type="button" value="Remove" onclick="$(this).parent().remove();"></p>';
+	jQuery(tableid).append(row);
+}
+
+function removeRow(rnum) {
+	jQuery('#rowNum'+rnum).remove();
+}
