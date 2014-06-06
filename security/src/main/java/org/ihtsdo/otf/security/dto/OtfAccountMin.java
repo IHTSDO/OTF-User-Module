@@ -148,7 +148,8 @@ public class OtfAccountMin extends OtfBaseName {
 			checkWebFieldInList(emailIn, EMAIL_NAME, emailAddr, false,
 					"Email must be unique");
 		}
-		LOG.info("leaving validateParams errors size = " + getErrors().size());
+		// LOG.info("leaving validateParams errors size = " +
+		// getErrors().size());
 	}
 
 	@Override

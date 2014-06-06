@@ -39,6 +39,7 @@ public class Model2Xml {
 	}
 
 	private void buildFromModel() {
+		LOG.info("buildFromModel");
 		doc = null;
 		final Element elem = getDoc().createElement(XmlStatics.XML_E_ROOT);
 		buildTopDirs(elem);

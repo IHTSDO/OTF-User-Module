@@ -21,14 +21,17 @@ public abstract class OtfBaseId extends OtfBaseWeb {
 	private String id;
 
 	public final String getIdref() {
-		if (idref == null) {
-			idref = "";
+		if (!stringOK(idref)) {
+			idref = getIdIfSet();
 		}
 		return idref;
 	}
 
 	public final void setIdref(String idrefIn) {
 		idref = idrefIn;
+		if (stringOK(idref)) {
+			setId(idref);
+		}
 	}
 
 	@JsonIgnore
@@ -47,7 +50,7 @@ public abstract class OtfBaseId extends OtfBaseWeb {
 
 	@JsonIgnore
 	public final String getId() {
-		if (id == null || id.isEmpty()) {
+		if (!stringOK(id)) {
 			id = new StringBuilder().append(UUID.randomUUID().toString())
 					.toString();
 		}

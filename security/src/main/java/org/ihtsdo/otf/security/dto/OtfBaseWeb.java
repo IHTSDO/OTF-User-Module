@@ -553,7 +553,7 @@ public abstract class OtfBaseWeb {
 	}
 
 	public static final boolean stringOK(final String toCheck) {
-		return toCheck != null && toCheck.length() > 0;
+		return toCheck != null && !toCheck.isEmpty();
 	}
 
 	public final Map<String, List<String>> getErrors() {

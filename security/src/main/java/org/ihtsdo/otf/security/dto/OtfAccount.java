@@ -114,9 +114,9 @@ public class OtfAccount extends OtfAccountMin {
 		} else {
 			// If no errors then update
 			if (errors.size() == 0) {
-				LOG.info("Before " + this.toString());
+				// LOG.info("Before " + this.toString());
 				setValsFromParams();
-				LOG.info("After " + this.toString());
+				// LOG.info("After " + this.toString());
 			}
 		}
 	}

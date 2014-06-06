@@ -64,7 +64,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		setHr(requestIn);
 		// logParameters(requestIn);
 		OtfBaseWeb obw = handlePostAction(requestIn, responseIn);
-		LOG.info("obw3 = " + obw + " num errs = " + obw.getErrors().size());
+		// LOG.info("obw3 = " + obw + " num errs = " + obw.getErrors().size());
 		if (obw.getErrors().size() == 0) {
 			// update remotely using obw
 			String ok = updateFromWebObject(obw);
@@ -249,7 +249,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		String inputKey = getNamedParam(OtfBaseWeb.INPUT_KEY_NAME, requestIn);
 		String id = getNamedParam(OtfBaseId.ID_KEY, requestIn);
 		// LOG.info("InputKey = " + inputKey);
-		LOG.info("handlePostAction id = " + id);
+		// LOG.info("handlePostAction id = " + id);
 
 		// OtfAccount SecurityService.USERS
 		// OtfApplication SecurityService.APPS
