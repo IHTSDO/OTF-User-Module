@@ -59,6 +59,9 @@ public abstract class AbstractUserSecurityHandler implements
 	public abstract String addUpdateAccountLocal(final OtfAccount accIn,
 			final OtfDirectory parentIn, boolean isNew);
 
+	public abstract String addUpdateDirLocal(final OtfDirectory parentIn,
+			boolean isNew);
+
 	@Override
 	public final UserSecurity getUserSecurity() {
 		if (userSecurity == null) {
@@ -168,7 +171,7 @@ public abstract class AbstractUserSecurityHandler implements
 
 		OtfDirectory mDirectory = getUserSecurity().getDirs()
 				.getDirByName(pDir);
-		LOG.info("addUpdateGroup mDirectory = " + mDirectory.getName());
+		// LOG.info("addUpdateGroup mDirectory = " + mDirectory.getName());
 
 		if (isNew && mDirectory.getGroups().groupExists(grpIn.getName())) {
 			// names must be unique
@@ -185,7 +188,7 @@ public abstract class AbstractUserSecurityHandler implements
 		}
 
 		String rVal = addUpdateGroupLocal(grpIn, mDirectory, isNew);
-		LOG.info("rVal = " + rVal);
+		// LOG.info("rVal = " + rVal);
 
 		return rVal;
 
@@ -197,9 +200,26 @@ public abstract class AbstractUserSecurityHandler implements
 	}
 
 	@Override
+	public final String addUpdateDir(OtfDirectory dirIn) {
+		boolean isNew = dirIn.isNew();
+
+		if (isNew && getUserSecurity().getDirs().dirExists(dirIn.getName())) {
+			return NAME_NOT_UNIQUE;
+		}
+		if (!stringOK(dirIn.getName())) {
+			return NAME_NOT_SET;
+		}
+
+		getUserSecurity().getDirs().getDirectories()
+				.put(dirIn.getName(), dirIn);
+
+		return addUpdateDirLocal(dirIn, isNew);
+	}
+
+	@Override
 	public final String addUpdateApp(final OtfApplication appIn) {
 		boolean isNew = appIn.isNew();
-		LOG.info("addUpdateApp App isNew = " + isNew);
+		// LOG.info("addUpdateApp App isNew = " + isNew);
 		if (isNew && getUserSecurity().getApps().appExists(appIn.getName())) {
 			// names must be unique
 			return NAME_NOT_UNIQUE;
@@ -217,16 +237,16 @@ public abstract class AbstractUserSecurityHandler implements
 			dir.getId();
 			dir.setName(appIn.getName());
 			dir.setDescription("Auto created Directory for " + appIn.getName());
-			appIn.getAccountStores().put(dir.getName(), dir);
 
-			getUserSecurity().getDirs().getDirectories()
-					.put(dir.getName(), dir);
-
-			getUserSecurity().getApps().getApplications()
-					.put(appIn.getName(), appIn);
-
-			// Create a new dir?
-
+			String dirRval = addUpdateDir(dir);
+			if (!dirRval.equals(NAME_NOT_UNIQUE)
+					&& !dirRval.equals(NAME_NOT_SET)) {
+				appIn.getAccountStores().put(dir.getName(), dir);
+				getUserSecurity().getApps().getApplications()
+						.put(appIn.getName(), appIn);
+			} else {
+				return "DIRECTORY " + dirRval;
+			}
 		}
 
 		return addUpdateAppLocal(appIn, isNew);

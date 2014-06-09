@@ -28,6 +28,10 @@ public class OtfDirectories {
 		return directories.get(name);
 	}
 
+	public final boolean dirExists(final String name) {
+		return directories.keySet().contains(name);
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sbuild = new StringBuilder();

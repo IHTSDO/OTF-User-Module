@@ -34,4 +34,6 @@ public interface UserSecurityHandler {
 
 	String addUpdateApp(OtfApplication app);
 
+	String addUpdateDir(OtfDirectory dir);
+
 }

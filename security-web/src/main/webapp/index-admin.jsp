@@ -1,6 +1,10 @@
 <html>
 <%
-String context = session.getAttribute("BASEURL").toString();;
+String context = session.getAttribute("BASEURL").toString();
+System.out.println("context = "+context);
+String username = session.getAttribute("userName").toString();
+String authToken = session.getAttribute("AUTH_TOKEN").toString();
+System.out.println("username = "+username +" Authtoken = "+authToken);
 %>
 <head>
 <link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/style.css">

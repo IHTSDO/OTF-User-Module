@@ -61,30 +61,38 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 	protected void handlePostRequest(HttpServletRequest requestIn,
 			HttpServletResponse responseIn) throws ServletException,
 			IOException {
+		boolean userok = checkCred(requestIn, responseIn);
 		setHr(requestIn);
-		// logParameters(requestIn);
-		OtfBaseWeb obw = handlePostAction(requestIn, responseIn);
-		// LOG.info("obw3 = " + obw + " num errs = " + obw.getErrors().size());
-		if (obw.getErrors().size() == 0) {
-			// update remotely using obw
-			String ok = updateFromWebObject(obw);
-			// LOG.info("ok =" + ok);
+		if (userok) {
+			if (getNamedParam(PASSWD, requestIn) != null) {
+				handleGetRequest(requestIn, responseIn);
+			} else {
+				// logParameters(requestIn);
+				OtfBaseWeb obw = handlePostAction(requestIn, responseIn);
+				// LOG.info("obw3 = " + obw + " num errs = " +
+				// obw.getErrors().size());
+				if (obw.getErrors().size() == 0) {
+					// update remotely using obw
+					String ok = updateFromWebObject(obw);
+					// LOG.info("ok =" + ok);
 
-			setTreetype(null);
-			if (ok.equals(AbstractUserSecurityHandler.REMOTE_COMMIT_OK)) {
-				LOG.info("YAYYYY " + ok);
+					setTreetype(null);
+					if (ok.equals(AbstractUserSecurityHandler.REMOTE_COMMIT_OK)) {
+						LOG.info("YAYYYY " + ok);
+					}
+					if (ok.equals(AbstractUserSecurityHandler.REMOTE_COMMIT_NOT_OK)) {
+						// try again? reload entire model from remote? revert?
+						// Capture
+						// orig as JSON?
+						LOG.info("BOOOO " + ok);
+					}
+					loadScreen(requestIn, responseIn, null);
+				} else {
+					obw.setAction(getDecString(getHr().getRequestURI()));
+					loadScreen(requestIn, responseIn, obw);
+				}
 			}
-			if (ok.equals(AbstractUserSecurityHandler.REMOTE_COMMIT_NOT_OK)) {
-				// try again? reload entire model from remote? revert? Capture
-				// orig as JSON?
-				LOG.info("BOOOO " + ok);
-			}
-			loadScreen(requestIn, responseIn, null);
-		} else {
-			obw.setAction(getDecString(getHr().getRequestURI()));
-			loadScreen(requestIn, responseIn, obw);
 		}
-
 		// TODO - make sure values carry through
 		// e.g. change name of mapping app find all refs and change that.
 	}
@@ -129,7 +137,8 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			OtfGroup otfObj = (OtfGroup) webObject;
 			// LOG.info("Parent dir = " + otfObj.getParentDirName());
 			String retval = getUsh().addUpdateGroup(otfObj);
-
+			getUsh().getUserSecurity().resetAppsMap();
+			getUsh().getUserSecurity().resetAppsNotMembersOrUsers();
 			getUsh().getUserSecurity().resetDirsMap();
 			getUsh().getUserSecurity().resetMembers();
 			return retval;
@@ -142,23 +151,56 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 	protected void handleGetRequest(HttpServletRequest requestIn,
 			HttpServletResponse responseIn) throws ServletException,
 			IOException {
+		boolean userok = checkCred(requestIn, responseIn);
+		// LOG.info("userok = " + userok);
 		setHr(requestIn);
+		if (userok) {
+			String decPath = getDecString(getNotNullPath(requestIn));
+			// LOG.info("decPath = " + decPath);
+			if (decPath.startsWith(NEW_FORM)) {
+				// getUrlNodes();
+				// LOG.info("New Form val = " + getUrlNodes()[1]);
+				String retval = getNewForm();
+				// LOG.info("New Form retval = " + retval);
 
-		String decPath = getDecString(getNotNullPath(requestIn));
+				responseIn.setContentType("application/html");
+				final PrintWriter out = responseIn.getWriter();
+				out.write(retval);
 
-		if (decPath.startsWith(NEW_FORM)) {
-			// getUrlNodes();
-			// LOG.info("New Form val = " + getUrlNodes()[1]);
-			String retval = getNewForm();
-			// LOG.info("New Form retval = " + retval);
-
-			responseIn.setContentType("application/html");
-			final PrintWriter out = responseIn.getWriter();
-			out.write(retval);
-
-		} else {
-			loadScreen(requestIn, responseIn, null);
+			} else {
+				loadScreen(requestIn, responseIn, null);
+			}
 		}
+	}
+
+	private boolean checkCred(HttpServletRequest requestIn,
+			HttpServletResponse responseIn) throws IOException,
+			ServletException {
+		String usern = authUser(requestIn);
+		// LOG.info("Check Cred uname = " + usern);
+		if (usern != null) {
+			// check perm
+			Boolean perm = true;
+			// if not perm send to sorry page
+			if (!perm) {
+				requestIn.getSession().removeAttribute(USERNAME);
+				requestIn.getSession().removeAttribute(AUTH_TOKEN);
+				setRedirect("/NoAdmin.jsp");
+				final RequestDispatcher reqd = sc.getServletContext()
+						.getRequestDispatcher(redirect);
+				reqd.forward(requestIn, responseIn);
+				return false;
+			}
+		}
+		if (usern == null) {
+			setRedirect("/login.jsp");
+			final RequestDispatcher reqd = sc.getServletContext()
+					.getRequestDispatcher(redirect);
+			reqd.forward(requestIn, responseIn);
+			return false;
+		}
+
+		return true;
 
 	}
 
@@ -169,18 +211,19 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		getUsh().getUserSecurity().getCachedListMaps()
 				.setAdminServletContextUrl(curl);
 		hr.getSession().setAttribute(BASEURL, curl);
-		// LOG.info("loadScreen curl = " + curl);
+		// LOG.info("loadScreen curl = " + curl + "session id = "
+		// + hr.getSession().getId());
 		boolean loadObw = false;
 		if (obw != null) {
 			if (obw instanceof OtfBaseId) {
 				OtfBaseId obi = (OtfBaseId) obw;
-				LOG.info("loadScreen obw isnew = = " + obi.isNew());
-				LOG.info("loadScreen obw errs = " + obw.getErrors().size());
+				// LOG.info("loadScreen obw isnew = = " + obi.isNew());
+				// LOG.info("loadScreen obw errs = " + obw.getErrors().size());
 				loadObw = obi.isNew() && obw.getErrors().size() > 0;
 			}
 
 		}
-
+		// LOG.info("loadObw = " + loadObw);
 		if (loadObw) {
 			hr.getSession().setAttribute(FORM, obw.getRHS());
 		} else {
@@ -250,14 +293,6 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		String id = getNamedParam(OtfBaseId.ID_KEY, requestIn);
 		// LOG.info("InputKey = " + inputKey);
 		// LOG.info("handlePostAction id = " + id);
-
-		// OtfAccount SecurityService.USERS
-		// OtfApplication SecurityService.APPS
-		// OtfSettings SecurityService.SETTINGS
-		//
-		// OtfGroup getGrptype() TYPE_MEMBER TYPE_SETTING TYPE_NORMAL
-		// OtfBaseId getClass().getName();
-
 		// logParameters(requestIn);
 
 		OtfBaseWeb obw = getWebObjectFromId(inputKey, id);
@@ -270,6 +305,9 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 
 	private OtfBaseWeb getWebObjectFromId(String inputKey, String id) {
 
+		if (!stringOK(inputKey)) {
+			return null;
+		}
 		boolean exists = stringOK(id);
 		// LOG.info("getWebObjectFromId is = " + id);
 		switch (inputKey) {
@@ -378,9 +416,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 
 	public final boolean isLoadTree() {
 		String type = getUrlNodes()[0];
-
 		// LOG.info("isLoadTree type = " + type + " treetype = " + treetype);
-
 		if (stringOK(treetype) && treetype.equals(type)) {
 			return false;
 		} else {
@@ -531,39 +567,8 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		return sbuild.toString();
 	}
 
-	// public static final List<String> getMembers() {
-	// return getUsh().getUserSecurity().getMembers();
-	// }
-	//
-	// public static final void setMembers(List<String> membersIn) {
-	// members = membersIn;
-	// }
-
 	public final Map<String, List<String>> getApps() {
 		return getUsh().getUserSecurity().getAppsMap();
 	}
-
-	// public final List<String> getAppsL() {
-	// AppsListQueryDTO ulq = new AppsListQueryDTO(getUsh());
-	// return ulq.getApps();
-	// }
-
-	// public final List<String> getMembers() {
-	// MembersListQueryDTO mlq = new MembersListQueryDTO(getUsh());
-	// return mlq.getMembers();
-	// }
-
-	// public String getRepeatingSubForms(String title,
-	// Collection<? extends OtfBaseName> items) {
-	// StringBuilder sbuild = new StringBuilder();
-	// sbuild.append(OtfBaseWeb.getSubForm(title));
-	// // getTableSubview
-	// for (OtfBaseName obw : items) {
-	// sbuild.append(obw.getRHS());
-	// }
-	//
-	// return sbuild.toString();
-	//
-	// }
 
 }

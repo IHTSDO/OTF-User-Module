@@ -1,10 +1,14 @@
 package org.ihtsdo.otf.security.dto;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.logging.Logger;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -24,11 +28,17 @@ public class OtfSettings extends OtfBaseId {
 	public final static String DEF_PW_LABEL = "Default Password:";
 	public final static String USER_APP_LABEL = "Users Application:";
 	public final static String MEMBER_APP_LABEL = "Members Application:";
+	public final static String ADMIN_APP_LABEL = "Admin Application:";
+	public final static String MOD_DATE_LABEL = "Last Modified Date:";
 	private Map<String, OtfCustomFieldSetting> settings;
 
 	private String defPw;
 	private String users;
 	private String members;
+	private String admin;
+	private String modDate;
+
+	private DateFormat df = null;
 
 	private OtfGroup grp;
 
@@ -42,12 +52,26 @@ public class OtfSettings extends OtfBaseId {
 		setSettings();
 	}
 
+	public void updateSettings() {
+		setModDate("");
+		updateGrpSettings();
+	}
+
 	public void updateGrpSettings() {
 
 		for (String key : getSettings().keySet()) {
+			// LOG.info("updateGrpSettings key = " + key);
 			OtfCustomFieldSetting setF = getSettings().get(key);
 			OtfCustomField ocf = getGrp().getCustData().getCustFields()
 					.get(setF.getKey());
+
+			if (ocf == null) {
+				ocf = new OtfCustomField();
+				ocf.setKey(setF.getKey());
+				ocf.setModel(setF);
+				getGrp().getCustData().getCustFields().put(setF.getKey(), ocf);
+			}
+
 			ocf.setValsFromModelVals();
 			ocf.setValueFromVals();
 
@@ -128,6 +152,11 @@ public class OtfSettings extends OtfBaseId {
 		getTableRows().add(
 				getHtmlRowTextInput(MEMBER_APP_LABEL, getMembers(), getErrors()
 						.get(MEMBER_APP_LABEL)));
+		getTableRows().add(
+				getHtmlRowTextInput(ADMIN_APP_LABEL, getAdmin(), getErrors()
+						.get(ADMIN_APP_LABEL)));
+
+		getTableRows().add(getHtmlRowPlainText(MOD_DATE_LABEL, getModDate()));
 	}
 
 	@Override
@@ -154,17 +183,34 @@ public class OtfSettings extends OtfBaseId {
 	}
 
 	private void setFieldsFromSettings() {
-		defPw = getSettings().get(OtfCustomFieldSetting.DEFPW).getVal().trim();
-		users = getSettings().get(OtfCustomFieldSetting.USERS).getVal().trim();
-		members = getSettings().get(OtfCustomFieldSetting.MEMBERS).getVal()
-				.trim();
+		defPw = getSetting(OtfCustomFieldSetting.DEFPW).getVal().trim();
+		users = getSetting(OtfCustomFieldSetting.USERS).getVal().trim();
+		members = getSetting(OtfCustomFieldSetting.MEMBERS).getVal().trim();
+
+		admin = getSetting(OtfCustomFieldSetting.ADMIN).getVal().trim();
+		modDate = getSetting(OtfCustomFieldSetting.MOD_DATE).getVal().trim();
+
 	}
 
 	public final void setSettingsFromFields() {
-		getSettings().get(OtfCustomFieldSetting.DEFPW).updateVal(getDefPw());
-		getSettings().get(OtfCustomFieldSetting.USERS).updateVal(getUsers());
-		getSettings().get(OtfCustomFieldSetting.MEMBERS)
-				.updateVal(getMembers());
+		getSetting(OtfCustomFieldSetting.DEFPW).updateVal(getDefPw());
+		getSetting(OtfCustomFieldSetting.USERS).updateVal(getUsers());
+		getSetting(OtfCustomFieldSetting.MEMBERS).updateVal(getMembers());
+
+		getSetting(OtfCustomFieldSetting.ADMIN).updateVal(getAdmin());
+		getSetting(OtfCustomFieldSetting.MOD_DATE).updateVal(getModDate());
+	}
+
+	private OtfCustomFieldSetting getSetting(String key) {
+		OtfCustomFieldSetting rval = getSettings().get(key);
+		if (rval == null) {
+			rval = new OtfCustomFieldSetting();
+			rval.setKeyVal(key);
+			rval.setVal("");
+			getSettings().put(key, rval);
+		}
+
+		return rval;
 	}
 
 	public final String getDefPw() {
@@ -211,6 +257,8 @@ public class OtfSettings extends OtfBaseId {
 		setDefPw(getNotNullParam(DEF_PW_LABEL));
 		setMembers(getNotNullParam(MEMBER_APP_LABEL));
 		setUsers(getNotNullParam(USER_APP_LABEL));
+		setAdmin(getNotNullParam(ADMIN_APP_LABEL));
+		setModDate("");
 	}
 
 	@Override
@@ -235,6 +283,40 @@ public class OtfSettings extends OtfBaseId {
 	public final void setGrp(OtfGroup grpIn) {
 		grp = grpIn;
 		grp.setGrptype(OtfGroup.TYPE_SETTING);
+	}
+
+	public final String getAdmin() {
+		// LOG.info("Admin = " + admin);
+		return admin;
+	}
+
+	public final void setAdmin(String adminIn) {
+		admin = adminIn;
+	}
+
+	public final String getModDate() {
+		if (!stringOK(modDate)) {
+			modDate = getDf().format(new Date());
+		}
+		return modDate;
+	}
+
+	public final void setModDate(String modDateIn) {
+		modDate = modDateIn;
+	}
+
+	public final DateFormat getDf() {
+		if (df == null) {
+			TimeZone tz = TimeZone.getTimeZone("UTC");
+			df = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm-ss.SS'Z'");
+			df.setTimeZone(tz);
+		}
+		// "2014-04-01T17:00:09.189Z",
+		return df;
+	}
+
+	public final void setDf(DateFormat dfIn) {
+		df = dfIn;
 	}
 
 }

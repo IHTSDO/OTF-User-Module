@@ -172,12 +172,7 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 	@Override
 	public final String addUpdateAppLocal(final OtfApplication appIn,
 			final boolean isNewIn) {
-
-		getUserSecurity().getApps().getApplications()
-				.put(appIn.getName(), appIn);
-
-		// Remember to create a new dir?
-
+		// Nothing to do as the entire model is written out.
 		return saveUSToXML();
 	}
 
@@ -200,6 +195,11 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 	@Override
 	public String addUpdateGroupLocal(OtfGroup grpIn,
 			OtfDirectory mDirectoryIn, boolean isNewIn) {
+		return saveUSToXML();
+	}
+
+	@Override
+	public String addUpdateDirLocal(OtfDirectory parentIn, boolean isNewIn) {
 		return saveUSToXML();
 	}
 

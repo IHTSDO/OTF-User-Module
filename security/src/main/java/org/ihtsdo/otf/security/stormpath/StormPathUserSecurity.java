@@ -179,6 +179,12 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 	}
 
 	@Override
+	public void localReload() {
+		spbd = null;
+		mod2Storm = null;
+	}
+
+	@Override
 	public final String addUpdateMemberLocal(final OtfGroup grpIn,
 			final OtfDirectory mDirectoryIn, final boolean isNewIn) {
 		Directory mdir = storm2Mod.getDirByName(mDirectoryIn.getName());
@@ -197,14 +203,13 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 	@Override
 	public final String addUpdateAppLocal(final OtfApplication appIn,
 			final boolean isNewIn) {
-
+		// Remember to create a new dir? Before adding app
 		if (isNewIn) {
 			mod2Storm.buildApp(appIn, null);
 		} else {
 			Application app = storm2Mod.getAppByName(appIn.getName());
 			mod2Storm.buildApp(appIn, app);
 		}
-
 		return null;
 	}
 
@@ -213,26 +218,43 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 			final OtfDirectory parentIn, final boolean isNewIn) {
 
 		Directory mdir = storm2Mod.getDirByName(parentIn.getName());
-
+		if (mdir == null) {
+			return DIR_NOT_FOUND;
+		}
 		if (isNewIn) {
 			mod2Storm.buildAccount(accIn, null, mdir);
 		} else {
 			Account acc = storm2Mod.getAccountByName(accIn.getName(), mdir);
-			mod2Storm.buildAccount(accIn, null, mdir);
+			mod2Storm.buildAccount(accIn, acc, mdir);
 		}
 		return null;
 	}
 
 	@Override
-	public void localReload() {
-		spbd = null;
-		mod2Storm = null;
+	public String addUpdateGroupLocal(OtfGroup grpIn,
+			OtfDirectory mDirectoryIn, boolean isNewIn) {
+		Directory dir = storm2Mod.getDirByName(mDirectoryIn.getName());
+		if (dir == null) {
+			return DIR_NOT_FOUND;
+		}
+		if (isNewIn) {
+			mod2Storm.buildGroup(grpIn, null, dir);
+		} else {
+			Group grp = storm2Mod.getGrpByName(grpIn.getName(), dir);
+			mod2Storm.buildGroup(grpIn, grp, dir);
+		}
+		return null;
 	}
 
 	@Override
-	public String addUpdateGroupLocal(OtfGroup grpIn,
-			OtfDirectory mDirectoryIn, boolean isNewIn) {
-		// TODO Auto-generated method stub
+	public String addUpdateDirLocal(OtfDirectory dirIn, boolean isNewIn) {
+
+		if (isNewIn) {
+			mod2Storm.buildDirectory(dirIn, null);
+		} else {
+			Directory dir = storm2Mod.getDirByName(dirIn.getName());
+			mod2Storm.buildDirectory(dirIn, dir);
+		}
 		return null;
 	}
 

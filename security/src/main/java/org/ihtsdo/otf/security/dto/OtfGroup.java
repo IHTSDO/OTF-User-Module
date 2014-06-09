@@ -83,7 +83,7 @@ public class OtfGroup extends OtfAccountStore {
 
 	@Override
 	public void processParams() {
-		LOG.info("GROUP: processParams");
+		// LOG.info("GROUP: processParams");
 		// printParams();
 		resetErrors();
 		validateParams();
@@ -97,9 +97,9 @@ public class OtfGroup extends OtfAccountStore {
 		} else {
 			// If no errors then update
 			if (errors.size() == 0) {
-				LOG.info("Before " + this.toString());
+				// LOG.info("Before " + this.toString());
 				setValsFromParams();
-				LOG.info("After " + this.toString());
+				// LOG.info("After " + this.toString());
 			}
 		}
 	}
@@ -114,21 +114,21 @@ public class OtfGroup extends OtfAccountStore {
 		// Only check if changed
 		if (!nameIn.equals(getName())) {
 			List<String> names = new ArrayList<String>();
-			LOG.info("GrpType = " + getGrptype());
+			// LOG.info("GrpType = " + getGrptype());
 			if (getGrptype().equals(TYPE_MEMBER)) {
 				names = cfb.getMembers();
-				LOG.info("members names size = " + names.size());
+				// LOG.info("members names size = " + names.size());
 			}
 			if (getGrptype().equals(TYPE_NORMAL)) {
-				LOG.info("getParentDirName = " + getParentDirName());
+				// LOG.info("getParentDirName = " + getParentDirName());
 				names = cfb.getRolesByDir(getParentDirName());
-				LOG.info("roles names size = " + names.size());
+				// LOG.info("roles names size = " + names.size());
 			}
 			checkWebFieldInList(nameIn, NAME_NAME, names, false,
 					"Name must be unique");
 		}
 
-		LOG.info("OtfGroup validate num errs = " + getErrors().size());
+		// LOG.info("OtfGroup validate num errs = " + getErrors().size());
 
 	}
 

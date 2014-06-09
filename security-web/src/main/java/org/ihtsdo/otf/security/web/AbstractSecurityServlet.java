@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ihtsdo.otf.security.UserSecurityHandler;
+import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.query.SecurityService;
 import org.ihtsdo.otf.security.objectcache.ObjectCacheClassHandler;
 
@@ -53,6 +54,10 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 	public static final String JSON = "json";
 	public static final String RELOAD = "reload";
 	public static final String BASEURL = "BASEURL";
+
+	public static final String USERNAME = "userName";
+	public static final String PASSWD = "passWord";
+	public static final String AUTH_TOKEN = "AUTH_TOKEN";
 
 	public static final String CLASS = "class";
 	public static final String USER_SECURITY_HANDLER = "UserSecurityHandler";
@@ -146,6 +151,37 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 		return setProps;
 	}
 
+	protected String authUser(final HttpServletRequest request) {
+
+		// See if UN and Token are set in the session
+		String uname = (String) request.getSession().getAttribute(USERNAME);
+		// LOG.info("authuser uname from Session = " + uname);
+		String token = null;
+		if (stringOK(uname)) {
+			token = (String) request.getSession().getAttribute(AUTH_TOKEN);
+			if (stringOK(token)) {
+				return uname;
+			}
+		}
+
+		// Get the UN + pw strings
+		uname = getNamedParam(USERNAME, request);
+		String password = getNamedParam(PASSWD, request);
+		// LOG.info("authuser uname from param = " + uname);
+		// auth users
+		if (stringOK(uname) && stringOK(password)) {
+			OtfAccount oacc = getUsh().authAccount(uname, password);
+			if (oacc != null) {
+				token = oacc.getAuthToken();
+				request.getSession().setAttribute(USERNAME, uname);
+				request.getSession().setAttribute(AUTH_TOKEN, token);
+				password = null;
+				return uname;
+			}
+		}
+		return null;
+	}
+
 	@Override
 	public void doPost(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException,
@@ -158,7 +194,7 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void doGet(final HttpServletRequest request,
+	public void doGet(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException,
 			IOException {
 		// LOG.info("doGet called path info = " + request.getPathInfo());
@@ -180,6 +216,7 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 	protected final String getContextFreeUrl(final HttpServletRequest request) {
 		String pathI = getNotNullPath(request);
+		// LOG.info("getContextFreeUrl pathI = " + pathI);
 		if (pathI.startsWith("/")) {
 			return pathI.substring(1);
 		}
@@ -227,7 +264,11 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 		String context = "";
 		if (decPath == null || decPath.length() == 0 || decPath.equals("/")) {
-			return context;
+			if (decUrl.endsWith("/")) {
+				return decUrl;
+			} else {
+				return decUrl + "/";
+			}
 		} else {
 			int chop = decUrl.indexOf(decPath);
 			if (chop > 0) {
@@ -425,21 +466,33 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 	public final String[] setUrlNodes(final HttpServletRequest request) {
 		String noContext = getContextFreeUrl(request);
 		// LOG.info("URL Nodes noContext = " + noContext);
-
 		return setUrlNodes(noContext);
 	}
 
 	public final String[] setUrlNodes(final String urlS) {
+		// LOG.info("setUrlNodes urlS = " + urlS);
 		if (stringOK(urlS)) {
 			urlNodes = urlS.split("/");
 		}
 
-		if (urlNodes == null) {
+		if (urlNodes == null || !stringOK(urlS)) {
 			urlNodes = new String[1];
 			urlNodes[0] = "";
 		}
-
+		// logUrlNodes();
 		return urlNodes;
+	}
+
+	private void logUrlNodes() {
+		if (urlNodes == null) {
+			LOG.info("logUrlNodes urlNodes is null");
+		} else {
+			LOG.info("logUrlNodes urlNodes length = " + urlNodes.length);
+			for (String url : urlNodes) {
+				LOG.info("url = " + url);
+			}
+		}
+
 	}
 
 	public final String[] getUrlNodes() {
@@ -454,7 +507,7 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 		if (baseUrl == null) {
 			baseUrl = getParamsProps().getProperty(BASEURL);
-			// LOG.info("getBaseUrl baseUrl = " + baseUrl);
+			LOG.info("getBaseUrl baseUrl = " + baseUrl);
 		}
 		return baseUrl;
 	}

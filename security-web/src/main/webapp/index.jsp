@@ -1,6 +1,3 @@
 
 <%System.out.println("Index jsp loaded");%>
-
-
-
-<jsp:forward page="./userAdmin"/>
+<jsp:forward page="./admin/"/>

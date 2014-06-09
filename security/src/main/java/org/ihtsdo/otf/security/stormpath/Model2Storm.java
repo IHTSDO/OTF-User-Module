@@ -112,7 +112,7 @@ public class Model2Storm {
 		}
 	}
 
-	private void buildDirectory(final OtfDirectory oDir, Directory dir) {
+	public void buildDirectory(final OtfDirectory oDir, Directory dir) {
 		// TODO: catch both being null;
 
 		if (oDir == null && dir == null) {

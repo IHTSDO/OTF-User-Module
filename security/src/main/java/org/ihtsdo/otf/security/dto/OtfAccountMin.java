@@ -1,6 +1,7 @@
 package org.ihtsdo.otf.security.dto;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -20,6 +21,8 @@ public class OtfAccountMin extends OtfBaseName {
 	private String givenName;
 	private String middleName;
 	private String surname;
+
+	private String authToken;
 
 	public static final String EMAIL_NAME = "Email:";
 	public static final String GIVEN_NAME = "Given Name:";
@@ -198,6 +201,18 @@ public class OtfAccountMin extends OtfBaseName {
 	@JsonIgnore
 	public String getHtmlForm(String formName) {
 		return super.getHtmlForm(formName);
+	}
+
+	public final String getAuthToken() {
+		// Temporary until Oauth etc.
+		if (!stringOK(authToken)) {
+			authToken = UUID.randomUUID().toString();
+		}
+		return authToken;
+	}
+
+	public final void setAuthToken(String authTokenIn) {
+		authToken = authTokenIn;
 	}
 
 }
