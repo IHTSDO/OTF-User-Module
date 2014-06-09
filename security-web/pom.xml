@@ -158,6 +158,17 @@
 									</mapper>
 								</data>
 								<data>
+									<src>${basedir}/src/deb/usersecurity.xml</src>
+									<dst>/etc/opt/${packageName}/usersecurity.xml</dst>
+									<type>file</type>
+									<conffile>true</conffile>
+									<mapper>
+										<type>perm</type>
+										<group>${packageName}</group>
+										<filemode>0640</filemode>
+									</mapper>
+								</data>
+								<data>
 									<type>template</type>
 									<paths>
 										<path>/etc/opt/${packageName}</path>
