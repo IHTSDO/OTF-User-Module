@@ -1,6 +1,6 @@
 <userSecurity>
 <directories>
-<directory idref="" name="Release Directory" status="ENABLED">
+<directory idref="" name="Release" status="ENABLED">
 <groups>
 <group idref="a98c8f56-b91f-4523-a3b4-3ac7ac6d8c4b" name="Reviewer" status="ENABLED"/>
 <group idref="55aafe0e-a779-40e4-bbfe-92dd1f59682c" name="Manager" status="ENABLED"/>
@@ -43,29 +43,13 @@
 </customData>
 </account>
 <account email="va@test.com" givenName="VA" idref="c54d4de1-50cb-4571-ace7-ba5037c8c606" middleName="Admin" name="VAAdmingroup" status="ENABLED" surname="Group"/>
-
-
-<account  givenName="Donna" surname="Morgan" name="dmo" email="dmo@ihtsdo.org" idref="" middleName=""  status="ENABLED" />
-<account  givenName="Graeme" surname="Miller" name="gmi" email="graeme.miller@sydney.edu.au" idref="" middleName=""  status="ENABLED" />
-<account  givenName="Julie" surname="O'Halloran" name="joh" email="julie.ohalloran@sydney.edu.au" idref="" middleName=""  status="ENABLED" />
-<account  givenName="Kathy" surname="Giannangelo" name="kgi" email="kgi@ihtsdo.org" idref="" middleName=""  status="ENABLED" />
-<account  givenName="Krista" surname="Lilly" name="kli" email="kli@ihtsdo.org" idref="" middleName=""  status="ENABLED" />
-<account  givenName="Nicola" surname="Ingram" name="nin" email="nin@ihtsdo.org" idref="" middleName=""  status="ENABLED" />
-<account  givenName="Theresa" surname="Rihanek" name="tri" email="tri@ihtsdo.org" idref="" middleName=""  status="ENABLED" />
-<account  givenName="Brian" surname="Carlsen" name="bca" email="bcarlsen@westcoastinformatics.com" idref="" middleName=""  status="ENABLED" />
-<account  givenName="Deborah" surname="Shapiro" name="dsh" email="dshapiro@westcoastinformatics.com" idref="" middleName=""  status="ENABLED" />
-<account  givenName="Patrick" surname="Granvold" name="pgr" email="pgranvold@westcoastinformatics.com" idref="" middleName=""  status="ENABLED" />
-<account  givenName="Mapping" surname="Administrator" name="adm" email="mappingadmin@westcoastinformatics.com" idref="" middleName=""  status="ENABLED" />
-
-
-<account email="bob@test.com" givenName="Bob" idref="f2b17e70-54c1-4fd1-8c7f-3c70de9e3b24" middleName="Bobby" name="Bob" status="ENABLED" surname="Bobbin">
+<account email="bob@test.com" givenName="Bob" idref="f2b17e70-54c1-4fd1-8c7f-3c70de9e3b24" middleName="" name="Bob" status="ENABLED" surname="Bobbin">
 <customData>
 <customField key="3645e9a1-f257-405b-8439-a9c787043b5b" value="CD_TYPE_APP:Release:Manager:UK"/>
 <customField key="e08dc86a-0996-4859-8e9c-2fdb13b7ff3a" value="CD_TYPE_MEMBER:INTL"/>
 <customField key="ed28c2ce-6e7c-4678-b2f8-da4773d46b24" value="CD_TYPE_MEMBER:UK"/>
 <customField key="7e7d427f-86c1-490d-b8c9-edec3e555de5" value="CD_TYPE_APP:Mapping:Specialist:INTL"/>
 <customField key="300d4a10-4ac5-4bd3-b38e-ad658831b220" value="CD_TYPE_APP:Mapping:Reviewer:DK"/>
-<customField key="b4665c80-d4ee-4025-87dd-bc2d7c17e229" value="CD_TYPE_APP:User Admin:Admin:*"/>
 </customData>
 </account>
 <account email="frank@test.com" givenName="Frank" idref="161cede7-d5a1-4be8-a301-02155beb2f5d" middleName="Lee" name="Frank" status="ENABLED" surname="MyDear">
@@ -87,6 +71,17 @@
 <customField key="c924c6c9-d90d-473e-a30f-3b57c88a3735" value="CD_TYPE_APP:Mapping:Specialist:AUS"/>
 </customData>
 </account>
+<account  givenName="Donna" surname="Morgan" name="dmo" email="dmo@ihtsdo.org" idref="" middleName="Admin"  status="ENABLED" />
+<account  givenName="Graeme" surname="Miller" name="gmi" email="graeme.miller@sydney.edu.au" idref="" middleName="Admin"  status="ENABLED" />
+<account  givenName="Julie" surname="O'Halloran" name="joh" email="julie.ohalloran@sydney.edu.au" idref="" middleName="Admin"  status="ENABLED" />
+<account  givenName="Kathy" surname="Giannangelo" name="kgi" email="kgi@ihtsdo.org" idref="" middleName="Admin"  status="ENABLED" />
+<account  givenName="Krista" surname="Lilly" name="kli" email="kli@ihtsdo.org" idref="" middleName="Admin"  status="ENABLED" />
+<account  givenName="Nicola" surname="Ingram" name="nin" email="nin@ihtsdo.org" idref="" middleName="Admin"  status="ENABLED" />
+<account  givenName="Theresa" surname="Rihanek" name="tri" email="tri@ihtsdo.org" idref="" middleName="Admin"  status="ENABLED" />
+<account  givenName="Brian" surname="Carlsen" name="bca" email="bcarlsen@westcoastinformatics.com" idref="" middleName="Admin"  status="ENABLED" />
+<account  givenName="Deborah" surname="Shapiro" name="dsh" email="dshapiro@westcoastinformatics.com" idref="" middleName="Admin"  status="ENABLED" />
+<account  givenName="Patrick" surname="Granvold" name="pgr" email="pgranvold@westcoastinformatics.com" idref="" middleName="Admin"  status="ENABLED" />
+<account  givenName="Mapping" surname="Administrator" name="adm" email="mappingadmin@westcoastinformatics.com" idref="" middleName="Admin"  status="ENABLED" />
 </accounts>
 </directory>
 <directory idref="" name="Refset Directory" status="ENABLED">
@@ -99,7 +94,6 @@
 </directory>
 <directory description="Auto created Directory for User Admin" idref="d0cddc74-7738-4951-b485-7c90d23bb796" name="User Admin" status="ENABLED">
 <groups>
-<group idref="d7218078-34f2-46c2-aefb-baa77a55e52c" name="LocalAdmin" status="ENABLED"/>
 <group idref="850b16c9-54bd-4b59-8822-301421d1539d" name="Admin" status="ENABLED"/>
 </groups>
 </directory>
@@ -158,7 +152,7 @@
 </directories>
 <applications>
 <application idref="" name="Release" status="ENABLED">
-<accountStore idref="" name="Release Directory" status="ENABLED" type="dir"/>
+<accountStore idref="" name="Release" status="ENABLED" type="dir"/>
 </application>
 <application idref="" name="Editor" status="ENABLED">
 <accountStore idref="" name="Editor Directory" status="ENABLED" type="dir"/>

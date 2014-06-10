@@ -79,7 +79,7 @@
 		</init-param>
 		<!-- <init-param> <param-name>debug</param-name> <param-value>true</param-value> 
 			<description>Do we startup in debug mode?</description> </init-param> -->
-		<!-- <load-on-startup>1</load-on-startup> -->
+		<load-on-startup>1</load-on-startup> 
 	</servlet>
 	
 	<servlet-mapping>

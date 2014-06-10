@@ -51,7 +51,6 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 		try {
 			init(propsIn);
 		} catch (Exception e) {
-
 			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 
@@ -109,6 +108,7 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 	public final Application getUsersApplication() {
 		if (usersApplication == null) {
 			String userAppName = getUserSecurity().getUsersApp();
+			LOG.info("userAppName = " + userAppName);
 			ApplicationList applications = spbd.getTenant().getApplications();
 			for (Application application : applications) {
 				if (application.getName().equals(userAppName)) {
@@ -117,6 +117,7 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 				}
 			}
 		}
+		LOG.info("usersApplication = " + usersApplication);
 		return usersApplication;
 	}
 
@@ -156,6 +157,8 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 	private Account authSPAccount(final String acName, final String pw) {
 		// Create an authentication request using the credentials
 		AuthenticationRequest request = new UsernamePasswordRequest(acName, pw);
+		LOG.info("authSPAccount acName = " + acName + " pw =" + pw);
+		LOG.info("authSPAccount request = " + request);
 		// Now let's authenticate the account with the application:
 		try {
 			return getUsersApplication().authenticateAccount(request)

@@ -44,9 +44,11 @@ public class UserSecurity {
 		getAllAccounts();
 		getDirsMap();
 		getAppsMap();
-		getMembers();
-		getSettings();
-		getAppsNotMembersOrUsers();
+		if (getSettings() != null && getSettings().getSettings().size() > 0) {
+			getMembers();
+			getSettings();
+			getAppsNotMembersOrUsers();
+		}
 
 	}
 
@@ -123,11 +125,14 @@ public class UserSecurity {
 			Map<String, OtfCustomFieldSetting> setMap = new HashMap<String, OtfCustomFieldSetting>();
 			// Get settings dir
 			OtfDirectory setDirectory = getDirs().getDirByName(SETTINGS);
-			// get settings group
-			OtfGroup setgrp = setDirectory.getGroups().getGroupByName(SETTINGS);
-			setgrp.setParentDirName(SETTINGS);
-			settings = new OtfSettings(setgrp);
-			getCachedListMaps().setSettings(settings);
+			if (setDirectory != null) {
+				// get settings group
+				OtfGroup setgrp = setDirectory.getGroups().getGroupByName(
+						SETTINGS);
+				setgrp.setParentDirName(SETTINGS);
+				settings = new OtfSettings(setgrp);
+				getCachedListMaps().setSettings(settings);
+			}
 		}
 		return settings;
 	}
