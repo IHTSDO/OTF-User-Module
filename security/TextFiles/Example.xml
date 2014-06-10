@@ -43,13 +43,29 @@
 </customData>
 </account>
 <account email="va@test.com" givenName="VA" idref="c54d4de1-50cb-4571-ace7-ba5037c8c606" middleName="Admin" name="VAAdmingroup" status="ENABLED" surname="Group"/>
-<account email="bob@test.com" givenName="Bob" idref="f2b17e70-54c1-4fd1-8c7f-3c70de9e3b24" middleName="" name="Bob" status="ENABLED" surname="Bobbin">
+
+
+<account  givenName="Donna" surname="Morgan" name="dmo" email="dmo@ihtsdo.org" idref="" middleName=""  status="ENABLED" />
+<account  givenName="Graeme" surname="Miller" name="gmi" email="graeme.miller@sydney.edu.au" idref="" middleName=""  status="ENABLED" />
+<account  givenName="Julie" surname="O'Halloran" name="joh" email="julie.ohalloran@sydney.edu.au" idref="" middleName=""  status="ENABLED" />
+<account  givenName="Kathy" surname="Giannangelo" name="kgi" email="kgi@ihtsdo.org" idref="" middleName=""  status="ENABLED" />
+<account  givenName="Krista" surname="Lilly" name="kli" email="kli@ihtsdo.org" idref="" middleName=""  status="ENABLED" />
+<account  givenName="Nicola" surname="Ingram" name="nin" email="nin@ihtsdo.org" idref="" middleName=""  status="ENABLED" />
+<account  givenName="Theresa" surname="Rihanek" name="tri" email="tri@ihtsdo.org" idref="" middleName=""  status="ENABLED" />
+<account  givenName="Brian" surname="Carlsen" name="bca" email="bcarlsen@westcoastinformatics.com" idref="" middleName=""  status="ENABLED" />
+<account  givenName="Deborah" surname="Shapiro" name="dsh" email="dshapiro@westcoastinformatics.com" idref="" middleName=""  status="ENABLED" />
+<account  givenName="Patrick" surname="Granvold" name="pgr" email="pgranvold@westcoastinformatics.com" idref="" middleName=""  status="ENABLED" />
+<account  givenName="Mapping" surname="Administrator" name="adm" email="mappingadmin@westcoastinformatics.com" idref="" middleName=""  status="ENABLED" />
+
+
+<account email="bob@test.com" givenName="Bob" idref="f2b17e70-54c1-4fd1-8c7f-3c70de9e3b24" middleName="Bobby" name="Bob" status="ENABLED" surname="Bobbin">
 <customData>
 <customField key="3645e9a1-f257-405b-8439-a9c787043b5b" value="CD_TYPE_APP:Release:Manager:UK"/>
 <customField key="e08dc86a-0996-4859-8e9c-2fdb13b7ff3a" value="CD_TYPE_MEMBER:INTL"/>
 <customField key="ed28c2ce-6e7c-4678-b2f8-da4773d46b24" value="CD_TYPE_MEMBER:UK"/>
 <customField key="7e7d427f-86c1-490d-b8c9-edec3e555de5" value="CD_TYPE_APP:Mapping:Specialist:INTL"/>
 <customField key="300d4a10-4ac5-4bd3-b38e-ad658831b220" value="CD_TYPE_APP:Mapping:Reviewer:DK"/>
+<customField key="b4665c80-d4ee-4025-87dd-bc2d7c17e229" value="CD_TYPE_APP:User Admin:Admin:*"/>
 </customData>
 </account>
 <account email="frank@test.com" givenName="Frank" idref="161cede7-d5a1-4be8-a301-02155beb2f5d" middleName="Lee" name="Frank" status="ENABLED" surname="MyDear">
@@ -81,6 +97,12 @@
 <group idref="ffa3d724-271f-4735-bf81-186739960cca" name="Admin" status="ENABLED"/>
 </groups>
 </directory>
+<directory description="Auto created Directory for User Admin" idref="d0cddc74-7738-4951-b485-7c90d23bb796" name="User Admin" status="ENABLED">
+<groups>
+<group idref="d7218078-34f2-46c2-aefb-baa77a55e52c" name="LocalAdmin" status="ENABLED"/>
+<group idref="850b16c9-54bd-4b59-8822-301421d1539d" name="Admin" status="ENABLED"/>
+</groups>
+</directory>
 <directory description="List of IHTSDO Members" idref="" name="Members" status="ENABLED">
 <groups>
 <group idref="c8457633-e6fc-40df-82c5-b3086c7cf035" name="US" status="ENABLED"/>
@@ -96,9 +118,11 @@
 <groups>
 <group description="Used to store OTF Settings " idref="774dfbd4-35a0-4902-9b07-96986d7c15d9" name="OTFSettings" status="ENABLED">
 <customData>
+<customField key="a44268c9-7039-4498-a92e-824fd636cea3" value="CD_TYPE_SETTING:admin:User Admin"/>
 <customField key="c0ec1ade-e19d-4a31-913b-39c6678690f4" value="CD_TYPE_SETTING:defaultpw:Sn0m3dDefPass"/>
 <customField key="957f86db-6e0d-4dc6-8a91-098f1f67a940" value="CD_TYPE_SETTING:users:OTF Users"/>
 <customField key="08869379-ab6f-4480-ac88-c2ab808f421e" value="CD_TYPE_SETTING:members:Members"/>
+<customField key="8c2b9fff-3f88-4501-a432-e182a4bea985" value="CD_TYPE_SETTING:modDate:2014-06-06T15-53-23.589Z"/>
 </customData>
 </group>
 </groups>
@@ -144,6 +168,9 @@
 </application>
 <application idref="" name="Refset" status="ENABLED">
 <accountStore idref="" name="Refset Directory" status="ENABLED" type="dir"/>
+</application>
+<application description="User Administration" idref="d4975a40-eac8-4191-a09e-06ba33938bdb" name="User Admin" status="ENABLED">
+<accountStore idref="d0cddc74-7738-4951-b485-7c90d23bb796" name="User Admin" status="ENABLED" type="dir"/>
 </application>
 <application description="Members Application" idref="" name="Members" status="ENABLED">
 <accountStore idref="" name="Members" status="ENABLED" type="dir"/>
