@@ -69,14 +69,19 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			} else {
 				// logParameters(requestIn);
 				OtfBaseWeb obw = handlePostAction(requestIn, responseIn);
-				// LOG.info("obw3 = " + obw + " num errs = " +
-				// obw.getErrors().size());
+				LOG.info("obw3 = " + obw + " num errs = "
+						+ obw.getErrors().size());
 				if (obw.getErrors().size() == 0) {
 					// update remotely using obw
 					String ok = updateFromWebObject(obw);
 					// LOG.info("ok =" + ok);
 
 					setTreetype(null);
+
+					if (ok == null) {
+						ok = AbstractUserSecurityHandler.REMOTE_COMMIT_NOT_OK;
+					}
+
 					if (ok.equals(AbstractUserSecurityHandler.REMOTE_COMMIT_OK)) {
 						LOG.info("YAYYYY " + ok);
 					}
