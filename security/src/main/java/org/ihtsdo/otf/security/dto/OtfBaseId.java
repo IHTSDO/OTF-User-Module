@@ -70,6 +70,7 @@ public abstract class OtfBaseId extends OtfBaseWeb {
 		getHiddenRows().put(ID_KEY, getHtmlInputHidden(ID_KEY, getIdIfSet()));
 	}
 
+	@JsonIgnore
 	public String getInputKey() {
 		return getClass().getName();
 	}

@@ -1,8 +1,10 @@
 package org.ihtsdo.otf.security.util;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -22,6 +24,8 @@ public class PropertiesLoader {
 	private String fileKey;
 	// The properties object for storing all the settings.
 	private Properties settings;
+	private Properties initProps;
+	private Properties sysVarArgProps;
 
 	public PropertiesLoader() {
 		super();
@@ -37,6 +41,14 @@ public class PropertiesLoader {
 		super();
 		keyValues = keyValuesIn;
 		fileKey = fileKeyIn;
+	}
+
+	public PropertiesLoader(List<String> keyValuesIn, String fileKeyIn,
+			Properties initPropsIn) {
+		super();
+		keyValues = keyValuesIn;
+		fileKey = fileKeyIn;
+		initProps = initPropsIn;
 	}
 
 	public PropertiesLoader(String[] argsIn, List<String> keyValuesIn) {
@@ -117,6 +129,23 @@ public class PropertiesLoader {
 			String setProp = setProps.getProperty(fileKey);
 			if (setProp != null) {
 				LOG.info("Loading props from " + setProp);
+
+				// Test file exists etc.
+				File fprop = new File(setProp);
+
+				if (!fprop.exists()) {
+					LOG.info("Properties File does not exist at " + setProp);
+					return null;
+				}
+				if (fprop.isDirectory()) {
+					LOG.info("Properties File is a direcotry at " + setProp);
+					return null;
+				}
+				if (!fprop.canRead()) {
+					LOG.info("Properties File can not be read from " + setProp);
+					return null;
+				}
+
 				try {
 					fileProps = new Properties();
 					fileProps.load(new FileInputStream(setProp));
@@ -134,26 +163,27 @@ public class PropertiesLoader {
 	public final Properties getSettings() {
 		getKeyValues();
 		if (settings == null) {
-			// First create the initial properties
-			Properties setProps = new Properties();
-			// Look into Env Vars
-			addEnvVars(setProps);
-			// Look into System props
-			addSysProps(setProps);
-			// Look into commandline args
-			addArgs(setProps);
-			// IF settings is set then load the props and apply the initial
-			// props to
-			// it.
-			settings = addPropsFromFile(setProps);
+			settings = addPropsFromFile(getSysVarArgProps());
+			if (settings == null) {
+				settings = addPropsFromFile(getInitProps());
+			}
 			if (settings == null) {
 				settings = new Properties();
 			}
 			// Over write vals from file with vals from args.
-			for (Object keyO : setProps.keySet()) {
+			for (Object keyO : getSysVarArgProps().keySet()) {
 				String key = keyO.toString();
-				String val = setProps.getProperty(key);
+				String val = getSysVarArgProps().getProperty(key);
 				settings.setProperty(key, val);
+			}
+
+			// add from init props if not exist
+			for (Object keyO : getInitProps().keySet()) {
+				if (!settings.containsKey(keyO)) {
+					String key = keyO.toString();
+					String val = getInitProps().getProperty(key);
+					settings.setProperty(key, val);
+				}
 			}
 
 			return settings;
@@ -178,4 +208,55 @@ public class PropertiesLoader {
 		return toCheck != null & toCheck.length() > 0;
 	}
 
+	public final Properties getInitProps() {
+		if (initProps == null) {
+			initProps = new Properties();
+		}
+		return initProps;
+	}
+
+	public final void setInitProps(Properties initPropsIn) {
+		initProps = initPropsIn;
+	}
+
+	public final Properties getSysVarArgProps() {
+		if (sysVarArgProps == null) {
+			sysVarArgProps = new Properties();
+			addEnvVars(sysVarArgProps);
+			// Look into System props
+			addSysProps(sysVarArgProps);
+			// Look into commandline args
+			addArgs(sysVarArgProps);
+		}
+		return sysVarArgProps;
+	}
+
+	public final void setSysVarArgProps(Properties sysVarArgPropsIn) {
+		sysVarArgProps = sysVarArgPropsIn;
+	}
+
+	public static final void logProps(Properties props) {
+
+		StringBuilder sbuild = new StringBuilder();
+
+		List<String> keys = new ArrayList<String>();
+
+		for (Object keyO : props.keySet()) {
+			keys.add(keyO.toString());
+		}
+
+		Collections.sort(keys);
+
+		sbuild.append("Properties num found = ").append(keys.size())
+				.append(":\n");
+		for (String key : keys) {
+			String val = props.getProperty(key);
+			sbuild.append("Key = ").append(key).append(" || Value = ")
+					.append(val).append("\n");
+
+		}
+
+		LOG.info(sbuild.toString());
+
+	}
 }

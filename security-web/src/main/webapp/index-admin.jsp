@@ -4,6 +4,8 @@ String context = session.getAttribute("BASEURL").toString();
 //System.out.println("context = "+context);
 String username = session.getAttribute("userName").toString();
 String authToken = session.getAttribute("AUTH_TOKEN").toString();
+Object save = session.getAttribute("save");
+boolean canSave = save != null && save.toString().length() > 0;
 //System.out.println("username = "+username +" Authtoken = "+authToken);
 %>
 <head>
@@ -55,6 +57,11 @@ $(window).load(function(){
 	<div class="topRow"><a href="<%=context%>apps">Apps</a></div>
 	<div class="topRow"><a href="<%=context%>members">Members</a></div>
 	<div class="topRow"><a href="<%=context%>settings">Settings</a></div>
+	<div class="topRow"><a href="<%=context%>reload">Reload</a></div>
+	<%if(canSave){%>
+		<div class="topRow"><a href="<%=context%>save">Save</a></div>	
+	<%}%>
+	
 	</div>
 </div>	
 	<div class="container">

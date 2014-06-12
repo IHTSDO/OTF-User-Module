@@ -97,10 +97,9 @@ public class SecurityServlet extends AbstractSecurityServlet {
 	protected void handlePostRequest(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException,
 			IOException {
-		LOG.info("handlePostRequest");
-		System.out.println("handlePostRequest");
+		// LOG.info("handlePostRequest");
+		// System.out.println("handlePostRequest");
 		setHr(request);
-
 		// AUTHUSER
 		handleGetRequest(request, response);
 

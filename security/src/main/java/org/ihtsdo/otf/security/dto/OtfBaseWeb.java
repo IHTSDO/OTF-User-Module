@@ -556,6 +556,7 @@ public abstract class OtfBaseWeb {
 		return toCheck != null && !toCheck.isEmpty();
 	}
 
+	@JsonIgnore
 	public final Map<String, List<String>> getErrors() {
 		if (errors == null) {
 			errors = new HashMap<String, List<String>>();

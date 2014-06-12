@@ -67,10 +67,8 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 			spbd = new StormPathBaseDTO(props);
 			spbd.load();
 		}
-		if (mod2Storm == null) {
-			mod2Storm = new Model2Storm(spbd);
-		}
-		mod2Storm.sendToStormPath(null);
+
+		getMod2Storm().sendToStormPath(null);
 
 	}
 
@@ -80,10 +78,7 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 			spbd = new StormPathBaseDTO(props);
 			spbd.load();
 		}
-		if (storm2Mod == null) {
-			storm2Mod = new Storm2Model(spbd);
-		}
-		setUserSecurity(storm2Mod.build());
+		setUserSecurity(getStorm2Mod().build());
 	}
 
 	public final void sendUserSecuritytoStormPath(
@@ -95,10 +90,8 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 			spbd = new StormPathBaseDTO(props);
 			spbd.load();
 		}
-		if (mod2Storm == null) {
-			mod2Storm = new Model2Storm(spbd);
-		}
-		mod2Storm.sendToStormPath(getUserSecurity());
+
+		getMod2Storm().sendToStormPath(getUserSecurity());
 	}
 
 	@Override
@@ -190,17 +183,17 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 	@Override
 	public final String addUpdateMemberLocal(final OtfGroup grpIn,
 			final OtfDirectory mDirectoryIn, final boolean isNewIn) {
-		Directory mdir = storm2Mod.getDirByName(mDirectoryIn.getName());
+		Directory mdir = getStorm2Mod().getDirByName(mDirectoryIn.getName());
 		if (mdir == null) {
 			return DIR_NOT_FOUND;
 		}
 		if (isNewIn) {
-			mod2Storm.buildGroup(grpIn, null, mdir);
+			getMod2Storm().buildGroup(grpIn, null, mdir);
 		} else {
-			Group remoteG = storm2Mod.getGrpByName(grpIn.getName(), mdir);
-			mod2Storm.buildGroup(grpIn, remoteG, mdir);
+			Group remoteG = getStorm2Mod().getGrpByName(grpIn.getName(), mdir);
+			getMod2Storm().buildGroup(grpIn, remoteG, mdir);
 		}
-		return null;
+		return REMOTE_COMMIT_OK;
 	}
 
 	@Override
@@ -208,57 +201,79 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 			final boolean isNewIn) {
 		// Remember to create a new dir? Before adding app
 		if (isNewIn) {
-			mod2Storm.buildApp(appIn, null);
+			getMod2Storm().buildApp(appIn, null);
 		} else {
-			Application app = storm2Mod.getAppByName(appIn.getName());
-			mod2Storm.buildApp(appIn, app);
+			Application app = getStorm2Mod().getAppByName(appIn.getName());
+			getMod2Storm().buildApp(appIn, app);
 		}
-		return null;
+		return REMOTE_COMMIT_OK;
 	}
 
 	@Override
 	public final String addUpdateAccountLocal(final OtfAccount accIn,
 			final OtfDirectory parentIn, final boolean isNewIn) {
-
-		Directory mdir = storm2Mod.getDirByName(parentIn.getName());
+		Directory mdir = getStorm2Mod().getDirByName(parentIn.getName());
 		if (mdir == null) {
 			return DIR_NOT_FOUND;
 		}
 		if (isNewIn) {
-			mod2Storm.buildAccount(accIn, null, mdir);
+			getMod2Storm().buildAccount(accIn, null, mdir);
 		} else {
-			Account acc = storm2Mod.getAccountByName(accIn.getName(), mdir);
-			mod2Storm.buildAccount(accIn, acc, mdir);
+			Account acc = getStorm2Mod()
+					.getAccountByName(accIn.getName(), mdir);
+			getMod2Storm().buildAccount(accIn, acc, mdir);
 		}
-		return null;
+		return REMOTE_COMMIT_OK;
 	}
 
 	@Override
 	public String addUpdateGroupLocal(OtfGroup grpIn,
 			OtfDirectory mDirectoryIn, boolean isNewIn) {
-		Directory dir = storm2Mod.getDirByName(mDirectoryIn.getName());
+		Directory dir = getStorm2Mod().getDirByName(mDirectoryIn.getName());
 		if (dir == null) {
 			return DIR_NOT_FOUND;
 		}
 		if (isNewIn) {
-			mod2Storm.buildGroup(grpIn, null, dir);
+			getMod2Storm().buildGroup(grpIn, null, dir);
 		} else {
-			Group grp = storm2Mod.getGrpByName(grpIn.getName(), dir);
-			mod2Storm.buildGroup(grpIn, grp, dir);
+			Group grp = getStorm2Mod().getGrpByName(grpIn.getName(), dir);
+			getMod2Storm().buildGroup(grpIn, grp, dir);
 		}
-		return null;
+		return REMOTE_COMMIT_OK;
 	}
 
 	@Override
 	public String addUpdateDirLocal(OtfDirectory dirIn, boolean isNewIn) {
 
 		if (isNewIn) {
-			mod2Storm.buildDirectory(dirIn, null);
+			getMod2Storm().buildDirectory(dirIn, null);
 		} else {
-			Directory dir = storm2Mod.getDirByName(dirIn.getName());
-			mod2Storm.buildDirectory(dirIn, dir);
+			Directory dir = getStorm2Mod().getDirByName(dirIn.getName());
+			getMod2Storm().buildDirectory(dirIn, dir);
 		}
-		return null;
+		return REMOTE_COMMIT_OK;
+	}
+
+	public final Storm2Model getStorm2Mod() {
+		if (storm2Mod == null) {
+			storm2Mod = new Storm2Model(spbd);
+		}
+		return storm2Mod;
+	}
+
+	public final void setStorm2Mod(Storm2Model storm2ModIn) {
+		storm2Mod = storm2ModIn;
+	}
+
+	public final Model2Storm getMod2Storm() {
+		if (mod2Storm == null) {
+			mod2Storm = new Model2Storm(spbd);
+		}
+		return mod2Storm;
+	}
+
+	public final void setMod2Storm(Model2Storm mod2StormIn) {
+		mod2Storm = mod2StormIn;
 	}
 
 }

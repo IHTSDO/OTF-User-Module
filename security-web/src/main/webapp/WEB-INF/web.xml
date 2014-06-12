@@ -32,7 +32,7 @@
 	<context-param>
 		<param-name>StormPathUserSecurity.keyPath</param-name>
 		<!-- <param-value>C:/Users/adamf/stormpath/apiKey.properties</param-value>  -->
-		<param-value>/opt/api/apiKey.properties</param-value>
+		<param-value>/opt/useradmin/api/apiKey.properties</param-value>
 	</context-param>
 	<!-- <context-param>
 		<param-name>StormPathUserSecurity.apiKey.id</param-name>
@@ -42,6 +42,16 @@
 		<param-name>StormPathUserSecurity.apiKey.secret</param-name>
 		<param-value>SOME LONG SECRET</param-value>
 	</context-param> -->
+
+	<context-param>
+		<param-name>SecurityServiceProps</param-name>
+		<param-value>/opt/useradmin/settings/securitySettings.txt</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>save</param-name>
+		<param-value>/opt/useradmin/save/useradmin.xml</param-value>
+	</context-param>
 
 		<filter>
 		<filter-name>cors</filter-name>

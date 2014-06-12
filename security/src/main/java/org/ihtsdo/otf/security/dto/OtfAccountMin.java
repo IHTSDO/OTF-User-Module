@@ -203,6 +203,7 @@ public class OtfAccountMin extends OtfBaseName {
 		return super.getHtmlForm(formName);
 	}
 
+	@JsonIgnore
 	public final String getAuthToken() {
 		// Temporary until Oauth etc.
 		if (!stringOK(authToken)) {

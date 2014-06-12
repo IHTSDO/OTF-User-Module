@@ -161,7 +161,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		setHr(requestIn);
 		if (userok) {
 			String decPath = getDecString(getNotNullPath(requestIn));
-			// LOG.info("decPath = " + decPath);
+			LOG.info("decPath = " + decPath);
 			if (decPath.startsWith(NEW_FORM)) {
 				// getUrlNodes();
 				// LOG.info("New Form val = " + getUrlNodes()[1]);
@@ -173,6 +173,16 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 				out.write(retval);
 
 			} else {
+
+				if (decPath.endsWith(RELOAD)) {
+					LOG.info("Reloading model");
+					reloadUsh();
+				}
+				if (decPath.endsWith(SAVE)) {
+					LOG.info("saving model");
+					save();
+				}
+
 				loadScreen(requestIn, responseIn, null);
 			}
 		}

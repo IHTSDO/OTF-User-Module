@@ -101,7 +101,7 @@ public class AppPermGroupsQueryDTO extends AbstractSecurityQuery {
 			GroupPermDTO gpd = new GroupPermDTO(grp.getName());
 			for (OtfCustomField cf : permsL) {
 				OtfCustomFieldPerm cfapp = (OtfCustomFieldPerm) cf.getModel();
-				PermDTO pd = new PermDTO(cfapp.getKey(), cfapp.getVal());
+				PermDTO pd = new PermDTO(cfapp.getKeyVal(), cfapp.getVal());
 				gpd.getPerms().add(pd);
 			}
 			return gpd;

@@ -1,12 +1,15 @@
 package org.ihtsdo.otf.security.web;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -23,6 +26,8 @@ import org.ihtsdo.otf.security.UserSecurityHandler;
 import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.query.SecurityService;
 import org.ihtsdo.otf.security.objectcache.ObjectCacheClassHandler;
+import org.ihtsdo.otf.security.util.PropertiesLoader;
+import org.ihtsdo.otf.security.xml.XmlUserSecurity;
 
 /**
  * 
@@ -54,6 +59,7 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 	public static final String JSON = "json";
 	public static final String RELOAD = "reload";
 	public static final String BASEURL = "BASEURL";
+	public static final String SAVE = "save";
 
 	public static final String USERNAME = "userName";
 	public static final String PASSWD = "passWord";
@@ -74,6 +80,9 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 	private String baseUrl;
 
+	private String savePath = null;
+	private Boolean canSave = null;
+
 	@Override
 	public void init(final ServletConfig config) throws ServletException {
 
@@ -85,6 +94,15 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 		}
 	}
 
+	public final List<String> getInitParamNames() {
+		List<String> pnames = new ArrayList<String>();
+		pnames.add(SETTINGS_PROPS);
+		pnames.add(USER_SECURITY_HANDLER);
+		pnames.add(BASEURL);
+		pnames.add(SAVE);
+		return pnames;
+	}
+
 	private void initParameters(final ServletConfig scIn) throws Exception {
 		sc = scIn;
 		ServletContext scon = sc.getServletContext();
@@ -92,12 +110,14 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 		// Add context params first so that init params over write if present
 
+		Properties contextProps = new Properties();
+
 		while (contextParams.hasMoreElements()) {
 			String name = contextParams.nextElement();
 			String val = scon.getInitParameter(name);
 			// LOG.info("Adding context param name = " + name + " val = " +
 			// val);
-			getParamsProps().setProperty(name, val);
+			contextProps.setProperty(name, val);
 		}
 		Enumeration<String> initParams = sc.getInitParameterNames();
 
@@ -105,17 +125,25 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 			String name = initParams.nextElement();
 			String val = sc.getInitParameter(name);
 			// LOG.info("Adding init param name = " + name + " val = " + val);
-			getParamsProps().setProperty(name, val);
+			contextProps.setProperty(name, val);
 		}
 
-		Properties cmdProps = getCmdEnvProps();
-		if (cmdProps != null) {
-			for (Object key : cmdProps.keySet()) {
-				String keyS = key.toString();
-				String val = cmdProps.getProperty(keyS);
-				getParamsProps().setProperty(keyS, val);
-			}
-		}
+		LOG.info("initParameters contextProps = \n");
+		PropertiesLoader.logProps(contextProps);
+
+		PropertiesLoader pl = new PropertiesLoader(getInitParamNames(),
+				SETTINGS_PROPS, contextProps);
+
+		setParamsProps(pl.getSettings());
+
+		// Properties cmdProps = getCmdEnvProps();
+		// if (cmdProps != null) {
+		// for (Object key : cmdProps.keySet()) {
+		// String keyS = key.toString();
+		// String val = cmdProps.getProperty(keyS);
+		// getParamsProps().setProperty(keyS, val);
+		// }
+		// }
 	}
 
 	private Properties getCmdEnvProps() {
@@ -445,6 +473,8 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 	public final void setParamsProps(Properties paramsPropsIn) {
 		paramsProps = paramsPropsIn;
+		LOG.info("setParamsProps \n");
+		PropertiesLoader.logProps(paramsProps);
 	}
 
 	public final HttpServletRequest getHr() {
@@ -453,6 +483,7 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 	public final void setHr(HttpServletRequest hrIn) {
 		hr = hrIn;
+		getCanSave();
 	}
 
 	public final ServletConfig getSc() {
@@ -514,6 +545,70 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 	public final void setBaseUrl(final String baseUrlIn) {
 		baseUrl = baseUrlIn;
+	}
+
+	private boolean canSaveFile() {
+		if (stringOK(getSavePath())) {
+			File fi = new File(getSavePath());
+			if (fi.exists()) {
+				if (fi.isFile()) {
+					return fi.canWrite();
+				}
+			} else {
+				File parent = fi.getParentFile();
+				if (parent != null && parent.exists()) {
+					// assume dir
+					return parent.canWrite();
+				}
+			}
+		}
+		return false;
+	}
+
+	public final Boolean getCanSave() {
+
+		if (canSave == null) {
+			canSave = new Boolean(canSaveFile());
+			LOG.info("getCanSave getSavePath() = " + getSavePath()
+					+ " canSave = " + canSave);
+			if (canSave) {
+				hr.getSession().setAttribute(SAVE, "true");
+			}
+			if (!canSave) {
+				hr.getSession().removeAttribute(SAVE);
+			}
+		}
+
+		return canSave;
+	}
+
+	public final void setCanSave(Boolean canSaveIn) {
+		canSave = canSaveIn;
+	}
+
+	public final String getSavePath() {
+		if (savePath == null) {
+			savePath = getParamsProps().getProperty(SAVE);
+			LOG.info("getSavePath savePath = " + savePath);
+		}
+		return savePath;
+	}
+
+	public final void setSavePath(String savePathIn) {
+		savePath = savePathIn;
+	}
+
+	public void save() {
+		if (getCanSave()) {
+			XmlUserSecurity xmlUsOut = new XmlUserSecurity();
+			xmlUsOut.setConfigFN(getSavePath());
+			xmlUsOut.setUserSecurity(getUsh().getUserSecurity());
+			try {
+				xmlUsOut.saveUserSecurity();
+			} catch (Exception e) {
+				LOG.log(Level.SEVERE, "Error trying to write model to file", e);
+			}
+		}
 	}
 
 }
