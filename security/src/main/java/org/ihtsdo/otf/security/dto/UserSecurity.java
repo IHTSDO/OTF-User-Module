@@ -32,6 +32,9 @@ public class UserSecurity {
 	private String usersApp;
 	private String membersApp;
 
+	private String adminApp;
+	private String handlerAdminDir;
+
 	public static final String SETTINGS = "OTFSettings";
 
 	// private List<String> members;
@@ -49,6 +52,8 @@ public class UserSecurity {
 			getSettings();
 			getAppsNotMembersOrUsers();
 		}
+
+		getAdminUsersMap();
 
 	}
 
@@ -330,9 +335,39 @@ public class UserSecurity {
 		if (dirname.equals("*")) {
 			return getAllUsers();
 		}
-
 		return getUsersbyDir(dirname);
+	}
 
+	public final Map<String, OtfAccount> getAdminUsersMap() {
+
+		Map<String, OtfAccount> adminUsers = new HashMap<String, OtfAccount>();
+		// First get all StormPath Admins
+		if (stringOK(getHandlerAdminDir())) {
+			String ucAdminDir = getHandlerAdminDir().toUpperCase();
+			LOG.info("getAdminUsers ucAdminDir");
+			// getCachedListMaps().getDirsMap().keySet();
+			for (String dirName : getDirs().getDirectories().keySet()) {
+				if (dirName.toUpperCase().startsWith(ucAdminDir)) {
+					LOG.info("Found an admin dir " + dirName);
+					Collection<OtfAccount> handleradmins = getUsersbyDir(dirName);
+					for (OtfAccount acc : handleradmins) {
+						adminUsers.put(acc.getName(), acc);
+					}
+				}
+			}
+		}
+
+		// Then add any users who have a role in the relevant admin app.
+		String adminA = getAdminApp();
+		LOG.info("adminApp = " + adminA);
+		if (stringOK(adminA)) {
+			for (OtfAccount acc : getAllUsers()) {
+				// if(acc.)
+
+			}
+		}
+
+		return adminUsers;
 	}
 
 	public final Collection<OtfAccount> getAllUsers() {
@@ -493,6 +528,26 @@ public class UserSecurity {
 			}
 		}
 		return false;
+	}
+
+	public final String getAdminApp() {
+		if (!stringOK(adminApp)) {
+			adminApp = getSettings().getSettings()
+					.get(OtfCustomFieldSetting.ADMIN).getVal().trim();
+		}
+		return adminApp;
+	}
+
+	public final void setAdminApp(String adminAppIn) {
+		adminApp = adminAppIn;
+	}
+
+	public final String getHandlerAdminDir() {
+		return handlerAdminDir;
+	}
+
+	public final void setHandlerAdminDir(String handlerAdminDirIn) {
+		handlerAdminDir = handlerAdminDirIn;
 	}
 
 }

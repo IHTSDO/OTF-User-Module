@@ -128,22 +128,14 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 			contextProps.setProperty(name, val);
 		}
 
-		LOG.info("initParameters contextProps = \n");
-		PropertiesLoader.logProps(contextProps);
+		// LOG.info("initParameters contextProps = \n");
+		// PropertiesLoader.logProps(contextProps);
 
 		PropertiesLoader pl = new PropertiesLoader(getInitParamNames(),
 				SETTINGS_PROPS, contextProps);
 
 		setParamsProps(pl.getSettings());
 
-		// Properties cmdProps = getCmdEnvProps();
-		// if (cmdProps != null) {
-		// for (Object key : cmdProps.keySet()) {
-		// String keyS = key.toString();
-		// String val = cmdProps.getProperty(keyS);
-		// getParamsProps().setProperty(keyS, val);
-		// }
-		// }
 	}
 
 	private Properties getCmdEnvProps() {
@@ -473,8 +465,8 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 	public final void setParamsProps(Properties paramsPropsIn) {
 		paramsProps = paramsPropsIn;
-		LOG.info("setParamsProps \n");
-		PropertiesLoader.logProps(paramsProps);
+		// LOG.info("setParamsProps \n");
+		// PropertiesLoader.logProps(paramsProps);
 	}
 
 	public final HttpServletRequest getHr() {
@@ -569,8 +561,8 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 		if (canSave == null) {
 			canSave = new Boolean(canSaveFile());
-			LOG.info("getCanSave getSavePath() = " + getSavePath()
-					+ " canSave = " + canSave);
+			// LOG.info("getCanSave getSavePath() = " + getSavePath()
+			// + " canSave = " + canSave);
 			if (canSave) {
 				hr.getSession().setAttribute(SAVE, "true");
 			}
@@ -589,7 +581,7 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 	public final String getSavePath() {
 		if (savePath == null) {
 			savePath = getParamsProps().getProperty(SAVE);
-			LOG.info("getSavePath savePath = " + savePath);
+			// LOG.info("getSavePath savePath = " + savePath);
 		}
 		return savePath;
 	}
