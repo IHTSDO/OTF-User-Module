@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldApplication;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldSetting;
 
 public class UserSecurity {
@@ -36,6 +37,7 @@ public class UserSecurity {
 	private String handlerAdminDir;
 
 	public static final String SETTINGS = "OTFSettings";
+	public static final String ALL = "*";
 
 	// private List<String> members;
 	// private Map<String, OtfAccount> allAccounts;
@@ -53,7 +55,7 @@ public class UserSecurity {
 			getAppsNotMembersOrUsers();
 		}
 
-		getAdminUsersMap();
+		getAdminUsers();
 
 	}
 
@@ -64,6 +66,7 @@ public class UserSecurity {
 		resetMembers();
 		resetSettings();
 		resetAppsNotMembersOrUsers();
+		resetAdminUsers();
 
 	}
 
@@ -332,7 +335,7 @@ public class UserSecurity {
 			// Get members dir
 			return getUsersbyDir(getUsersApp());
 		}
-		if (dirname.equals("*")) {
+		if (dirname.equals(ALL)) {
 			return getAllUsers();
 		}
 		return getUsersbyDir(dirname);
@@ -344,11 +347,11 @@ public class UserSecurity {
 		// First get all StormPath Admins
 		if (stringOK(getHandlerAdminDir())) {
 			String ucAdminDir = getHandlerAdminDir().toUpperCase();
-			LOG.info("getAdminUsers ucAdminDir");
+			// LOG.info("getAdminUsers ucAdminDir");
 			// getCachedListMaps().getDirsMap().keySet();
 			for (String dirName : getDirs().getDirectories().keySet()) {
 				if (dirName.toUpperCase().startsWith(ucAdminDir)) {
-					LOG.info("Found an admin dir " + dirName);
+					// LOG.info("Found an admin dir " + dirName);
 					Collection<OtfAccount> handleradmins = getUsersbyDir(dirName);
 					for (OtfAccount acc : handleradmins) {
 						adminUsers.put(acc.getName(), acc);
@@ -359,15 +362,50 @@ public class UserSecurity {
 
 		// Then add any users who have a role in the relevant admin app.
 		String adminA = getAdminApp();
-		LOG.info("adminApp = " + adminA);
+		// LOG.info("adminApp = " + adminA);
 		if (stringOK(adminA)) {
 			for (OtfAccount acc : getAllUsers()) {
-				// if(acc.)
+				if (acc.getCustData() != null) {
+					List<OtfCustomField> apps = acc.getCustData().getApps();
+					for (OtfCustomField app : apps) {
+						OtfCustomFieldApplication oca = (OtfCustomFieldApplication) app
+								.getModel();
+						if (oca.getApp().equals(adminA)) {
+							// LOG.info("Found an admin user " + acc.getName());
+							adminUsers.put(acc.getName(), acc);
+						}
+					}
+				}
 
 			}
 		}
 
 		return adminUsers;
+	}
+
+	public final List<String> getAdminUsers() {
+		// LOG.info("GET MEMBERS");
+		List<String> adminUsers = getCachedListMaps().getAdminUsersList();
+		if (adminUsers == null) {
+			adminUsers = new ArrayList<String>();
+			Map<String, OtfAccount> adminUserMap = getAdminUsersMap();
+			if (adminUserMap != null && adminUserMap.size() > 0) {
+				adminUsers.addAll(adminUserMap.keySet());
+			}
+			Collections.sort(adminUsers, String.CASE_INSENSITIVE_ORDER);
+			setAdminUsers(adminUsers);
+		}
+
+		return adminUsers;
+	}
+
+	public final void setAdminUsers(List<String> listIn) {
+		getCachedListMaps().setAdminUsersList(listIn);
+	}
+
+	public final void resetAdminUsers() {
+		getCachedListMaps().remAdminUsersList();
+		getAdminUsers();
 	}
 
 	public final Collection<OtfAccount> getAllUsers() {

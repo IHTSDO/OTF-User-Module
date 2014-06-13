@@ -220,11 +220,13 @@ public class SecurityService {
 			final String password) {
 		UserByNameQueryDTO ubn = new UserByNameQueryDTO(ush, username, password);
 		if (ubn.getUser() == null) {
-			LOG.info("ubn.getUser() == null");
+			// LOG.info("ubn.getUser() == null");
 			return null;
 		}
 
 		String json = getJSonFromObject(ubn);
+
+		ubn.getUser().setAuth(false);
 		// LOG.info("JSON = " + json);
 		return json;
 

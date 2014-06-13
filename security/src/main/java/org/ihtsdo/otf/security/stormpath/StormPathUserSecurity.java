@@ -137,14 +137,12 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 	}
 
 	@Override
-	public final OtfAccount authAccount(final String acNameIn, String pwIn) {
+	public final OtfAccount authAccountLocal(final String acNameIn,
+			String pwIn, OtfAccount accIn) {
 		Account acc = authSPAccount(acNameIn, pwIn);
-
 		pwIn = null;
-		// CustomData cd = spdb.
-
 		if (acc != null) {
-			return getUserSecurity().getUserAccountByName(acNameIn, "*");
+			return accIn;
 		}
 		return null;
 	}

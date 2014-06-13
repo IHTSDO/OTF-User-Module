@@ -126,6 +126,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			OtfAccount otfObj = (OtfAccount) webObject;
 			String retval = getUsh().addUpdateAccount(otfObj, null);
 			getUsh().getUserSecurity().resetAllAccounts();
+			getUsh().getUserSecurity().resetAdminUsers();
 			return retval;
 		}
 		if (webObject instanceof OtfApplication) {
@@ -135,6 +136,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			getUsh().getUserSecurity().resetAppsMap();
 			getUsh().getUserSecurity().resetAppsNotMembersOrUsers();
 			getUsh().getUserSecurity().resetDirsMap();
+			getUsh().getUserSecurity().resetAdminUsers();
 			return retval;
 		}
 		if (webObject instanceof OtfGroup) {
@@ -146,6 +148,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			getUsh().getUserSecurity().resetAppsNotMembersOrUsers();
 			getUsh().getUserSecurity().resetDirsMap();
 			getUsh().getUserSecurity().resetMembers();
+			getUsh().getUserSecurity().resetAdminUsers();
 			return retval;
 		} else
 			return AbstractUserSecurityHandler.REMOTE_COMMIT_NOT_OK;
@@ -194,8 +197,9 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		String usern = authUser(requestIn);
 		// LOG.info("Check Cred uname = " + usern);
 		if (usern != null) {
-			// check perm
-			Boolean perm = true;
+			// check perm - is the uname in the list of admin users
+			Boolean perm = getUsh().getUserSecurity().getAdminUsers()
+					.contains(usern);
 			// if not perm send to sorry page
 			if (!perm) {
 				requestIn.getSession().removeAttribute(USERNAME);
@@ -289,6 +293,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 
 	public final String getList(String title, String baseUrl, List<String> vals) {
 		StringBuilder sbuild = new StringBuilder();
+		Collections.sort(vals, String.CASE_INSENSITIVE_ORDER);
 		sbuild.append(OtfBaseWeb.getForm(title));
 		sbuild.append("<ul>");
 		for (String val : vals) {

@@ -465,7 +465,7 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 	public final void setParamsProps(Properties paramsPropsIn) {
 		paramsProps = paramsPropsIn;
-		LOG.info("Paramters used on Start up");
+		LOG.info("Parameters used on Start up");
 		PropertiesLoader.logProps(paramsProps);
 	}
 

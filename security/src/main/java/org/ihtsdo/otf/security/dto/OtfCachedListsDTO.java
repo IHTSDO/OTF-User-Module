@@ -16,6 +16,8 @@ public class OtfCachedListsDTO {
 	public static final String ACCOUNTS_LIST = "Accounts_List";
 	public static final String APPS_NOT_USER_MEM_LIST = "AppNotUserMember_List";
 
+	public static final String ADMINUSERS_LIST = "AdminUsers_List";
+
 	public static final String ADMIN_CONTEXT_URL = "OtfAdminServletContextUrl";
 
 	// private Map<String, OtfCustomFieldSetting> settings = new HashMap<String,
@@ -66,6 +68,21 @@ public class OtfCachedListsDTO {
 
 	public final void remMembersList() {
 		ObjectCache.INSTANCE.remove(MEMBERS_LIST);
+	}
+
+	public final List<String> getAdminUsersList() {
+		@SuppressWarnings("unchecked")
+		List<String> list = (List<String>) ObjectCache.INSTANCE
+				.get(ADMINUSERS_LIST);
+		return list;
+	}
+
+	public final void setAdminUsersList(List<String> listIn) {
+		ObjectCache.INSTANCE.put(ADMINUSERS_LIST, listIn);
+	}
+
+	public final void remAdminUsersList() {
+		ObjectCache.INSTANCE.remove(ADMINUSERS_LIST);
 	}
 
 	public final Map<String, OtfAccount> getAllAccountsMap() {

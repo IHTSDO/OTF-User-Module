@@ -23,6 +23,7 @@ public class OtfAccountMin extends OtfBaseName {
 	private String surname;
 
 	private String authToken;
+	private boolean auth;
 
 	public static final String EMAIL_NAME = "Email:";
 	public static final String GIVEN_NAME = "Given Name:";
@@ -43,6 +44,8 @@ public class OtfAccountMin extends OtfBaseName {
 		setIdref(orig.getIdref());
 		setId(orig.getId());
 		setStatus(orig.getStatus().toString());
+		setAuthToken(orig.getAuthToken());
+		setAuth(orig.isAuth());
 	}
 
 	@Override
@@ -214,6 +217,24 @@ public class OtfAccountMin extends OtfBaseName {
 
 	public final void setAuthToken(String authTokenIn) {
 		authToken = authTokenIn;
+	}
+
+	public final String getToken() {
+		// LOG.info("getToken isAuth() =" + isAuth());
+		if (isAuth()) {
+			return getAuthToken();
+		} else
+			return "";
+	}
+
+	@JsonIgnore
+	public final boolean isAuth() {
+		return auth;
+	}
+
+	public final void setAuth(boolean authIn) {
+		LOG.info("setAuth authIn =" + authIn);
+		auth = authIn;
 	}
 
 }

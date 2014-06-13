@@ -1,6 +1,7 @@
 package org.ihtsdo.otf.security.dto.query.queries;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.ihtsdo.otf.security.UserSecurityHandler;
@@ -28,6 +29,7 @@ public class UsersListQueryDTO extends AbstractSecurityQuery {
 				users = new ArrayList<OtfAccountMin>();
 			}
 		}
+		Collections.sort(users);
 		return users;
 	}
 

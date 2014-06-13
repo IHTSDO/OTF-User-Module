@@ -36,8 +36,11 @@ public abstract class AbstractUserSecurityHandler implements
 	@Override
 	public abstract void saveUserSecurity() throws Exception;
 
-	@Override
-	public abstract OtfAccount authAccount(String acNameIn, String pwIn);
+	// TODO: Make not abstract add local method. Add token based method
+	// Check username exists & is enabled (e.g. could be not verified)
+
+	public abstract OtfAccount authAccountLocal(String acNameIn, String pwIn,
+			OtfAccount acc);
 
 	@Override
 	public abstract void init(Properties propsIn) throws Exception;
@@ -61,6 +64,41 @@ public abstract class AbstractUserSecurityHandler implements
 
 	public abstract String addUpdateDirLocal(final OtfDirectory parentIn,
 			boolean isNew);
+
+	@Override
+	public OtfAccount getUser(String acNameIn, String pwIn) {
+		if (pwIn != null && pwIn.length() > 0) {
+			// first auth
+			return authAccount(acNameIn, pwIn);
+		}
+		if (pwIn == null || pwIn.length() == 0) {
+			return getUserSecurity().getUserAccountByName(acNameIn, "*");
+		}
+		return null;
+	}
+
+	@Override
+	public OtfAccount authAccount(String acNameIn, String pwIn) {
+
+		// check acc exists
+		OtfAccount acc = getUserSecurity().getUserAccountByName(acNameIn,
+				UserSecurity.ALL);
+		if (acc == null) {
+			return null;
+		}
+		// LOG.info("acc = " + acc.getName());
+		// check if uuid/token
+		if (pwIn.equals(acc.getAuthToken())) {
+			// LOG.info("token ok");
+			return acc;
+		}
+		// else auth local
+		acc = authAccountLocal(acNameIn, pwIn, acc);
+		if (acc != null) {
+			acc.setAuth(true);
+		}
+		return acc;
+	}
 
 	@Override
 	public final UserSecurity getUserSecurity() {

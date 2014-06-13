@@ -18,6 +18,8 @@ public interface UserSecurityHandler {
 
 	OtfAccount authAccount(String acName, String pw);
 
+	OtfAccount getUser(String acName, String pw);
+
 	void init(Properties props) throws Exception;
 
 	void reload();

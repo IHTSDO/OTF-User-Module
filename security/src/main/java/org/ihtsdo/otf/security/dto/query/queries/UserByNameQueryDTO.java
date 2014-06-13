@@ -1,8 +1,8 @@
 package org.ihtsdo.otf.security.dto.query.queries;
 
 import org.ihtsdo.otf.security.UserSecurityHandler;
-import org.ihtsdo.otf.security.dto.OtfAccountMin;
 import org.ihtsdo.otf.security.dto.OtfAccount;
+import org.ihtsdo.otf.security.dto.OtfAccountMin;
 import org.ihtsdo.otf.security.dto.query.AbstractSecurityQuery;
 
 public class UserByNameQueryDTO extends AbstractSecurityQuery {
@@ -28,18 +28,10 @@ public class UserByNameQueryDTO extends AbstractSecurityQuery {
 
 	public final OtfAccountMin getUser() {
 		if (user == null) {
-			OtfAccount oacc = null;
-			// if pw is set
-			if (pw != null && pw.length() > 0) {
-				// first auth
-				oacc = ush.authAccount(userName, pw);
-			}
-			if (pw == null || pw.length() == 0) {
-				oacc = ush.getUserSecurity()
-						.getUserAccountByName(userName, "*");
-			}
+			OtfAccount oacc = ush.getUser(userName, pw);
 			if (oacc != null) {
 				user = new OtfAccountMin(oacc);
+				oacc.setAuth(false);
 			}
 		}
 		return user;
