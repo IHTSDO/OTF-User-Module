@@ -28,7 +28,7 @@ public class SecurityTestXML extends AbstractSecurityTest {
 		SecurityTestXML stx = new SecurityTestXML();
 		try {
 			stx.getSecS();
-			LOG.info(xmlUs.getXMLFromUserSecurityAsStringSortByName());
+			LOG.info(xmlUs.getXMLFromUserSecurityAsString());
 			LOG.info("String representation: \n");
 			String uStr = xmlUs.getUserSecurity().toString();
 			LOG.info(uStr);

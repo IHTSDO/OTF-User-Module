@@ -76,7 +76,7 @@ public class StormTest {
 			xmlUs.setUserSecurity(spu.getUserSecurity());
 			if (log) {
 				LOG.info("storm2Xml : \n"
-						+ xmlUs.getXMLFromUserSecurityAsStringSortByName());
+						+ xmlUs.getXMLFromUserSecurityAsString());
 			}
 
 		} catch (Exception e) {
@@ -93,7 +93,7 @@ public class StormTest {
 			getXmlUs();
 			if (log) {
 				LOG.info("Xml2Storm : \n"
-						+ xmlUs.getXMLFromUserSecurityAsStringSortByName());
+						+ xmlUs.getXMLFromUserSecurityAsString());
 			}
 			spu.sendUserSecuritytoStormPath(xmlUs.getUserSecurity());
 
@@ -117,8 +117,7 @@ public class StormTest {
 	private void sortXML() {
 		try {
 			getXmlUs();
-			LOG.info("using XML :\n"
-					+ xmlUs.getXMLFromUserSecurityAsStringSortByName());
+			LOG.info("using XML :\n" + xmlUs.getXMLFromUserSecurity());
 
 		} catch (Exception e) {
 

@@ -207,6 +207,9 @@ public class Xml2Model {
 			OtfCustomField cust = buildCustField(el);
 			acc.getCustData().getCustFields().put(cust.getKey(), cust);
 		}
+		// if (acc.getName().contains("map_")) {
+		// LOG.info(acc.toString());
+		// }
 		return acc;
 	}
 

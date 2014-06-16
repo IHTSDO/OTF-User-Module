@@ -395,7 +395,6 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 	public final UserSecurityHandler getUsh() {
 		if (ush == null) {
-
 			String ushName = getParamsProps()
 					.getProperty(USER_SECURITY_HANDLER);
 

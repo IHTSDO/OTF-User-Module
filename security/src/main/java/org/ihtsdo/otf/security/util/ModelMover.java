@@ -102,8 +102,7 @@ public class ModelMover {
 			getXmlUsOut().saveUserSecurity();
 			if (log) {
 				LOG.info("storm2Xml : \n"
-						+ getXmlUsOut()
-								.getXMLFromUserSecurityAsStringSortByName());
+						+ getXmlUsOut().getXMLFromUserSecurity());
 			}
 
 		} catch (Exception e) {
@@ -120,7 +119,7 @@ public class ModelMover {
 			getXmlUsIn();
 			if (log) {
 				LOG.info("Xml2Storm : \n"
-						+ xmlUsIn.getXMLFromUserSecurityAsStringSortByName());
+						+ xmlUsIn.getXMLFromUserSecurityAsString());
 			}
 			spu.sendUserSecuritytoStormPath(xmlUsIn.getUserSecurity());
 

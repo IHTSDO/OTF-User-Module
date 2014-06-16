@@ -95,7 +95,32 @@ get parent > add to
 
 Password - user change - page etc.
 
-refresh/reload at /user /app/ /group level? How to handle the refresh across fidderent machines.
-token/shiro
+refresh/reload at /user /app/ /group level? How to handle the refresh across different machines.
+check dirty....in case many working of one repo date on settings
+token/shiro at present can return a UUID
 
 quick test of develop branch
+
+
+Admin Web app:
+
+
+check all screen wrt their update on SP
+
+Changes:
+
+folder for json files?
+Save changes as JSON files with date. before & after?
+replay failed changes? How to know? Only keep failed? 
+
+
+
+
+add all remain users for mapping . remove testing users 
+look at creating separate instance for Mapping & MLDS
+
+Write docs/read me
+Discuss Enable/Disabled return or not? Check before Auth?
+Check user exists then check enabled then auth.
+
+UUID/Token login if already logged in. TTL?

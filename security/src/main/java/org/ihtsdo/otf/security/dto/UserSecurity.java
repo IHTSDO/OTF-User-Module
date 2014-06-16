@@ -39,13 +39,7 @@ public class UserSecurity {
 	public static final String SETTINGS = "OTFSettings";
 	public static final String ALL = "*";
 
-	// private List<String> members;
-	// private Map<String, OtfAccount> allAccounts;
-	// private final Map<String, OtfCustomFieldSetting> settings = new
-	// HashMap<String, OtfCustomFieldSetting>();
-
 	public final void initCachedValues() {
-		// LOG.info("initCachedValues called");
 		getAllAccounts();
 		getDirsMap();
 		getAppsMap();

@@ -105,6 +105,7 @@ public abstract class AbstractUserSecurityHandler implements
 		if (userSecurity == null) {
 			userSecurity = (UserSecurity) ObjectCache.INSTANCE.get(getKey());
 		}
+		// LOG.info("getUserSecurity = " + userSecurity);
 		return userSecurity;
 	}
 
@@ -133,6 +134,7 @@ public abstract class AbstractUserSecurityHandler implements
 		localReload();
 		try {
 			buildUserSecurity();
+			getUserSecurity().resetAllCachedValues();
 		} catch (Exception e) {
 
 			LOG.log(Level.SEVERE, "An exception has occurred", e);

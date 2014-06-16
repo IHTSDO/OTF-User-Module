@@ -178,11 +178,9 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			} else {
 
 				if (decPath.endsWith(RELOAD)) {
-					LOG.info("Reloading model");
 					reloadUsh();
 				}
 				if (decPath.endsWith(SAVE)) {
-					LOG.info("saving model");
 					save();
 				}
 

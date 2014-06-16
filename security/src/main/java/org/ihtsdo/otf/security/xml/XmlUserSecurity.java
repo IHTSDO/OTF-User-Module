@@ -82,6 +82,7 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 		final File confile = new File(configFnIn);
 		if (confile.exists() && !confile.isDirectory() && confile.canRead()) {
 			final Document confDoc = XMLUtil.getDocument(configFnIn);
+			// LOG.info(XMLUtil.writeXMLToString(confDoc, getSortXsltFn()));
 			setUserSecurity(xml2Mod.build(confDoc));
 		} else {
 			LOG.severe("Something is wrong with the file you have specified file = "
@@ -98,21 +99,27 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 	}
 
 	public final String getXMLFromUserSecurityAsString() {
-		return XMLUtil.writeXMLToString(getXMLFromUserSecurity());
-	}
-
-	public final String getXMLFromUserSecurityAsStringSortByName() {
-
-		getSortXsltFn();
-		String xml = getXMLFromUserSecurityAsString();
-		LOG.info("Orig XML : \n" + xml);
-		if (sortXsltFn == null || sortXsltFn.length() == 0) {
-			return xml;
-		} else {
-			return XMLUtil.processXslt(xml, sortXsltFn);
+		try {
+			return XMLUtil.writeXMLToString(getXMLFromUserSecurity(),
+					getSortXsltFn());
+		} catch (Exception e) {
+			LOG.log(Level.SEVERE, "Problem getting XML as String", e);
 		}
-
+		return "";
 	}
+
+	// public final String getXMLFromUserSecurityAsStringSortByName() {
+	//
+	// getSortXsltFn();
+	// String xml = getXMLFromUserSecurityAsString();
+	// LOG.info("Orig XML : \n" + xml);
+	// if (sortXsltFn == null || sortXsltFn.length() == 0) {
+	// return xml;
+	// } else {
+	// return XMLUtil.processXslt(xml, sortXsltFn);
+	// }
+	//
+	// }
 
 	private String saveUSToXML() {
 		try {
@@ -127,7 +134,8 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 	@Override
 	public void saveUserSecurity() throws Exception {
 		LOG.info("About to write to " + getConfigFN());
-		XMLUtil.writeXMLToFile(getXMLFromUserSecurity(), getConfigFN());
+		XMLUtil.writeXMLToFile(getXMLFromUserSecurity(), getConfigFN(),
+				getSortXsltFn());
 	}
 
 	public final String getConfigFN() {
@@ -184,11 +192,7 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 
 	@Override
 	public void localReload() {
-		try {
-			buildUserSecurity();
-		} catch (Exception e) {
-			LOG.log(Level.SEVERE, "An exception has occurred", e);
-		}
+		// LOG.info("localReload called");
 	}
 
 	@Override

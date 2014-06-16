@@ -8,8 +8,8 @@
 # StormPathUserSecurity.keyPath=/opt/api/apiKey.properties
 
 # UserSecurityHandler
-#UserSecurityHandler=XmlUserSecurity
-UserSecurityHandler=StormPathUserSecurity
+UserSecurityHandler=XmlUserSecurity
+#UserSecurityHandler=StormPathUserSecurity
 
 # XML Security Handler
 XmlUserSecurity.configFile=D:/Data/git/OTF-User-Module/security/TextFiles/Example.xml
@@ -17,5 +17,7 @@ XmlUserSecurity.configFile=D:/Data/git/OTF-User-Module/security/TextFiles/Exampl
 # StormPath Security Handler
 StormPathUserSecurity.keyPath=C:/Users/adamf/stormpath/apiKey.properties
 #StormPathUserSecurity.keyPath=/opt/api/apiKey.properties
+
+save=D:/Data/git/OTF-User-Module/security/TextFiles/Example-save.xml
 
 	

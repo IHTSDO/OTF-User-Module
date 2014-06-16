@@ -173,7 +173,6 @@ public class OtfAccountMin extends OtfBaseName {
 		getTableRows().add(
 				getHtmlRowTextInput(SUR_NAME, getSurname(),
 						getErrors().get(SUR_NAME)));
-
 	}
 
 	@Override
@@ -233,7 +232,6 @@ public class OtfAccountMin extends OtfBaseName {
 	}
 
 	public final void setAuth(boolean authIn) {
-		LOG.info("setAuth authIn =" + authIn);
 		auth = authIn;
 	}
 

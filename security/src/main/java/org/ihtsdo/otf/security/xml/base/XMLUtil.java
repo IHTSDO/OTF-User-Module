@@ -299,79 +299,113 @@ public final class XMLUtil {
 
 	/**
 	 * Writes XML supplied as an DOM Document to a place indicated by the
-	 * supplied filename string
+	 * supplied filename string. Transformer can be null. Used for transforms
+	 * which may sort the result
 	 * 
 	 * @param document
 	 * @param fileName
+	 * @param transformer
 	 * @throws Exception
 	 */
 
 	public static void writeXMLToFile(final Document document,
-			final String fileName) throws Exception {
-		writeXMLToStream(document, new FileOutputStream(new File(fileName)));
+			final String fileName, Transformer transformer) throws Exception {
+		writeXMLToStream(document, new FileOutputStream(new File(fileName)),
+				transformer);
 	}
 
 	/**
-	 * Writes XML supplied as an DOM Document to an OutputStream
+	 * Writes XML supplied as an DOM Document to a place indicated by the
+	 * supplied filename string. String transformerFn is a path to where an xslt
+	 * sheet is. Can be null or empty.
 	 * 
 	 * @param document
-	 * @param stream
+	 * @param fileName
+	 * @param transformerFn
 	 * @throws Exception
 	 */
 
-	/*
-	 * public static void writeXMLToStream(Document document, OutputStream
-	 * stream) throws Exception { OutputFormat format = new
-	 * OutputFormat(document); // Serialize DOM //
-	 * log.severe("format encoding = "+format.getEncoding());
-	 * format.setIndent(4); // format.setEncoding(CommonProps.DEFAULTENC);
-	 * XMLSerializer serial = new XMLSerializer(stream, format);
-	 * serial.serialize(document);
+	public static void writeXMLToFile(final Document document,
+			final String fileName, String transformerFn) throws Exception {
+		Transformer transformer = getTransformer(transformerFn);
+		writeXMLToFile(document, fileName, transformer);
+	}
+
+	/**
+	 * Writes to a stream. Transformer can be null. Used for transforms which
+	 * may sort the result
 	 * 
-	 * }
+	 * @param document
+	 * @param stream
+	 * @param transformer
+	 * @throws Exception
 	 */
 
 	public static void writeXMLToStream(final Document document,
-			final OutputStream stream) throws Exception {
+			final OutputStream stream, Transformer transformer)
+			throws Exception {
 		if (document == null) {
 			LOG.severe("You have passed me a null object");
 		}
+		if (transformer == null) {
+			transformer = ProcessXSLT.getEmptyTransformer();
+		}
+
 		if (document != null) {
 			StreamResult result = new StreamResult(stream);
 			DOMSource domSource = new DOMSource(document);
-			Transformer transformer = ProcessXSLT.getEmptyTransformer();
+			// Transformer transformer = ProcessXSLT.getEmptyTransformer();
 			transformer.transform(domSource, result);
 		}
 	}
 
+	// Transformer renderer = getTransformer(xsltFilename);
+	// retS = transform(renderer, xmlInput, "");
+	// return retS;
+
 	/**
 	 * Given a DOM this returns the XML as string formatted for pretty printing
+	 * If the transformer is null then the std empty transformer is used.
 	 * 
 	 * @param document
+	 * @param transformer
 	 * @return String
 	 * @throws Exception
 	 */
 
-	public static String writeXMLToString(final Document document) {
+	public static String writeXMLToString(final Document document,
+			Transformer transformer) throws Exception {
 		String output = "";
 		if (document == null) {
 			LOG.severe("You have passed me a null object");
 		}
+		if (transformer == null) {
+			transformer = ProcessXSLT.getEmptyTransformer();
+		}
 		if (document != null) {
-			try {
-				StringWriter sw = new StringWriter();
-				StreamResult result = new StreamResult(sw);
-				DOMSource domSource = new DOMSource(document);
-				Transformer transformer = ProcessXSLT.getEmptyTransformer();
-				transformer.transform(domSource, result);
-				output = sw.toString();
-			} catch (Exception excep) {
-				// log.error("Error thrown in XMLUtil.writeXMLToString", E);
-				LOG.log(Level.SEVERE,
-						"Error thrown in XMLUtil.writeXMLToString", excep);
-			}
+			StringWriter sw = new StringWriter();
+			StreamResult result = new StreamResult(sw);
+			DOMSource domSource = new DOMSource(document);
+			transformer.transform(domSource, result);
+			output = sw.toString();
 		}
 		return output;
+	}
+
+	/**
+	 * Given a DOM this returns the XML as string formatted for pretty printing
+	 * The string is a file path to an XSLT sheet
+	 * 
+	 * @param document
+	 * @param transformerFn
+	 * @return String
+	 * @throws Exception
+	 */
+
+	public static String writeXMLToString(final Document document,
+			String transformerFn) throws Exception {
+		Transformer transformer = getTransformer(transformerFn);
+		return writeXMLToString(document, transformer);
 	}
 
 	/*
@@ -460,7 +494,7 @@ public final class XMLUtil {
 		}
 
 		// Stream the result to file.
-		writeXMLToStream(document, new FileOutputStream(new File(upPath)));
+		writeXMLToStream(document, new FileOutputStream(new File(upPath)), null);
 
 		return upPath;
 	}
@@ -833,7 +867,8 @@ public final class XMLUtil {
 					// +" attname = "+attrName);
 					/*
 					 * try { log.info(convertToStringLeaveCDATA(e));
-					 * }catch(Exception excep) { LOG.log(Level.SEVERE, "An exception has occurred", e); }
+					 * }catch(Exception excep) { LOG.log(Level.SEVERE,
+					 * "An exception has occurred", e); }
 					 */
 					retV.add(val);
 				}
@@ -876,7 +911,8 @@ public final class XMLUtil {
 						// +" attrNames = "+attrNames);
 						/*
 						 * try { log.info(convertToStringLeaveCDATA(e));
-						 * }catch(Exception excep) { LOG.log(Level.SEVERE, "An exception has occurred", e); }
+						 * }catch(Exception excep) { LOG.log(Level.SEVERE,
+						 * "An exception has occurred", e); }
 						 */
 						retV.add(val);
 					}
@@ -1396,12 +1432,14 @@ public final class XMLUtil {
 	public static Transformer getTransformer(final String xsltFileName) {
 
 		Transformer renderer = null;
-		ProcessXSLT px = new ProcessXSLT();
-		try {
-			renderer = px.getTransformer(xsltFileName);
-		} catch (Exception excep) {
-			LOG.severe("getTransformer Unable to get a transformer using "
-					+ xsltFileName);
+		if (stringOK(xsltFileName)) {
+			ProcessXSLT px = new ProcessXSLT();
+			try {
+				renderer = px.getTransformer(xsltFileName);
+			} catch (Exception excep) {
+				LOG.severe("getTransformer Unable to get a transformer using "
+						+ xsltFileName);
+			}
 		}
 		return renderer;
 	}
@@ -1774,6 +1812,10 @@ public final class XMLUtil {
 		}
 		result.append(str.substring(s));
 		return result.toString();
+	}
+
+	public static final boolean stringOK(final String toCheck) {
+		return toCheck != null && toCheck.length() > 0;
 	}
 
 }
