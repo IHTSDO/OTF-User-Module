@@ -23,6 +23,7 @@ import com.stormpath.sdk.directory.Directory;
 import com.stormpath.sdk.directory.DirectoryList;
 import com.stormpath.sdk.group.Group;
 import com.stormpath.sdk.group.GroupList;
+import com.stormpath.sdk.resource.ResourceException;
 
 public class Storm2Model {
 
@@ -64,7 +65,10 @@ public class Storm2Model {
 			// }
 
 			OtfDirectory odir = buildDirectory(directory);
-			userSecurity.getDirs().getDirectories().put(odir.getName(), odir);
+			if (odir != null) {
+				userSecurity.getDirs().getDirectories()
+						.put(odir.getName(), odir);
+			}
 		}
 	}
 
@@ -110,25 +114,33 @@ public class Storm2Model {
 
 	private OtfDirectory buildDirectory(final Directory dirIn) {
 
-		final Directory dir = spbd.getResourceByHref_Directory(dirIn.getHref());
-
-		OtfDirectory oDir = new OtfDirectory();
-		oDir.setIdref(dir.getHref());
-		oDir.setName(dir.getName());
-		oDir.setDescription(dir.getDescription());
-		oDir.setStatus(dir.getStatus().toString());
-
-		GroupList groups = dir.getGroups();
-
-		for (Group group : groups) {
-			OtfGroup ogroup = buildGroup(group);
-			ogroup.setParentDirName(dir.getName());
-			oDir.getGroups().getGroups().put(ogroup.getName(), ogroup);
+		Directory dir = null;
+		OtfDirectory oDir = null;
+		try {
+			dir = spbd.getResourceByHref_Directory(dirIn.getHref());
+		} catch (ResourceException re) {
+			LOG.severe("Directory at this href does not exist Dir = "
+					+ dirIn.getName() + " href = " + dirIn.getHref());
 		}
-		for (Account acc : dir.getAccounts()) {
-			// sLOG.info("Account =" + acc);
-			OtfAccount oacc = buildAccount(acc);
-			oDir.getAccounts().getAccounts().put(oacc.getName(), oacc);
+		if (dir != null) {
+			oDir = new OtfDirectory();
+			oDir.setIdref(dir.getHref());
+			oDir.setName(dir.getName());
+			oDir.setDescription(dir.getDescription());
+			oDir.setStatus(dir.getStatus().toString());
+
+			GroupList groups = dir.getGroups();
+
+			for (Group group : groups) {
+				OtfGroup ogroup = buildGroup(group);
+				ogroup.setParentDirName(dir.getName());
+				oDir.getGroups().getGroups().put(ogroup.getName(), ogroup);
+			}
+			for (Account acc : dir.getAccounts()) {
+				// sLOG.info("Account =" + acc);
+				OtfAccount oacc = buildAccount(acc);
+				oDir.getAccounts().getAccounts().put(oacc.getName(), oacc);
+			}
 		}
 		return oDir;
 	}

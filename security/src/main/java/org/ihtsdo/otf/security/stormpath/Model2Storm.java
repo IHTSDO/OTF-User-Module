@@ -98,10 +98,10 @@ public class Model2Storm {
 				.values()) {
 			boolean found = false;
 			for (Directory directory : directories) {
-				LOG.info("buildDirs directory.getName() = "
-						+ directory.getName());
+				// LOG.info("buildDirs directory.getName() = "
+				// + directory.getName());
 				if (directory.getName().equals(oDir.getName())) {
-					LOG.info("buildDirs oDir.getName() = " + oDir.getName());
+					// LOG.info("buildDirs oDir.getName() = " + oDir.getName());
 					buildDirectory(oDir, directory);
 					found = true;
 				}

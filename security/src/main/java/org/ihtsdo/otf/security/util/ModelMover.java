@@ -102,7 +102,7 @@ public class ModelMover {
 			getXmlUsOut().saveUserSecurity();
 			if (log) {
 				LOG.info("storm2Xml : \n"
-						+ getXmlUsOut().getXMLFromUserSecurity());
+						+ getXmlUsOut().getXMLFromUserSecurityAsString());
 			}
 
 		} catch (Exception e) {
@@ -131,12 +131,14 @@ public class ModelMover {
 	}
 
 	private void clearSP() {
+		setSpu(null);
 		StormPathUserSecurity spu = getSpu();
 		try {
 			spu.clearSP();
 		} catch (Exception e) {
 			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
+		setSpu(null);
 	}
 
 	public void init(String[] args) {

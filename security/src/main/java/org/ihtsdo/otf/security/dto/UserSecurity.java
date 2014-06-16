@@ -47,10 +47,8 @@ public class UserSecurity {
 			getMembers();
 			getSettings();
 			getAppsNotMembersOrUsers();
+			getAdminUsers();
 		}
-
-		getAdminUsers();
-
 	}
 
 	public final void resetAllCachedValues() {
