@@ -1,0 +1,9 @@
+
+xmlFnIn=D:/Data/git/OTF-User-Module/security/TextFiles/Example.xml
+xmlFnOut=D:/Data/git/OTF-User-Module/security/TextFiles/Example-out.xml
+rebuild=true
+log=true
+keyPath=C:/Users/adamf/stormpath/apiKey.properties
+#apiKey.id=
+#apiKey.secret
+

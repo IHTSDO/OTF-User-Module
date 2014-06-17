@@ -13,7 +13,6 @@
 <group description="The Administrator" idref="43c6c264-60e1-4443-a92d-d4e4615d4c2c" name="Admin" status="ENABLED">
 <customData>
 <customField key="49f8fffa-068b-43f3-a7fc-546a7ad413f3" value="CD_TYPE_PERM:cardinality:0"/>
-<customField key="54ac8d36-3360-47ed-985c-e775da5c6a6c" value="CD_TYPE_PERM:PNAME:PVAL"/>
 </customData>
 </group>
 <group description="The Reviewer" idref="94ec1c25-443d-4dc2-a551-44b84b4d0caf" name="Reviewer" status="ENABLED">
