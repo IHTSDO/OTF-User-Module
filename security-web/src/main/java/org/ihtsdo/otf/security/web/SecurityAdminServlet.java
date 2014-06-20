@@ -69,8 +69,8 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			} else {
 				// logParameters(requestIn);
 				OtfBaseWeb obw = handlePostAction(requestIn, responseIn);
-				LOG.info("obw3 = " + obw + " num errs = "
-						+ obw.getErrors().size());
+				// LOG.info("obw3 = " + obw + " num errs = "
+				// + obw.getErrors().size());
 				if (obw.getErrors().size() == 0) {
 					// update remotely using obw
 					String ok = updateFromWebObject(obw);
@@ -82,15 +82,19 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 						ok = AbstractUserSecurityHandler.REMOTE_COMMIT_NOT_OK;
 					}
 
-					if (ok.equals(AbstractUserSecurityHandler.REMOTE_COMMIT_OK)) {
-						LOG.info("YAYYYY " + ok);
-					}
-					if (ok.equals(AbstractUserSecurityHandler.REMOTE_COMMIT_NOT_OK)) {
-						// try again? reload entire model from remote? revert?
-						// Capture
-						// orig as JSON?
-						LOG.info("BOOOO " + ok);
-					}
+					// if
+					// (ok.equals(AbstractUserSecurityHandler.REMOTE_COMMIT_OK))
+					// {
+					// LOG.info("YAYYYY " + ok);
+					// }
+					// if
+					// (ok.equals(AbstractUserSecurityHandler.REMOTE_COMMIT_NOT_OK))
+					// {
+					// // try again? reload entire model from remote? revert?
+					// // Capture
+					// // orig as JSON?
+					// LOG.info("BOOOO " + ok);
+					// }
 					loadScreen(requestIn, responseIn, null);
 				} else {
 					obw.setAction(getDecString(getHr().getRequestURI()));
