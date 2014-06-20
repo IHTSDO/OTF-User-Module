@@ -273,6 +273,7 @@ public class Model2Storm {
 				acc.setMiddleName(oacc.getMiddleName());
 				acc.setSurname(oacc.getSurname());
 				acc.setEmail(oacc.getEmail());
+				LOG.info("userSecurity = " + userSecurity);
 				acc.setPassword(userSecurity.getDefaultpw());
 				if (oacc.getCustData().getCustFields().size() > 0) {
 					// LOG.info("CD2BADDED num = "

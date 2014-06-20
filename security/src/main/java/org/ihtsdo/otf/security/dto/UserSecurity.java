@@ -66,6 +66,7 @@ public class UserSecurity {
 		if (!stringOK(defaultpw)) {
 			defaultpw = getSettings().getSettings()
 					.get(OtfCustomFieldSetting.DEFPW).getVal().trim();
+			LOG.info("getDefaultpw deffpass = " + defaultpw);
 		}
 		return defaultpw;
 	}
