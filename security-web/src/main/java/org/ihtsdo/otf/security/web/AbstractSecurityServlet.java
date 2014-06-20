@@ -98,7 +98,7 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 		List<String> pnames = new ArrayList<String>();
 		pnames.add(SETTINGS_PROPS);
 		pnames.add(USER_SECURITY_HANDLER);
-		pnames.add(BASEURL);
+		// pnames.add(BASEURL);
 		pnames.add(SAVE);
 		return pnames;
 	}
