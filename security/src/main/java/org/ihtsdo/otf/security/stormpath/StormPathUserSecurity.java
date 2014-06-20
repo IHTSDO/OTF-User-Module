@@ -268,6 +268,7 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 	public final Model2Storm getMod2Storm() {
 		if (mod2Storm == null) {
 			mod2Storm = new Model2Storm(spbd);
+			mod2Storm.setUserSecurity(getUserSecurity());
 		}
 		return mod2Storm;
 	}
