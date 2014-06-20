@@ -19,3 +19,6 @@ StormPathUserSecurity.keyPath=C:/Users/adamf/stormpath/apiKey.properties
 #StormPathUserSecurity.apiKey.id=SOME LONG ID
 #StormPathUserSecurity.apiKey.secret=SOME LONG SECRET
 	
+	
+# Where/What file you want any save actrions to be written to.
+save=D:/Data/git/OTF-User-Module/security/TextFiles/Example-save.xml

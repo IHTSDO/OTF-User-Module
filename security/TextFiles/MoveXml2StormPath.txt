@@ -5,5 +5,5 @@ rebuild=true
 log=true
 keyPath=C:/Users/adamf/stormpath/apiKey.properties
 #apiKey.id=
-#apiKey.secret
+#apiKey.secret=
 
