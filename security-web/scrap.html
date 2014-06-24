@@ -3,11 +3,42 @@
 <head>
 <link rel="stylesheet" type="text/css" href="/security-web/style.css">
 <title>IHTSDO OTF User Management Admin</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
 <body>
 	<script src="/security-web/jquery-2.1.0.js" type="text/javascript"></script>
 
+	<script>
+		function replaceRole(select, hiddenRoleId, cssClass, selectName) {
+			var selVal = select.options[select.selectedIndex].text;
+			//	alert(selVal);
+			var selId = selVal + hiddenRoleId;
+			var hiddenRole = document.getElementById(selId);
+			var pdiv = $(select).closest(cssClass);
+			var roleSelect = $(pdiv).find(selectName);
+			roleSelect.html(hiddenRole.innerHTML);
+		}
 
+		function appendElement(urlIn, parentId) {
+
+			//create the ajax request
+			$.get(urlIn, function(data) {
+				$(parentId).html(data);
+				//alert( "Load was performed." );
+			});
+
+		}
+
+		$(window).load(function() {
+			$(".base_web_text_input_error").mouseover(function() {
+				//alert( "Load was performed. this = "+$(this).attr("class") );
+				$(this).parent().children(".errortooltip").show();
+			}).mouseout(function() {
+				$(this).parent().children(".errortooltip").hide();
+			});
+
+		});
+	</script>
 
 	<h1 class="blue">IHTSDO OTF User Management Admin</h1>
 	<div class="container">
@@ -41,13 +72,16 @@
 				<h1 class="blue">Update Application : Mapping</h1>
 				<div class="formDiv">
 					<form name="Update Application : Mapping"
-						action="/security-web/admin/" method="post">
+						action="/security-web/admin/apps/Mapping" method="post">
+						<input type="hidden" name="Input_Key" value="apps" /> <input
+							type="hidden" name="id"
+							value="504c114c-255a-4b5c-bee8-176d2ee4eb65" />
 						<div class="base_web_table">
 							<div class="base_web_table_row">
 								<div class="base_web_table_cell_label">Name:</div>
 								<div class="base_web_table_cell_input">
 									<input type="text" class="base_web_text_input" name="Name:"
-										value="Mapping">
+										value="Mapping" />
 								</div>
 							</div>
 							<div class="base_web_table_row">
@@ -68,7 +102,7 @@
 								<div class="base_web_table_cell_label"></div>
 								<div class="base_web_submit">
 									<input type="submit" class="base_web_submit" name="submit"
-										value="Update Application : Mapping">
+										value="Update Application : Mapping" />
 								</div>
 							</div>
 						</div>
@@ -82,17 +116,18 @@
 						<div class="columnRight">
 							<h1 class="blue">Add New Role/Group:</h1>
 							<div class="formDiv">
-								<form name="Add New Role/Group: " action="ActionNOTSet"
-									method="post">
-									<input type="hidden" name="Input_Key"
-										value="org.ihtsdo.otf.security.dto.OtfGroup" /> <input
-										type="hidden" name="id" value="" />
+								<form name="Add New Role/Group: "
+									action="/security-web/admin/apps/Mapping" method="post">
+									<input type="hidden" name="Input_Key" value="group_group" /> <input
+										type="hidden" name="id" value="" /> <input type="hidden"
+										name="parentDir" value="Mapping Directory" /> <input
+										type="hidden" name="Cd_Key_id_list" value="" />
 									<div class="base_web_table">
 										<div class="base_web_table_row">
 											<div class="base_web_table_cell_label">Name:</div>
 											<div class="base_web_table_cell_input">
 												<input type="text" class="base_web_text_input" name="Name:"
-													value="">
+													value="" />
 											</div>
 										</div>
 										<div class="base_web_table_row">
@@ -113,26 +148,46 @@
 											<div class="base_web_table_cell_label"></div>
 											<div class="base_web_submit">
 												<input type="submit" class="base_web_submit" name="submit"
-													value="Add New Role/Group: ">
+													value="Add New Role/Group: " />
 											</div>
 										</div>
 									</div>
 								</form>
 							</div>
-							<h1 class="blue">Update Role/Group: Admin</h1>
+							<h1 class="blue">Update Role/Group: Admin1</h1>
 							<div class="formDiv">
-								<form name="Update Role/Group: Admin" action="ActionNOTSet"
-									method="post">
-									<input type="hidden" name="Input_Key"
-										value="org.ihtsdo.otf.security.dto.OtfGroup" /> <input
+								<form name="Update Role/Group: Admin1"
+									action="/security-web/admin/apps/Mapping" method="post">
+									<input type="hidden" name="Input_Key" value="group_group" /> <input
 										type="hidden" name="id"
-										value="70a6ef7c-0f3d-44da-85f2-3f62c4b8fb4f" />
+										value="4cfb5aae-049e-4e06-82af-cad3b6791a88" /> <input
+										type="hidden" name="parentDir" value="Mapping Directory" /> <input
+										type="hidden" name="Cd_Key_id_list"
+										value="49f8fffa-068b-43f3-a7fc-546a7ad413f3,54ac8d36-3360-47ed-985c-e775da5c6a6c," />
+									<input type="hidden" name="Cd_Key_id_list"
+										value="49f8fffa-068b-43f3-a7fc-546a7ad413f3," /> <input
+										type="hidden" name="Cd_Key_id_list"
+										value="69c44b17-e691-4b59-b536-160dc9657f34,49f8fffa-068b-43f3-a7fc-546a7ad413f3," />
+									<input type="hidden" name="Cd_Key_id_list"
+										value="69c44b17-e691-4b59-b536-160dc9657f34,49f8fffa-068b-43f3-a7fc-546a7ad413f3," />
+									<input type="hidden" name="Cd_Key_id_list"
+										value="69c44b17-e691-4b59-b536-160dc9657f34,49f8fffa-068b-43f3-a7fc-546a7ad413f3," />
+									<input type="hidden" name="Cd_Key_id_list"
+										value="69c44b17-e691-4b59-b536-160dc9657f34,49f8fffa-068b-43f3-a7fc-546a7ad413f3," />
+									<input type="hidden" name="Cd_Key_id_list"
+										value="69c44b17-e691-4b59-b536-160dc9657f34,49f8fffa-068b-43f3-a7fc-546a7ad413f3," />
+									<input type="hidden" name="Cd_Key_id_list"
+										value="69c44b17-e691-4b59-b536-160dc9657f34,49f8fffa-068b-43f3-a7fc-546a7ad413f3," />
+									<input type="hidden" name="Cd_Key_id_list"
+										value="69c44b17-e691-4b59-b536-160dc9657f34,49f8fffa-068b-43f3-a7fc-546a7ad413f3," />
+									<input type="hidden" name="Cd_Key_id_list"
+										value="69c44b17-e691-4b59-b536-160dc9657f34,49f8fffa-068b-43f3-a7fc-546a7ad413f3," />
 									<div class="base_web_table">
 										<div class="base_web_table_row">
 											<div class="base_web_table_cell_label">Name:</div>
 											<div class="base_web_table_cell_input">
 												<input type="text" class="base_web_text_input" name="Name:"
-													value="Admin">
+													value="Admin1" />
 											</div>
 										</div>
 										<div class="base_web_table_row">
@@ -153,80 +208,99 @@
 											<div class="base_web_table_cell_label"></div>
 											<div class="base_web_submit">
 												<input type="submit" class="base_web_submit" name="submit"
-													value="Update Role/Group: Admin">
+													value="Update Role/Group: Admin1" />
 											</div>
 										</div>
 									</div>
-								</form>
-							</div>
-							<div class="formDiv">
-								<h2 class="blue">Permissions</h2>
-								<input type="button" value="Add New Permissions"
-									onclick="jQuery('#e6d7672d-d597-4b58-827d-de6cd99b7c89').append('&lt;div class=&quot;std&quot;&gt;&lt;div class=&quot;base_web_table&quot;&gt;&lt;div class=&quot;base_web_table_row&quot;&gt;&lt;div class=&quot;base_web_table_cell_label&quot;&gt;Name:&lt;/div&gt;
-&lt;div class=&quot;base_web_table_cell_input&quot;&gt;&lt;input type=&quot;text&quot; class=&quot;base_web_text_input&quot; name=&quot;PermissionName&quot; value=&quot;&quot;&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;base_web_table_row&quot;&gt;&lt;div class=&quot;base_web_table_cell_label&quot;&gt;Value:&lt;/div&gt;
-&lt;div class=&quot;base_web_table_cell_input&quot;&gt;&lt;input type=&quot;text&quot; class=&quot;base_web_text_input&quot; name=&quot;PermissionValue&quot; value=&quot;&quot;&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;input type=&quot;button&quot; value=&quot;Remove&quot; onclick=&quot;$(this).parent().remove();&quot;&gt;&lt;/div&gt;');">
-								<form id="e6d7672d-d597-4b58-827d-de6cd99b7c89"
-									action="ActionNOTSet" method="post">
-									<div class="std">
-										<div class="base_web_table">
-											<div class="base_web_table_row">
-												<div class="base_web_table_cell_label">Name:</div>
-												<div class="base_web_table_cell_input">
-													<input type="text" class="base_web_text_input"
-														name="PermissionName" value="">
+									<div class="formDiv">
+										<h2 class="blue">Permissions</h2>
+										<input type="button" value="Add New Permission"
+											onclick="$.get('/security-web/admin/newForm/CD_TYPE_PERM', function(data) {$('#068a990a-8541-4057-afcb-7e7f29c64f56').append(data);});">
+										<div class="subformDiv"
+											id="068a990a-8541-4057-afcb-7e7f29c64f56"
+											title="Add New Permission">
+											<div class="CustomDataTable">
+												<div class="base_web_table">
+													<div class="base_web_table_row">
+														<div class="base_web_table_cell_label">Name:</div>
+														<div class="base_web_table_cell_input">
+															<input type="text" class="base_web_text_input"
+																name="CD_TYPE_PERM-xxx-PermissionName-xxx-69c44b17-e691-4b59-b536-160dc9657f34"
+																value="bbbbb" />
+														</div>
+													</div>
+													<div class="base_web_table_row">
+														<div class="base_web_table_cell_label">Value:</div>
+														<div class="base_web_table_cell_input">
+															<input type="text" class="base_web_text_input"
+																name="CD_TYPE_PERM-xxx-PermissionValue-xxx-69c44b17-e691-4b59-b536-160dc9657f34"
+																value="bbbbbbbbx" />
+														</div>
+													</div>
 												</div>
+												<input type="button" value="Remove"
+													onclick="$(this).parent().remove();">
 											</div>
-											<div class="base_web_table_row">
-												<div class="base_web_table_cell_label">Value:</div>
-												<div class="base_web_table_cell_input">
-													<input type="text" class="base_web_text_input"
-														name="PermissionValue" value="">
+											<div class="CustomDataTable">
+												<div class="base_web_table">
+													<div class="base_web_table_row">
+														<div class="base_web_table_cell_label">Name:</div>
+														<div class="base_web_table_cell_input">
+															<input type="text" class="base_web_text_input"
+																name="CD_TYPE_PERM-xxx-PermissionName-xxx-49f8fffa-068b-43f3-a7fc-546a7ad413f3"
+																value="cardinality" />
+														</div>
+													</div>
+													<div class="base_web_table_row">
+														<div class="base_web_table_cell_label">Value:</div>
+														<div class="base_web_table_cell_input">
+															<input type="text" class="base_web_text_input"
+																name="CD_TYPE_PERM-xxx-PermissionValue-xxx-49f8fffa-068b-43f3-a7fc-546a7ad413f3"
+																value="0" />
+														</div>
+													</div>
 												</div>
+												<input type="button" value="Remove"
+													onclick="$(this).parent().remove();">
 											</div>
 										</div>
-										<input type="button" value="Remove"
-											onclick="$(this).parent().remove();">
-									</div>
-									<div class="std">
-										<div class="base_web_table">
-											<div class="base_web_table_row">
-												<div class="base_web_table_cell_label">Name:</div>
-												<div class="base_web_table_cell_input">
-													<input type="text" class="base_web_text_input"
-														name="PermissionName" value="cardinality">
-												</div>
-											</div>
-											<div class="base_web_table_row">
-												<div class="base_web_table_cell_label">Value:</div>
-												<div class="base_web_table_cell_input">
-													<input type="text" class="base_web_text_input"
-														name="PermissionValue" value="0">
-												</div>
-											</div>
-										</div>
-										<input type="button" value="Remove"
-											onclick="$(this).parent().remove();">
 									</div>
 								</form>
 							</div>
 							<h1 class="blue">Update Role/Group: Reviewer</h1>
 							<div class="formDiv">
-								<form name="Update Role/Group: Reviewer" action="ActionNOTSet"
-									method="post">
-									<input type="hidden" name="Input_Key"
-										value="org.ihtsdo.otf.security.dto.OtfGroup" /> <input
+								<form name="Update Role/Group: Reviewer"
+									action="/security-web/admin/apps/Mapping" method="post">
+									<input type="hidden" name="Input_Key" value="group_group" /> <input
 										type="hidden" name="id"
-										value="ac83f2df-824b-49cc-bc7b-262f46c2eaa5" />
+										value="bbe79884-9ff6-4e7d-840b-24782310298e" /> <input
+										type="hidden" name="parentDir" value="Mapping Directory" /> <input
+										type="hidden" name="Cd_Key_id_list"
+										value="4abaff6f-188c-4f51-acfa-2a377340596f," /> <input
+										type="hidden" name="Cd_Key_id_list"
+										value="4abaff6f-188c-4f51-acfa-2a377340596f," /> <input
+										type="hidden" name="Cd_Key_id_list"
+										value="4abaff6f-188c-4f51-acfa-2a377340596f," /> <input
+										type="hidden" name="Cd_Key_id_list"
+										value="4abaff6f-188c-4f51-acfa-2a377340596f," /> <input
+										type="hidden" name="Cd_Key_id_list"
+										value="4abaff6f-188c-4f51-acfa-2a377340596f," /> <input
+										type="hidden" name="Cd_Key_id_list"
+										value="4abaff6f-188c-4f51-acfa-2a377340596f," /> <input
+										type="hidden" name="Cd_Key_id_list"
+										value="4abaff6f-188c-4f51-acfa-2a377340596f," /> <input
+										type="hidden" name="Cd_Key_id_list"
+										value="4abaff6f-188c-4f51-acfa-2a377340596f," /> <input
+										type="hidden" name="Cd_Key_id_list"
+										value="4abaff6f-188c-4f51-acfa-2a377340596f," /> <input
+										type="hidden" name="Cd_Key_id_list"
+										value="4abaff6f-188c-4f51-acfa-2a377340596f," />
 									<div class="base_web_table">
 										<div class="base_web_table_row">
 											<div class="base_web_table_cell_label">Name:</div>
 											<div class="base_web_table_cell_input">
 												<input type="text" class="base_web_text_input" name="Name:"
-													value="Reviewer">
+													value="Reviewer" />
 											</div>
 										</div>
 										<div class="base_web_table_row">
@@ -247,60 +321,77 @@
 											<div class="base_web_table_cell_label"></div>
 											<div class="base_web_submit">
 												<input type="submit" class="base_web_submit" name="submit"
-													value="Update Role/Group: Reviewer">
+													value="Update Role/Group: Reviewer" />
 											</div>
 										</div>
 									</div>
-								</form>
-							</div>
-							<div class="formDiv">
-								<h2 class="blue">Permissions</h2>
-								<input type="button" value="Add New Permissions"
-									onclick="jQuery('#9d0d6a37-9ed8-43cb-a17f-73f5dba5f1b4').append('&lt;div class=&quot;std&quot;&gt;&lt;div class=&quot;base_web_table&quot;&gt;&lt;div class=&quot;base_web_table_row&quot;&gt;&lt;div class=&quot;base_web_table_cell_label&quot;&gt;Name:&lt;/div&gt;
-&lt;div class=&quot;base_web_table_cell_input&quot;&gt;&lt;input type=&quot;text&quot; class=&quot;base_web_text_input&quot; name=&quot;PermissionName&quot; value=&quot;&quot;&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;base_web_table_row&quot;&gt;&lt;div class=&quot;base_web_table_cell_label&quot;&gt;Value:&lt;/div&gt;
-&lt;div class=&quot;base_web_table_cell_input&quot;&gt;&lt;input type=&quot;text&quot; class=&quot;base_web_text_input&quot; name=&quot;PermissionValue&quot; value=&quot;&quot;&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;input type=&quot;button&quot; value=&quot;Remove&quot; onclick=&quot;$(this).parent().remove();&quot;&gt;&lt;/div&gt;');">
-								<form id="9d0d6a37-9ed8-43cb-a17f-73f5dba5f1b4"
-									action="ActionNOTSet" method="post">
-									<div class="std">
-										<div class="base_web_table">
-											<div class="base_web_table_row">
-												<div class="base_web_table_cell_label">Name:</div>
-												<div class="base_web_table_cell_input">
-													<input type="text" class="base_web_text_input"
-														name="PermissionName" value="cardinality">
+									<div class="formDiv">
+										<h2 class="blue">Permissions</h2>
+										<input type="button" value="Add New Permission"
+											onclick="$.get('/security-web/admin/newForm/CD_TYPE_PERM', function(data) {$('#fb533c4b-e46e-4b73-8350-da0a29de565a').append(data);});">
+										<div class="subformDiv"
+											id="fb533c4b-e46e-4b73-8350-da0a29de565a"
+											title="Add New Permission">
+											<div class="CustomDataTable">
+												<div class="base_web_table">
+													<div class="base_web_table_row">
+														<div class="base_web_table_cell_label">Name:</div>
+														<div class="base_web_table_cell_input">
+															<input type="text" class="base_web_text_input"
+																name="CD_TYPE_PERM-xxx-PermissionName-xxx-4abaff6f-188c-4f51-acfa-2a377340596f"
+																value="readonly" readonly = "readonly" />
+														</div>
+													</div>
+													<div class="base_web_table_row">
+														<div class="base_web_table_cell_label">Value:</div>
+														<div class="base_web_table_cell_input">
+															<input type="text" class="base_web_text_input"
+																name="CD_TYPE_PERM-xxx-PermissionValue-xxx-4abaff6f-188c-4f51-acfa-2a377340596f"
+																value="disabled"  disabled = "disabled"/>
+														</div>
+													</div>
 												</div>
-											</div>
-											<div class="base_web_table_row">
-												<div class="base_web_table_cell_label">Value:</div>
-												<div class="base_web_table_cell_input">
-													<input type="text" class="base_web_text_input"
-														name="PermissionValue" value="2">
-												</div>
+												<input type="button" value="Remove"
+													onclick="$(this).parent().remove();">
 											</div>
 										</div>
-										<input type="button" value="Remove"
-											onclick="$(this).parent().remove();">
 									</div>
 								</form>
 							</div>
 							<h1 class="blue">Update Role/Group: Specialist</h1>
 							<div class="formDiv">
-								<form name="Update Role/Group: Specialist" action="ActionNOTSet"
-									method="post">
-									<input type="hidden" name="Input_Key"
-										value="org.ihtsdo.otf.security.dto.OtfGroup" /> <input
+								<form name="Update Role/Group: Specialist"
+									action="/security-web/admin/apps/Mapping" method="post">
+									<input type="hidden" name="Input_Key" value="group_group" /> <input
 										type="hidden" name="id"
-										value="7b693e6d-3007-4d20-8639-e7b41efcc1ce" />
+										value="072e6993-a8d9-472c-a2fe-2eb45ae1155e" /> <input
+										type="hidden" name="parentDir" value="Mapping Directory" /> <input
+										type="hidden" name="Cd_Key_id_list"
+										value="0d546b2d-5939-43fa-9cc4-b6d9c60db1cd," /> <input
+										type="hidden" name="Cd_Key_id_list"
+										value="0d546b2d-5939-43fa-9cc4-b6d9c60db1cd," /> <input
+										type="hidden" name="Cd_Key_id_list"
+										value="0d546b2d-5939-43fa-9cc4-b6d9c60db1cd," /> <input
+										type="hidden" name="Cd_Key_id_list"
+										value="0d546b2d-5939-43fa-9cc4-b6d9c60db1cd," /> <input
+										type="hidden" name="Cd_Key_id_list"
+										value="0d546b2d-5939-43fa-9cc4-b6d9c60db1cd," /> <input
+										type="hidden" name="Cd_Key_id_list"
+										value="0d546b2d-5939-43fa-9cc4-b6d9c60db1cd," /> <input
+										type="hidden" name="Cd_Key_id_list"
+										value="0d546b2d-5939-43fa-9cc4-b6d9c60db1cd," /> <input
+										type="hidden" name="Cd_Key_id_list"
+										value="0d546b2d-5939-43fa-9cc4-b6d9c60db1cd," /> <input
+										type="hidden" name="Cd_Key_id_list"
+										value="0d546b2d-5939-43fa-9cc4-b6d9c60db1cd," /> <input
+										type="hidden" name="Cd_Key_id_list"
+										value="0d546b2d-5939-43fa-9cc4-b6d9c60db1cd," />
 									<div class="base_web_table">
 										<div class="base_web_table_row">
 											<div class="base_web_table_cell_label">Name:</div>
 											<div class="base_web_table_cell_input">
 												<input type="text" class="base_web_text_input" name="Name:"
-													value="Specialist">
+													value="Specialist" />
 											</div>
 										</div>
 										<div class="base_web_table_row">
@@ -321,43 +412,40 @@
 											<div class="base_web_table_cell_label"></div>
 											<div class="base_web_submit">
 												<input type="submit" class="base_web_submit" name="submit"
-													value="Update Role/Group: Specialist">
+													value="Update Role/Group: Specialist" />
 											</div>
 										</div>
 									</div>
-								</form>
-							</div>
-							<div class="formDiv">
-								<h2 class="blue">Permissions</h2>
-								<input type="button" value="Add New Permissions"
-									onclick="jQuery('#b68d50f7-f340-4bca-a02f-fc19886eb71a').append('&lt;div class=&quot;std&quot;&gt;&lt;div class=&quot;base_web_table&quot;&gt;&lt;div class=&quot;base_web_table_row&quot;&gt;&lt;div class=&quot;base_web_table_cell_label&quot;&gt;Name:&lt;/div&gt;
-&lt;div class=&quot;base_web_table_cell_input&quot;&gt;&lt;input type=&quot;text&quot; class=&quot;base_web_text_input&quot; name=&quot;PermissionName&quot; value=&quot;&quot;&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;base_web_table_row&quot;&gt;&lt;div class=&quot;base_web_table_cell_label&quot;&gt;Value:&lt;/div&gt;
-&lt;div class=&quot;base_web_table_cell_input&quot;&gt;&lt;input type=&quot;text&quot; class=&quot;base_web_text_input&quot; name=&quot;PermissionValue&quot; value=&quot;&quot;&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;input type=&quot;button&quot; value=&quot;Remove&quot; onclick=&quot;$(this).parent().remove();&quot;&gt;&lt;/div&gt;');">
-								<form id="b68d50f7-f340-4bca-a02f-fc19886eb71a"
-									action="ActionNOTSet" method="post">
-									<div class="std">
-										<div class="base_web_table">
-											<div class="base_web_table_row">
-												<div class="base_web_table_cell_label">Name:</div>
-												<div class="base_web_table_cell_input">
-													<input type="text" class="base_web_text_input"
-														name="PermissionName" value="cardinality">
+									<div class="formDiv">
+										<h2 class="blue">Permissions</h2>
+										<input type="button" value="Add New Permission"
+											onclick="$.get('/security-web/admin/newForm/CD_TYPE_PERM', function(data) {$('#ba5733db-bc64-4974-9bc1-5fb5ddd421ed').append(data);});">
+										<div class="subformDiv"
+											id="ba5733db-bc64-4974-9bc1-5fb5ddd421ed"
+											title="Add New Permission">
+											<div class="CustomDataTable">
+												<div class="base_web_table">
+													<div class="base_web_table_row">
+														<div class="base_web_table_cell_label">Name:</div>
+														<div class="base_web_table_cell_input">
+															<input type="text" class="base_web_text_input"
+																name="CD_TYPE_PERM-xxx-PermissionName-xxx-0d546b2d-5939-43fa-9cc4-b6d9c60db1cd"
+																value="cardinality" />
+														</div>
+													</div>
+													<div class="base_web_table_row">
+														<div class="base_web_table_cell_label">Value:</div>
+														<div class="base_web_table_cell_input">
+															<input type="text" class="base_web_text_input"
+																name="CD_TYPE_PERM-xxx-PermissionValue-xxx-0d546b2d-5939-43fa-9cc4-b6d9c60db1cd"
+																value="1" />
+														</div>
+													</div>
 												</div>
-											</div>
-											<div class="base_web_table_row">
-												<div class="base_web_table_cell_label">Value:</div>
-												<div class="base_web_table_cell_input">
-													<input type="text" class="base_web_text_input"
-														name="PermissionValue" value="1">
-												</div>
+												<input type="button" value="Remove"
+													onclick="$(this).parent().remove();">
 											</div>
 										</div>
-										<input type="button" value="Remove"
-											onclick="$(this).parent().remove();">
 									</div>
 								</form>
 							</div>
