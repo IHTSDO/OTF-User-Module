@@ -1,3 +1,5 @@
+Some Java Script and other text 
+
 function getRandomNumber(range)
 {
 	return Math.floor(Math.random() * range);
