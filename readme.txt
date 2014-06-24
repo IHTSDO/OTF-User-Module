@@ -13,7 +13,7 @@ The OTF User Security Module is designed to do 2 distinct tasks:
 (A) Authentication - You are who you say you are. 
 (B) Authorization - You can do this.
 
-It conssists of 3 modules:
+It consists of 3 modules:
 i) Security - the basic security code. includes 2 implementations: 
 1 for XML and 1 for Stormpath
 
@@ -76,6 +76,44 @@ tomcat contained within a debian based linux (e.g. Ubuntu, debian etc) deb file.
 
 If looking to build and deploy onto a new debian linux instance (e.g. a clean 
 digital ocean image) this is the one to use,
+
+First you have to install supervisord (supervisord.org)
+
+'sudo apt-get install supervisor'
+then 
+'dpkg -i otf-user-module-security-web-0.1.2-SNAPSHOT-all.deb'
+if you forget to install supervisor first then:
+'apt-get -f install'
+Will fix it.
+The deb sets up the following:
+
+A) The jar (which includes tomcat) gets installed to: 
+
+/opt/otf-user-module-security-web
+
+B) The conf file for supervisor is installed to:
+
+/etc/supervisor/conf.d/otf-user-module-security-web.conf
+
+C) The Conf file points to the properties file:
+/etc/opt/otf-user-module-security-web/config.properties
+Which you have to adjust for your own use
+
+as detailed below.
+
+
+The app is stopped by :
+
+sudo supervisorctl stop otf-user-module-security-web
+
+To start:
+
+sudo supervisorctl start otf-user-module-security-web
+
+To restart:
+
+sudo supervisorctl restart otf-user-module-security-web
+
 
 2.2) Build as individual jar/war files using: 
 pom-orig.xml for security and security-web
