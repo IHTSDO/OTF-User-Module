@@ -36,8 +36,3 @@ Have a play.
 
  If there are queries which are obviously missing then shout out.
 
-Bunch of todo'es such as a 
-
-1) ReadMe.
-2) Management JSP to allow for adding of users/apps/members etc.
-3) Create a read-only user and use that persona for querying.
