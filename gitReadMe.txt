@@ -30,5 +30,5 @@ Commit and push all your work.
 then:
 checkout develop
 pull origin/develop-bob
-
+Then commit (if you did not set the pull to --commit).
 
