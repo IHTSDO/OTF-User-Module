@@ -101,6 +101,8 @@ Which you have to adjust for your own use
 
 as detailed below.
 
+D) Logging is written to /var/log/supervisor
+
 
 The app is stopped by :
 
@@ -113,6 +115,8 @@ sudo supervisorctl start otf-user-module-security-web
 To restart:
 
 sudo supervisorctl restart otf-user-module-security-web
+
+
 
 
 2.2) Build as individual jar/war files using: 
