@@ -19,6 +19,6 @@ StormPathUserSecurity.keyPath=C:/Users/adamf/stormpath/apiKey.properties
 #StormPathUserSecurity.keyPath=/opt/api/apiKey.properties
 
 # Where/What file you want any save actions to be written to.
-save=D:/Data/git/OTF-User-Module/security/TextFiles/Example-save1.xml
+#save=D:/Data/git/OTF-User-Module/security/TextFiles/Example-save1.xml
 
 	

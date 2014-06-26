@@ -5,7 +5,7 @@ OTF User Security Module
 3) Example files
 4) Moving data between XML and StormPath
 5) Running the web apps
-
+6) Quick and dirty - get running w/o explanation read QuickAndDirty.txt
 
 (1) Introduction
 
