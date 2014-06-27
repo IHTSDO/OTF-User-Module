@@ -1,0 +1,163 @@
+<userSecurity>
+<directories>
+<directory idref="https://api.stormpath.com/v1/directories/nyyxZURd4vjE54m07db82" name="Editor Directory" status="ENABLED">
+<groups>
+<group idref="https://api.stormpath.com/v1/groups/oyhCa2VO9rx8s8FnlyqTu" name="Admin" status="ENABLED"/>
+<group idref="https://api.stormpath.com/v1/groups/oZnjcL8DzgEeBe3ZQ22mc" name="Editor" status="ENABLED"/>
+<group idref="https://api.stormpath.com/v1/groups/oNwkaU099aehHz6bROEXu" name="Owner" status="ENABLED"/>
+<group idref="https://api.stormpath.com/v1/groups/olj2hURekF1Zbj8uMTgju" name="Reviewer" status="ENABLED"/>
+</groups>
+</directory>
+<directory idref="https://api.stormpath.com/v1/directories/lnymjhvRiqXLgzOuhWd3u" name="Mapping Directory" status="ENABLED">
+<groups>
+<group idref="https://api.stormpath.com/v1/groups/ms152RL7GzjmuBFg9hazm" name="Admin" status="ENABLED">
+<customData>
+<customField key="49f8fffa-068b-43f3-a7fc-546a7ad413f3" value="CD_TYPE_PERM:cardinality:0"/>
+</customData>
+</group>
+<group idref="https://api.stormpath.com/v1/groups/mEPMrrKNvOrJskZIH9mZy" name="Reviewer" status="ENABLED">
+<customData>
+<customField key="4abaff6f-188c-4f51-acfa-2a377340596f" value="CD_TYPE_PERM:cardinality:2"/>
+</customData>
+</group>
+<group idref="https://api.stormpath.com/v1/groups/nSHGewYstyZOpNSHjfMti" name="Specialist" status="ENABLED">
+<customData>
+<customField key="0d546b2d-5939-43fa-9cc4-b6d9c60db1cd" value="CD_TYPE_PERM:cardinality:1"/>
+</customData>
+</group>
+</groups>
+</directory>
+<directory description="List of IHTSDO Members" idref="https://api.stormpath.com/v1/directories/jvnwF6qgHxr2UiTpiQt8Y" name="Members" status="ENABLED">
+<groups>
+<group idref="https://api.stormpath.com/v1/groups/l8czEnKsbTQTb1LGhsxfa" name="*" status="ENABLED"/>
+<group idref="https://api.stormpath.com/v1/groups/kkv1B54ivIGZnhRKkbLCA" name="AUS" status="ENABLED"/>
+<group idref="https://api.stormpath.com/v1/groups/ldJIbpuNMlVzgUkF7Y034" name="DK" status="ENABLED"/>
+<group idref="https://api.stormpath.com/v1/groups/kwueJWZVaKGTkCf2eqos2" name="INTL" status="ENABLED"/>
+<group idref="https://api.stormpath.com/v1/groups/kXWuylus2q59OlWDYHB8g" name="NZ" status="ENABLED"/>
+<group idref="https://api.stormpath.com/v1/groups/lO2SybnytagDABB7sWJZu" name="UK" status="ENABLED"/>
+<group idref="https://api.stormpath.com/v1/groups/kJNGCEk89CazFC71k6qAo" name="US" status="ENABLED"/>
+</groups>
+</directory>
+<directory description="OTF User Mangement Settings" idref="https://api.stormpath.com/v1/directories/ivOShcxO6JXMTReKQ3Ias" name="OTFSettings" status="ENABLED">
+<groups>
+<group idref="https://api.stormpath.com/v1/groups/jJNiyVwxQNXAMS5kEYFwc" name="OTFSettings" status="ENABLED">
+<customData>
+<customField key="a44268c9-7039-4498-a92e-824fd636cea3" value="CD_TYPE_SETTING:admin:User Admin"/>
+<customField key="c0ec1ade-e19d-4a31-913b-39c6678690f4" value="CD_TYPE_SETTING:defaultpw:Sn0m3dDefPass"/>
+<customField key="08869379-ab6f-4480-ac88-c2ab808f421e" value="CD_TYPE_SETTING:members:Members"/>
+<customField key="8c2b9fff-3f88-4501-a432-e182a4bea985" value="CD_TYPE_SETTING:modDate:2014-06-06T15-53-23.589Z"/>
+<customField key="957f86db-6e0d-4dc6-8a91-098f1f67a940" value="CD_TYPE_SETTING:users:OTF Users"/>
+</customData>
+</group>
+</groups>
+</directory>
+<directory description="List of All OTF Users" idref="https://api.stormpath.com/v1/directories/TooNHdTrojWL1qNXBWS8E" name="OTF Users" status="ENABLED">
+<accounts>
+<account email="bcarlsen@westcoastinformatics.com" givenName="Brian" idref="https://api.stormpath.com/v1/accounts/XJ7g3NW7C8kR9RAVIq4bO" middleName="" name="bca" status="ENABLED" surname="Carlsen">
+<customData>
+<customField key="7969ff16-1b90-430f-a097-8bd83793a88e" value="CD_TYPE_APP:Mapping:Admin:*"/>
+<customField key="2eeada3b-08d4-451e-9f60-1866b3ff6399" value="CD_TYPE_APP:User Admin:Admin:*"/>
+</customData>
+</account>
+<account email="bhe@ihtsdo.org" givenName="Brenda" idref="https://api.stormpath.com/v1/accounts/eIRW7nQ93fIOcq69BVejW" middleName="" name="bhe" status="ENABLED" surname="Henley"/>
+<account email="bob@test.com" givenName="Bob" idref="https://api.stormpath.com/v1/accounts/cMDuYBisnSTT67LaFnX6U" middleName="" name="Bob" status="ENABLED" surname="Bobbin">
+<customData>
+<customField key="3645e9a1-f257-405b-8439-a9c787043b5b" value="CD_TYPE_APP:Release:Manager:UK"/>
+<customField key="903fdfe9-c8ef-4e2c-b39f-9b5d710386e7" value="CD_TYPE_APP:User Admin:Admin:*"/>
+<customField key="e08dc86a-0996-4859-8e9c-2fdb13b7ff3a" value="CD_TYPE_MEMBER:INTL"/>
+<customField key="ed28c2ce-6e7c-4678-b2f8-da4773d46b24" value="CD_TYPE_MEMBER:UK"/>
+</customData>
+</account>
+<account email="bt@gamil.com" givenName="Bob" idref="https://api.stormpath.com/v1/accounts/43X98aUGVQbJBCkomsUqOk" middleName="" name="bt" status="ENABLED" surname="Test"/>
+<account email="dmo@ihtsdo.org" givenName="Donna" idref="https://api.stormpath.com/v1/accounts/WK6fZlHtDucHab2PIXARK" middleName="" name="dmo" status="ENABLED" surname="Morgan">
+<customData>
+<customField key="89d854c9-3f60-4130-8b63-0eacab5b4a24" value="CD_TYPE_APP:Mapping:Reviewer:*"/>
+</customData>
+</account>
+<account email="dshapiro@westcoastinformatics.com" givenName="Deborah" idref="https://api.stormpath.com/v1/accounts/ZE18cPjf9Oaok9M1uHLZO" middleName="" name="dsh" status="ENABLED" surname="Shapiro">
+<customData>
+<customField key="17c04958-8252-4ba4-8871-f2c8ebc3ef86" value="CD_TYPE_APP:Mapping:Admin:*"/>
+<customField key="dde972c5-7e5f-4380-8174-67519e691395" value="CD_TYPE_APP:User Admin:Admin:*"/>
+</customData>
+</account>
+<account email="graeme.miller@sydney.edu.au" givenName="Graeme" idref="https://api.stormpath.com/v1/accounts/hPflJSqPx8FNeuCW1mACU" middleName="" name="gmi" status="ENABLED" surname="Miller"/>
+<account email="julie.ohalloran@sydney.edu.au" givenName="Julie" idref="https://api.stormpath.com/v1/accounts/aLkZjgr3yVszfgMQU3Wc2" middleName="" name="joh" status="ENABLED" surname="O'Halloran"/>
+<account email="kgi@ihtsdo.org" givenName="Kathy" idref="https://api.stormpath.com/v1/accounts/UFWFcxcDfAgDJI5OcMwWc" middleName="" name="kgi" status="ENABLED" surname="Giannangelo"/>
+<account email="kli@ihtsdo.org" givenName="Krista" idref="https://api.stormpath.com/v1/accounts/dKP2OHkrq25uNtrEgSQda" middleName="" name="kli" status="ENABLED" surname="Lilly"/>
+<account email="kre@ihtsdo.org" givenName="Kelly" idref="https://api.stormpath.com/v1/accounts/VKX4fnapxuoJqNpLZnaWc" middleName="" name="kre" status="ENABLED" surname="Read"/>
+<account email="lma@ihtsdo.org" givenName="Lesley" idref="https://api.stormpath.com/v1/accounts/43BA5NFS9le6FCcKhh9Ay6" middleName="" name="lma" status="ENABLED" surname="MacNeil">
+<customData>
+<customField key="cf03d38e-0c70-4dac-b954-095831e9ec81" value="CD_TYPE_APP:Mapping:Admin:*"/>
+<customField key="85221f60-51e6-44c3-ab9b-20cafe936ce1" value="CD_TYPE_MEMBER:*"/>
+</customData>
+</account>
+<account email="mappingadmin@westcoastinformatics.com" givenName="Mapping" idref="https://api.stormpath.com/v1/accounts/gTNMuHkyVHHIUVKrdon54" middleName="" name="map_adm" status="ENABLED" surname="Administrator"/>
+<account email="nin@ihtsdo.org" givenName="Nicola" idref="https://api.stormpath.com/v1/accounts/fXQalZaIbmM5wD944saYY" middleName="" name="nin" status="ENABLED" surname="Ingram"/>
+<account email="pgranvold@westcoastinformatics.com" givenName="Patrick" idref="https://api.stormpath.com/v1/accounts/bJ5owGgo5QzigPFdL4PWA" middleName="" name="pgr" status="ENABLED" surname="Granvold">
+<customData>
+<customField key="dd6a0b93-4fd3-4e3d-b437-5c10e17ebec4" value="CD_TYPE_APP:Mapping:Admin:*"/>
+<customField key="b27bd0fa-5828-4df3-9dcb-fdc9176f919e" value="CD_TYPE_APP:User Admin:Admin:*"/>
+</customData>
+</account>
+<account email="tri@ihtsdo.org" givenName="Theresa" idref="https://api.stormpath.com/v1/accounts/YG2ywCFjqEbJ1dFUN1xC2" middleName="" name="tri" status="ENABLED" surname="Rihanek"/>
+</accounts>
+</directory>
+<directory idref="https://api.stormpath.com/v1/directories/SPvN6DJWvik1ScA1K14Ck" name="Refset Directory" status="ENABLED">
+<groups>
+<group idref="https://api.stormpath.com/v1/groups/Tct4CUAR4AjPblICF4oAw" name="Admin" status="ENABLED"/>
+<group idref="https://api.stormpath.com/v1/groups/T8tzMNQTPajekVEvTS6zG" name="Editor" status="ENABLED"/>
+<group idref="https://api.stormpath.com/v1/groups/SoTDnRlvXYPdWzgOqwhJ8" name="Journalist" status="ENABLED"/>
+<group idref="https://api.stormpath.com/v1/groups/TNTaSfhKm3Tg2bSL4RSGc" name="Reader" status="ENABLED"/>
+</groups>
+</directory>
+<directory idref="https://api.stormpath.com/v1/directories/RIXYFP6texUj9BpTZG3l0" name="Release" status="ENABLED">
+<groups>
+<group idref="https://api.stormpath.com/v1/groups/SE041406B9x62X4gNZQFS" name="Admin" status="ENABLED"/>
+<group idref="https://api.stormpath.com/v1/groups/S0gHs31bDAyeA1Hw935uY" name="Manager" status="ENABLED"/>
+<group idref="https://api.stormpath.com/v1/groups/RocKgJLSdfllh5vrGzmW6" name="Reviewer" status="ENABLED"/>
+</groups>
+</directory>
+<directory description="Default directory for accounts and groups that may access Stormpath IAM." idref="https://api.stormpath.com/v1/directories/7c0jSKV7ofg7Y7ddmPPBAk" name="Stormpath Administrators" status="ENABLED">
+<accounts>
+<account email="afl@ihtsdo.org" givenName="Adam" idref="https://api.stormpath.com/v1/accounts/20OQb0agrlp9wcHqKt59ck" middleName="" name="afl@ihtsdo.org" status="ENABLED" surname="Flinton"/>
+<account email="henrik@sparklingideas.co.uk" givenName="Henrik" idref="https://api.stormpath.com/v1/accounts/1x2I5dcN46EOb6nqawufYk" middleName="" name="hpe@ihtsdo.org" status="ENABLED" surname="Petersen"/>
+<account email="kke@ihtsdo.org" givenName="Kai" idref="https://api.stormpath.com/v1/accounts/2raZS7aYAAM6OzCZPWQm9G" middleName="" name="kke@ihtsdo.org" status="ENABLED" surname="Kewley"/>
+<account email="mwi@ihtsdo.org" givenName="Matt" idref="https://api.stormpath.com/v1/accounts/4uiwIiC2gbD9RUrHQD2OCN" middleName="" name="matt" status="ENABLED" surname="Willsher "/>
+<account email="pwi@ihtsdo.org" givenName="Peter" idref="https://api.stormpath.com/v1/accounts/3GnuaxXu2wLFIVXHKNJDMk" middleName="" name="pwi@ihtsdo.org" status="ENABLED" surname="Williams"/>
+<account email="rda@ihtsdo.org" givenName="Rory" idref="https://api.stormpath.com/v1/accounts/7c19OeGDw8VNPGAS0CEBUE" middleName="" name="rda@ihtsdo.org" status="ENABLED" surname="Davidson"/>
+<account email="rtu@ihtsdo.org" givenName="Robert" idref="https://api.stormpath.com/v1/accounts/2ObLV7z0yUEzPZ33BTgVGI" middleName="" name="rtu@ihtsdo.org" status="ENABLED" surname="Turnbull"/>
+</accounts>
+</directory>
+<directory description="Auto created Directory for User Admin" idref="https://api.stormpath.com/v1/directories/iKR2YBu5McbzK261C3BV8" name="User Admin" status="ENABLED">
+<groups>
+<group idref="https://api.stormpath.com/v1/groups/ikW0PsOG0ot4tgaXwfAQI" name="Admin" status="ENABLED"/>
+</groups>
+</directory>
+</directories>
+<applications>
+<application idref="https://api.stormpath.com/v1/applications/tasaZe1kBKtMy6JuOgJQs" name="Editor" status="ENABLED">
+<accountStore idref="https://api.stormpath.com/v1/directories/nyyxZURd4vjE54m07db82" name="Editor Directory" status="ENABLED" type="dir"/>
+</application>
+<application idref="https://api.stormpath.com/v1/applications/163evDjM7wGHM3WSdq8fra" name="Mapping" status="ENABLED">
+<accountStore idref="https://api.stormpath.com/v1/directories/lnymjhvRiqXLgzOuhWd3u" name="Mapping Directory" status="ENABLED" type="dir"/>
+</application>
+<application description="Members Application" idref="https://api.stormpath.com/v1/applications/13eI7RX78x7yNwbHFiRrfq" name="Members" status="ENABLED">
+<accountStore idref="https://api.stormpath.com/v1/directories/jvnwF6qgHxr2UiTpiQt8Y" name="Members" status="ENABLED" type="dir"/>
+</application>
+<application description="Users Application" idref="https://api.stormpath.com/v1/applications/yfrYVNB3NNGl2A8zOLILe" name="OTF Users" status="ENABLED">
+<accountStore idref="https://api.stormpath.com/v1/directories/TooNHdTrojWL1qNXBWS8E" name="OTF Users" status="ENABLED" type="dir"/>
+</application>
+<application idref="https://api.stormpath.com/v1/applications/w4DpNYhs5K7yt3CPVBfbi" name="Refset" status="ENABLED">
+<accountStore idref="https://api.stormpath.com/v1/directories/SPvN6DJWvik1ScA1K14Ck" name="Refset Directory" status="ENABLED" type="dir"/>
+</application>
+<application idref="https://api.stormpath.com/v1/applications/qvtKtklbAfhjiktYCweB4" name="Release" status="ENABLED">
+<accountStore idref="https://api.stormpath.com/v1/directories/RIXYFP6texUj9BpTZG3l0" name="Release" status="ENABLED" type="dir"/>
+</application>
+<application description="Manages access to the Stormpath Console and API." idref="https://api.stormpath.com/v1/applications/7c2tTyanluHboKhpGJK2Sk" name="Stormpath" status="ENABLED">
+<accountStore idref="https://api.stormpath.com/v1/directories/7c0jSKV7ofg7Y7ddmPPBAk" name="Stormpath Administrators" status="ENABLED" type="dir"/>
+</application>
+<application description="User Administration" idref="https://api.stormpath.com/v1/applications/115RKRRy65vCeiLjUPRbh8" name="User Admin" status="ENABLED">
+<accountStore idref="https://api.stormpath.com/v1/directories/iKR2YBu5McbzK261C3BV8" name="User Admin" status="ENABLED" type="dir"/>
+</application>
+</applications>
+</userSecurity>
