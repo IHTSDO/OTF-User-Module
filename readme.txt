@@ -1,11 +1,16 @@
 OTF User Security Module
 
+Note for those simply interested in getting something working fast:
+i.e. Quick and dirty - get running w/o explanation read QuickAndDirty.txt
+
 1) Introduction
 2) Building
 3) Example files
 4) Moving data between XML and StormPath
-5) Running the web apps
-6) Quick and dirty - get running w/o explanation read QuickAndDirty.txt
+5) Running the web apps 
+6) URLS - What you can ask for and the URL to do it.
+7) Authentication - tokens
+
 
 (1) Introduction
 
@@ -315,3 +320,98 @@ If running as a self contained jar via our deb build process then just call
 the jar with :
 java -jar THEJARNAME.jar --DSecurityServiceProps=./MinimalExampleSecuritySettings.props
 
+6) URLS:
+
+If you are running the security-web-example web app then this is a repeat of:
+/security-web-example/home.jsp
+
+All URLS start with /security-web/query so /reload
+Will be /security-web/query/reload e.g. 
+http://localhost:8080/security-web/query/reload
+Text starting with ## is a variable you are meant to supply e.g.:
+/security-web/query/users/##user mean that if looking up a user called bob the 
+url would be:
+
+/security-web/query/users/bob
+
+Action:	          					Rest URL:
+
+--GENERAL--
+Reload Model from persistence:		/reload
+
+--Lists of All--
+A list of all Members:				/members
+A list of all Users:				/users
+A list of all Applications:			/apps
+
+--Specific user--
+Details for a specific User:		/users/##user
+Applications for a specific User:	/users/##user/app
+Roles within a specific application 
+for a specific user:      			/users/##user/apps/##app
+Roles within a specific application 
+for a specific user with a specific
+membership:							/users/##user/apps/##app/members/##member
+Memberships for a specific user: 	/users/##user/members
+
+--Specific Application--
+All users for a specific app:		/apps/##app/users
+All permissions for a specific app:	/apps/##app/perms
+All permissions for a specific app
+By Group:							/apps/##app/perms/##group
+
+7) Authentication - tokens
+
+Given the central place taken by the user authentication many applications will
+be needing to pass users over to another application. For example the refset 
+application might use the browser part run separately for viewing concept 
+detail.
+
+This requires that the password is not typed in repeatedly but that a token is 
+passed instead.
+
+Stormpath is in the midst of putting in OAuth token handling in part to allow 
+for external authentication (e.g. if using a google account).
+
+As a temporary measure the application will generate a UUID upon login which 
+will be changed periodically e.g. after 12 hours of use.
+
+As such when a user logs in the user details are returned as JSON which looks 
+like:
+
+{"user":{
+"name":"Bob",
+"status":"ENABLED",
+"email":"bob@test.com",
+"givenName":"Bob",
+"middleName":"",
+"surname":"Bobbin",
+"token":"1054fb93-2de6-47f4-ba0a-18f95ef2c3b1"
+}}
+
+Note the last field entitled "token".
+
+This is the UUID and can then be used in place of the password.
+
+Note that in order to distinguish between a password based login vs a token 
+based login in the case of a token based login the token is not returned e.g.:
+
+{"user":{
+"name":"Bob",
+"status":"ENABLED",
+"email":"bob@test.com",
+"givenName":"Bob",
+"middleName":"",
+"surname":"Bobbin",
+"token":""
+}}
+
+In order to login you must POST the following information to: 
+/security-web/query/
+
+queryName=getUserByNameAuth
+username=
+password=
+
+where username & the password are the username and password (or token) being 
+used.
