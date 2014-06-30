@@ -73,6 +73,9 @@ public abstract class OtfBaseName extends OtfBaseId implements
 		if (status == null) {
 			status = Status.ENABLED;
 		}
+		if (status.equals(Status.UNVERIFIED)) {
+			return Status.DISABLED;
+		}
 		return status;
 	}
 
@@ -83,7 +86,11 @@ public abstract class OtfBaseName extends OtfBaseId implements
 	public final void setStatus(final String statusIn) {
 		if (statusIn != null && statusIn.length() > 0) {
 			try {
-				status = Status.valueOf(statusIn);
+				// Filter out Unverified which is not to be set/unset by this
+				// app but instead via email to Stormpath etc.
+				if (!status.equals(Status.UNVERIFIED)) {
+					status = Status.valueOf(statusIn);
+				}
 			} catch (IllegalArgumentException iae) {
 				// Ignore as will be set to enabled by default
 			}
