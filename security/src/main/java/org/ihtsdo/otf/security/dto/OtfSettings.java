@@ -60,25 +60,18 @@ public class OtfSettings extends OtfBaseId {
 	public void updateGrpSettings() {
 
 		for (String key : getSettings().keySet()) {
-			// LOG.info("updateGrpSettings key = " + key);
 			OtfCustomFieldSetting setF = getSettings().get(key);
 			OtfCustomField ocf = getGrp().getCustData().getCustFields()
 					.get(setF.getKey());
-
 			if (ocf == null) {
 				ocf = new OtfCustomField();
 				ocf.setKey(setF.getKey());
 				ocf.setModel(setF);
 				getGrp().getCustData().getCustFields().put(setF.getKey(), ocf);
 			}
-
 			ocf.setValsFromModelVals();
 			ocf.setValueFromVals();
-
 		}
-
-		// LOG.info("updateGrpSettings grp = " + getGrp());
-
 	}
 
 	private void setSettings() {
@@ -92,16 +85,12 @@ public class OtfSettings extends OtfBaseId {
 
 	@Override
 	public final void processParams() {
-		// LOG.info("SETTINGS: ");
-		// printParams();
 		resetErrors();
 		validateParams();
 		// If no errors then update
 		if (errors.size() == 0) {
-			// LOG.info("Before " + this.toString());
 			setValsFromParams();
 			setSettingsFromFields();
-			// LOG.info("After " + this.toString());
 			updateGrpSettings();
 		}
 
@@ -113,15 +102,9 @@ public class OtfSettings extends OtfBaseId {
 		String membIn = getNotNullParam(MEMBER_APP_LABEL);
 		String usersIn = getNotNullParam(USER_APP_LABEL);
 
-		// LOG.info(" Settings validate defp = " + defpIn);
-		// LOG.info("membIn = " + membIn);
-		// LOG.info("usersIn = " + usersIn);
-
 		checkWebFieldNotEmpty(defpIn, DEF_PW_LABEL);
 		checkWebFieldNotEmpty(membIn, MEMBER_APP_LABEL);
 		checkWebFieldNotEmpty(usersIn, USER_APP_LABEL);
-
-		// LOG.info("Errors 1 size = " + errors.size());
 
 		// Check Password length etc
 		// TODO: FInd out how & where StormPath Sets it's pw length
@@ -133,16 +116,11 @@ public class OtfSettings extends OtfBaseId {
 		// Check user app in list.
 		checkWebFieldInList(usersIn, USER_APP_LABEL, appNames, true,
 				"Users App must exist as an application");
-		// LOG.info("Errors 2 size = " + errors.size());
 	}
 
 	@Override
 	public void addTableRows() {
 
-		// LOG.info("addTableRows getTableRows() size = " +
-		// getTableRows().size());
-		// LOG.info("addTableRows getTableRows() getErrors() size = "
-		// + getErrors().size());
 		getTableRows().add(
 				getHtmlRowTextInput(DEF_PW_LABEL, getDefPw(),
 						getErrors().get(DEF_PW_LABEL)));
@@ -286,7 +264,6 @@ public class OtfSettings extends OtfBaseId {
 	}
 
 	public final String getAdmin() {
-		// LOG.info("Admin = " + admin);
 		return admin;
 	}
 
@@ -311,7 +288,6 @@ public class OtfSettings extends OtfBaseId {
 			df = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm-ss.SS'Z'");
 			df.setTimeZone(tz);
 		}
-		// "2014-04-01T17:00:09.189Z",
 		return df;
 	}
 

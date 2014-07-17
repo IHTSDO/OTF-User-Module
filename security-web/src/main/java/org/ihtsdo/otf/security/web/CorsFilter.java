@@ -14,8 +14,6 @@ public class CorsFilter implements Filter {
 
 	@Override
 	public void destroy() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -33,8 +31,6 @@ public class CorsFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig arg0In) throws ServletException {
-		// TODO Auto-generated method stub
-
 	}
 
 }

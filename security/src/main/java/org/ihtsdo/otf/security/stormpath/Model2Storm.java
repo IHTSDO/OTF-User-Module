@@ -58,7 +58,6 @@ public class Model2Storm {
 	}
 
 	private void clear() {
-		// StormPathUserSecurity.STORMPATH
 		String UCSP = StormPathUserSecurity.STORMPATH.toUpperCase();
 		// Clear apps not SP
 		ApplicationList apps = spbd.getTenant().getApplications();
@@ -66,13 +65,8 @@ public class Model2Storm {
 			String UCName = app.getName().toUpperCase();
 			boolean canDel = !UCName.contains(UCSP);
 			if (canDel) {
-				// LOG.info("Can del app " + app.getName());
 				app.delete();
 			}
-			// if (!canDel) {
-			// LOG.info("Can NOT del app " + app.getName());
-			// }
-
 		}
 
 		// Clear Dirs not SP
@@ -81,13 +75,8 @@ public class Model2Storm {
 			String UCName = dir.getName().toUpperCase();
 			boolean canDel = !UCName.contains(UCSP);
 			if (canDel) {
-				// LOG.info("Can del Dir " + dir.getName());
 				dir.delete();
 			}
-			// if (!canDel) {
-			// LOG.info("Can NOT del Dir " + dir.getName());
-			// }
-
 		}
 
 	}
@@ -98,10 +87,7 @@ public class Model2Storm {
 				.values()) {
 			boolean found = false;
 			for (Directory directory : directories) {
-				// LOG.info("buildDirs directory.getName() = "
-				// + directory.getName());
 				if (directory.getName().equals(oDir.getName())) {
-					// LOG.info("buildDirs oDir.getName() = " + oDir.getName());
 					buildDirectory(oDir, directory);
 					found = true;
 				}
@@ -113,8 +99,6 @@ public class Model2Storm {
 	}
 
 	public void buildDirectory(final OtfDirectory oDir, Directory dir) {
-		// TODO: catch both being null;
-
 		if (oDir == null && dir == null) {
 			LOG.severe("buildDirectory all is null");
 			return;
@@ -129,7 +113,6 @@ public class Model2Storm {
 		} else {
 			if (dir == null) {
 				// Add new
-
 				dir = spbd.getClient().getDataStore()
 						.instantiate(Directory.class);
 				dir.setName(oDir.getName());
@@ -192,7 +175,6 @@ public class Model2Storm {
 
 			}
 			if (ogrp == null) {
-				// delete existing? NOT STORMPATH
 				grp = null;
 			}
 		}
@@ -250,7 +232,6 @@ public class Model2Storm {
 			LOG.severe("buildAccount all is null");
 			return;
 		}
-		// log = oacc.getName().equalsIgnoreCase("bob");
 		if (oacc != null && acc != null) {
 			// update
 			acc.setUsername(oacc.getName());
@@ -265,25 +246,18 @@ public class Model2Storm {
 		} else {
 			if (acc == null) {
 				// Add new
-				// TODO: Check to see if account must be added
-				// to directory prior to being added to Group;
 				acc = spbd.getClient().instantiate(Account.class);
 				acc.setUsername(oacc.getName());
 				acc.setGivenName(oacc.getGivenName());
 				acc.setMiddleName(oacc.getMiddleName());
 				acc.setSurname(oacc.getSurname());
 				acc.setEmail(oacc.getEmail());
-				// LOG.info("userSecurity = " + userSecurity);
 				acc.setPassword(userSecurity.getDefaultpw());
 				if (oacc.getCustData().getCustFields().size() > 0) {
-					// LOG.info("CD2BADDED num = "
-					// + oacc.getCustData().getCustFields().size());
 					CustomData cd = acc.getCustomData();
-					// cd.put("rank", "Captain");
 					buildCustomData(oacc.getCustData().getCustFields(), cd);
 					if (log) {
 						LOG.info("Acc1 = " + acc);
-						// LOG.info("Acc1 = " + acc.getCustomData().size());
 					}
 				}
 
@@ -302,41 +276,16 @@ public class Model2Storm {
 				}
 
 			}
-			// if (oacc == null) {
-			// // delete existing? NOT STORMPATH
-			// acc = null;
-			// }
 		}
-		// if (log) {
-		// LOG.info("Acc2 = " + acc);
-		// }
-		// buildCustomData(oacc.getCustData().getCustFields(),
-		// acc.getCustomData());
-		// acc.getCustomData().save();
-		// if (log) {
-		// LOG.info("Acc3 = " + acc);
-		// }
-		// spbd.load();
-		// CustomData customData = spbd.getClient().getResource(
-		// acc.getCustomData().getHref(), CustomData.class);
-		// if (log) {
-		// LOG.info("Acc4 = customData size " + customData.size());
-		// }
-
 	}
 
 	private void buildCustomData(final Map<String, OtfCustomField> custFields,
 			final CustomData customData) {
-		// LOG.info("buildCustomData custFields size = " + custFields.size());
-		// LOG.info("buildCustomData customData = " + customData);
 		if (custFields != null && customData != null) {
-			// LOG.info("buildCustomData about to roll through cust fuie");
 			for (String key : custFields.keySet()) {
 				String value = custFields.get(key).getValFromVals();
-				// LOG.info("buildCustomData customData val1= " + value);
 				// roll through keys in cust field
 				if (!OtfCustomData.getReservedWords().contains(key)) {
-					// LOG.info("buildCustomData customData adding " + value);
 					customData.put(key, value);
 				}
 			}
@@ -344,13 +293,10 @@ public class Model2Storm {
 				// roll through keys checking not reserved.
 				if (!OtfCustomData.getReservedWords().contains(key)) {
 					if (!custFields.containsKey(key)) {
-						// LOG.info("buildCustomData about to rem key " + key);
 						customData.remove(key);
 					}
 				}
 			}
-			// LOG.info("customData.size = " + customData.size());
-
 		}
 	}
 
@@ -437,11 +383,8 @@ public class Model2Storm {
 						}
 					}
 				}
-				//
-
 			}
 			if (oApp == null) {
-				// delete existing? NOT STORMPATH
 				app = null;
 			}
 		}

@@ -87,13 +87,11 @@ public class OtfCustomFieldApplication extends OtfCustomFieldCachedVals {
 
 	@Override
 	public String getCollectionTitle() {
-		// TODO Auto-generated method stub
 		return "Application Roles";
 	}
 
 	@Override
 	public String getNewTitle() {
-		// TODO Auto-generated method stub
 		return "Add new Application Role";
 	}
 

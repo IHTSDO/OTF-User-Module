@@ -97,8 +97,6 @@ public class SecurityServlet extends AbstractSecurityServlet {
 	protected void handlePostRequest(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException,
 			IOException {
-		// LOG.info("handlePostRequest");
-		// System.out.println("handlePostRequest");
 		setHr(request);
 		// AUTHUSER
 		handleGetRequest(request, response);
@@ -109,22 +107,9 @@ public class SecurityServlet extends AbstractSecurityServlet {
 	protected void handleGetRequest(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException,
 			IOException {
-		// LOG.info("handleGetRequest");
-		// System.out.println("handleGetRequest");
 		setHr(request);
 
 		String urlS = request.getRequestURI();
-		// LOG.info("urls = " + urlS);
-		// String contextP = request.getContextPath();
-		// LOG.info("context = " + contextP);
-
-		// See if Rest of QueryName
-		// boolean isRest = false;
-		// final String queryName = getNamedParam(QUERY_NAME, request);
-		// if (queryName != null && queryName.length() > 0) {
-		// isRest = true;
-		// }
-
 		boolean reload = stringOK(getNamedParam(RELOAD, hr));
 		if (!reload) {
 			// try rest
@@ -137,9 +122,7 @@ public class SecurityServlet extends AbstractSecurityServlet {
 		}
 
 		if (!reload) {
-			// setRedirect(getNamedParam(REDIRECT, hr));
 			redirect = getNamedParam(REDIRECT, hr);
-			// LOG.info("redirect = " + redirect);
 			String json = handleQuery(hr, response);
 			if (!stringOK(json)) {
 				json = "NO RESPONSE";
@@ -148,7 +131,6 @@ public class SecurityServlet extends AbstractSecurityServlet {
 				hr.setAttribute(JSON, json);
 				final String context = getNamedParam(CON_PATH, hr);
 				if (stringOK(context)) {
-					// LOG.info("Context = " + context);
 					final RequestDispatcher reqd = sc.getServletContext()
 							.getContext(context).getRequestDispatcher(redirect);
 					reqd.forward(request, response);
@@ -158,7 +140,6 @@ public class SecurityServlet extends AbstractSecurityServlet {
 					reqd.forward(request, response);
 				}
 
-				// response.sendRedirect(redirect);
 			} else {
 				response.setContentType("application/json");
 				hr.getSession().setAttribute(JSON, null);
@@ -176,12 +157,10 @@ public class SecurityServlet extends AbstractSecurityServlet {
 		if (isQuery) {
 			final Map<String, String> args = getFiltParamsAsHM(request);
 			final SecurityQueryDTO sqd = new SecurityQueryDTO(queryName, args);
-			// LOG.info("SQD \n" + getSecServ().GetJSonFromObject(sqd));
 			String rval = getJSonFromSqd(sqd);
 			if (sqd.getQueryName()
 					.equals(SecurityService.GET_USER_BY_NAME_AUTH)
 					&& !stringOK(rval)) {
-				// LOG.info("setting status to 401");
 				response.setStatus(401);
 			}
 
@@ -203,7 +182,6 @@ public class SecurityServlet extends AbstractSecurityServlet {
 		// else try for json as a param
 		final String jsonQ = getNamedParam(QUERY_JSON, request);
 		if (jsonQ != null && jsonQ.length() > 0) {
-			// LOG.info("jsonQ = " + jsonQ);
 			final SecurityQueryDTO sqd = getSqdFromJSON(jsonQ);
 			String rval = getJSonFromSqd(sqd);
 			if (stringOK(rval)) {
@@ -213,7 +191,6 @@ public class SecurityServlet extends AbstractSecurityServlet {
 		// finally see if there is json in the body
 		final String jsonB = getContentAsString(request);
 		if (jsonB != null && jsonB.length() > 0) {
-			// LOG.info("jsonB = " + jsonB);
 			final SecurityQueryDTO sqd = getSqdFromJSON(jsonB);
 			String rval = getJSonFromSqd(sqd);
 			if (stringOK(rval)) {
@@ -273,9 +250,6 @@ public class SecurityServlet extends AbstractSecurityServlet {
 			if (str2.equals(SecurityService.APPS)) {
 				return new SecurityQueryDTO(SecurityService.GET_USER_APPS, args);
 			}
-
-			// Look at listing all apps for a User
-
 		}
 		if (nodes.length == 4) {
 			String str2 = nodes[2];
@@ -348,7 +322,6 @@ public class SecurityServlet extends AbstractSecurityServlet {
 
 	private final String getJSonFromSqd(final SecurityQueryDTO sqd) {
 		if (sqd != null) {
-			// LOG.info("sqd = " + sqd);
 			final String rval = getSecServ().getQueryResultFromQueryDTO(sqd);
 
 			if (sqd.getQueryName()
@@ -362,8 +335,6 @@ public class SecurityServlet extends AbstractSecurityServlet {
 
 				}
 			}
-			// hr.setAttribute(SecurityService.USER_NAME, hr.getSession()
-			// .getAttribute(SecurityService.USER_NAME));
 
 			if (stringOK(redirect)) {
 				final String qasJ = getSecServ().getJSonFromObject(sqd);

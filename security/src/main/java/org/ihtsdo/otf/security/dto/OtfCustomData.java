@@ -18,7 +18,6 @@ import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldParamDTO;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldPerm;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldSetting;
 
-//TODO Pull the html out to specific html class
 public class OtfCustomData extends OtfBaseId {
 
 	public OtfCustomData(CustomParentType parentTypeIn) {
@@ -155,7 +154,6 @@ public class OtfCustomData extends OtfBaseId {
 
 	@Override
 	public void addTableRows() {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -176,7 +174,7 @@ public class OtfCustomData extends OtfBaseId {
 	@Override
 	@JsonIgnore
 	public String getTableTitle() {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
@@ -187,7 +185,6 @@ public class OtfCustomData extends OtfBaseId {
 		for (OtfCustomFieldModel model : getModels()) {
 			sbuild.append(getHtmlForm(model));
 		}
-		// LOG.info("getHtmlForm for = \n" + sbuild.toString());
 		return sbuild.toString();
 	}
 
@@ -214,12 +211,6 @@ public class OtfCustomData extends OtfBaseId {
 	}
 
 	private String getAppsForm() {
-
-		// StringBuilder sbuild = new StringBuilder();
-		// OtfCustomFieldApplication cfa = new OtfCustomFieldApplication();
-		// // sbuild.append(cfa.getHiddenDivRoleOptions());
-		// sbuild.append(getCdForm(cfa, getApps()));
-		// return sbuild.toString();
 		return getCdForm(new OtfCustomFieldApplication(), getApps());
 	}
 
@@ -234,48 +225,21 @@ public class OtfCustomData extends OtfBaseId {
 	private String getCdForm(OtfCustomFieldModel cfType,
 			Collection<OtfCustomField> cfields) {
 		StringBuilder sbuild = new StringBuilder();
-		// getLabelValuesMap()
-
-		// String emptyRow = getCDTable(cfType.getLabelValuesMap());
-		// if (emptyRow == null) {
-		// LOG.info("empty row = null");
-		// emptyRow = "";
-		// }
-
-		// String incRemBtn = getHtmlRemBtnAction(emptyRow, cssClass);
-		// LOG.info("getCdForm incRemBtn = " + incRemBtn);
-		// String result = StringEscapeUtils.escapeHtml4(incRemBtn);
 		// Add heading
 		sbuild.append(getSubFormHead(cfType.getCollectionTitle()));
 
 		String id = UUID.randomUUID().toString();
-
-		// sbuild.append(getHiddenDiv(
-		// getHtmlRemBtnAction(getCDTable(cfType.getLabelValuesMap()),
-		// cssClass), cfType.getNewFormId()));
-
-		// getJavaScriptAddRow(String formID, String rowToAppend)
 		String js = getJavaScriptAddRow(id, cfType.getNewFormURLWithContext());
-		// LOG.info("getCdForm js = " + js);
-
-		// getHtmlAddRowBtn(String btnTitle, String onClickAction)
 
 		sbuild.append(getHtmlAddRowBtn(cfType.getNewTitle(), js));
-
-		// sbuild.append(getHtmlFormHeadId(id, cfType.getNewTitle(),
-		// getAction()))
-		// .append("\n");
 
 		sbuild.append(getHtmlDivHeadId(id, cfType.getNewTitle())).append("\n");
 
 		for (OtfCustomField cf : cfields) {
 			String row = getCDTable(cf.getModel().getLabelValuesMap());
-			// LOG.info("getCdForm row = " + row);
 			sbuild.append(getHtmlRemBtnAction(row, cssClass));
 		}
 
-		// Add AddRow Button
-		// sbuild.append(HTML_FORM_CLOSE);
 		sbuild.append(HTML_DIV_CLOSE);
 		return getFormDiv(sbuild.toString());
 	}
@@ -309,7 +273,6 @@ public class OtfCustomData extends OtfBaseId {
 		String[] vals = fullVal.split(CD_KEY_ID_LIST_SEP);
 		for (String val : vals) {
 			if (stringOK(val)) {
-				// LOG.info("Adding val " + val);
 				ids.add(val);
 			}
 		}
@@ -319,14 +282,11 @@ public class OtfCustomData extends OtfBaseId {
 
 	@Override
 	public void processParams() {
-		// LOG.info("Entering CustData ProcessParams current cd = "
-		// + this.toString());
 		List<OtfCustomFieldParamDTO> cfpList = new ArrayList<OtfCustomFieldParamDTO>();
 		List<String> initialIds = new ArrayList<String>();
 		List<String> newIds = new ArrayList<String>();
 
 		for (String key : params.keySet()) {
-			// if string startsWith(OtfCustomField.CustomType.CD_TYPE
 			if (key.startsWith(OtfCustomField.CustomType.CD_TYPE.toString())) {
 				String val = params.get(key);
 				OtfCustomFieldParamDTO cfp = new OtfCustomFieldParamDTO(key,
@@ -336,14 +296,12 @@ public class OtfCustomData extends OtfBaseId {
 			if (key.equals(CD_KEY_ID_LIST)) {
 				initialIds = getInitalCdIdList(params.get(key));
 			}
-			// LOG.info("cfpList size = " + cfpList.size());
 			// iterate seeing if cd id is in cust fields
 			for (OtfCustomFieldParamDTO cfp : cfpList) {
 				// See if the OftCustomField exists in getCustFields
 				String cfpId = cfp.getId();
 				newIds.add(cfpId);
 				if (getCustFields().containsKey(cfpId)) {
-					// LOG.info("Found key " + cfp.getId());
 					OtfCustomField oft = getCustFields().get(cfpId);
 					oft.setModelvalFromParamDTO(cfp);
 				} else {
@@ -360,7 +318,6 @@ public class OtfCustomData extends OtfBaseId {
 		// if id not in list.....
 		for (String initId : initialIds) {
 			if (!newIds.contains(initId)) {
-				// LOG.info("Removed CField found ID = " + initId);
 				getCustFields().remove(initId);
 			}
 		}
@@ -369,14 +326,10 @@ public class OtfCustomData extends OtfBaseId {
 		for (OtfCustomField ocf : getCustFields().values()) {
 			ocf.setValueFromModel();
 		}
-
-		// LOG.info("Leaving CustData ProcessParams current cd = "
-		// + this.toString());
 	}
 
 	@Override
 	public void validateParams() {
-		// TODO Auto-generated method stub
 
 	}
 }

@@ -31,12 +31,6 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 	private static final Logger LOG = Logger.getLogger(XmlUserSecurity.class
 			.getName());
 
-	// public XmlUserSecurity(String configFNIn) {
-	// super();
-	// configFN = configFNIn;
-	//
-	// }
-
 	public XmlUserSecurity(final Properties propsIn) {
 		super();
 		try {
@@ -82,7 +76,6 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 		final File confile = new File(configFnIn);
 		if (confile.exists() && !confile.isDirectory() && confile.canRead()) {
 			final Document confDoc = XMLUtil.getDocument(configFnIn);
-			// LOG.info(XMLUtil.writeXMLToString(confDoc, getSortXsltFn()));
 			setUserSecurity(xml2Mod.build(confDoc));
 		} else {
 			LOG.severe("Something is wrong with the file you have specified file = "
@@ -107,19 +100,6 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 		}
 		return "";
 	}
-
-	// public final String getXMLFromUserSecurityAsStringSortByName() {
-	//
-	// getSortXsltFn();
-	// String xml = getXMLFromUserSecurityAsString();
-	// LOG.info("Orig XML : \n" + xml);
-	// if (sortXsltFn == null || sortXsltFn.length() == 0) {
-	// return xml;
-	// } else {
-	// return XMLUtil.processXslt(xml, sortXsltFn);
-	// }
-	//
-	// }
 
 	private String saveUSToXML() {
 		try {
@@ -192,7 +172,6 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 
 	@Override
 	public void localReload() {
-		// LOG.info("localReload called");
 	}
 
 	@Override

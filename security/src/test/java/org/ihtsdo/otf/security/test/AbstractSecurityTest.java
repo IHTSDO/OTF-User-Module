@@ -63,8 +63,6 @@ public abstract class AbstractSecurityTest {
 
 		// test service and client
 		String json = secS.getApps();
-		// LOG.info("JSON = " + json);
-
 		List<String> member2 = SecurityClient.getApps(json);
 		int jsonI = member2.size();
 		int origI = getUsh().getUserSecurity().getApps().getApplications()
@@ -96,13 +94,9 @@ public abstract class AbstractSecurityTest {
 	public final void testNumMembers() {
 		// test service and client
 		String json = secS.getMembers();
-		// LOG.info("JSON = " + json);
-
 		List<String> member2 = SecurityClient.getMembers(json);
 		int jsonI = member2.size();
 		int origI = getUsh().getUserSecurity().getMembers().size();
-
-		// MembersListQueryDTO mlq2 = new MembersListQueryDTO(json);
 		assertEquals(getNumMembers(), origI);
 		assertEquals(origI, jsonI);
 
@@ -114,8 +108,6 @@ public abstract class AbstractSecurityTest {
 	public final void testNumUsers() {
 		// test service and client
 		String json = secS.getUsers();
-		// LOG.info("users JSON = " + json);
-
 		List<OtfAccountMin> user2 = SecurityClient.getUsers(json);
 
 		int jsonI = user2.size();
@@ -132,7 +124,6 @@ public abstract class AbstractSecurityTest {
 				TEST_USER, "*");
 		assertNotNull(testAcc);
 		if (testAcc != null) {
-			// LOG.info("User name = " + testAcc.getName());
 			OtfCustomData accCd = testAcc.getCustData();
 			// check num custfields
 			assertEquals(5, accCd.getCustFields().size());
@@ -147,7 +138,6 @@ public abstract class AbstractSecurityTest {
 	public final void testAccountAuth() {
 		OtfAccount testAcc = getUsh().authAccount(TEST_USER, TEST_PW);
 		String json = secS.getUserByName(TEST_USER, TEST_PW);
-		// LOG.info("test acc JSON = " + json);
 
 		String name = "";
 		OtfAccountMin user = SecurityClient.getUserByName(json);
@@ -157,20 +147,6 @@ public abstract class AbstractSecurityTest {
 		assertEquals(TEST_USER, name);
 		assertNotNull(testAcc);
 	}
-
-	// @Test
-	// public final void testAccountFull() {
-	// String json = secS.getUserByNameFull(testUser);
-	// // LOG.info("test acc JSON = " + json);
-	//
-	// String name = "";
-	// OftAccountMin user = SecurityClient.getUserByNameFull(json);
-	// if (user != null) {
-	// name = user.getName();
-	// }
-	// assertEquals(testUser, name);
-	//
-	// }
 
 	public abstract int getNumAccountMembers();
 
@@ -219,8 +195,6 @@ public abstract class AbstractSecurityTest {
 		List<String> member2 = SecurityClient.getUserApps(json);
 		int jsonI = member2.size();
 		int origI = members.size();
-
-		// LOG.info("jsonI = " + jsonI + " origI = " + origI);
 
 		assertEquals(getNumAccountApps(), origI);
 		assertEquals(origI, jsonI);

@@ -74,13 +74,13 @@ public class OtfCustomFieldKeyVal extends OtfCustomFieldCachedVals {
 
 	@Override
 	public String getCollectionTitle() {
-		// TODO Auto-generated method stub
+		
 		return "Key Values";
 	}
 
 	@Override
 	public String getNewTitle() {
-		// TODO Auto-generated method stub
+		
 		return "New Key Value";
 	}
 

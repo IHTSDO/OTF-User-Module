@@ -20,13 +20,10 @@ public abstract class OtfCustomFieldModel {
 
 	protected String[] vals;
 	protected String key;
-	// protected String id;
 	protected OtfCustomField.CustomType type;
 	private OtfBasicWeb obw;
 	public static final String SEP = "-xxx-";
 	public static final String NEW_FORM_URL = "newForm/";
-
-	// public static final String CD_FIELD = "XCD_FIELDX";
 
 	public OtfCustomFieldModel() {
 		super();
@@ -82,16 +79,6 @@ public abstract class OtfCustomFieldModel {
 		return sb.toString();
 	}
 
-	// public final String getHtmlTextInput(String name, String value) {
-	// StringBuilder sbuild = new StringBuilder();
-	// sbuild.append("<input type=\"text\" class=\"base_web_text_input\" name=\"");
-	// sbuild.append(name);
-	// sbuild.append("\" value=\"");
-	// sbuild.append(value);
-	// sbuild.append("\">");
-	// return sbuild.toString();
-	// }
-
 	public final OtfBasicWeb getObw() {
 		if (obw == null) {
 			obw = new OtfBasicWeb();
@@ -138,7 +125,6 @@ public abstract class OtfCustomFieldModel {
 		}
 		return new StringBuilder().append(getType()).append(SEP)
 				.append(controlName).append(SEP).append(id).toString();
-		// .append(SEP).append(CD_FIELD)
 	}
 
 	public final String getId() {

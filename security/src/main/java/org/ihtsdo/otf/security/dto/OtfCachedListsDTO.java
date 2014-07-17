@@ -20,28 +20,6 @@ public class OtfCachedListsDTO {
 
 	public static final String ADMIN_CONTEXT_URL = "OtfAdminServletContextUrl";
 
-	// private Map<String, OtfCustomFieldSetting> settings = new HashMap<String,
-	// OtfCustomFieldSetting>();
-	// private List<String> appsNotUserMemberList;
-
-	// private Map<String, OtfAccount> allAccounts;
-	// private Map<String, List<String>> appsMap;
-
-	// private String adminServletContextUrl;
-
-	// public final Map<String, OtfCustomFieldSetting> getSettingsMap() {
-	// @SuppressWarnings("unchecked")
-	// Map<String, OtfCustomFieldSetting> settings = (Map<String,
-	// OtfCustomFieldSetting>) ObjectCache.INSTANCE
-	// .get(SETTINGS_MAP);
-	// return settings;
-	// }
-	//
-	// public final void setSettingsMap(
-	// Map<String, OtfCustomFieldSetting> settingsIn) {
-	// ObjectCache.INSTANCE.put(SETTINGS_MAP, settingsIn);
-	// }
-
 	public final void setSettings(OtfSettings settingsIn) {
 		ObjectCache.INSTANCE.put(SETTINGS, settingsIn);
 	}

@@ -117,7 +117,6 @@ public class BasicTest {
 		for (Application app : applications) {
 			appsList.add(app.getName());
 			LOG.info("Application =" + app);
-			// getAppAccounts(application);
 
 			for (AccountStoreMapping accountStoreMap : app
 					.getAccountStoreMappings()) {
@@ -160,9 +159,6 @@ public class BasicTest {
 	public final List<String> getGroups(final Directory directory) {
 		ArrayList<String> groupsList = new ArrayList<String>();
 		GroupList groups = directory.getGroups();
-
-		// directory.getA
-
 		for (Group group : groups) {
 			groupsList.add(group.getName());
 			LOG.info("group " + group);
@@ -177,7 +173,6 @@ public class BasicTest {
 		AccountList acs = application.getAccounts();
 		for (Account ac : acs) {
 			acList.add(ac.getUsername());
-			// LOG.info("Username = " + ac.getUsername());
 			LOG.info("Account = " + ac);
 		}
 		return acList;

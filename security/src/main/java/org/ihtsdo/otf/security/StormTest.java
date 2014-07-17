@@ -9,8 +9,6 @@ import org.ihtsdo.otf.security.stormpath.StormPathUserSecurity;
 import org.ihtsdo.otf.security.xml.XmlUserSecurity;
 
 public class StormTest {
-	// TODO: Full test XML > SP > XML > Compare. Obviously StormPath admin etc
-	// info will be different.
 	/**
 	 * <p>
 	 * logger.

@@ -28,13 +28,13 @@ public class OtfCustomFieldPerm extends OtfCustomFieldKeyVal {
 
 	@Override
 	public final String getCollectionTitle() {
-		// TODO Auto-generated method stub
+		
 		return "Permissions";
 	}
 
 	@Override
 	public final String getNewTitle() {
-		// TODO Auto-generated method stub
+		
 		return "Add New Permission";
 	}
 

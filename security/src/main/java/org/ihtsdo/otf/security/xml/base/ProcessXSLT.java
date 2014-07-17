@@ -1,15 +1,9 @@
 package org.ihtsdo.otf.security.xml.base;
 
-// No copyright, no warranty; use as you will.
-// Written by Adam Flinton, 2001
-//
-// Version 1.1
-// Changes from version 1.01: New in 1.1
-
 /**
  * Implementation of the ProcessXslt interface for the Xalan 2 XSLT processor.
  * 
- * @author Adam Flinton
+ * @author Adam Flinton , 2001
  * @version 1.1
  */
 // Imported TraX classes
@@ -44,11 +38,9 @@ import org.xml.sax.InputSource;
 
 public class ProcessXSLT {
 
-	// private static final Log log = LogFactory.getLog(ProcessXSLT.class);
 	private static final Logger LOG = Logger.getLogger(ProcessXSLT.class
 			.getName());
 
-	// private static ObjectCache oc = new ObjectCache();
 	/**
 	 * Create a new ProcessXalan1 object.
 	 */
@@ -61,18 +53,11 @@ public class ProcessXSLT {
 	 */
 	public static Templates getSheet(final String fileName) throws Exception {
 		Templates s = (Templates) ObjectCache.INSTANCE.get(fileName);
-		// System.out.println("2");
 		if (s == null) {
-			// System.out.println("3");
 			synchronized (ProcessXSLT.class) // make thread safe
 			{
 				s = (Templates) ObjectCache.INSTANCE.get(fileName);
 				if (s == null) {
-					// may have changed between first if and synch call...
-
-					// System.out.println("4");
-					// Compile the stylesheet.
-					// GetFileURL gfu = new GetFileURL();
 					String full = fullqual(fileName);
 					TransformerFactory tFactory = TransformerFactory
 							.newInstance();
@@ -96,17 +81,14 @@ public class ProcessXSLT {
 	 */
 	public final String transformFiles(final String xmlfileName,
 			final String xslfileName) throws Exception {
-		// GetFileURL gfu = new GetFileURL();
 		String result = "";
 		String fullfn = fullqual(xslfileName);
 		InputSource src1 = new InputSource(fullfn);
 		String srcURL1 = src1.getSystemId();
 		Templates s = getSheet(srcURL1);
 		String full = fullqual(xmlfileName);
-		// System.out.println("XMLFILE fullqual= " +full);
 		InputSource src = new InputSource(full);
 		String srcURL = src.getSystemId();
-		// System.out.println("XMLFILE SysID= " +srcURL);
 		java.io.StringWriter sw = new java.io.StringWriter();
 		Transformer trans = s.newTransformer();
 		trans.transform(new StreamSource(srcURL), new StreamResult(sw));
@@ -126,7 +108,6 @@ public class ProcessXSLT {
 	 */
 	public final String transformStream(final java.io.InputStream srcStream,
 			final String xslfileName) throws Exception {
-		// GetFileURL gfu = new GetFileURL();
 		String result = "";
 		String fullfn = fullqual(xslfileName);
 		InputSource src1 = new InputSource(fullfn);
@@ -134,7 +115,6 @@ public class ProcessXSLT {
 		Templates s = getSheet(srcURL1);
 		java.io.StringWriter sw = new java.io.StringWriter();
 		Transformer trans = s.newTransformer();
-		// trans.setURIResolver(null);
 		trans.transform(new StreamSource(srcStream), new StreamResult(sw));
 		result = sw.toString();
 		return result;
@@ -143,20 +123,12 @@ public class ProcessXSLT {
 	public final InputStream transformStream2Stream(
 			final java.io.InputStream srcStream, final String xslfileName)
 			throws Exception {
-		// GetFileURL gfu = new GetFileURL();
-		// String Result = "";
 		String fullfn = fullqual(xslfileName);
 		InputSource src1 = new InputSource(fullfn);
-
-		// log.error("Encoding = "+src1.getEncoding()
-		// +" for file :"+xslfileName);
-
 		String srcURL1 = src1.getSystemId();
 		Templates s = getSheet(srcURL1);
-		// java.io.StringWriter sw = new java.io.StringWriter();
 		Transformer trans = s.newTransformer();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		// trans.setURIResolver(null);
 		trans.transform(new StreamSource(srcStream), new StreamResult(out));
 
 		return new ByteArrayInputStream(out.toByteArray());
@@ -174,13 +146,9 @@ public class ProcessXSLT {
 			throws Exception {
 		String media = null, title = null, charset = null;
 		String result = "";
-		// GetFileURL gfu = new GetFileURL();
 		String full = fullqual(inputxml);
-		// System.out.println("XMLFILE fullqual= " +full);
-		// InputSource src = new InputSource(gfu.getFileURL(xmlFilename));
 		InputSource src = new InputSource(full);
 		String srcURL = src.getSystemId();
-		// System.out.println("XMLFILE SysID= " +srcURL);
 		try {
 			TransformerFactory tFactory = TransformerFactory.newInstance();
 			Source stylesheet = tFactory.getAssociatedStylesheet(
@@ -189,11 +157,7 @@ public class ProcessXSLT {
 			java.io.StringWriter sw = new java.io.StringWriter();
 			transformer.transform(new StreamSource(srcURL),
 					new StreamResult(sw));
-			// System.out.println("3");
 			result = sw.toString();
-			// System.out.println("************* The result is in foo.out
-			// *************");
-			// System.out.println("The result string is " + result);
 		} catch (Exception e) {
 			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
@@ -212,7 +176,6 @@ public class ProcessXSLT {
 	 */
 	public final String transformString(final String inputxml,
 			final String xslfileName) throws Exception {
-		// GetFileURL gfu = new GetFileURL();
 		String result = "";
 		String fullfn = fullqual(xslfileName);
 		InputSource src1 = new InputSource(fullfn);
@@ -264,8 +227,6 @@ public class ProcessXSLT {
 		Templates s = getSheet(srcURL1);
 		Transformer trans = s.newTransformer();
 		trans.setOutputProperties(props);
-		// trans.setParameter(name, value)
-
 		trans.transform(domSource, result);
 
 		return resultD;
@@ -280,10 +241,7 @@ public class ProcessXSLT {
 		if (inputxml.getNodeType() != Node.DOCUMENT_NODE) {
 			isNode = true;
 		}
-
-		// log.error("xslfileName = "+xslfileName);
 		String fullfn = fullqual(xslfileName);
-		// log.error("fullfn = "+fullfn);
 		InputSource src1 = new InputSource(fullfn);
 		String srcURL1 = src1.getSystemId();
 		Templates s = getSheet(srcURL1);
@@ -298,10 +256,8 @@ public class ProcessXSLT {
 		if (isNode) {
 			Document parent = inputxml.getOwnerDocument();
 			domSource = new DOMSource(parent);
-			// log.error("Setting P_Node");
 			Element inputE = (Element) inputxml;
 			String uuid = inputE.getAttribute(CommonXMLStatics.SECRETUUID);
-			// log.error("uuid = "+uuid);
 			trans.setParameter(CommonXMLStatics.ACTION_PARAM_NODELOCATE, uuid);
 			if (props != null && props.size() > 0) {
 
@@ -312,20 +268,12 @@ public class ProcessXSLT {
 				}
 
 			}
-			// XMLUtil.logNode("ProcessXSLT transformNodeIncDoc inputxml = ",inputxml);
 		} else {
 			domSource = new DOMSource(inputxml);
 		}
 
 		trans.setParameter(CommonXMLStatics.ACTION_PARAM_XMLFILENAME,
 				xMLFilename);
-		// Debug
-		/*
-		 * java.io.StringWriter sw = new java.io.StringWriter();
-		 * trans.transform(domSource, new StreamResult(sw));
-		 * log.error("transformed String = "+sw.toString());
-		 */
-
 		trans.transform(domSource, result);
 
 		return resultD;
@@ -345,7 +293,6 @@ public class ProcessXSLT {
 
 		String def = "DEFAULTTRANSFORMER";
 		Transformer transformer = null;
-		// Hashtable h = ObjectCache.getMap();
 		transformer = (Transformer) ObjectCache.INSTANCE.get(def);
 
 		if (transformer == null) {
@@ -371,38 +318,26 @@ public class ProcessXSLT {
 	}
 
 	public static String fullqual(final String filename) throws Exception {
-		// System.out.println("Entering GFU.fullqual");
 		String fname = filename;
 		String fqn = "";
-		// String fpath = "file:///";
 		java.net.URL fins = ProcessXSLT.class.getResource(filename);
 		File f1;
 		f1 = new File(fname);
-		// System.out.println("Filename passed in = " + filename);
-		// System.out.println("fname now = " + fname);
 		if (f1.exists()) {
 			try {
 				fname = f1.toURL().toString();
-				// name = f1.getName();
 			} catch (java.net.MalformedURLException mfu) {
-				System.out
-						.println("java.Net.MalfromedURLException caught in GetFileURL.fullqual Error = "
-								+ mfu);
+				LOG.log(Level.SEVERE,
+						"java.Net.MalfromedURLException caught in GetFileURL.fullqual Error = ",
+						mfu);
 			}
-			// fname = fpath + f1.getAbsolutePath();
-			// System.out.println("File found thus fname now = " + fname);
 			return fname;
 		}
 		// end checking if local file or URL
 		else if (fins != null) {
-			// System.out.println("Fins = " + fins.toString());
 			return fins.toString();
 		} else {
-			// System.out.println("File not in a jar nor a local file thus fname
-			// now = " + fname);
-
 			fqn = fname;
-
 			return fqn;
 		}
 	}
