@@ -16,7 +16,7 @@ public class GroupPermDTO {
 	}
 
 	private String name;
-	private List<PermDTO> perms = new ArrayList<PermDTO>();;
+	private List<PermDTO> perms = new ArrayList<PermDTO>();
 
 	public final String getName() {
 		return name;

@@ -122,7 +122,6 @@ public class UserSecurity {
 	public final OtfSettings getSettings() {
 		OtfSettings settings = getCachedListMaps().getSettings();
 		if (settings == null) {
-			Map<String, OtfCustomFieldSetting> setMap = new HashMap<String, OtfCustomFieldSetting>();
 			// Get settings dir
 			OtfDirectory setDirectory = getDirs().getDirByName(SETTINGS);
 			if (setDirectory != null) {

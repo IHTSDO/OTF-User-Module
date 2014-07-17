@@ -120,7 +120,6 @@ public class BasicTest {
 
 			for (AccountStoreMapping accountStoreMap : app
 					.getAccountStoreMappings()) {
-				int i = 0;
 				AccountStore accountStore1 = accountStoreMap.getAccountStore();
 				LOG.info("accountStore1 = " + accountStore1);
 				SPAccountStoreVisitor spa = new SPAccountStoreVisitor();
