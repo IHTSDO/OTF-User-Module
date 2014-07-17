@@ -54,8 +54,7 @@ public class ProcessXSLT {
 	public static Templates getSheet(final String fileName) throws Exception {
 		Templates s = (Templates) ObjectCache.INSTANCE.get(fileName);
 		if (s == null) {
-			synchronized (ProcessXSLT.class) // make thread safe
-			{
+			synchronized (ProcessXSLT.class) {
 				s = (Templates) ObjectCache.INSTANCE.get(fileName);
 				if (s == null) {
 					String full = fullqual(fileName);
@@ -296,8 +295,7 @@ public class ProcessXSLT {
 		transformer = (Transformer) ObjectCache.INSTANCE.get(def);
 
 		if (transformer == null) {
-			synchronized (ProcessXSLT.class) // make thread safe
-			{
+			synchronized (ProcessXSLT.class) {
 				transformer = (Transformer) ObjectCache.INSTANCE.get(def);
 				if (transformer == null) {
 					// may have changed between first if and synch call...

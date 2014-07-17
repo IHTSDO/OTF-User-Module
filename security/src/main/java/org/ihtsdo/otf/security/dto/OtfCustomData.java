@@ -37,7 +37,7 @@ public class OtfCustomData extends OtfBaseId {
 	private final Map<String, OtfCustomField> custFields = new HashMap<String, OtfCustomField>();
 
 	private CustomParentType parentType;
-	public static String cssClass = "CustomDataTable";
+	public String cssClass = "CustomDataTable";
 	private List<OtfCustomFieldModel> models = new ArrayList<OtfCustomFieldModel>();
 	public static final String CD_KEY_ID_LIST = "Cd_Key_id_list";
 	public static final String CD_KEY_ID_LIST_SEP = ",";

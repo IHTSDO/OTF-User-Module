@@ -15,7 +15,7 @@ public class OtfCustomFieldParamDTO {
 			.getLogger(OtfCustomFieldParamDTO.class.getName());
 
 	private String paramKey;
-	private String cd_type;
+	private String cdType;
 	private String localKey;
 	private String id;
 	private String val;
@@ -36,13 +36,13 @@ public class OtfCustomFieldParamDTO {
 		paramKeyToArray();
 	}
 
-	public final String getCd_type() {
-		return cd_type;
+	public final String getCdType() {
+		return cdType;
 	}
 
-	public final void setCd_type(String cd_typeIn) {
-		cd_type = cd_typeIn;
-		setType(OtfCustomField.CustomType.getCustomTypeByString(cd_type));
+	public final void setCdType(String cdTypeIn) {
+		cdType = cdTypeIn;
+		setType(OtfCustomField.CustomType.getCustomTypeByString(cdType));
 	}
 
 	public final String getId() {
@@ -79,7 +79,7 @@ public class OtfCustomFieldParamDTO {
 
 	public final String[] paramKeyToArray() {
 		String[] keyAr = paramKey.split(OtfCustomFieldModel.SEP);
-		setCd_type(keyAr[0]);
+		setCdType(keyAr[0]);
 		setLocalKey(keyAr[1]);
 		setId(keyAr[2]);
 

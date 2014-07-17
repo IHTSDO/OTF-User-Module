@@ -14,7 +14,7 @@ public abstract class OtfBaseId extends OtfBaseWeb {
 	private static final Logger LOG = Logger.getLogger(OtfBaseName.class
 			.getName());
 
-	public static String ID_KEY = "id";
+	public static final String ID_KEY = "id";
 
 	@JsonIgnore
 	private String idref;

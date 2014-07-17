@@ -39,7 +39,7 @@ public class BasicXMLParser {
 	}
 
 	public final void handleXML() {
-		String rv = getElementValue(testString, testTag);
+		getElementValue(testString, testTag);
 	}
 
 	public static String getFirstAttValue(final String xml, final String attName) {
