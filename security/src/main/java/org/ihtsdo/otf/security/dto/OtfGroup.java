@@ -44,7 +44,6 @@ public class OtfGroup extends OtfAccountStore {
 		if (!isNew() && showCustData) {
 			getCustData().setModels(null);
 			getCustData().getModels().add(new OtfCustomFieldPerm());
-			// sbuild.append(getCustData().getHtmlForm(formName));
 			sbuild.append(super.getHtmlForm(formName, getCustData()
 					.getHtmlForm(formName)));
 		} else {
@@ -59,10 +58,6 @@ public class OtfGroup extends OtfAccountStore {
 	}
 
 	public final OtfCustomData getCustData() {
-		// LOG.info("group getCustData href = " + custData.getIdref());
-		// if (!stringOK(custData.getIdref())) {
-		// new Exception().printStackTrace();
-		// }
 		return custData;
 	}
 
@@ -83,8 +78,6 @@ public class OtfGroup extends OtfAccountStore {
 
 	@Override
 	public void processParams() {
-		// LOG.info("GROUP: processParams");
-		// printParams();
 		resetErrors();
 		validateParams();
 		if (getCustData() != null) {
@@ -97,9 +90,7 @@ public class OtfGroup extends OtfAccountStore {
 		} else {
 			// If no errors then update
 			if (errors.size() == 0) {
-				// LOG.info("Before " + this.toString());
 				setValsFromParams();
-				// LOG.info("After " + this.toString());
 			}
 		}
 	}
@@ -114,22 +105,15 @@ public class OtfGroup extends OtfAccountStore {
 		// Only check if changed
 		if (!nameIn.equals(getName())) {
 			List<String> names = new ArrayList<String>();
-			// LOG.info("GrpType = " + getGrptype());
 			if (getGrptype().equals(TYPE_MEMBER)) {
 				names = cfb.getMembers();
-				// LOG.info("members names size = " + names.size());
 			}
 			if (getGrptype().equals(TYPE_NORMAL)) {
-				// LOG.info("getParentDirName = " + getParentDirName());
 				names = cfb.getRolesByDir(getParentDirName());
-				// LOG.info("roles names size = " + names.size());
 			}
 			checkWebFieldInList(nameIn, NAME_NAME, names, false,
 					"Name must be unique");
 		}
-
-		// LOG.info("OtfGroup validate num errs = " + getErrors().size());
-
 	}
 
 	@Override
@@ -171,12 +155,10 @@ public class OtfGroup extends OtfAccountStore {
 		if (grpDesc == null) {
 			getGrptype();
 		}
-		// LOG.info("getGrpDesc " + grpDesc);
 		return grpDesc;
 	}
 
 	public final void setGrpDesc(String grpDescIn) {
-		// LOG.info("setGrpDesc " + grpDescIn);
 		grpDesc = grpDescIn;
 	}
 
@@ -206,7 +188,6 @@ public class OtfGroup extends OtfAccountStore {
 
 	public final void setGrptype(String grptypeIn) {
 		grptype = grptypeIn;
-		// LOG.info("setGrptype grptype = " + grptype);
 		switch (grptype) {
 		case TYPE_MEMBER:
 			setShowCustData(false);

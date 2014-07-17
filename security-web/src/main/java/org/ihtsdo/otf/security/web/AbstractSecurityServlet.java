@@ -98,7 +98,6 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 		List<String> pnames = new ArrayList<String>();
 		pnames.add(SETTINGS_PROPS);
 		pnames.add(USER_SECURITY_HANDLER);
-		// pnames.add(BASEURL);
 		pnames.add(SAVE);
 		return pnames;
 	}
@@ -115,8 +114,6 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 		while (contextParams.hasMoreElements()) {
 			String name = contextParams.nextElement();
 			String val = scon.getInitParameter(name);
-			// LOG.info("Adding context param name = " + name + " val = " +
-			// val);
 			contextProps.setProperty(name, val);
 		}
 		Enumeration<String> initParams = sc.getInitParameterNames();
@@ -124,12 +121,8 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 		while (initParams.hasMoreElements()) {
 			String name = initParams.nextElement();
 			String val = sc.getInitParameter(name);
-			// LOG.info("Adding init param name = " + name + " val = " + val);
 			contextProps.setProperty(name, val);
 		}
-
-		// LOG.info("initParameters contextProps = \n");
-		// PropertiesLoader.logProps(contextProps);
 
 		PropertiesLoader pl = new PropertiesLoader(getInitParamNames(),
 				SETTINGS_PROPS, contextProps);
@@ -158,7 +151,6 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 			}
 		}
 		if (setProp != null) {
-			LOG.info("Loading props from " + setProp);
 			try {
 				setProps = new Properties();
 				setProps.load(new FileInputStream(setProp));
@@ -175,7 +167,6 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 		// See if UN and Token are set in the session
 		String uname = (String) request.getSession().getAttribute(USERNAME);
-		// LOG.info("authuser uname from Session = " + uname);
 		String token = null;
 		if (stringOK(uname)) {
 			token = (String) request.getSession().getAttribute(AUTH_TOKEN);
@@ -187,7 +178,6 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 		// Get the UN + pw strings
 		uname = getNamedParam(USERNAME, request);
 		String password = getNamedParam(PASSWD, request);
-		// LOG.info("authuser uname from param = " + uname);
 		// auth users
 		if (stringOK(uname) && stringOK(password)) {
 			OtfAccount oacc = getUsh().authAccount(uname, password);
@@ -206,8 +196,6 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 	public void doPost(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException,
 			IOException {
-		// LOG.info("doPost called path info = " + request.getPathInfo());
-		// logParameters(request);
 		setUrlNodes(request);
 		handlePostRequest(request, response);
 
@@ -217,13 +205,8 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 	public void doGet(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException,
 			IOException {
-		// LOG.info("doGet called path info = " + request.getPathInfo());
 		setUrlNodes(request);
-		// LOG.info("doGet urlNodes = " + urlNodes);
-		// if (urlNodes != null) {
 		handleGetRequest(request, response);
-		// }
-
 	}
 
 	protected abstract void handlePostRequest(final HttpServletRequest request,
@@ -236,7 +219,6 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 	protected final String getContextFreeUrl(final HttpServletRequest request) {
 		String pathI = getNotNullPath(request);
-		// LOG.info("getContextFreeUrl pathI = " + pathI);
 		if (pathI.startsWith("/")) {
 			return pathI.substring(1);
 		}
@@ -244,10 +226,7 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 	}
 
 	protected String getNotNullPath(final HttpServletRequest request) {
-		// String urlS = request.getRequestURI();
-		// String contextP = request.getContextPath();
 		String pathI = request.getPathInfo();
-
 		if (pathI == null) {
 			return "/";
 		}
@@ -272,15 +251,9 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 		String decPath;
 		String decUrl;
-		// rem %20
 
 		decPath = getDecString(pathI);
 		decUrl = getDecString(urlS);
-
-		// LOG.info("getContextUrl pathI = " + pathI);
-		// LOG.info("getContextUrl decPath = " + decPath);
-		// LOG.info("getContextUrl urlS = " + urlS);
-		// LOG.info("getContextUrl decUrl = " + decUrl);
 
 		String context = "";
 		if (decPath == null || decPath.length() == 0 || decPath.equals("/")) {
@@ -295,7 +268,6 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 				context = urlS.substring(0, chop);
 			}
 		}
-		// LOG.info("getContextUrl context = " + context);
 
 		if (context.endsWith("/")) {
 			return context;
@@ -320,7 +292,6 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 			content = sb.toString();
 		} catch (Exception E) {
 			LOG.log(Level.SEVERE, "Error in getContentAsString ", E);
-
 		}
 		return content;
 
@@ -452,7 +423,6 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 	public void setRedirect(String redirectIn) {
 		redirect = redirectIn;
-		// LOG.info("setRedirect redirect = " + redirect);
 	}
 
 	public final Properties getParamsProps() {
@@ -464,8 +434,6 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 	public final void setParamsProps(Properties paramsPropsIn) {
 		paramsProps = paramsPropsIn;
-		LOG.info("Parameters used on Start up");
-		PropertiesLoader.logProps(paramsProps);
 	}
 
 	public final HttpServletRequest getHr() {
@@ -487,12 +455,10 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 	public final String[] setUrlNodes(final HttpServletRequest request) {
 		String noContext = getContextFreeUrl(request);
-		// LOG.info("URL Nodes noContext = " + noContext);
 		return setUrlNodes(noContext);
 	}
 
 	public final String[] setUrlNodes(final String urlS) {
-		// LOG.info("setUrlNodes urlS = " + urlS);
 		if (stringOK(urlS)) {
 			urlNodes = urlS.split("/");
 		}
@@ -501,7 +467,6 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 			urlNodes = new String[1];
 			urlNodes[0] = "";
 		}
-		// logUrlNodes();
 		return urlNodes;
 	}
 
@@ -560,8 +525,6 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 		if (canSave == null) {
 			canSave = new Boolean(canSaveFile());
-			// LOG.info("getCanSave getSavePath() = " + getSavePath()
-			// + " canSave = " + canSave);
 			if (canSave) {
 				hr.getSession().setAttribute(SAVE, "true");
 			}
@@ -580,7 +543,6 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 	public final String getSavePath() {
 		if (savePath == null) {
 			savePath = getParamsProps().getProperty(SAVE);
-			// LOG.info("getSavePath savePath = " + savePath);
 		}
 		return savePath;
 	}

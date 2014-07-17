@@ -51,13 +51,13 @@ public class OtfCustomFieldMember extends OtfCustomFieldCachedVals {
 
 	@Override
 	public String getCollectionTitle() {
-		// TODO Auto-generated method stub
+		
 		return "Memberships";
 	}
 
 	@Override
 	public String getNewTitle() {
-		// TODO Auto-generated method stub
+		
 		return "Add new Membership";
 	}
 

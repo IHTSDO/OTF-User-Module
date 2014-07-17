@@ -39,12 +39,10 @@ public class Model2Xml {
 	}
 
 	private void buildFromModel() {
-		LOG.info("buildFromModel");
 		doc = null;
 		final Element elem = getDoc().createElement(XmlStatics.XML_E_ROOT);
 		buildTopDirs(elem);
 		buildTopApps(elem);
-		// doc.importNode(elem, true);
 		doc.appendChild(elem);
 	}
 
@@ -105,8 +103,6 @@ public class Model2Xml {
 		final Element elemNew = doc.createElement(XmlStatics.XML_E_CUST);
 		elemNew.setAttribute(XmlStatics.XML_A_KEY, cField.getKey());
 		elemNew.setAttribute(XmlStatics.XML_A_VAL, cField.getValue());
-		// LOG.info("buildCustField cField.getValue() = " + cField.getValue()
-		// + " Getvals =" + cField.getValFromVals());
 		elem.appendChild(elemNew);
 	}
 

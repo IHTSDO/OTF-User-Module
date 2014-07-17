@@ -111,8 +111,6 @@ public abstract class OtfCustomFieldCachedVals extends OtfCustomFieldModel {
 	}
 
 	public final String getHiddenDivRoleOptions() {
-
-		// Create the role options for each app
 		StringBuilder sbuild = new StringBuilder();
 
 		for (String app : getAppsNotUserMembers()) {
@@ -120,7 +118,6 @@ public abstract class OtfCustomFieldCachedVals extends OtfCustomFieldModel {
 					(getRolesOptionsSelect("", app, app, app
 							+ HIDDEN_DIV_ROLES_ID))).append("\n");
 		}
-		// getHiddenDiv(String html, String id)
 		return getObw().getHiddenDiv(sbuild.toString(), HIDDEN_DIV_ROLES_ID);
 	}
 

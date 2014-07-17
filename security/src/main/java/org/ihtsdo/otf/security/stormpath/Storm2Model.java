@@ -57,13 +57,6 @@ public class Storm2Model {
 	private void buildDirs() {
 		DirectoryList directories = spbd.getTenant().getDirectories();
 		for (Directory directory : directories) {
-			// if (directory.getName().equalsIgnoreCase("Test1")) {
-			// LOG.info("directory" + directory);
-			// Directory directory2 = spbd.getClient().getResource(
-			// directory.getHref(), Directory.class);
-			// LOG.info("directory2" + directory2);
-			// }
-
 			OtfDirectory odir = buildDirectory(directory);
 			if (odir != null) {
 				userSecurity.getDirs().getDirectories()
@@ -137,7 +130,6 @@ public class Storm2Model {
 				oDir.getGroups().getGroups().put(ogroup.getName(), ogroup);
 			}
 			for (Account acc : dir.getAccounts()) {
-				// sLOG.info("Account =" + acc);
 				OtfAccount oacc = buildAccount(acc);
 				oDir.getAccounts().getAccounts().put(oacc.getName(), oacc);
 			}
@@ -172,19 +164,6 @@ public class Storm2Model {
 	}
 
 	private OtfAccount buildAccount(final Account accIn) {
-		// boolean log = acc.getUsername().equalsIgnoreCase("Bob");
-		// if (log) {
-		// LOG.info("acc = " + acc);
-		// LOG.info("acc middlename= " + acc.getMiddleName());
-		// LOG.info("Account href = : " + acc.getHref());
-		//
-		// Account acc2 = spbd.getClient().getResource(acc.getHref(),
-		// Account.class);
-		//
-		// LOG.info("acc2 = " + acc2);
-		// LOG.info("acc2 middlename= " + acc2.getMiddleName());
-		// }
-
 		final Account acc = spbd.getResourceByHref_Account(accIn.getHref());
 
 		OtfAccount oacc = new OtfAccount();
@@ -202,21 +181,9 @@ public class Storm2Model {
 			oacc.getCustData().setIdref(cdHref);
 		}
 
-		// LOG.info("Account href = : " + acc.getHref());
-		// LOG.info("oacc = : " + oacc);
-
-		// if (log) {
-		// LOG.info("Account: " + acc);
-		// LOG.info("buildAccount1 cd size " + cd.size());
-		// LOG.info("href = " + acc.getCustomData().getHref());
-		// }
 		for (String key : cd.keySet()) {
 			if (!OtfCustomData.getReservedWords().contains(key)) {
-
 				String val = cd.get(key).toString();
-				// if (log) {
-				// LOG.info("buildAccount val = " + val);
-				// }
 				OtfCustomField cf = new OtfCustomField(key, val);
 				oacc.getCustData().getCustFields().put(key, cf);
 			}
@@ -259,15 +226,11 @@ public class Storm2Model {
 	private OtfAccountStore buildAccountStore(final AccountStoreMapping asm) {
 
 		AccountStore accountStore1 = asm.getAccountStore();
-
-		// LOG.info("accountStore1 = " + accountStore1);
 		SPAccountStoreVisitor spa = new SPAccountStoreVisitor();
 		accountStore1.accept(spa);
-		// LOG.info("SPA TYEP = " + spa.getType());
 		if (spa.getType().equals(SPAccountStoreVisitor.AccountStoreType.DIR)) {
 			// Is a directory
 			Directory dir = (Directory) accountStore1;
-			// LOG.info("DIR NAME =" + dir.getName());
 			OtfAccountStore oAs = new OtfAccountStore();
 			oAs.setIdref(dir.getHref());
 			oAs.setName(dir.getName());
@@ -276,7 +239,6 @@ public class Storm2Model {
 			return oAs;
 		} else {
 			Group grp = (Group) accountStore1;
-			// LOG.info("DIR NAME =" + dir.getName());
 			OtfAccountStore oAs = new OtfAccountStore();
 			oAs.setIdref(grp.getHref());
 			oAs.setName(grp.getName());
@@ -286,10 +248,4 @@ public class Storm2Model {
 		}
 
 	}
-
-	// private OtfDirectory buildDir(final Directory dir) {
-	// OtfDirectory oDir = new OtfDirectory();
-	// return oDir;
-	// }
-
 }

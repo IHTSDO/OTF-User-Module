@@ -23,11 +23,10 @@ public class OtfAccount extends OtfAccountMin {
 
 	public OtfAccount() {
 		super();
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public final OtfCustomData getCustData() {
-		// LOG.info("OtfAccount getCustData href = " + custData.getIdref());
 		return custData;
 	}
 
@@ -60,7 +59,6 @@ public class OtfAccount extends OtfAccountMin {
 		super.addHiddenRows();
 		getCustData().setHiddenRows(getHiddenRows());
 		getCustData().addHiddenRows();
-		// getHiddenRows().addAll(getCustData().getHiddenRows());
 	}
 
 	@Override
@@ -68,24 +66,14 @@ public class OtfAccount extends OtfAccountMin {
 	public String getHtmlForm(String formName) {
 
 		StringBuilder sbuild = new StringBuilder();
-		// sbuild.append(super.getHtmlForm(formName));
 		// add the hidden fields
 		OtfCustomFieldMember cfm = new OtfCustomFieldMember();
 		OtfCustomFieldApplication cfa = new OtfCustomFieldApplication();
-		//
 		getCustData().setModels(null);
 		getCustData().getModels().add(cfm);
 		getCustData().getModels().add(cfa);
 
 		sbuild.append(cfa.getHiddenDivRoleOptions());
-		// sbuild.append(getHiddenDiv(
-		// getHtmlRemBtnAction(getCDTable(cfa.getLabelValuesMap()),
-		// getCustData().getCssClass()), cfa.getNewFormId()));
-		//
-		// sbuild.append(getHiddenDiv(
-		// getHtmlRemBtnAction(getCDTable(cfm.getLabelValuesMap()),
-		// getCustData().getCssClass()), cfm.getNewFormId()));
-
 		sbuild.append(super.getHtmlForm(formName,
 				getCustData().getHtmlForm(formName)));
 
@@ -100,8 +88,6 @@ public class OtfAccount extends OtfAccountMin {
 
 	@Override
 	public void processParams() {
-		// LOG.info("ACCOUNT: ");
-		// printParams();
 		resetErrors();
 		validateParams();
 		if (getCustData() != null) {
@@ -114,9 +100,7 @@ public class OtfAccount extends OtfAccountMin {
 		} else {
 			// If no errors then update
 			if (errors.size() == 0) {
-				// LOG.info("Before " + this.toString());
 				setValsFromParams();
-				// LOG.info("After " + this.toString());
 			}
 		}
 	}

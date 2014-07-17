@@ -9,25 +9,19 @@ public class OtfCustomFieldBasic extends OtfCustomFieldCachedVals {
 
 	@Override
 	public void model2Vals() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void modelFromVals() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public String getCollectionTitle() {
-		// TODO Auto-generated method stub
 		return "Basic Fields:";
 	}
 
 	@Override
 	public String getNewTitle() {
-		// TODO Auto-generated method stub
 		return "New Basic Field";
 	}
 
@@ -60,7 +54,6 @@ public class OtfCustomFieldBasic extends OtfCustomFieldCachedVals {
 
 	@Override
 	public void valFromParamDTO(OtfCustomFieldParamDTO ocfpIn) {
-		// TODO Auto-generated method stub
 
 	}
 

@@ -78,8 +78,6 @@ public class OtfApplication extends OtfBaseNameDesc {
 	@Override
 	public void addTableRows() {
 		super.addTableRows();
-		// getTableRows().add(getHtmlRowTextInput("Name:", getName()));
-
 	}
 
 	@Override

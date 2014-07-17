@@ -74,18 +74,6 @@ public class SecurityClient {
 		return null;
 	}
 
-	// public static OftAccountMin getUserByNameFull(String json) {
-	// try {
-	// UserByNameFullQueryDTO ulq = mapper.readValue(json,
-	// UserByNameFullQueryDTO.class);
-	// return ulq.getUser();
-	// } catch (IOException e) {
-	//
-	// LOG.log(Level.SEVERE, "An exception has occurred", e);
-	// }
-	// return null;
-	// }
-
 	public static List<String> getAppUsers(final String json) {
 		try {
 			AppUsersListQueryDTO mlq = MAPPER.readValue(json,

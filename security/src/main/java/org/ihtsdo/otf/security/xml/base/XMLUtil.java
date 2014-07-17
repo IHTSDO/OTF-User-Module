@@ -57,7 +57,6 @@ import org.xml.sax.SAXParseException;
 public final class XMLUtil {
 
 	private static DocumentBuilder mDB;
-	// private static final Log log = LogFactory.getLog(XMLUtil.class);
 	private static final Logger LOG = Logger.getLogger(XMLUtil.class.getName());
 	private static SimpleErrorHandler mErrorhandler = new SimpleErrorHandler();
 	public static final String XPATH_FACTORY = "net.sf.saxon.xpath.XPathFactoryImpl";
@@ -94,8 +93,8 @@ public final class XMLUtil {
 				return temp.replaceAll(AND, AND_A);
 
 			} catch (Exception excep) {
-				System.out.println("ex in encodeString4XML content = "
-						+ content + " result = " + result);
+				LOG.log(Level.SEVERE, "ex in encodeString4XML content = "
+						+ content, excep);
 			}
 		}
 
@@ -110,16 +109,6 @@ public final class XMLUtil {
 		result = result.replaceAll(APOS_A, APOS);
 		result = result.replaceAll(AND_A, AND);
 		result = result.replaceAll(NBSP_A, SPACE);
-
-		/*
-		 * if(result.contains("amp;")){ log.severe("decodeXML Orig XML = "+XML);
-		 * log.severe("decodeXML Final XML = "+result); }
-		 */
-
-		/*
-		 * if(result.contains("&")){
-		 * log.severe("decodeXML Final XML contains amp = "+result); }
-		 */
 		return result;
 	}
 
@@ -127,9 +116,8 @@ public final class XMLUtil {
 
 		if (content != null) {
 			try {
-				// log.severe("encodeXMLReplaceAmp content = "+content);
-				// change all &
 
+				// change all &
 				String c1 = content.replaceAll("&", AND_A);
 				// then set back those which are OK
 				String c2 = c1.replaceAll("&amp;quot", QUOTE_A);
@@ -139,18 +127,11 @@ public final class XMLUtil {
 				return c5.replaceAll("&amp;amp;", AND_A);
 
 			} catch (Exception exec) {
-				// log.error("ex in encodeXMLReplaceAmp content = " + content,
-				// E);
 				LOG.log(Level.SEVERE, "ex in encodeXMLReplaceAmp content = "
 						+ content, exec);
 			}
 
 		}
-
-		/*
-		 * if(content.contains("amp;")){
-		 * log.severe("encodeXMLReplaceAmp content2 = "+content); }
-		 */
 
 		return "";
 	}
@@ -163,17 +144,11 @@ public final class XMLUtil {
 	 */
 	public static Document getDocument(final String fileName) throws Exception {
 		Document doc = null;
-		// try {
 		if (mDB == null) {
 			getDocumentBuilder();
 		}
 		doc = mDB.parse(new File(fileName));
 
-		/*
-		 * } catch (Exception e) { log.severe(
-		 * "Error thrown n XMLUtil.getDocument(String fileName) fileName = " +
-		 * fileName, e); }
-		 */
 		return doc;
 	}
 
@@ -207,9 +182,6 @@ public final class XMLUtil {
 				getDocumentBuilder();
 			}
 			doc = mDB.parse(is, systemID);
-
-			// XMLUtil.logNode("XMLUtil getDocument 147 ", doc);
-
 		} catch (SAXParseException sx) {
 			LOG.severe("SAXParseException in getDocument(InputStream is) \n"
 					+ " line number = " + sx.getLineNumber()
@@ -226,10 +198,7 @@ public final class XMLUtil {
 			if (mDB == null) {
 				getDocumentBuilder();
 			}
-			// doc = mDB.parse(is, SystemID);
 			doc = mDB.parse(is);
-			// XMLUtil.logNode("XMLUtil getDocument 169 ", doc);
-
 		} catch (SAXParseException sx) {
 			LOG.severe("SAXParseException in getDocument(InputSource is) \n"
 					+ " line number = " + sx.getLineNumber()
@@ -241,7 +210,6 @@ public final class XMLUtil {
 
 	public static synchronized Document getDocument(final String fileName,
 			final boolean namespaceaware) {
-		// log.severe("getDocument called ");
 		Document doc = null;
 		try {
 			DocumentBuilder lDBIgNS = getDBF(namespaceaware)
@@ -250,7 +218,6 @@ public final class XMLUtil {
 			doc = lDBIgNS.parse(new File(fileName));
 
 		} catch (Exception e) {
-			// log.error("Error thrown in XMLUtil.getDocument(String fileName,boolean namespaceaware)) Exception = ",e);
 			LOG.log(Level.SEVERE,
 					"Error thrown in XMLUtil.getDocument(String fileName,boolean namespaceaware)) Exception = ",
 					e);
@@ -281,12 +248,6 @@ public final class XMLUtil {
 
 		} catch (Exception e) {
 			// Failed to build the document
-			/*
-			 * log.error(
-			 * "Error thrown in XMLUtil.getDocumentFromXMLString(String xmlString,boolean namespaceaware) xmlString = "
-			 * + xmlString + " namespaceaware = " + namespaceaware, e);
-			 */
-
 			LOG.log(Level.SEVERE,
 					"Error thrown in XMLUtil.getDocumentFromXMLString(String xmlString,boolean namespaceaware) xmlString = "
 							+ xmlString + " namespaceaware = " + namespaceaware,
@@ -354,14 +315,9 @@ public final class XMLUtil {
 		if (document != null) {
 			StreamResult result = new StreamResult(stream);
 			DOMSource domSource = new DOMSource(document);
-			// Transformer transformer = ProcessXSLT.getEmptyTransformer();
 			transformer.transform(domSource, result);
 		}
 	}
-
-	// Transformer renderer = getTransformer(xsltFilename);
-	// retS = transform(renderer, xmlInput, "");
-	// return retS;
 
 	/**
 	 * Given a DOM this returns the XML as string formatted for pretty printing
@@ -408,22 +364,6 @@ public final class XMLUtil {
 		return writeXMLToString(document, transformer);
 	}
 
-	/*
-	 * public static final String writeXMLToString(Document document) { String
-	 * output = ""; if (document == null) {
-	 * log.severe("You have passed me a null object");
-	 * 
-	 * } if (document != null) { try { StringWriter sw = new StringWriter();
-	 * OutputFormat format = new OutputFormat(document); // Serialize //
-	 * log.severe("format encoding = "+format.getEncoding()); // DOM
-	 * format.setIndent(4); XMLSerializer serial = new XMLSerializer(sw,
-	 * format); serial.serialize(document); output = sw.toString(); } catch
-	 * (Exception excep) { //
-	 * log.error("Error thrown in XMLUtil.writeXMLToString", E);
-	 * log.log(Level.SEVERE, "Error thrown in XMLUtil.writeXMLToString", E); } }
-	 * return output; }
-	 */
-
 	/**
 	 * Creates & returns an empty DOM document
 	 * 
@@ -439,7 +379,6 @@ public final class XMLUtil {
 			}
 			dom = mDB.newDocument();
 		} catch (Exception e) {
-			// log.error("Exception thrown in XMLUtil.getEmptyDocument", e);
 			LOG.log(Level.SEVERE,
 					"Exception thrown in XMLUtil.getEmptyDocument ", e);
 		}
@@ -529,9 +468,6 @@ public final class XMLUtil {
 	public static String convertToStringStripCDATA(final Node node)
 			throws TransformerException {
 		Transformer transformer = ProcessXSLT.getEmptyTransformer();
-		// transformer.setOutputProperty(OutputKeys.ENCODING,
-		// CommonProps.DEFAULTENC);
-
 		StringWriter stringWriter = new StringWriter();
 		transformer.transform(new DOMSource(node), new StreamResult(
 				stringWriter));
@@ -558,8 +494,6 @@ public final class XMLUtil {
 		try {
 			ds = new DOMSource(node);
 		} catch (Exception execep) {
-			// log.error("Error thrown creating DOMSource from Node "+
-			// node.getNodeName(), Ex);
 			LOG.log(Level.SEVERE, "Error thrown creating DOMSource from Node "
 					+ node.getNodeName(), execep);
 
@@ -571,37 +505,9 @@ public final class XMLUtil {
 		return buffer.toString();
 	}
 
-	/*
-	 * public static final String CDATANamedElementString(String NodeAsString,
-	 * String ElementName){
-	 * 
-	 * log.severe("CDATANamedElementString called ElementName = "+ElementName);
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * return NodeAsString; }
-	 * 
-	 * public static final String UNCDATANamedElementString(String NodeAsString,
-	 * String ElementName){
-	 * 
-	 * 
-	 * 
-	 * log.severe("UNCDATANamedElementString called ElementName = "+ElementName);
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * return NodeAsString; }
-	 */
-
 	/**
 	 * 
-	 * @author rana
+	 * @author adfl
 	 * 
 	 *         A Simple Error Handling class
 	 * 
@@ -610,9 +516,6 @@ public final class XMLUtil {
 	private static class SimpleErrorHandler implements ErrorHandler {
 		SimpleErrorHandler() {
 		}
-
-		// The following methods are standard SAX ErrorHandler methods.
-		// See SAX documentation for more info.
 
 		@Override
 		public void warning(final SAXParseException spe) {
@@ -629,22 +532,6 @@ public final class XMLUtil {
 			throw spe;
 		}
 	}
-
-	/*
-	 * public static Document addUuidAttrDoc(Document Doc, String Attname) {
-	 * 
-	 * try { // System.out.println("addUuidAttrDoc(Document Doc, String Attname
-	 * ) // called"); Element root = Doc.getDocumentElement(); //
-	 * System.out.println("addUuidAttrDoc Root = "+root.getNodeName()); root =
-	 * addUuidAttrElems(root, Attname); //
-	 * System.out.println("addUuidAttrDoc Root2 = "+root.getNodeName());
-	 * 
-	 * // System.out.println("Document post adding uuid = //
-	 * "+writeXMLToString(Doc)); } catch (Exception excep) { System.out
-	 * .println(
-	 * "Exception in addUuidAttrDoc(Document Doc, String Attname ) Ex = " + E);
-	 * } return Doc; }
-	 */
 
 	/**
 	 * Will create a documentFragment of the replacingDocument, will import the
@@ -687,7 +574,6 @@ public final class XMLUtil {
 
 	public static Node insertNewAfter(final Document impD, final Node targetE,
 			final Node newE) {
-		// System.out.println("targetE "+targetE.getLocalName());
 		Node impNewNode = impD.importNode(newE, true);
 		Node parent = targetE.getParentNode();
 		if (targetE.getNextSibling() == null) {
@@ -704,24 +590,17 @@ public final class XMLUtil {
 
 		if (nl.getLength() == 1) {
 			Node newNode = nl.item(0);
-			// System.out.println("replaceNodeWithNodeList  1 NewNode Found newNode = "+
-			// newNode.getLocalName());
 			if (newNode != null && newNode != oldE) {
 				XMLUtil.replaceNode(impD, oldE, newNode);
 			}
 			if (newNode == oldE) {
 				isOK = false;
-				// System.out.println("replaceNodeWithNodeList newNode is the same as node supplied");
 			}
 		}
 
 		if (nl.getLength() > 1) {
-			// System.out.println("replaceNodeWithNodeList multiple nodes found  num = "+
-			// nl.getLength());
 			if (nl.item(0).getNodeType() != Node.ELEMENT_NODE) {
 				LOG.severe("Sorry for multiple nodes I only handle Elements");
-				System.out
-						.println("Sorry for multiple nodes  I only handle Elements");
 			}
 
 			else {
@@ -729,9 +608,6 @@ public final class XMLUtil {
 				for (int y = 0; y < nl.getLength(); y++) {
 					Node node = nl.item(y);
 					Element elementE = (Element) node;
-
-					// System.out.println("Inserting Elem y = "+y);
-
 					if (y == 0 && oldE != elementE) {
 						anchor = insertNewAfter(impD, oldE, elementE);
 					}
@@ -741,38 +617,11 @@ public final class XMLUtil {
 				}
 
 				oldE.getParentNode().removeChild(oldE);
-				// impD.removeChild(oldE);
 			}
 		}
 
 		return isOK;
 	}
-
-	/*
-	 * public static Element addUuidAttrElems(Element elem, String Attname) { //
-	 * System.out.println("addUuidAttrElems(Element elem, String Attname //
-	 * called "); elem = addUuidAttrElem(elem, Attname); //
-	 * System.out.println("elem = addUuidAttrElem(elem, Attname );"); NodeList
-	 * pl = elem.getChildNodes(); int index = pl.getLength(); //
-	 * System.out.println("addUuidAttrElems index = "+index); int i = 0; while
-	 * (i < index) { // System.out.println("addUuidAttrElems i = "+i); Node
-	 * DomNode = pl.item(i); if ((DomNode.getNodeType()) ==
-	 * org.w3c.dom.Node.ELEMENT_NODE) { Element el = (Element) DomNode; el =
-	 * addUuidAttrElems(el, Attname); } i++; } return elem; }
-	 */
-
-	/*
-	 * public static Element addUuidAttrElem(Element elem, String Attname) { //
-	 * System.out.println("addUuidAttrElem(Element elem, String Attname ) //
-	 * called"); // If att exists if (elem.getAttribute(Attname).equals("")) {
-	 * // Get a UUID & add it to the element as an id attrib String uuid =
-	 * HistoryItemHandler.getHistoryItemHandler().getUUID();
-	 * elem.setAttribute(Attname, uuid); } // if the attrib doesn't exist if
-	 * (elem.getAttribute(Attname) == null) { // Get a UUID & add it to the
-	 * element as an id attrib String uuid =
-	 * HistoryItemHandler.getHistoryItemHandler().getUUID();
-	 * elem.setAttribute(Attname, uuid); } return elem; }
-	 */
 
 	public static String removeCDATA(final String xml) {
 
@@ -780,7 +629,6 @@ public final class XMLUtil {
 		String cEnd = "]]>";
 
 		int loc = xml.indexOf(cStart);
-		// System.out.println("loc = "+loc);
 		if (loc > -1) {
 			String frontchop = remove(xml, cStart, loc);
 			loc = frontchop.indexOf(cEnd);
@@ -790,9 +638,6 @@ public final class XMLUtil {
 	}
 
 	public static String addCDATA(final String xML) {
-
-		// log.severe("addCDATA called XML = "+XML);
-
 		String cStart = "<![CDATA[";
 		String cEnd = "]]>";
 
@@ -827,17 +672,15 @@ public final class XMLUtil {
 		boolean isUnique = false;
 
 		try {
-			// NodeList nl = getNodeListXpath(XPath, Doc);
 			NodeList nl = getNodesListXpathNode(xPath, doc);
 			int nlLen = nl.getLength();
-			// System.out.println("UniqueXpath nl length = "+nlLen +" XPath =
-			// "+XPath);
 			if (nlLen == 1) {
 				isUnique = true;
 			}
 
-		} catch (Exception exec) {
-			System.out.println("Exception in XMLUtil.UniqueXpath Ex = " + exec);
+		} catch (Exception excep) {
+			LOG.log(Level.SEVERE, "Exception in XMLUtil.UniqueXpath Ex = ",
+					excep);
 		}
 		return isUnique;
 	}
@@ -863,13 +706,6 @@ public final class XMLUtil {
 			if (e.getNodeType() == Node.ELEMENT_NODE) {
 				val = e.getAttribute(attrName);
 				if (val != null && val.length() > 0) {
-					// log.info("getNodeListAttValAsStringCol val = "+val
-					// +" attname = "+attrName);
-					/*
-					 * try { log.info(convertToStringLeaveCDATA(e));
-					 * }catch(Exception excep) { LOG.log(Level.SEVERE,
-					 * "An exception has occurred", e); }
-					 */
 					retV.add(val);
 				}
 			}
@@ -907,13 +743,6 @@ public final class XMLUtil {
 					}
 					val = sb.toString();
 					if (val != null && val.length() > 0) {
-						// log.info("getNodeListAttValAsStringCol val = "+val
-						// +" attrNames = "+attrNames);
-						/*
-						 * try { log.info(convertToStringLeaveCDATA(e));
-						 * }catch(Exception excep) { LOG.log(Level.SEVERE,
-						 * "An exception has occurred", e); }
-						 */
 						retV.add(val);
 					}
 				}
@@ -922,13 +751,21 @@ public final class XMLUtil {
 		return retV;
 	}
 
-	// Return type is one of XPathConstants .BOOLEAN, .NODE, .NODESET, .NUMBER,
-	// .STRING
+	/**
+	 * 
+	 * @param xPathS
+	 * @param node
+	 * @param nsuri
+	 * @param pre
+	 * @param returnType
+	 * @return Return type is one of XPathConstants .BOOLEAN, .NODE, .NODESET,
+	 *         .NUMBER, .STRING
+	 * @throws Exception
+	 */
 	public static Object getNodesListXpath(final String xPathS,
 			final Node node, final String nsuri, final String pre,
 			final QName returnType) throws Exception {
 		Object matches = null;
-		// TODO move this to a generic start up method
 		System.setProperty("javax.xml.xpath.XPathFactory:"
 				+ XPathConstants.DOM_OBJECT_MODEL, XPATH_FACTORY);
 
@@ -940,11 +777,6 @@ public final class XMLUtil {
 
 		return matches;
 	}
-
-	/*
-	 * public static String evaluateXPathDoc(Document dom, String xpath) {
-	 * return evaluateXPathNode(dom,xpath); }
-	 */
 
 	public static String evaluateXPathNode(final Node inNode, final String xpath)
 			throws Exception {
@@ -964,27 +796,14 @@ public final class XMLUtil {
 		return xPathBool.booleanValue();
 	}
 
-	/*
-	 * public static Node selectSingleNode(String xPath, Document Doc, String
-	 * nsuri, String pre) { return (Node)getNodesListXpath(Xpath, Doc, nsuri,
-	 * pre,XPathConstants.NODE); }
-	 */
-
 	public static Node selectSingleNode(final String xPath, final Node inNode,
 			final String nsuri, final String pre) throws Exception {
 		return (Node) getNodesListXpath(xPath, inNode, nsuri, pre,
 				XPathConstants.NODE);
 	}
 
-	/*
-	 * public static Node selectSingleNodeDoc(String xPath, Document Doc) { //
-	 * TODO put a node type checker so it can be used for documents or nodes
-	 * return selectSingleNode(Xpath, Doc, "", ""); }
-	 */
-
 	public static Node selectSingleNode(final String xPath, final Node inNode)
 			throws Exception {
-		// TODO put a node type checker so it can be used for documents or nodes
 		return selectSingleNode(xPath, inNode, "", "");
 	}
 
@@ -1003,8 +822,6 @@ public final class XMLUtil {
 	public static String removeNonXMLEntities(final String xML) {
 
 		String result = xML.replaceAll("&nbsp;", " ");
-		// result = result.replaceAll("&nbsp;", "&#160;");
-		// escape any remaining & elements
 		result = encodeXMLReplaceAmp(result);
 		return result;
 
@@ -1093,7 +910,6 @@ public final class XMLUtil {
 			doc.appendChild(impNode);
 
 		} catch (Exception excep) {
-			// log.severe("Exception in createDocFromNode", E);
 			LOG.log(Level.SEVERE, "Exception in createDocFromNode", excep);
 		}
 
@@ -1168,9 +984,6 @@ public final class XMLUtil {
 		xd.setXPath(xPath);
 
 		String[] bits = xPath.split(regex);
-
-		// System.out.println(bits.length);
-
 		String startChars = "";
 		int z = 1;
 		for (int i = 0; i < bits.length; i++) {
@@ -1186,14 +999,8 @@ public final class XMLUtil {
 				xd.getTokens().put(valI, bits[i]);
 				z++;
 			}
-
-			// System.out.println("Bit = "+bits[i]+ "length =
-			// "+bits[i].length());
-
 		}
 		xd.setStartChars(startChars);
-		// System.out.println("xd Start Chars = "+xd.getStartChars());
-		// System.out.println("xd HT size = "+xd.tokens.size());
 
 		return xd;
 
@@ -1292,85 +1099,6 @@ public final class XMLUtil {
 		return retS;
 	}
 
-	/*
-	 * public static String processXslt(Node inNode, ActionDTO ad) { String RetS
-	 * = ""; Transformer renderer = getTransformer(ad.getFilePath()); if
-	 * (renderer != null) { renderer = XMLUtil.setStdTransParamsProps(renderer,
-	 * ad .getCurrProps()); RetS = transform(renderer, inNode); } if (renderer
-	 * == null) {
-	 * log.severe("No transform possible as no renderer found, returning xml");
-	 * try { RetS = XMLUtil.convertToStringLeaveCDATA(inNode); } catch
-	 * (Exception excep) {
-	 * log.severe("Exception trying to turn a node into string", E);
-	 * log.log(Level.SEVERE, "ex in encodeXMLReplaceAmp content = " + content,
-	 * E); } } return RetS; }
-	 */
-
-	/*
-	 * public static String processXslt(Node inNode, String xsltFilename, String
-	 * xmlFileName, boolean editable, String httpPath, String EdfPath) { String
-	 * RetS = "";
-	 * 
-	 * Transformer renderer = getTransformer(xsltFilename); if (renderer !=
-	 * null) { // log.severe("httpPath = "+httpPath); renderer =
-	 * setStdTransParams(renderer, editable, xmlFileName,httpPath, EdfPath); //
-	 * log.severe("httpPath2 = "+httpPath); RetS = Transform(renderer, inNode);
-	 * // logNode("processXslt XMLUtil 1175",inNode); //
-	 * log.severe("RetS straight after transform = "+RetS); } if (renderer ==
-	 * null) { log
-	 * .error("No transform possible as no renderer found, returning xml"); try
-	 * { RetS = XMLUtil.convertToStringLeaveCDATA(inNode); } catch (Exception
-	 * excep) { log.severe("Exception trying to turn a node into string", E); }
-	 * }
-	 * 
-	 * return RetS; }
-	 * 
-	 * public static String processXslt(Node inNode, String xsltFilename, String
-	 * xmlFileName, boolean editable, Properties params, String httpPath, String
-	 * EdfPath) { String RetS = ""; // log.severe("httpPath " +httpPath);
-	 * Transformer renderer = getTransformer(xsltFilename); if (renderer !=
-	 * null) { renderer = setStdTransParams(renderer, editable,
-	 * xmlFileName,httpPath, EdfPath); if (params != null && params.size() > 0)
-	 * { renderer = setTransParams(renderer, params, EdfPath); } RetS =
-	 * Transform(renderer, inNode); } if (renderer == null) { log
-	 * .error("No transform possible as no renderer found, returning xml"); try
-	 * { RetS = XMLUtil.convertToStringLeaveCDATA(inNode); } catch (Exception
-	 * excep) { log.severe("Exception trying to tunr a node into string", E); }
-	 * }
-	 * 
-	 * return RetS; }
-	 * 
-	 * public static String processXslt(Node inNode, String xsltFilename, String
-	 * xmlFileName, String type, boolean editable, String httpPath, String
-	 * EdfPath) {
-	 * 
-	 * // ProcessXSLT px = new ProcessXSLT();
-	 * log.finest("processXslt called xsltFilename = " + xsltFilename +
-	 * " xmlFileName = " + xmlFileName + " type = " + type);
-	 * 
-	 * String RetS = "";
-	 * 
-	 * Transformer renderer = getTransformer(xsltFilename);
-	 * 
-	 * if (renderer == null) { ConfigApplicationDTO cad =
-	 * ConfigController.getConfig() .getAppConfigByName(type); // String
-	 * abs_typehome = cad.getTypeHomeAbsolute(); String cadHome =
-	 * cad.getCadURL(); // log.finest("processXslt abs_typehome = " +
-	 * abs_typehome); xsltFilename = cadHome + File.separator + xsltFilename;
-	 * log.finest("About to try & get " + xsltFilename); renderer =
-	 * getTransformer(xsltFilename); }
-	 * 
-	 * if (renderer != null) { // log.severe("httpPath = "+httpPath); renderer =
-	 * setStdTransParams(renderer, editable, xmlFileName,httpPath, EdfPath);
-	 * RetS = Transform(renderer, inNode); } if (renderer == null) { log
-	 * .error("No transform possible as no renderer found, returning xml"); try
-	 * { RetS = XMLUtil.convertToStringLeaveCDATA(inNode); } catch (Exception
-	 * excep) { log.severe("Exception trying to turn a node into string", E); }
-	 * } return RetS;
-	 * 
-	 * }
-	 */
-
 	public static String transform(final Transformer renderer, final Node inNode) {
 
 		/*
@@ -1383,10 +1111,8 @@ public final class XMLUtil {
 		try {
 			String enc = inNode.getOwnerDocument().getInputEncoding();
 			String inputxml = XMLUtil.convertToStringLeaveCDATA(inNode);
-			// log.severe("inputxml = "+inputxml);
 			return transform(renderer, inputxml, enc);
 		} catch (Exception excep) {
-			// log.error("Error in Transform ", E);
 			LOG.log(Level.SEVERE, "Error in Transform ", excep);
 		}
 
@@ -1397,8 +1123,6 @@ public final class XMLUtil {
 			final String inputxml, final String enc) {
 
 		String locenc = CommonXMLStatics.DEFAULTENC;
-		// String defEnc = CommonProps.DEFAULTENC;
-		// log.severe("Enc = "+enc);
 		if (enc == null || enc.length() == 0) {
 			String docLevelEnc = BasicXMLParser.getFirstAttValue(inputxml,
 					"encoding");
@@ -1408,22 +1132,13 @@ public final class XMLUtil {
 		} else {
 			locenc = enc;
 		}
-
-		// log.severe("enc = "+enc);
-
 		try {
 			InputStream is = new ByteArrayInputStream(inputxml.getBytes(locenc));
-			/*
-			 * byte[] buf = inputxml.getBytes(docLevelEnc); InputStream is = new
-			 * ByteArrayInputStream(buf); log.finest(inputxml);
-			 */
 
 			java.io.StringWriter sw = new java.io.StringWriter();
 			renderer.transform(new StreamSource(is), new StreamResult(sw));
 			return sw.toString();
-			// log.finest("Transform RetS = " + RetS);
 		} catch (Exception excep) {
-			// log.severe("Exception in Transform input XML = " + inputxml, Ex);
 			LOG.log(Level.SEVERE, "Exception in Transform input XML = ", excep);
 		}
 		return "";
@@ -1446,9 +1161,6 @@ public final class XMLUtil {
 
 	public static Transformer setStdTransParamsProps(
 			final Transformer renderer, final Properties params) {
-
-		// log.severe("setStdTransParamsProps params = "+params);
-
 		if (params != null) {
 			for (Enumeration<Object> e = params.keys(); e.hasMoreElements();) {
 
@@ -1460,39 +1172,6 @@ public final class XMLUtil {
 		return renderer;
 	}
 
-	/*
-	 * public static Transformer setStdTransParams(Transformer renderer, boolean
-	 * editable, String xmlFileName,String httpPath, String EdfPath) {
-	 * 
-	 * // log.severe("setStdTransParams httpPath = "+httpPath);
-	 * 
-	 * String EditPS = Boolean.toString(editable);
-	 * renderer.setParameter(CommonProps.ACTION_PARAM_EDITABLE, EditPS);
-	 * renderer.setParameter(CommonProps.ACTION_PARAM_SECRETUUID,
-	 * CommonProps.SECRETUUID);
-	 * renderer.setParameter(CommonProps.ACTION_PARAM_XMLFILENAME, xmlFileName);
-	 * //renderer.setParameter(CommonProps.ACTION_PARAM_NODENAME, NodeName);
-	 * renderer.setParameter(CommonProps.ACTION_PARAM_HTTP_PATH, httpPath); if
-	 * (EdfPath != null && EdfPath.length() != 0) {
-	 * renderer.setParameter(CommonProps.ACTION_PARAM_EDF_URL, EdfPath); }
-	 * 
-	 * 
-	 * return renderer; }
-	 * 
-	 * public static Transformer setTransParams(Transformer renderer, Properties
-	 * params, String EdfPath) {
-	 * 
-	 * if (params != null) {
-	 * 
-	 * for (Enumeration e = params.keys(); e.hasMoreElements();) {
-	 * 
-	 * String localkey = (String) e.nextElement(); String val =
-	 * params.getProperty(localkey); renderer.setParameter(localkey, val); } if
-	 * (EdfPath != null && EdfPath.length() != 0) {
-	 * renderer.setParameter(CommonProps.ACTION_PARAM_EDF_URL, EdfPath); } }
-	 * 
-	 * return renderer; }
-	 */
 	public static void insertAfter(final Node newChild, final Node refChild) {
 		if (refChild == null) {
 			LOG.severe("refChild == null");
@@ -1501,23 +1180,11 @@ public final class XMLUtil {
 		}
 
 		Node nextSibling = refChild.getNextSibling();
-		// log.severe("insertAfter 1 nextSibling ="+nextSibling);
 
 		if (nextSibling == null) {
-			// log.severe("insertAfter 2");
-			// log.severe("refChild = "+refChild);
-			// log.severe("newChild = "+newChild);
-			// log.severe("refChild.getParentNode() ="+refChild.getParentNode());
-
 			refChild.getParentNode().appendChild(newChild);
-			// Parent.appendChild(newChild);
-
-			// log.severe("insertAfter 3");
 		} else {
-			// log.severe("insertAfter 4");
 			refChild.getParentNode().insertBefore(newChild, nextSibling);
-			// Parent.insertBefore(newChild, nextSibling);
-			// log.severe("insertAfter 5");
 		}
 	}
 
@@ -1527,14 +1194,12 @@ public final class XMLUtil {
 			LOG.severe("logNode Message = " + message);
 			LOG.severe("logNode XML = \n" + convertToStringLeaveCDATA(nodeIn));
 		} catch (Exception excep) {
-			// log.severe(E2);
 			LOG.log(Level.SEVERE, "Exception in logNode", excep);
 		}
 
 	}
 
 	public static String getpathToRoot(final Node nodeIn) {
-		// log.severe("getpathToRoot called");
 		String path = "";
 		Node parent = null;
 		int y = 0;
@@ -1549,11 +1214,6 @@ public final class XMLUtil {
 				y++;
 				int i = getCurrentPosition(locNode);
 				i = i - 1;
-				// log.finest("Current position of Node = " + i);
-				// Element elem = (Element) n;
-				// log.finest("Node = " + elem.getLocalName() +
-				// " AttribName = "+
-				// elem.getAttribute("name"));
 				// Check to see it has children as otherwise the htmltree has a
 				// problem with expanding leaves.
 				if (nodeIn.hasChildNodes()) {
@@ -1563,8 +1223,6 @@ public final class XMLUtil {
 
 			}
 		}
-
-		// log.severe("path = " + path);
 		if (path == null || path.length() == 0) {
 			path = "0";
 
@@ -1683,13 +1341,8 @@ public final class XMLUtil {
 
 	public static Node removeAllAttribFromNodeByName(final String attName,
 			final Node target) throws Exception {
-		System.out.println("removeAllAttribFromNodeByName called attName = "
-				+ attName);
 		String xPath = "//@" + attName + "/parent::*";
 		NodeList nl = XMLUtil.getNodesListXpathNode(xPath, target);
-		System.out
-				.println("removeAllAttribFromNodeByName(String attName,Node target)called size = "
-						+ nl.getLength());
 		Node n = null;
 		for (int y = 0; y < nl.getLength(); y++) {
 			n = nl.item(y);
@@ -1741,11 +1394,8 @@ public final class XMLUtil {
 			Attr att = (Attr) namedNodeMap.item(i);
 			sb.append(" " + estr + att.getName() + "=\"" + att.getNodeValue()
 					+ "\" ");
-			// Es = " " + Es + att.getName() + "=\"" + att.getNodeValue() +
-			// "\" ";
 		}
 		sb.append(">");
-		// Es = Es + ">";
 		estr = sb.toString();
 		NodeList pl = elem.getChildNodes();
 		int index = pl.getLength();
@@ -1763,7 +1413,6 @@ public final class XMLUtil {
 		}
 		// Child Elements
 		if (index > 0) {
-			// level++;
 			int i = 0;
 			while (i < index) {
 				Node domNode = pl.item(i);
@@ -1786,8 +1435,6 @@ public final class XMLUtil {
 			getDocumentFromXMLString(xmlText, false);
 			isOK = true;
 		} catch (Exception excep) {
-			// log.severe("testXML Exception thrown as string not well formed.",
-			// E);
 			LOG.log(Level.SEVERE,
 					"testXML Exception thrown as string not well formed.",
 					excep);

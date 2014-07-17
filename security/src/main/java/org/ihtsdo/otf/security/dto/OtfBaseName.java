@@ -79,10 +79,6 @@ public abstract class OtfBaseName extends OtfBaseId implements
 		return status;
 	}
 
-	// public void setStatus(Status statusIn) {
-	// status = statusIn;
-	// }
-
 	public final void setStatus(final String statusIn) {
 		if (statusIn != null && statusIn.length() > 0) {
 			try {

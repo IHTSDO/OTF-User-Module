@@ -38,17 +38,6 @@ public class Xml2Model {
 
 	private void buildUserSecurity(final Element elem) {
 		userSecurity = new UserSecurity();
-		// String defpw = elem.getAttribute(XmlStatics.XML_A_DEFPW);
-		// // LOG.info("Def pw = " + defpw);
-		// userSecurity.setDefaultpw(defpw);
-		//
-		// String users = elem.getAttribute(XmlStatics.XML_A_USERS_APP);
-		// // LOG.info("users app = " + users);
-		// userSecurity.setUsersApp(users);
-		//
-		// String members = elem.getAttribute(XmlStatics.XML_A_MEMBERS_APP);
-		// // LOG.info("members app = " + members);
-		// userSecurity.setMembersApp(members);
 		buildTopDirs(elem);
 		buildTopApps(elem);
 
@@ -57,13 +46,9 @@ public class Xml2Model {
 	private void buildTopDirs(final Element elem) {
 		List<Element> namedChildren = XMLUtil.getChildElemsListByName(
 				XmlStatics.XML_E_DIRS, elem);
-
-		// LOG.info("buildTopDirs namedChildren size = " +
-		// namedChildren.size());
 		for (Element el : namedChildren) {
 			buildDirs(el);
 		}
-
 	}
 
 	private void buildDirs(final Element elem) {
@@ -72,7 +57,6 @@ public class Xml2Model {
 
 		List<Element> namedChildren = XMLUtil.getChildElemsListByName(
 				XmlStatics.XML_E_DIR, elem);
-		// LOG.info("buildDirs namedChildren size = " + namedChildren.size());
 		for (Element el : namedChildren) {
 			OtfDirectory dir = buildDir(el);
 			dirs.getDirectories().put(dir.getName(), dir);
@@ -123,7 +107,6 @@ public class Xml2Model {
 		grp.setDescription(elem.getAttribute(XmlStatics.XML_A_DESC));
 		grp.setStatus(elem.getAttribute(XmlStatics.XML_A_STAT));
 		// CustomData
-		//
 		List<Element> namedChildren = XMLUtil.getChildElemsListByName(
 				XmlStatics.XML_E_CUSTD, elem);
 		for (Element el : namedChildren) {
@@ -138,7 +121,6 @@ public class Xml2Model {
 		for (Element el : namedChildren) {
 			OtfCustomField cust = buildCustField(el);
 			grp.getCustData().getCustFields().put(cust.getKey(), cust);
-			// custData.getCustFields().put(cust.getKey(), cust);
 		}
 
 		// Accounts
@@ -147,7 +129,6 @@ public class Xml2Model {
 		for (Element el : namedChildren) {
 			grp.setAccounts(buildAccounts(el));
 		}
-
 		return grp;
 
 	}
@@ -191,7 +172,6 @@ public class Xml2Model {
 		acc.setStatus(elem.getAttribute(XmlStatics.XML_A_STAT));
 
 		// CustomData
-		//
 		List<Element> namedChildren = XMLUtil.getChildElemsListByName(
 				XmlStatics.XML_E_CUSTD, elem);
 		for (Element el : namedChildren) {
@@ -207,9 +187,6 @@ public class Xml2Model {
 			OtfCustomField cust = buildCustField(el);
 			acc.getCustData().getCustFields().put(cust.getKey(), cust);
 		}
-		// if (acc.getName().contains("map_")) {
-		// LOG.info(acc.toString());
-		// }
 		return acc;
 	}
 

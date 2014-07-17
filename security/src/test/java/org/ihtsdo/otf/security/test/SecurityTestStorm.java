@@ -43,10 +43,7 @@ public class SecurityTestStorm extends AbstractSecurityTest {
 			// the build from Stormpath and test.
 			refreshSpu();
 			getSpu().buildUserSecurity();
-			// refreshSpu();
 			getXmlUs().setUserSecurity(getSpu().getUserSecurity());
-			// LOG.info("storm2Xml : \n"
-			// + xmlUs.getXMLFromUserSecurityAsStringSortByName());
 		} catch (Exception e) {
 			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}

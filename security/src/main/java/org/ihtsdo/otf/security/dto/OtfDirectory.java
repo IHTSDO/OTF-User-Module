@@ -86,13 +86,13 @@ public class OtfDirectory extends OtfAccountStore {
 
 	@Override
 	public void addHiddenRows() {
-		// TODO Auto-generated method stub
+		
 
 	}
 
 	@Override
 	public void setValsFromParams() {
-		// TODO Auto-generated method stub
+		
 
 	}
 }

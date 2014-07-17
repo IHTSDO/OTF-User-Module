@@ -14,7 +14,7 @@ public class XPathDTO {
 
 	public XPathDTO() {
 		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public final String getStartChars() {

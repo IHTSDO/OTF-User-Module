@@ -2,7 +2,7 @@ package org.ihtsdo.otf.security.xml;
 
 public class XmlStatics {
 
-	// Statics for element and attibrute names
+	// Statics for element and attribute names
 
 	/** The xml element names. */
 	public static String XML_E_DIRS = "directories";
@@ -19,10 +19,6 @@ public class XmlStatics {
 	public static String XML_E_ROOT = "userSecurity";
 
 	/** The xml attribute names. */
-	// public static String XML_A_DEFPW = "defaultpw";
-	// public static String XML_A_USERS_APP = "users";
-	// public static String XML_A_MEMBERS_APP = "members";
-
 	public static String XML_A_ACCS_TYPE = "type";
 	public static String XML_A_STAT = "status";
 	public static String XML_A_NAME = "name";

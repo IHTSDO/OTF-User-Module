@@ -13,13 +13,7 @@ import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldPerm;
 import org.ihtsdo.otf.security.dto.query.AbstractSecurityQuery;
 
 public class AppPermGroupsQueryDTO extends AbstractSecurityQuery {
-	/**
-	 * <p>
-	 * logger.
-	 * </p>
-	 */
-	// private static final Logger LOG = Logger
-	// .getLogger(AppPermGroupsQueryDTO.class.getName());
+
 	private String appName;
 	private String groupName;
 	private List<GroupPermDTO> perms = new ArrayList<GroupPermDTO>();
@@ -54,8 +48,6 @@ public class AppPermGroupsQueryDTO extends AbstractSecurityQuery {
 						.getApplications().values()) {
 
 					if (oApp.getName().equals(appName)) {
-						// Assume all account stores are directories.
-
 						for (OtfAccountStore oAst : oApp.getAccountStores()
 								.values()) {
 							String name = oAst.getName();
@@ -78,7 +70,6 @@ public class AppPermGroupsQueryDTO extends AbstractSecurityQuery {
 	}
 
 	private void getGroupsForDir(final OtfDirectory dir, final boolean checkName) {
-		// get groups
 		for (OtfGroup grp : dir.getGroups().getGroups().values()) {
 			boolean add = true;
 			if (checkName) {
@@ -95,7 +86,6 @@ public class AppPermGroupsQueryDTO extends AbstractSecurityQuery {
 	}
 
 	private GroupPermDTO getgpd(final OtfGroup grp) {
-		// If grp has perms
 		List<OtfCustomField> permsL = grp.getCustData().getPerms();
 		if (permsL.size() > 0) {
 			GroupPermDTO gpd = new GroupPermDTO(grp.getName());

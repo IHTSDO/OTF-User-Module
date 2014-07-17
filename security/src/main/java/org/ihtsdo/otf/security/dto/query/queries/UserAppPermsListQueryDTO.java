@@ -11,14 +11,6 @@ import org.ihtsdo.otf.security.dto.query.AbstractSecurityQuery;
 
 public class UserAppPermsListQueryDTO extends AbstractSecurityQuery {
 
-	/**
-	 * <p>
-	 * logger.
-	 * </p>
-	 */
-	// private static final Logger LOG = Logger
-	// .getLogger(UserAppPermsListQueryDTO.class.getName());
-
 	private List<AppPermDTO> perms;
 	private String userName;
 	private String appName;

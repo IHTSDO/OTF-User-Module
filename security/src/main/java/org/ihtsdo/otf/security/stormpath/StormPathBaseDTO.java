@@ -131,7 +131,6 @@ public class StormPathBaseDTO {
 	}
 
 	public final CustomData getResourceByHref_CustomData(final String href) {
-		// LOG.info("getCustomData href = " + href);
 		return getClient().getResource(href, CustomData.class);
 	}
 

@@ -13,7 +13,6 @@ public class CommonXMLStatics {
 	 * order to guarantee a unique XPath
 	 */
 	public static final String SECRETUUID = "b0b";
-	// public static final String SECRETUUID = "rumplestiltskin";
 	/** Action parameter to set the Relative or http path */
 	public static final String ACTION_PARAM_NODELOCATE = "action.node.locator";
 
@@ -228,24 +227,6 @@ public class CommonXMLStatics {
 	/** RefSetType Attribute **/
 
 	public static final String REFSET_TYPE_ATT = "refsetType";
-	/** RefSetClassNames **/
-
-	/*
-	 * public static final String CLASS_NAME_TE_BOOL =
-	 * "ThinExtByRefPartBoolean"; public static final String CLASS_NAME_TE_CON =
-	 * "ThinExtByRefPartConcept"; public static final String
-	 * CLASS_NAME_TE_CONCON = "ThinExtByRefPartConceptConcept"; public static
-	 * final String CLASS_NAME_TE_CONCONSTR =
-	 * "ThinExtByRefPartConceptConceptString"; public static String
-	 * CLASS_NAME_TE_CONSTR = "ThinExtByRefPartConceptString"; public static
-	 * final String CLASS_NAME_TE_CROSS = "ThinExtByRefPartCrossmapForRel";
-	 * public static final String CLASS_NAME_TE_INT = "ThinExtByRefPartInteger";
-	 * public static final String CLASS_NAME_TE_LANG =
-	 * "ThinExtByRefPartLanguage"; public static final String CLASS_NAME_TE_MEAS
-	 * = "ThinExtByRefPartMeasurement"; public static final String
-	 * CLASS_NAME_TE_STR = "ThinExtByRefPartString"; public static final String
-	 * CLASS_NAME_TE_TEMPL = "ThinExtByRefPartTemplateForRel";
-	 */
 
 	/** RefsetType Names **/
 
@@ -262,17 +243,7 @@ public class CommonXMLStatics {
 	public static final String REFSET_TYPE_LONG = "Long";
 	public static final String REFSET_TYPE_STR = "String";
 
-	/*
-	 * public static final String REFSET_TYPE_CROSS = "CrossmapForRel"; public
-	 * static String REFSET_TYPE_LANG = "Language"; public static final String
-	 * REFSET_TYPE_MEAS = "Measurement"; public static final String
-	 * REFSET_TYPE_TEMPL = "TemplateForRel";
-	 */
-
 	// XPATH Statements
-
-	// String rootXP = "//*[name()='"+BackingFileProps.INSTANCES
-	// +"']/@"+BackingFileProps.ROOT;
 	/** Start Select Elem by name **/
 	public static final String XPATH_START_E_BY_NAME = "//*[name()='";
 	/** End Select Elem by name **/
@@ -286,7 +257,5 @@ public class CommonXMLStatics {
 	public static final String XPATH_START_ATT_BY_VAL = "[@";
 	/** Equals + singlequote **/
 	public static final String XPATH_EQUAL_SINGLEQUOT = "='";
-
-	// *[name()='id'][@id_int='-2147483561']/@*[name()='value']
 
 }

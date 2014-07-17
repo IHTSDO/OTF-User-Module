@@ -108,7 +108,6 @@ public abstract class OtfBaseWeb {
 	public static final String getRepeatingSubForms(String title,
 			Collection<? extends OtfBaseWeb> items) {
 		StringBuilder sbuild = new StringBuilder();
-		// sbuild.append(getSubForm(title));
 		// getTableSubview
 		for (OtfBaseWeb obw : items) {
 			sbuild.append(obw.getRHS());
@@ -164,7 +163,6 @@ public abstract class OtfBaseWeb {
 		return sbuild.toString();
 	}
 
-	// /remember to add hidden field inc id
 	@JsonIgnore
 	protected String getHtmlForm(String formName) {
 		// clear rows
@@ -339,14 +337,6 @@ public abstract class OtfBaseWeb {
 		return getHtmlDiv(sbuild.toString(), CSS_TABLE_ROW);
 	}
 
-	// public final String getHtmlRowOptionsNoLabel(List<String> vals,
-	// String selval, String name) {
-	// StringBuilder sbuild = new StringBuilder();
-	// sbuild.append(getHtmlInputCell(getHtmlOptions(vals, selval, name)))
-	// .append("\n");
-	// return getHtmlDiv(sbuild.toString(), CSS_TABLE_ROW);
-	// }
-
 	public final String getHtmlOptions(List<String> vals, String selval,
 			String name, String onclickJS, String id) {
 		StringBuilder sbuild = new StringBuilder();
@@ -425,17 +415,11 @@ public abstract class OtfBaseWeb {
 	}
 
 	public final String getHtmlAddRowBtn(String btnTitle, String onClickAction) {
-		// LOG.info("getHtmlAddRowBtn title = " + btnTitle + " onClickAction = "
-		// + onClickAction);
 		return replaceJspTitleValue(HTML_ADD_ROW_BTN, onClickAction, btnTitle);
 	}
 
 	public final String getJavaScriptAddRow(String formID, String getUrl) {
-		// LOG.info("getJavaScriptAddRow formID = " + formID + " rowToAppend = "
-		// + rowToAppend);
-		// return replaceJspTitleValue(JS_ADD_ROW, hiddenhtml, formID);
 		return replaceJspTitleValue(JS_ADD_ROW_AJAX, getUrl, formID);
-
 	}
 
 	public final String getNewCfModelElement(OtfCustomFieldModel cfm,
@@ -581,13 +565,10 @@ public abstract class OtfBaseWeb {
 	}
 
 	public final void resetErrors() {
-		// LOG.info("Reset Errors called");
 		errors = new HashMap<String, List<String>>();
 	}
 
 	public final void addError(String webName, String errormessage) {
-		// LOG.info("addError webName = " + webName + " errmsg = " +
-		// errormessage);
 		List<String> erWn = errors.get(webName);
 		if (erWn == null) {
 			erWn = new ArrayList<String>();

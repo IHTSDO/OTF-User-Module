@@ -30,13 +30,6 @@ public class XMLTest {
 		XmlUserSecurity xmlUs = new XmlUserSecurity(xmlP);
 		try {
 			xmlUs.initFromFile();
-			// LOG.info("defpw = " + xmlUs.getUserSecurity().getDefaultpw());
-			// LOG.info("num top dirs = "
-			// + xmlUs.getUserSecurity().getDirs().getDirectories().size());
-			// LOG.info("num apps = "
-			// + xmlUs.getUserSecurity().getApps().getApplications()
-			// .size());
-
 			LOG.info(xmlUs.getXMLFromUserSecurityAsString());
 
 		} catch (Exception e) {

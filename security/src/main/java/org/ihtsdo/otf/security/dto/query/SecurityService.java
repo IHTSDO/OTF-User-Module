@@ -43,43 +43,6 @@ public class SecurityService {
 	public static final String PERMS = "perms";
 	public static final String SETTINGS = "settings";
 
-	// REST URLS
-	// 0 Args - 1 node:
-	// getMembers
-	// /members
-
-	// getUsers
-	// /users
-
-	// getApps
-	// /apps
-
-	// 1 arg - 2 Nodes:
-
-	// getUserByName
-	// /users/{username}
-
-	// 1 arg 3 nodes:
-	// getUserMemberships
-	// /users/{username}/members
-
-	// getUserApps
-	// /users/{username}/apps
-
-	// getAppUsers
-
-	// /apps/{appname}/users
-
-	// 2 arg 3 nodes or 4.
-	// getAppPermGroups App name Group name (optional)
-	// /apps/{appname}/perms/{group}
-
-	// 3 arg 5 or 6 nodes
-
-	// getUserAppPerms (Member Optional)
-
-	// /users/{username}/apps/{appname}/members/{membername}
-
 	public static final String GET_USER_BY_NAME = "getUserByName";
 	public static final String GET_USER_MEMBERSHIPS = "getUserMemberships";
 	public static final String GET_USER_APP_PERMS = "getUserAppPerms";
@@ -180,18 +143,13 @@ public class SecurityService {
 
 		MembersListQueryDTO mlq = new MembersListQueryDTO(ush);
 		String json = getJSonFromObject(mlq);
-		// LOG.info("JSON = " + json);
 		return json;
 
 	}
 
 	public final String getUsers() {
-
-		LOG.info("ush = " + ush);
 		UsersListQueryDTO ulq = new UsersListQueryDTO(ush);
-		LOG.info("ulq size = " + ulq.getUsers().size());
 		String json = getJSonFromObject(ulq);
-		// LOG.info("JSON = " + json);
 		return json;
 
 	}
@@ -199,9 +157,7 @@ public class SecurityService {
 	public final String getApps() {
 
 		AppsListQueryDTO ulq = new AppsListQueryDTO(ush);
-		// LOG.info("ulq size = " + ulq.getUsers().size());
 		String json = getJSonFromObject(ulq);
-		// LOG.info("JSON = " + json);
 		return json;
 
 	}
@@ -209,9 +165,7 @@ public class SecurityService {
 	public final String getAppUsers(final String appname) {
 
 		AppUsersListQueryDTO ulq = new AppUsersListQueryDTO(ush, appname);
-		// LOG.info("ulq size = " + ulq.getUsers().size());
 		String json = getJSonFromObject(ulq);
-		// LOG.info("JSON = " + json);
 		return json;
 
 	}
@@ -220,14 +174,12 @@ public class SecurityService {
 			final String password) {
 		UserByNameQueryDTO ubn = new UserByNameQueryDTO(ush, username, password);
 		if (ubn.getUser() == null) {
-			// LOG.info("ubn.getUser() == null");
 			return null;
 		}
 
 		String json = getJSonFromObject(ubn);
 
 		ubn.getUser().setAuth(false);
-		// LOG.info("JSON = " + json);
 		return json;
 
 	}
@@ -240,7 +192,6 @@ public class SecurityService {
 		if (oacc != null) {
 			OtfAccountMin user = new OtfAccountMin(oacc);
 			String json = getJSonFromObject(user);
-			// LOG.info("JSON = " + json);
 			return json;
 		}
 
@@ -248,29 +199,15 @@ public class SecurityService {
 
 	}
 
-	// TODO the full account uses abstract ypes (model) which the json engine
-	// does not like.
-
-	// public String getUserByNameFull(String username) {
-	// UserByNameFullQueryDTO ubn = new UserByNameFullQueryDTO(ush, username,
-	// null);
-	// String json = GetJSonFromObject(ubn);
-	// // LOG.info("JSON = " + json);
-	// return json;
-	//
-	// }
-
 	public final String getUserMemberships(final String username) {
 		UserMembersListQueryDTO uml = new UserMembersListQueryDTO(ush, username);
 		String json = getJSonFromObject(uml);
-		// LOG.info("JSON = " + json);
 		return json;
 	}
 
 	public final String getUserApps(final String username) {
 		UserAppsListQueryDTO uml = new UserAppsListQueryDTO(ush, username);
 		String json = getJSonFromObject(uml);
-		// LOG.info("JSON = " + json);
 		return json;
 	}
 
@@ -279,7 +216,6 @@ public class SecurityService {
 		UserAppPermsListQueryDTO uml = new UserAppPermsListQueryDTO(ush,
 				username, appName);
 		String json = getJSonFromObject(uml);
-		// LOG.info("getUserAppPerms JSON = " + json);
 		return json;
 	}
 
@@ -288,14 +224,12 @@ public class SecurityService {
 		UserAppPermsListQueryDTO uml = new UserAppPermsListQueryDTO(ush,
 				username, appName, member);
 		String json = getJSonFromObject(uml);
-		// LOG.info("JSON = " + json);
 		return json;
 	}
 
 	public final String getAppPermGroups(final String appName) {
 		AppPermGroupsQueryDTO uml = new AppPermGroupsQueryDTO(ush, appName);
 		String json = getJSonFromObject(uml);
-		// LOG.info("getAppPermGroups appname JSON = " + json);
 		return json;
 	}
 
@@ -304,7 +238,6 @@ public class SecurityService {
 		AppPermGroupsQueryDTO uml = new AppPermGroupsQueryDTO(ush, appName,
 				groupName);
 		String json = getJSonFromObject(uml);
-		// LOG.info("getAppPermGroups app grp JSON = " + json);
 		return json;
 	}
 

@@ -137,7 +137,6 @@ public class OtfAccountMin extends OtfBaseName {
 		OtfCustomFieldBasic cfb = new OtfCustomFieldBasic();
 		// Check if changed
 		String nameIn = getNotNullParam(NAME_NAME);
-		// LOG.info("NAME = " + nameIn);
 		// Only check if changed
 		if (!nameIn.equals(getName())) {
 			List<String> uNames = cfb.getUsersList();
@@ -147,15 +146,12 @@ public class OtfAccountMin extends OtfBaseName {
 		// Email
 		String emailIn = getNotNullParam(EMAIL_NAME);
 		checkWebFieldNotEmpty(emailIn, EMAIL_NAME);
-		// LOG.info("emailIn = " + emailIn);
 		if (!emailIn.equals(getEmail())) {
 
 			List<String> emailAddr = cfb.getUserEmailList();
 			checkWebFieldInList(emailIn, EMAIL_NAME, emailAddr, false,
 					"Email must be unique");
 		}
-		// LOG.info("leaving validateParams errors size = " +
-		// getErrors().size());
 	}
 
 	@Override
@@ -219,7 +215,6 @@ public class OtfAccountMin extends OtfBaseName {
 	}
 
 	public final String getToken() {
-		// LOG.info("getToken isAuth() =" + isAuth());
 		if (isAuth()) {
 			return getAuthToken();
 		} else

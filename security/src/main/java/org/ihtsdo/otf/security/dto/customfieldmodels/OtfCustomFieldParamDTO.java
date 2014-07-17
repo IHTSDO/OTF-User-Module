@@ -79,12 +79,6 @@ public class OtfCustomFieldParamDTO {
 
 	public final String[] paramKeyToArray() {
 		String[] keyAr = paramKey.split(OtfCustomFieldModel.SEP);
-		// LOG.info("KeyArr length = " + keyAr.length);
-
-		// Arr[0] = cd_type
-		// Arr[1] = localkey
-		// Arr[2] = key
-
 		setCd_type(keyAr[0]);
 		setLocalKey(keyAr[1]);
 		setId(keyAr[2]);

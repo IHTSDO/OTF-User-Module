@@ -94,8 +94,6 @@ public class OtfCustomField {
 	}
 
 	public void analyseValue() {
-		// LOG.info("analyseValue key = " + getKey());
-		// Split val
 		vals = getValue().split(SEP);
 		if (vals.length > 0) {
 			setType();
@@ -147,7 +145,6 @@ public class OtfCustomField {
 
 	public void setValsFromModelVals() {
 		if (model != null) {
-			// model.model2Vals();
 			vals = model.getVals();
 		}
 	}
@@ -202,8 +199,6 @@ public class OtfCustomField {
 
 	public void setModel(OtfCustomFieldModel modelIn) {
 		model = modelIn;
-		// LOG.info("\n Model Type = " + model.getType() + " key = "
-		// + model.getKey() + " id = " + model.getId());
 	}
 
 	public void setModelvalFromParamDTO(OtfCustomFieldParamDTO ocfpIn) {
@@ -222,7 +217,6 @@ public class OtfCustomField {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append("CustomField: ").append("key:").append(key)
 				.append(", value:").append(value);
-		// sbuild.append("\n val from Array =  ").append(getValFromVals());
 		return sbuild.toString();
 	}
 }

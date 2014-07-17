@@ -35,8 +35,6 @@ public class ModelMover {
 
 	}
 
-	// Properties spuP = new Properties();
-
 	public static void main(String[] args) {
 		ModelMover mm = new ModelMover();
 		mm.run(args);
@@ -48,9 +46,6 @@ public class ModelMover {
 	}
 
 	public void run() {
-
-		LOG.info("run settings = " + getSettings());
-
 		if (checkSpSettings()) {
 
 			boolean logging = PropertiesLoader.stringOK(settings
@@ -172,7 +167,6 @@ public class ModelMover {
 	}
 
 	public final void setPropLoad(String[] args) {
-		// return propLoad;
 	}
 
 	private List<String> getKeyVals() {

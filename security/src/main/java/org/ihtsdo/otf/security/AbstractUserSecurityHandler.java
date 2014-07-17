@@ -36,9 +36,6 @@ public abstract class AbstractUserSecurityHandler implements
 	@Override
 	public abstract void saveUserSecurity() throws Exception;
 
-	// TODO: Make not abstract add local method. Add token based method
-	// Check username exists & is enabled (e.g. could be not verified)
-
 	public abstract OtfAccount authAccountLocal(String acNameIn, String pwIn,
 			OtfAccount acc);
 
@@ -86,10 +83,8 @@ public abstract class AbstractUserSecurityHandler implements
 		if (acc == null) {
 			return null;
 		}
-		// LOG.info("acc = " + acc.getName());
 		// check if uuid/token
 		if (pwIn.equals(acc.getAuthToken())) {
-			// LOG.info("token ok");
 			return acc;
 		}
 		// else auth local
@@ -105,7 +100,6 @@ public abstract class AbstractUserSecurityHandler implements
 		if (userSecurity == null) {
 			userSecurity = (UserSecurity) ObjectCache.INSTANCE.get(getKey());
 		}
-		// LOG.info("getUserSecurity = " + userSecurity);
 		return userSecurity;
 	}
 
@@ -204,15 +198,10 @@ public abstract class AbstractUserSecurityHandler implements
 	@Override
 	public final String addUpdateGroup(final OtfGroup grpIn) {
 		String pDir = grpIn.getParentDirName();
-		// LOG.info("addUpdateGroup parent dir = " + pDir);
-		// LOG.info("addUpdateGroup Grp = " + grpIn);
-
 		boolean isNew = grpIn.isNew();
 
 		OtfDirectory mDirectory = getUserSecurity().getDirs()
 				.getDirByName(pDir);
-		// LOG.info("addUpdateGroup mDirectory = " + mDirectory.getName());
-
 		if (isNew && mDirectory.getGroups().groupExists(grpIn.getName())) {
 			// names must be unique
 			return NAME_NOT_UNIQUE;
@@ -228,8 +217,6 @@ public abstract class AbstractUserSecurityHandler implements
 		}
 
 		String rVal = addUpdateGroupLocal(grpIn, mDirectory, isNew);
-		// LOG.info("rVal = " + rVal);
-
 		return rVal;
 
 	}
@@ -259,7 +246,6 @@ public abstract class AbstractUserSecurityHandler implements
 	@Override
 	public final String addUpdateApp(final OtfApplication appIn) {
 		boolean isNew = appIn.isNew();
-		// LOG.info("addUpdateApp App isNew = " + isNew);
 		if (isNew && getUserSecurity().getApps().appExists(appIn.getName())) {
 			// names must be unique
 			return NAME_NOT_UNIQUE;
