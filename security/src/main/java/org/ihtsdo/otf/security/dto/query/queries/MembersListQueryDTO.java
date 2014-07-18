@@ -21,7 +21,7 @@ public class MembersListQueryDTO extends AbstractSecurityQuery {
 
 	public final List<String> getMembers() {
 
-		if (members == null || members.size() == 0) {
+		if (members == null || members.isEmpty()) {
 			if (ush != null) {
 				members = ush.getUserSecurity().getMembers();
 			} else {

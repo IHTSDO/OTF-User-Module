@@ -75,7 +75,7 @@ public class Model2Xml {
 	}
 
 	private void buildGroups(final Element elem, final OtfGroups grps) {
-		if (grps.getGroups().size() > 0) {
+		if (!grps.getGroups().isEmpty()) {
 			final Element elemNew = doc.createElement(XmlStatics.XML_E_GRPS);
 			for (OtfGroup grp : grps.getGroups().values()) {
 				buildGroup(elemNew, grp);
@@ -93,7 +93,7 @@ public class Model2Xml {
 		if (grp.getAccounts() != null) {
 			buildAccounts(elemNew, grp.getAccounts());
 		}
-		if (grp.getCustData().getCustFields().size() > 0) {
+		if (!grp.getCustData().getCustFields().isEmpty()) {
 			buildCustData(elemNew, grp.getCustData());
 		}
 		elem.appendChild(elemNew);
@@ -108,7 +108,7 @@ public class Model2Xml {
 
 	private void buildAccounts(final Element elem, final OtfAccounts accs) {
 
-		if (accs.getAccounts().size() > 0) {
+		if (!accs.getAccounts().isEmpty()) {
 			final Element elemNew = doc.createElement(XmlStatics.XML_E_ACCS);
 			for (OtfAccount acc : accs.getAccounts().values()) {
 				buildAccount(elemNew, acc);
@@ -135,7 +135,7 @@ public class Model2Xml {
 		elemNew.setAttribute(XmlStatics.XML_A_SNAME, acc.getSurname());
 		elemNew.setAttribute(XmlStatics.XML_A_EMAIL, acc.getEmail());
 		elemNew.setAttribute(XmlStatics.XML_A_STAT, acc.getStatus().toString());
-		if (acc.getCustData().getCustFields().size() > 0) {
+		if (!acc.getCustData().getCustFields().isEmpty()) {
 			buildCustData(elemNew, acc.getCustData());
 		}
 		elem.appendChild(elemNew);

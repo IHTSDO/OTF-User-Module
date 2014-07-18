@@ -258,7 +258,7 @@ public class ProcessXSLT {
 			Element inputE = (Element) inputxml;
 			String uuid = inputE.getAttribute(CommonXMLStatics.SECRETUUID);
 			trans.setParameter(CommonXMLStatics.ACTION_PARAM_NODELOCATE, uuid);
-			if (props != null && props.size() > 0) {
+			if (props != null && !props.isEmpty()) {
 
 				for (Enumeration<Object> e = props.keys(); e.hasMoreElements();) {
 					String key = (String) e.nextElement();

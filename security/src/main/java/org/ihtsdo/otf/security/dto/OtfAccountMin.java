@@ -122,7 +122,7 @@ public class OtfAccountMin extends OtfBaseName {
 			setValsFromParams();
 		} else {
 			// If no errors then update
-			if (errors.size() == 0) {
+			if (errors.isEmpty()) {
 				LOG.info("Before " + this.toString());
 				setValsFromParams();
 				LOG.info("After " + this.toString());

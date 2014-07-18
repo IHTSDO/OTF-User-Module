@@ -40,7 +40,7 @@ public class AppPermGroupsQueryDTO extends AbstractSecurityQuery {
 			perms = new ArrayList<GroupPermDTO>();
 		}
 
-		if (perms.size() == 0) {
+		if (!perms.isEmpty()) {
 			if (ush != null) {
 				boolean checkGrpName = groupName != null
 						&& groupName.length() > 0;
@@ -87,7 +87,7 @@ public class AppPermGroupsQueryDTO extends AbstractSecurityQuery {
 
 	private GroupPermDTO getgpd(final OtfGroup grp) {
 		List<OtfCustomField> permsL = grp.getCustData().getPerms();
-		if (permsL.size() > 0) {
+		if (!permsL.isEmpty()) {
 			GroupPermDTO gpd = new GroupPermDTO(grp.getName());
 			for (OtfCustomField cf : permsL) {
 				OtfCustomFieldPerm cfapp = (OtfCustomFieldPerm) cf.getModel();

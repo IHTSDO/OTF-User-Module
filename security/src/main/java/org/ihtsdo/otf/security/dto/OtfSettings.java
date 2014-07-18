@@ -88,7 +88,7 @@ public class OtfSettings extends OtfBaseId {
 		resetErrors();
 		validateParams();
 		// If no errors then update
-		if (errors.size() == 0) {
+		if (errors.isEmpty()) {
 			setValsFromParams();
 			setSettingsFromFields();
 			updateGrpSettings();

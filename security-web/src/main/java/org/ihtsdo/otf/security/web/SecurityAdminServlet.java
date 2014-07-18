@@ -65,7 +65,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 				handleGetRequest(requestIn, responseIn);
 			} else {
 				OtfBaseWeb obw = handlePostAction(requestIn, responseIn);
-				if (obw.getErrors().size() == 0) {
+				if (obw.getErrors().isEmpty()) {
 					// update remotely using obw
 					String ok = updateFromWebObject(obw);
 					setTreetype(null);
@@ -198,7 +198,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		if (obw != null) {
 			if (obw instanceof OtfBaseId) {
 				OtfBaseId obi = (OtfBaseId) obw;
-				loadObw = obi.isNew() && obw.getErrors().size() > 0;
+				loadObw = obi.isNew() && !obw.getErrors().isEmpty();
 			}
 
 		}
@@ -322,7 +322,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		Map<String, String> paramsMap = getFiltParamsAsHM(requestIn);
 		webObject.setParams(paramsMap);
 		webObject.processParams();
-		if (webObject.getErrors().size() > 0) {
+		if (!webObject.getErrors().isEmpty()) {
 			webObject.logErrors();
 		}
 

@@ -28,7 +28,7 @@ public class UserMembersListQueryDTO extends AbstractSecurityQuery {
 			members = new ArrayList<String>();
 		}
 
-		if (members.size() == 0) {
+		if (members.isEmpty()) {
 			if (ush != null) {
 				OtfAccount oacc = ush.getUserSecurity().getUserAccountByName(
 						userName, "*");
