@@ -33,10 +33,10 @@ public class OtfDirectory extends OtfAccountStore {
 		if (allAccounts == null) {
 			allAccounts = new HashMap<String, OtfAccount>();
 		}
-		if (getGroups().getGroups().size() == 0) {
+		if (getGroups().getGroups().isEmpty()) {
 			allAccounts = getDirAccounts();
 		}
-		if (getGroups().getGroups().size() > 0) {
+		if (!getGroups().getGroups().isEmpty()) {
 			for (String key : getDirAccounts().keySet()) {
 				allAccounts.put(key, getDirAccounts().get(key));
 			}
@@ -86,13 +86,11 @@ public class OtfDirectory extends OtfAccountStore {
 
 	@Override
 	public void addHiddenRows() {
-		
 
 	}
 
 	@Override
 	public void setValsFromParams() {
-		
 
 	}
 }

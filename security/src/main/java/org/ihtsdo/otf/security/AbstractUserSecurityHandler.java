@@ -153,7 +153,7 @@ public abstract class AbstractUserSecurityHandler implements
 		if (parentIn == null) {
 			Collection<String> dirnames = getUserSecurity().getDirNamesForUser(
 					accIn.getName());
-			if (dirnames.size() > 0) {
+			if (!dirnames.isEmpty()) {
 				if (dirnames.size() > 1) {
 					LOG.severe("MORE THAN 1 directory found for user called "
 							+ accIn.getName() + " num dirs = "

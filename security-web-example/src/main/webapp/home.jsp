@@ -20,28 +20,28 @@
 						<th>Set the Parameters</th>
 						<tr>
 							<td><%=ExampleDto.USER%>:</td>
-							<td><input type="text" class="w100" name="<%=ExampleDto.USER%>"
-								value="<%=edto.getUser()%>" ></td>
+							<td><input type="text" class="w100"
+								name="<%=ExampleDto.USER%>" value="<%=edto.getUser()%>"></td>
 						</tr>
 						<tr>
 							<td><%=ExampleDto.APP%>:</td>
-							<td><input type="text" class="w100" name="<%=ExampleDto.APP%>"
-								value="<%=edto.getApp()%>"></td>
+							<td><input type="text" class="w100"
+								name="<%=ExampleDto.APP%>" value="<%=edto.getApp()%>"></td>
 						</tr>
 						<tr>
 							<td><%=ExampleDto.GROUP%>:</td>
-							<td><input type="text" class="w100" name="<%=ExampleDto.GROUP%>"
-								value="<%=edto.getGrp()%>"></td>
+							<td><input type="text" class="w100"
+								name="<%=ExampleDto.GROUP%>" value="<%=edto.getGrp()%>"></td>
 						</tr>
 						<tr>
 							<td><%=ExampleDto.MEMBER%>:</td>
-							<td><input type="text" class="w100" name="<%=ExampleDto.MEMBER%>"
-								value="<%=edto.getMemb()%>"></td>
+							<td><input type="text" class="w100"
+								name="<%=ExampleDto.MEMBER%>" value="<%=edto.getMemb()%>"></td>
 						</tr>
 
 						<tr>
-							<td colspan="2" align="center"><input type="submit" class="w100"
-								name="submit" value="Submit"></td>
+							<td colspan="2" align="center"><input type="submit"
+								class="w100" name="submit" value="Submit"></td>
 						</tr>
 					</table>
 				</form>
@@ -65,11 +65,20 @@
 						</tr>
 
 						<tr>
-							<td colspan="2" align="center"><input type="submit" class="w100"
-								name="submit" value="Submit"></td>
+							<td colspan="2" align="center"><input type="submit"
+								class="w100" name="submit" value="Submit"></td>
 						</tr>
 					</table>
 				</form>
+				<table class="sampleNoBorder">
+					<th>Change A User Password</th>
+					<tr>
+						<td>Click on Link</td>
+						<td><a class="pseudoLabel"
+							href="/security-web/requestPwChange.jsp" target="_blank">/security-web/requestPwChange.jsp</a></td>
+					</tr>
+
+				</table>
 			</td>
 		</tr>
 	</table>
@@ -138,8 +147,8 @@
 								value="<%=edto.getUser()%>"></td>
 						</tr>
 						<tr>
-							<td colspan="2" align="center"><input type="submit" class="w100"
-								name="submit" value="Submit"></td>
+							<td colspan="2" align="center"><input type="submit"
+								class="w100" name="submit" value="Submit"></td>
 						</tr>
 					</table>
 				</form>
@@ -161,8 +170,8 @@
 								value="<%=edto.getUser()%>"></td>
 						</tr>
 						<tr>
-							<td colspan="2" align="center"><input type="submit" class="w100"
-								name="submit" value="Submit"></td>
+							<td colspan="2" align="center"><input type="submit"
+								class="w100" name="submit" value="Submit"></td>
 						</tr>
 					</table>
 				</form>
@@ -189,8 +198,8 @@
 								value="<%=edto.getApp()%>"></td>
 						</tr>
 						<tr>
-							<td colspan="2" align="center"><input type="submit" class="w100"
-								name="submit" value="Submit"></td>
+							<td colspan="2" align="center"><input type="submit"
+								class="w100" name="submit" value="Submit"></td>
 						</tr>
 					</table>
 				</form>
@@ -225,8 +234,8 @@
 								value="<%=edto.getMemb()%>"></td>
 						</tr>
 						<tr>
-							<td colspan="2" align="center"><input type="submit" class="w100"
-								name="submit" value="Submit"></td>
+							<td colspan="2" align="center"><input type="submit"
+								class="w100" name="submit" value="Submit"></td>
 						</tr>
 					</table>
 				</form>
@@ -248,8 +257,8 @@
 								value="<%=edto.getUser()%>"></td>
 						</tr>
 						<tr>
-							<td colspan="2" align="center"><input type="submit" class="w100"
-								name="submit" value="Submit"></td>
+							<td colspan="2" align="center"><input type="submit"
+								class="w100" name="submit" value="Submit"></td>
 						</tr>
 					</table>
 				</form>
@@ -288,8 +297,8 @@
 								value="<%=edto.getApp()%>"></td>
 						</tr>
 						<tr>
-							<td colspan="2" align="center"><input type="submit" class="w100"
-								name="submit" value="Submit"></td>
+							<td colspan="2" align="center"><input type="submit"
+								class="w100" name="submit" value="Submit"></td>
 						</tr>
 					</table>
 				</form>
@@ -311,15 +320,16 @@
 								value="<%=edto.getApp()%>"></td>
 						</tr>
 						<tr>
-							<td colspan="2" align="center"><input type="submit" class="w100"
-								name="submit" value="Submit"></td>
+							<td colspan="2" align="center"><input type="submit"
+								class="w100" name="submit" value="Submit"></td>
 						</tr>
 					</table>
 				</form>
 			</td>
 		</tr>
 		<tr class="green">
-			<td><span class="docSubSubTitle">App Permission Groups by Group:</span></td>
+			<td><span class="docSubSubTitle">App Permission Groups by
+					Group:</span></td>
 			<td><%=edto.getRestLink("apps/##app/perms/##group")%></td>
 			<td>
 				<form name="AppPermGroupform" action="<%=edto.getAction()%>"
@@ -339,8 +349,8 @@
 								value="<%=edto.getGrp()%>"></td>
 						</tr>
 						<tr>
-							<td colspan="2" align="center"><input type="submit" class="w100"
-								name="submit" value="Submit"></td>
+							<td colspan="2" align="center"><input type="submit"
+								class="w100" name="submit" value="Submit"></td>
 						</tr>
 					</table>
 				</form>

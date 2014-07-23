@@ -21,7 +21,7 @@ public class UsersListQueryDTO extends AbstractSecurityQuery {
 	}
 
 	public final List<OtfAccountMin> getUsers() {
-		if (users == null || users.size() == 0) {
+		if (users == null || users.isEmpty()) {
 			if (ush != null) {
 				users = (List<OtfAccountMin>) ush.getUserSecurity()
 						.getMinUsers("*");

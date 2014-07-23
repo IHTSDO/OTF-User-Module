@@ -99,7 +99,7 @@ public class OtfAccount extends OtfAccountMin {
 			setValsFromParams();
 		} else {
 			// If no errors then update
-			if (errors.size() == 0) {
+			if (errors.isEmpty()) {
 				setValsFromParams();
 			}
 		}

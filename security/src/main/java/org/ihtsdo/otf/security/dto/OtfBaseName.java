@@ -84,7 +84,7 @@ public abstract class OtfBaseName extends OtfBaseId implements
 			try {
 				// Filter out Unverified which is not to be set/unset by this
 				// app but instead via email to Stormpath etc.
-				if (!status.equals(Status.UNVERIFIED)) {
+				if (!statusIn.equals(Status.UNVERIFIED)) {
 					status = Status.valueOf(statusIn);
 				}
 			} catch (IllegalArgumentException iae) {

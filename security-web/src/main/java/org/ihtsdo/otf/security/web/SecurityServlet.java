@@ -110,10 +110,10 @@ public class SecurityServlet extends AbstractSecurityServlet {
 		setHr(request);
 
 		String urlS = request.getRequestURI();
-		boolean reload = stringOK(getNamedParam(RELOAD, hr));
+		boolean reload = stringOK(getNamedParam(WebStatics.RELOAD, hr));
 		if (!reload) {
 			// try rest
-			reload = urlS.endsWith(RELOAD);
+			reload = urlS.endsWith(WebStatics.RELOAD);
 		}
 
 		if (reload) {
@@ -122,14 +122,14 @@ public class SecurityServlet extends AbstractSecurityServlet {
 		}
 
 		if (!reload) {
-			redirect = getNamedParam(REDIRECT, hr);
+			redirect = getNamedParam(WebStatics.REDIRECT, hr);
 			String json = handleQuery(hr, response);
 			if (!stringOK(json)) {
 				json = "NO RESPONSE";
 			}
 			if (stringOK(redirect)) {
-				hr.setAttribute(JSON, json);
-				final String context = getNamedParam(CON_PATH, hr);
+				hr.setAttribute(WebStatics.JSON, json);
+				final String context = getNamedParam(WebStatics.CON_PATH, hr);
 				if (stringOK(context)) {
 					final RequestDispatcher reqd = sc.getServletContext()
 							.getContext(context).getRequestDispatcher(redirect);
@@ -142,7 +142,7 @@ public class SecurityServlet extends AbstractSecurityServlet {
 
 			} else {
 				response.setContentType("application/json");
-				hr.getSession().setAttribute(JSON, null);
+				hr.getSession().setAttribute(WebStatics.JSON, null);
 				final PrintWriter out = response.getWriter();
 				out.write(json);
 			}
@@ -151,7 +151,7 @@ public class SecurityServlet extends AbstractSecurityServlet {
 
 	private final String handleQuery(final HttpServletRequest request,
 			final HttpServletResponse response) {
-		final String queryName = getNamedParam(QUERY_NAME, request);
+		final String queryName = getNamedParam(WebStatics.QUERY_NAME, request);
 		boolean isQuery = stringOK(queryName);
 
 		if (isQuery) {
@@ -180,7 +180,7 @@ public class SecurityServlet extends AbstractSecurityServlet {
 		}
 
 		// else try for json as a param
-		final String jsonQ = getNamedParam(QUERY_JSON, request);
+		final String jsonQ = getNamedParam(WebStatics.QUERY_JSON, request);
 		if (jsonQ != null && jsonQ.length() > 0) {
 			final SecurityQueryDTO sqd = getSqdFromJSON(jsonQ);
 			String rval = getJSonFromSqd(sqd);
@@ -338,10 +338,10 @@ public class SecurityServlet extends AbstractSecurityServlet {
 
 			if (stringOK(redirect)) {
 				final String qasJ = getSecServ().getJSonFromObject(sqd);
-				hr.setAttribute(QUERY_JSON, qasJ);
+				hr.setAttribute(WebStatics.QUERY_JSON, qasJ);
 			}
 			if (!stringOK(redirect)) {
-				hr.setAttribute(QUERY_JSON, null);
+				hr.setAttribute(WebStatics.QUERY_JSON, null);
 			}
 			return rval;
 		}

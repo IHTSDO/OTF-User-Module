@@ -29,7 +29,7 @@ public class UserAppsListQueryDTO extends AbstractSecurityQuery {
 			apps = new ArrayList<String>();
 		}
 
-		if (apps.size() == 0) {
+		if (apps.isEmpty()) {
 			if (ush != null) {
 				OtfAccount oacc = ush.getUserSecurity().getUserAccountByName(
 						userName, "*");

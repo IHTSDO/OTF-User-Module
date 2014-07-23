@@ -112,7 +112,7 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 	}
 
 	@Override
-	public void saveUserSecurity() throws Exception {
+	public final void saveUserSecurity() throws Exception {
 		LOG.info("About to write to " + getConfigFN());
 		XMLUtil.writeXMLToFile(getXMLFromUserSecurity(), getConfigFN(),
 				getSortXsltFn());
@@ -140,7 +140,7 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 
 	@Override
 	public final OtfAccount authAccountLocal(final String acNameIn,
-			String pwIn, OtfAccount accIn) {
+			final String pwIn, final OtfAccount accIn) {
 		// Really for use in testing - simply check if password is defaultPw and
 		// that user account exists.
 		if (pwIn.equals(getUserSecurity().getDefaultpw())) {
@@ -175,14 +175,36 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 	}
 
 	@Override
-	public String addUpdateGroupLocal(OtfGroup grpIn,
-			OtfDirectory mDirectoryIn, boolean isNewIn) {
+	public final String addUpdateGroupLocal(final OtfGroup grpIn,
+			final OtfDirectory mDirectoryIn, final boolean isNewIn) {
 		return saveUSToXML();
 	}
 
 	@Override
-	public String addUpdateDirLocal(OtfDirectory parentIn, boolean isNewIn) {
+	public final String addUpdateDirLocal(final OtfDirectory parentIn,
+			final boolean isNewIn) {
 		return saveUSToXML();
+	}
+
+	@Override
+	public final String requestUpdateUserPassword(final String userNameIn,
+			final String emailAddrIn) {
+
+		return "XML Implementation. requestUpdateUserPassword :- Currently no "
+				+ "user password excepting the default one";
+	}
+
+	@Override
+	public final int updateUserPassword(final String usernameIn,
+			final String passwordIn, final String token) {
+
+		if (stringOK(passwordIn)) {
+			return 1;
+		}
+		if (stringOK(usernameIn)) {
+			return 0;
+		}
+		return -1;
 	}
 
 }

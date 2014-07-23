@@ -29,10 +29,10 @@ public class AppUsersListQueryDTO extends AbstractSecurityQuery {
 			appUsers = new ArrayList<String>();
 		}
 
-		if (appUsers.size() == 0) {
+		if (!appUsers.isEmpty()) {
 			if (ush != null) {
 				for (OtfAccount ac : ush.getUserSecurity().getUsers("*")) {
-					if (ac.getCustData().getAppsByAppName(appname).size() > 0) {
+					if (!ac.getCustData().getAppsByAppName(appname).isEmpty()) {
 						String name = ac.getName();
 						if (!appUsers.contains(name)) {
 							appUsers.add(ac.getName());

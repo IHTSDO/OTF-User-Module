@@ -121,7 +121,7 @@ public class OtfCustomFieldApplication extends OtfCustomFieldCachedVals {
 	}
 
 	@Override
-	public void valFromParamDTO(OtfCustomFieldParamDTO ocfpIn) {
+	public void valFromParamDTO(final OtfCustomFieldParamDTO ocfpIn) {
 		switch (ocfpIn.getLocalKey()) {
 		case APP_ROLE_APP:
 			setApp((ocfpIn.getVal()));

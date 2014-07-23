@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
-import java.util.logging.Logger;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldSetting;
@@ -17,19 +16,11 @@ import org.ihtsdo.otf.security.dto.query.SecurityService;
 
 public class OtfSettings extends OtfBaseId {
 
-	/**
-	 * <p>
-	 * logger.
-	 * </p>
-	 */
-	private static final Logger LOG = Logger.getLogger(OtfSettings.class
-			.getName());
-
-	public final static String DEF_PW_LABEL = "Default Password:";
-	public final static String USER_APP_LABEL = "Users Application:";
-	public final static String MEMBER_APP_LABEL = "Members Application:";
-	public final static String ADMIN_APP_LABEL = "Admin Application:";
-	public final static String MOD_DATE_LABEL = "Last Modified Date:";
+	public static final String DEF_PW_LABEL = "Default Password:";
+	public static final String USER_APP_LABEL = "Users Application:";
+	public static final String MEMBER_APP_LABEL = "Members Application:";
+	public static final String ADMIN_APP_LABEL = "Admin Application:";
+	public static final String MOD_DATE_LABEL = "Last Modified Date:";
 	private Map<String, OtfCustomFieldSetting> settings;
 
 	private String defPw;
@@ -88,7 +79,7 @@ public class OtfSettings extends OtfBaseId {
 		resetErrors();
 		validateParams();
 		// If no errors then update
-		if (errors.size() == 0) {
+		if (errors.isEmpty()) {
 			setValsFromParams();
 			setSettingsFromFields();
 			updateGrpSettings();

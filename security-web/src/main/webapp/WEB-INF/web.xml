@@ -32,6 +32,7 @@
 	<context-param>
 		<param-name>StormPathUserSecurity.keyPath</param-name>
 		<!-- <param-value>C:/Users/adamf/stormpath/apiKey.properties</param-value>  -->
+		<!-- <param-value>C:/Users/adamf/stormpath/apiKeyDev.properties</param-value>  -->
 		<param-value>/opt/useradmin/api/apiKey.properties</param-value>
 	</context-param>
 	<!-- <context-param>
@@ -53,7 +54,7 @@
 		<param-value>/opt/useradmin/save/useradmin.xml</param-value>
 	</context-param>
 
-		<filter>
+	<filter>
 		<filter-name>cors</filter-name>
 		<filter-class>org.ihtsdo.otf.security.web.CorsFilter</filter-class>
 	</filter>

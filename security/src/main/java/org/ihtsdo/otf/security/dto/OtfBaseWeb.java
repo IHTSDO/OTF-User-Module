@@ -306,7 +306,7 @@ public abstract class OtfBaseWeb {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append(getHtmlLabelCell(label)).append("\n");
 		String inputT = getHtmlInputText(label, value);
-		if (errors != null && errors.size() > 0) {
+		if (errors != null && !errors.isEmpty()) {
 			LOG.info("errors found for label " + label);
 			inputT = inputT.replace(CSS_TEXT_INPUT, CSS_TEXT_INPUT_ERROR);
 			inputT = inputT + "\n" + getErrorsDiv(errors);

@@ -68,7 +68,7 @@ public class OtfCustomData extends OtfBaseId {
 	}
 
 	public static List<String> getReservedWords() {
-		if (RESERVED_WORDS.size() == 0) {
+		if (RESERVED_WORDS.isEmpty()) {
 			RESERVED_WORDS.add("href");
 			RESERVED_WORDS.add("createdAt");
 			RESERVED_WORDS.add("modifiedAt");

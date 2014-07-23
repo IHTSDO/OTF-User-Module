@@ -14,6 +14,7 @@ public class CorsFilter implements Filter {
 
 	@Override
 	public void destroy() {
+		// Not needed
 	}
 
 	@Override
@@ -31,6 +32,7 @@ public class CorsFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig arg0In) throws ServletException {
+		// Not needed
 	}
 
 }

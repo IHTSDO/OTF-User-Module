@@ -43,7 +43,7 @@ public class UserSecurity {
 		getAllAccounts();
 		getDirsMap();
 		getAppsMap();
-		if (getSettings() != null && getSettings().getSettings().size() > 0) {
+		if (getSettings() != null && !getSettings().getSettings().isEmpty()) {
 			getMembers();
 			getSettings();
 			getAppsNotMembersOrUsers();
@@ -368,7 +368,7 @@ public class UserSecurity {
 		if (adminUsers == null) {
 			adminUsers = new ArrayList<String>();
 			Map<String, OtfAccount> adminUserMap = getAdminUsersMap();
-			if (adminUserMap != null && adminUserMap.size() > 0) {
+			if (adminUserMap != null && !adminUserMap.isEmpty()) {
 				adminUsers.addAll(adminUserMap.keySet());
 			}
 			Collections.sort(adminUsers, String.CASE_INSENSITIVE_ORDER);
@@ -410,7 +410,7 @@ public class UserSecurity {
 		ArrayList<String> dirs = new ArrayList<String>();
 
 		for (OtfDirectory dir : getDirs().getDirectories().values()) {
-			if (dir.getAccounts().getAccounts().size() > 0) {
+			if (!dir.getAccounts().getAccounts().isEmpty()) {
 				for (OtfAccount user : dir.getAccounts().getAccounts().values()) {
 					if (user.getName().equals(username)) {
 						dirs.add(dir.getName());
@@ -419,6 +419,33 @@ public class UserSecurity {
 			}
 		}
 		return dirs;
+	}
+
+	public final List<String> getOtfAppNamesForUser(final String username) {
+		ArrayList<String> appsList = new ArrayList<String>();
+		Collection<String> dirsforUser = getDirNamesForUser(username);
+
+		for (OtfApplication app : getApps().getApplications().values()) {
+			for (String key : app.getAccountStores().keySet()) {
+				if (dirsforUser.contains(key)) {
+					appsList.add(app.getName());
+				}
+			}
+		}
+
+		return appsList;
+	}
+
+	public final String getFirstAppForUser(final String username) {
+
+		List<String> appsList = getOtfAppNamesForUser(username);
+
+		Collections.sort(appsList);
+		if (appsList.isEmpty()) {
+			return null;
+		}
+		return appsList.get(0);
+
 	}
 
 	public final Collection<OtfAccountMin> getMinUsers(final String dirName) {
@@ -483,7 +510,7 @@ public class UserSecurity {
 		if (appsNotMembersOrUsers == null) {
 			Collection<String> all = getAppNames();
 			appsNotMembersOrUsers = new ArrayList<String>();
-			if (all != null && all.size() > 0) {
+			if (all != null && !all.isEmpty()) {
 				String users = getUsersApp();
 				String members = getMembersApp();
 				for (String appname : all) {
@@ -516,7 +543,7 @@ public class UserSecurity {
 		if (allAccounts == null) {
 			allAccounts = new HashMap<String, OtfAccount>();
 			for (OtfDirectory dir : getDirs().getDirectories().values()) {
-				if (dir.getAccounts().getAccounts().size() > 0) {
+				if (!dir.getAccounts().getAccounts().isEmpty()) {
 					for (OtfAccount user : dir.getAccounts().getAccounts()
 							.values()) {
 						allAccounts.put(user.getName(), user);
