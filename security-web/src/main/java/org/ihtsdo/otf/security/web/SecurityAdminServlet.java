@@ -46,11 +46,6 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			.getLogger(SecurityAdminServlet.class.getName());
 
 	private String treeHtml;
-	public static final String TREE = "TreeHTML";
-	public static final String FORM = "FormHTML";
-	public static final String DEF_REDIR = "/tree.jsp";
-
-	public static final String NEW_FORM = "/newForm/";
 
 	private String treetype;
 
@@ -58,10 +53,35 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 	protected void handlePostRequest(HttpServletRequest requestIn,
 			HttpServletResponse responseIn) throws ServletException,
 			IOException {
-		boolean userok = checkCred(requestIn, responseIn);
 		setHr(requestIn);
+		String decPath = getDecString(getNotNullPath(requestIn));
+		if (decPath.endsWith(WebStatics.CHG_PW_REG_URL)) {
+			String userdetails = getNamedParam(WebStatics.USERMAIL, requestIn);
+			if (stringOK(userdetails)) {
+				String reqVal = requestResetUserPassword(userdetails);
+				final RequestDispatcher reqd = sc.getServletContext()
+						.getRequestDispatcher(
+								"/" + WebStatics.CHG_PW_REG_REC_JSP);
+				reqd.forward(requestIn, responseIn);
+				return;
+			}
+		}
+
+		if (decPath.endsWith(WebStatics.CHG_PW_URL)) {
+			String username = getNamedParam(WebStatics.USERNAME, requestIn);
+			String password = getNamedParam(WebStatics.PASSWD, requestIn);
+			String token = getNamedParam(WebStatics.SP_TOKEN, requestIn);
+			String redirUrl = resetUserPassword(username, password, token);
+			// redirect
+			final RequestDispatcher reqd = sc.getServletContext()
+					.getRequestDispatcher("/" + redirUrl);
+			reqd.forward(requestIn, responseIn);
+			return;
+		}
+
+		boolean userok = checkCred(requestIn, responseIn);
 		if (userok) {
-			if (getNamedParam(PASSWD, requestIn) != null) {
+			if (getNamedParam(WebStatics.PASSWD, requestIn) != null) {
 				handleGetRequest(requestIn, responseIn);
 			} else {
 				OtfBaseWeb obw = handlePostAction(requestIn, responseIn);
@@ -123,8 +143,9 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			getUsh().getUserSecurity().resetMembers();
 			getUsh().getUserSecurity().resetAdminUsers();
 			return retval;
-		} else
+		} else {
 			return AbstractUserSecurityHandler.REMOTE_COMMIT_NOT_OK;
+		}
 
 	}
 
@@ -132,11 +153,26 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 	protected void handleGetRequest(HttpServletRequest requestIn,
 			HttpServletResponse responseIn) throws ServletException,
 			IOException {
-		boolean userok = checkCred(requestIn, responseIn);
 		setHr(requestIn);
+		String decPath = getDecString(getNotNullPath(requestIn));
+		if (decPath.endsWith(WebStatics.CHG_PW_URL)) {
+
+			// Check token is real.
+
+			String sptoken = getNamedParam(WebStatics.SP_TOKEN, requestIn);
+			String uname = getNamedParam(WebStatics.USERNAME, requestIn);
+			String redirUrl = resetUserPassword(uname, null, sptoken);
+			// redirect
+
+			final RequestDispatcher reqd = sc.getServletContext()
+					.getRequestDispatcher("/" + redirUrl);
+			reqd.forward(requestIn, responseIn);
+			return;
+		}
+
+		boolean userok = checkCred(requestIn, responseIn);
 		if (userok) {
-			String decPath = getDecString(getNotNullPath(requestIn));
-			if (decPath.startsWith(NEW_FORM)) {
+			if (decPath.startsWith(WebStatics.NEW_FORM_URL)) {
 				String retval = getNewForm();
 				responseIn.setContentType("application/html");
 				final PrintWriter out = responseIn.getWriter();
@@ -144,10 +180,10 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 
 			} else {
 
-				if (decPath.endsWith(RELOAD)) {
+				if (decPath.endsWith(WebStatics.RELOAD)) {
 					reloadUsh();
 				}
-				if (decPath.endsWith(SAVE)) {
+				if (decPath.endsWith(WebStatics.SAVE)) {
 					save();
 				}
 
@@ -166,8 +202,8 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 					.contains(usern);
 			// if not perm send to sorry page
 			if (!perm) {
-				requestIn.getSession().removeAttribute(USERNAME);
-				requestIn.getSession().removeAttribute(AUTH_TOKEN);
+				requestIn.getSession().removeAttribute(WebStatics.USERNAME);
+				requestIn.getSession().removeAttribute(WebStatics.AUTH_TOKEN);
 				setRedirect("/NoAdmin.jsp");
 				final RequestDispatcher reqd = sc.getServletContext()
 						.getRequestDispatcher(redirect);
@@ -193,7 +229,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		String curl = getContextUrl(requestIn);
 		getUsh().getUserSecurity().getCachedListMaps()
 				.setAdminServletContextUrl(curl);
-		hr.getSession().setAttribute(BASEURL, curl);
+		hr.getSession().setAttribute(WebStatics.BASEURL, curl);
 		boolean loadObw = false;
 		if (obw != null) {
 			if (obw instanceof OtfBaseId) {
@@ -204,11 +240,11 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		}
 
 		if (loadObw) {
-			hr.getSession().setAttribute(FORM, obw.getRHS());
+			hr.getSession().setAttribute(WebStatics.FORM, obw.getRHS());
 		} else {
-			hr.getSession().setAttribute(FORM, getForm());
+			hr.getSession().setAttribute(WebStatics.FORM, getForm());
 		}
-		hr.getSession().setAttribute(TREE, getTreeHtml(curl));
+		hr.getSession().setAttribute(WebStatics.TREE, getTreeHtml(curl));
 		setRedirect("/index-admin.jsp");
 		final RequestDispatcher reqd = sc.getServletContext()
 				.getRequestDispatcher(redirect);
@@ -514,4 +550,62 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		return getUsh().getUserSecurity().getAppsMap();
 	}
 
+	public final String requestResetUserPassword(final String userdetail) {
+		// First find if there is an account with that name or email
+		String email = null;
+		String username = null;
+		// Find account
+		UsersListQueryDTO ulq = new UsersListQueryDTO(getUsh());
+
+		for (OtfAccountMin acc : ulq.getUsers()) {
+			if (acc.getName().equals(userdetail)) {
+				email = acc.getEmail();
+				username = acc.getName();
+				acc.setAuthToken(null);
+			}
+		}
+
+		if (!stringOK(email)) {
+			// try all email registered
+			for (OtfAccountMin acc : ulq.getUsers()) {
+				if (acc.getEmail().equals(userdetail)) {
+					email = acc.getEmail();
+					username = acc.getName();
+					acc.setAuthToken(null);
+				}
+			}
+		}
+
+		if (!stringOK(email)) {
+			return null;
+		} else {
+			return getUsh().requestUpdateUserPassword(username, email);
+		}
+	}
+
+	public final String resetUserPassword(final String username,
+			final String password, final String token) {
+		UsersListQueryDTO ulq = new UsersListQueryDTO(getUsh());
+		for (OtfAccountMin acc : ulq.getUsers()) {
+			if (acc.getName().equals(username)) {
+				acc.setAuthToken(null);
+				int retval = getUsh().updateUserPassword(username, password,
+						token);
+
+				if (retval == 0) {
+					// return set pw page
+					return WebStatics.CHG_PW_JSP;
+				}
+				if (retval == 1) {
+					// return password updated page
+					return WebStatics.CHG_PW_REG_REC_OK_JSP;
+				}
+				if (retval < 0) {
+					// return password updated page
+					return WebStatics.CHG_PW_REG_REC_NOTOK_JSP;
+				}
+			}
+		}
+		return null;
+	}
 }

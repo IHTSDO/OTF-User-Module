@@ -103,19 +103,32 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 	public final Application getUsersApplication() {
 		if (usersApplication == null) {
 			String userAppName = getUserSecurity().getUsersApp();
-			ApplicationList applications = spbd.getTenant().getApplications();
-			for (Application application : applications) {
-				if (application.getName().equals(userAppName)) {
-					setUsersApplication(application);
-					return usersApplication;
-				}
-			}
+			setUsersApplication(getApplicationByName(userAppName));
 		}
 		return usersApplication;
 	}
 
+	public final Application getApplicationByName(final String appName) {
+		ApplicationList applications = spbd.getTenant().getApplications();
+		for (Application application : applications) {
+			if (application.getName().equals(appName)) {
+				return application;
+			}
+		}
+		return null;
+	}
+
 	public final void setUsersApplication(final Application usersApplicationIn) {
 		usersApplication = usersApplicationIn;
+	}
+
+	public final Application getFirstApplicationByUserName(final String userName) {
+
+		String appname = getUserSecurity().getFirstAppForUser(userName);
+		if (stringOK(appname)) {
+			return getApplicationByName(appname);
+		}
+		return null;
 	}
 
 	public final String getUsersAppName() {
@@ -136,7 +149,7 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 
 	@Override
 	public final OtfAccount authAccountLocal(final String acNameIn,
-			String pwIn, OtfAccount accIn) {
+			String pwIn, final OtfAccount accIn) {
 		Account acc = authSPAccount(acNameIn, pwIn);
 		pwIn = null;
 		if (acc != null) {
@@ -171,7 +184,7 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 	}
 
 	@Override
-	public void localReload() {
+	public final void localReload() {
 		spbd = null;
 		mod2Storm = null;
 	}
@@ -223,8 +236,8 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 	}
 
 	@Override
-	public String addUpdateGroupLocal(OtfGroup grpIn,
-			OtfDirectory mDirectoryIn, boolean isNewIn) {
+	public final String addUpdateGroupLocal(final OtfGroup grpIn,
+			final OtfDirectory mDirectoryIn, final boolean isNewIn) {
 		Directory dir = getStorm2Mod().getDirByName(mDirectoryIn.getName());
 		if (dir == null) {
 			return DIR_NOT_FOUND;
@@ -239,7 +252,8 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 	}
 
 	@Override
-	public String addUpdateDirLocal(OtfDirectory dirIn, boolean isNewIn) {
+	public final String addUpdateDirLocal(final OtfDirectory dirIn,
+			final boolean isNewIn) {
 
 		if (isNewIn) {
 			getMod2Storm().buildDirectory(dirIn, null);
@@ -257,7 +271,7 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 		return storm2Mod;
 	}
 
-	public final void setStorm2Mod(Storm2Model storm2ModIn) {
+	public final void setStorm2Mod(final Storm2Model storm2ModIn) {
 		storm2Mod = storm2ModIn;
 	}
 
@@ -269,8 +283,58 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 		return mod2Storm;
 	}
 
-	public final void setMod2Storm(Model2Storm mod2StormIn) {
+	public final void setMod2Storm(final Model2Storm mod2StormIn) {
 		mod2Storm = mod2StormIn;
+	}
+
+	@Override
+	public final String requestUpdateUserPassword(final String userNameIn,
+			final String emailAddrIn) {
+
+		Application uApp = getFirstApplicationByUserName(userNameIn);
+		if (uApp != null) {
+			Account account = uApp.sendPasswordResetEmail(emailAddrIn);
+			if (account != null) {
+				return "Password Mail requested";
+			}
+		}
+
+		return null;
+	}
+
+	@Override
+	public final int updateUserPassword(final String userNameIn,
+			final String passwordIn, final String tokenIn) {
+		Account acc = null;
+		Application uApp = getFirstApplicationByUserName(userNameIn);
+		if (uApp != null) {
+			acc = getUsersApplication().verifyPasswordResetToken(tokenIn);
+		}
+
+		if (acc == null) {
+			return -1;
+		}
+
+		else {
+			// check username & acc username agree
+			boolean namesMatch = userNameIn.equals(acc.getUsername());
+			if (!namesMatch) {
+				return -2;
+			}
+			if (namesMatch) {
+				if (stringOK(passwordIn)) {
+					acc.setPassword(passwordIn);
+					acc.save();
+					return 1;
+				} else {
+					return 0;
+				}
+
+			}
+
+		}
+
+		return -3;
 	}
 
 }

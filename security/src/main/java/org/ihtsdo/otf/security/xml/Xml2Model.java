@@ -29,7 +29,7 @@ public class Xml2Model {
 	private static final Logger LOG = Logger.getLogger(Xml2Model.class
 			.getName());
 
-	UserSecurity userSecurity;
+	private UserSecurity userSecurity;
 
 	public final UserSecurity build(final Document confDoc) throws Exception {
 		buildUserSecurity(confDoc.getDocumentElement());

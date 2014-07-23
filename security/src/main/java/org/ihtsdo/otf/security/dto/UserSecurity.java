@@ -421,6 +421,33 @@ public class UserSecurity {
 		return dirs;
 	}
 
+	public final List<String> getOtfAppNamesForUser(final String username) {
+		ArrayList<String> appsList = new ArrayList<String>();
+		Collection<String> dirsforUser = getDirNamesForUser(username);
+
+		for (OtfApplication app : getApps().getApplications().values()) {
+			for (String key : app.getAccountStores().keySet()) {
+				if (dirsforUser.contains(key)) {
+					appsList.add(app.getName());
+				}
+			}
+		}
+
+		return appsList;
+	}
+
+	public final String getFirstAppForUser(final String username) {
+
+		List<String> appsList = getOtfAppNamesForUser(username);
+
+		Collections.sort(appsList);
+		if (appsList.isEmpty()) {
+			return null;
+		}
+		return appsList.get(0);
+
+	}
+
 	public final Collection<OtfAccountMin> getMinUsers(final String dirName) {
 		Collection<OtfAccount> users = getUsers(dirName);
 		Collection<OtfAccountMin> usersMin = new ArrayList<OtfAccountMin>();

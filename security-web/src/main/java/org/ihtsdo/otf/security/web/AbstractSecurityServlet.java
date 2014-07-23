@@ -52,23 +52,6 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 	private SecurityService secServ;
 	private UserSecurityHandler ush;
-	public static final String QUERY_NAME = "queryName";
-	public static final String QUERY_JSON = "jsonQuery";
-	public static final String REDIRECT = "redirect";
-	public static final String CON_PATH = "context";
-	public static final String JSON = "json";
-	public static final String RELOAD = "reload";
-	public static final String BASEURL = "BASEURL";
-	public static final String SAVE = "save";
-
-	public static final String USERNAME = "userName";
-	public static final String PASSWD = "passWord";
-	public static final String AUTH_TOKEN = "AUTH_TOKEN";
-
-	public static final String CLASS = "class";
-	public static final String USER_SECURITY_HANDLER = "UserSecurityHandler";
-
-	public static final String SETTINGS_PROPS = "SecurityServiceProps";
 
 	protected String redirect;
 
@@ -96,9 +79,9 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 	public final List<String> getInitParamNames() {
 		List<String> pnames = new ArrayList<String>();
-		pnames.add(SETTINGS_PROPS);
-		pnames.add(USER_SECURITY_HANDLER);
-		pnames.add(SAVE);
+		pnames.add(WebStatics.SETTINGS_PROPS);
+		pnames.add(WebStatics.USER_SECURITY_HANDLER);
+		pnames.add(WebStatics.SAVE);
 		return pnames;
 	}
 
@@ -125,7 +108,7 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 		}
 
 		PropertiesLoader pl = new PropertiesLoader(getInitParamNames(),
-				SETTINGS_PROPS, contextProps);
+				WebStatics.SETTINGS_PROPS, contextProps);
 
 		setParamsProps(pl.getSettings());
 
@@ -138,14 +121,14 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 		Properties sysProps = System.getProperties();
 		for (Object key : sysProps.keySet()) {
-			if (key.toString().equals(SETTINGS_PROPS)) {
+			if (key.toString().equals(WebStatics.SETTINGS_PROPS)) {
 				setProp = sysProps.getProperty(key.toString());
 			}
 		}
 		if (setProp == null) {
 			Map<String, String> env = System.getenv();
 			for (String envName : env.keySet()) {
-				if (envName.equals(SETTINGS_PROPS)) {
+				if (envName.equals(WebStatics.SETTINGS_PROPS)) {
 					setProp = env.get(envName);
 				}
 			}
@@ -166,25 +149,27 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 	protected String authUser(final HttpServletRequest request) {
 
 		// See if UN and Token are set in the session
-		String uname = (String) request.getSession().getAttribute(USERNAME);
+		String uname = (String) request.getSession().getAttribute(
+				WebStatics.USERNAME);
 		String token = null;
 		if (stringOK(uname)) {
-			token = (String) request.getSession().getAttribute(AUTH_TOKEN);
+			token = (String) request.getSession().getAttribute(
+					WebStatics.AUTH_TOKEN);
 			if (stringOK(token)) {
 				return uname;
 			}
 		}
 
 		// Get the UN + pw strings
-		uname = getNamedParam(USERNAME, request);
-		String password = getNamedParam(PASSWD, request);
+		uname = getNamedParam(WebStatics.USERNAME, request);
+		String password = getNamedParam(WebStatics.PASSWD, request);
 		// auth users
 		if (stringOK(uname) && stringOK(password)) {
 			OtfAccount oacc = getUsh().authAccount(uname, password);
 			if (oacc != null) {
 				token = oacc.getAuthToken();
-				request.getSession().setAttribute(USERNAME, uname);
-				request.getSession().setAttribute(AUTH_TOKEN, token);
+				request.getSession().setAttribute(WebStatics.USERNAME, uname);
+				request.getSession().setAttribute(WebStatics.AUTH_TOKEN, token);
 				password = null;
 				return uname;
 			}
@@ -319,7 +304,8 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 		Enumeration<String> paramNames = hr.getParameterNames();
 		while (paramNames.hasMoreElements()) {
 			String paramName = paramNames.nextElement();
-			if (!paramName.equals(CON_PATH) && !paramName.equals(REDIRECT)
+			if (!paramName.equals(WebStatics.CON_PATH)
+					&& !paramName.equals(WebStatics.REDIRECT)
 					&& !paramName.equals("submit")) {
 				String[] paramValues = hr.getParameterValues(paramName);
 				if (paramValues.length == 1) {
@@ -366,8 +352,8 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 	public final UserSecurityHandler getUsh() {
 		if (ush == null) {
-			String ushName = getParamsProps()
-					.getProperty(USER_SECURITY_HANDLER);
+			String ushName = getParamsProps().getProperty(
+					WebStatics.USER_SECURITY_HANDLER);
 
 			Properties props = new Properties();
 			String key = new StringBuilder().append(ushName).append(".")
@@ -382,7 +368,7 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 				}
 			}
 
-			String clname = props.getProperty(CLASS);
+			String clname = props.getProperty(WebStatics.CLASS);
 			if (clname != null && clname.length() > 0) {
 				Object obj = ObjectCacheClassHandler.getInstClass(clname);
 				if (obj == null) {
@@ -493,7 +479,7 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 	public final String getBaseUrl() {
 
 		if (baseUrl == null) {
-			baseUrl = getParamsProps().getProperty(BASEURL);
+			baseUrl = getParamsProps().getProperty(WebStatics.BASEURL);
 			LOG.info("getBaseUrl baseUrl = " + baseUrl);
 		}
 		return baseUrl;
@@ -526,10 +512,10 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 		if (canSave == null) {
 			canSave = new Boolean(canSaveFile());
 			if (canSave) {
-				hr.getSession().setAttribute(SAVE, "true");
+				hr.getSession().setAttribute(WebStatics.SAVE, "true");
 			}
 			if (!canSave) {
-				hr.getSession().removeAttribute(SAVE);
+				hr.getSession().removeAttribute(WebStatics.SAVE);
 			}
 		}
 
@@ -542,7 +528,7 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 	public final String getSavePath() {
 		if (savePath == null) {
-			savePath = getParamsProps().getProperty(SAVE);
+			savePath = getParamsProps().getProperty(WebStatics.SAVE);
 		}
 		return savePath;
 	}

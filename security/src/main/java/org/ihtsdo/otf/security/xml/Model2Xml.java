@@ -32,7 +32,7 @@ public class Model2Xml {
 		super();
 	}
 
-	public Document getXML(UserSecurity userSecurityIn) {
+	public final Document getXML(UserSecurity userSecurityIn) {
 		userSecurity = userSecurityIn;
 		buildFromModel();
 		return doc;

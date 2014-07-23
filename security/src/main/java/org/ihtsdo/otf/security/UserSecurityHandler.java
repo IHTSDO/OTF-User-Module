@@ -38,4 +38,21 @@ public interface UserSecurityHandler {
 
 	String addUpdateDir(OtfDirectory dir);
 
+	String requestUpdateUserPassword(String username, String emailAddr);
+
+	/**
+	 * If the token is the only value (all others are null), then return the
+	 * username else check the token & if OK use the password (which must be not
+	 * null and longer than 0) to update the stored one for the username.
+	 * 
+	 * @param username
+	 * @param password
+	 * @param token
+	 * @return A number denoting success or failure. A negative number is a
+	 *         failure. 0 is where the username and token agree and thus the
+	 *         user should be allowed to input a password. 1 is a successful
+	 *         change of the password.
+	 */
+	int updateUserPassword(String username, String password, String token);
+
 }
