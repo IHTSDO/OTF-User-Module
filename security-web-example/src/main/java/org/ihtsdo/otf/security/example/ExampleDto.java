@@ -1,7 +1,11 @@
 package org.ihtsdo.otf.security.example;
 
 import java.util.Enumeration;
+import java.util.Map;
+import java.util.Properties;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -27,26 +31,27 @@ public class ExampleDto {
 
 	private HttpServletRequest request;
 	private HttpSession session;
+	private final ServletConfig config;
 
 	private String contextPath;
 
-	private String urlNorm = "/security-web/query/";
-	private String urlDev = "/security-web-dev/query/";
+	private final static String QUERY_URL = "/query/";
 
-	public ExampleDto(HttpServletRequest requestIn) {
+	public static final String BASE_URL = "baseUrl";
+
+	private String baseUrl = "/security-web";
+
+	private String actionUrl;
+
+	public ExampleDto(HttpServletRequest requestIn, ServletConfig configIn) {
 		super();
 		request = requestIn;
-		// init();
+		config = configIn;
+		init();
 	}
 
 	private void init() {
-		// System.out.println("Init called");
-		// final Enumeration<String> paramNames = request.getSession()
-		// .getAttributeNames();
-		// while (paramNames.hasMoreElements()) {
-		// final String paramName = paramNames.nextElement();
-		// System.out.println("Session name = " + paramName);
-		// }
+		setBaseUrlFromVars();
 
 	}
 
@@ -142,17 +147,9 @@ public class ExampleDto {
 		if (!stringOK(action)) {
 			action = getSessAttAsString(ACTION);
 			if (!stringOK(action)) {
-				String contextPath = request.getContextPath();
-				// System.out.println("getAction contextPath = " + contextPath);
-				// action = "/security-web";
-				if (contextPath.endsWith("dev")) {
-					setAction(getUrlDev());
-				} else {
-					setAction(getUrlNorm());
-				}
+				setAction(getActionUrl());
 			}
 		}
-
 		return action;
 	}
 
@@ -302,20 +299,77 @@ public class ExampleDto {
 		contextPath = contextpathIn;
 	}
 
-	public final String getUrlNorm() {
-		return urlNorm;
+	public final String getActionUrl() {
+		if (actionUrl == null || actionUrl.length() == 0) {
+			actionUrl = getBaseUrl() + QUERY_URL;
+		}
+		return actionUrl;
 	}
 
-	public final void setUrlNorm(String urlNormIn) {
-		urlNorm = urlNormIn;
+	public final void setActionUrl(String actionUrlIn) {
+		actionUrl = actionUrlIn;
 	}
 
-	public final String getUrlDev() {
-		return urlDev;
+	public final String getBaseUrl() {
+		return baseUrl;
 	}
 
-	public final void setUrlDev(String urlDevIn) {
-		urlDev = urlDevIn;
+	public final void setBaseUrl(String baseUrlIn) {
+		baseUrl = baseUrlIn;
+	}
+
+	public final void setBaseUrlFromVars() {
+
+		String burl = getParam(BASE_URL);
+		if (burl != null && burl.length() > 0) {
+			setBaseUrl(burl);
+		}
+
+	}
+
+	private final String getParam(final String keyName) {
+		// see if in sys props:
+		Properties sysProps = System.getProperties();
+		for (Object keyO : sysProps.keySet()) {
+			String key = keyO.toString();
+			if (key.equals(keyName)) {
+				String val = sysProps.getProperty(key);
+				return val;
+			}
+		}
+		// see in env vars
+		Map<String, String> env = System.getenv();
+		for (String key : env.keySet()) {
+			if (key.equals(keyName)) {
+				String val = env.get(key);
+				return val;
+			}
+		}
+
+		// see if in servlet web.xml
+
+		Enumeration<String> initParams = config.getInitParameterNames();
+
+		while (initParams.hasMoreElements()) {
+			String name = initParams.nextElement();
+			if (name.equals(keyName)) {
+				String val = config.getInitParameter(name);
+				return val;
+			}
+		}
+
+		ServletContext scon = config.getServletContext();
+		Enumeration<String> contextParams = scon.getInitParameterNames();
+
+		while (contextParams.hasMoreElements()) {
+			String name = contextParams.nextElement();
+			if (name.equals(keyName)) {
+				String val = scon.getInitParameter(name);
+				return val;
+			}
+		}
+
+		return null;
 	}
 
 }

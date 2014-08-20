@@ -84,7 +84,7 @@ public abstract class AbstractUserSecurityHandler implements
 			return null;
 		}
 		// check if uuid/token
-		if (pwIn.equals(acc.getAuthToken())) {
+		if (acc.checkAuthToken(pwIn)) {
 			return acc;
 		}
 		// else auth local

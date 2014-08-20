@@ -9,7 +9,7 @@
 
 	<h1>IHTSDO OTF User Management Web Example</h1>
 	<%
-		ExampleDto edto = new ExampleDto(request);
+		ExampleDto edto = new ExampleDto(request,getServletConfig());
 	%>
 
 	<table class="sampleNoBorder">
