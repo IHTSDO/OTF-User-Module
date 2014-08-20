@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -131,9 +132,16 @@ public class SecurityServlet extends AbstractSecurityServlet {
 				hr.setAttribute(WebStatics.JSON, json);
 				final String context = getNamedParam(WebStatics.CON_PATH, hr);
 				if (stringOK(context)) {
-					final RequestDispatcher reqd = sc.getServletContext()
-							.getContext(context).getRequestDispatcher(redirect);
-					reqd.forward(request, response);
+					ServletContext scon = sc.getServletContext().getContext(
+							context);
+					if (scon == null) {
+						// Set crossContext if allowed else write to out
+						writeJSONout(json, response);
+					} else {
+						final RequestDispatcher reqd = scon
+								.getRequestDispatcher(redirect);
+						reqd.forward(request, response);
+					}
 				} else {
 					final RequestDispatcher reqd = sc.getServletContext()
 							.getRequestDispatcher(redirect);
@@ -141,12 +149,17 @@ public class SecurityServlet extends AbstractSecurityServlet {
 				}
 
 			} else {
-				response.setContentType("application/json");
-				hr.getSession().setAttribute(WebStatics.JSON, null);
-				final PrintWriter out = response.getWriter();
-				out.write(json);
+				writeJSONout(json, response);
 			}
 		}
+	}
+
+	private void writeJSONout(final String json,
+			final HttpServletResponse response) throws IOException {
+		response.setContentType("application/json");
+		hr.getSession().setAttribute(WebStatics.JSON, null);
+		final PrintWriter out = response.getWriter();
+		out.write(json);
 	}
 
 	private final String handleQuery(final HttpServletRequest request,
