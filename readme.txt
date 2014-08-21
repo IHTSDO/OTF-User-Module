@@ -10,7 +10,7 @@ i.e. Quick and dirty - get running w/o explanation read QuickAndDirty.txt
 5) Running the web apps 
 6) URLS - What you can ask for and the URL to do it.
 7) Authentication - tokens
-
+8) Nginx - https set up
 
 (1) Introduction
 
@@ -216,7 +216,10 @@ keyPath=C:/Users/adamf/stormpath/apiKey.properties
 5.1) Build the security-web war & if required the security-web-example war & put 
 them into the webapps (or equivalent) directory of your java web app server.
 
-5.2) The security web-example war should need no further set up
+5.2) The security web-example war can be set to point to the security web url anywhere using a setting in the web.xml, a commandline (-D) setting or an environment variable set to secWebBaseUrl e.g. 
+-DsecWebBaseUrl=https://usermanagement.ihtsdotools.org/security-web
+
+If running in the same container as the security-web app the UI experience can be improved by wrapping the results in a page however that requires allowing crossContext by (in Tomcat) editing the context.xml and setting crossContext = "true" .
 
 5.3) The security-web Settings:
 
@@ -392,19 +395,8 @@ like:
 Note the last field entitled "token".
 
 This is the UUID and can then be used in place of the password.
-
-Note that in order to distinguish between a password based login vs a token 
-based login in the case of a token based login the token is not returned e.g.:
-
-{"user":{
-"name":"Bob",
-"status":"ENABLED",
-"email":"bob@test.com",
-"givenName":"Bob",
-"middleName":"",
-"surname":"Bobbin",
-"token":""
-}}
+Using the UUID will be quicker as the app caches that whereas it goes off to stormpath to validate the username + password
+The app using the service must be prepared for the uuid to change as it is set to have a 16 hour time to live.
 
 In order to login you must POST the following information to: 
 /security-web/query/
@@ -415,3 +407,64 @@ password=
 
 where username & the password are the username and password (or token) being 
 used.
+
+(8) Nginx - https set up
+
+We use Nginx to provide a proxy https service so that tomcat does not need to be configured etc.
+
+(8.1) Install Nginx:
+Command:
+sudo apt-get install nginx  
+
+(8.2) Cert and SSL Key installation:
+Place the certificate in /etc/ssl/certs
+Place the ssl private key in /etc/ssl/private
+Make sure the private key is owned by root:root, with a mode of 0600
+
+(8.3) Configuring Nginx
+
+Go to the nginx sites-available folder ( usually: /etc/nginx/sites-available)
+open or create the default file
+
+Make it look like:
+
+server {
+  server_name www.mydomain.com;
+  listen 80;
+  rewrite ^ https://$host$request_uri permanent;
+}
+
+server {
+  server_name www.mydomain.com;
+  listen 443 ssl;
+  ssl on;
+
+  ssl_certificate     /etc/ssl/certs/server.crt;
+  ssl_certificate_key /etc/ssl/private/server.key;
+
+  location / {
+      proxy_pass http://localhost:8081;
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto "https";
+	  proxy_set_header X-Url-Scheme $scheme;
+      proxy_redirect off;
+  }
+}
+
+(8.4) Check the config
+
+                         MAKE SURE:
+						 
+You change/Check 
+
+(A) www.mydomain.com to the name of YOUR machine
+(B) proxy_pass http://localhost:8081; to the port your web app is using
+(C) ssl_certificate     /etc/ssl/certs/server.crt;  points to the directory and file(name) or the certificate file
+(D) ssl_certificate_key /etc/ssl/private/server.key; points to the directory and file(name) or the certificate key file
+
+(8.5) Reload nginx with the new config.
+
+Command: 
+service nginx reload

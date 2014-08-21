@@ -186,6 +186,7 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 	@Override
 	public final void localReload() {
 		spbd = null;
+		storm2Mod = null;
 		mod2Storm = null;
 	}
 
