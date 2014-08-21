@@ -1,0 +1,14 @@
+For those you simply want it up & running with no explanation using the debian (deb) installer.
+Paths etc are those used as std or as std on Ubuntu 14.04 LTS 
+
+1) Get the deb
+
+2) Install the deb
+
+3) Test the Install
+
+4) Install Nginx for ssl proxying
+
+
+
+

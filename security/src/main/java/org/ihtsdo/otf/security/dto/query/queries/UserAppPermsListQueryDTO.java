@@ -41,27 +41,26 @@ public class UserAppPermsListQueryDTO extends AbstractSecurityQuery {
 			perms = new ArrayList<AppPermDTO>();
 		}
 
-		if (perms.isEmpty()) {
-			if (ush != null) {
-				OtfAccount oacc = ush.getUserSecurity().getUserAccountByName(
-						userName, "*");
-				if (oacc != null) {
-					List<OtfCustomField> operms = oacc.getCustData().getApps();
-					for (OtfCustomField cf : operms) {
-						OtfCustomFieldApplication cfapp = (OtfCustomFieldApplication) cf
-								.getModel();
-						if (cfapp.getApp().equals(appName)) {
-							if (membership == null || membership.length() == 0) {
-								perms.add(getAp(cfapp));
-							} else {
-								if (membership.equals(cfapp.getMember())) {
-									perms.add(getAp(cfapp));
-								}
-							}
+		if (perms.isEmpty() && ush != null) {
 
+			OtfAccount oacc = ush.getUserSecurity().getUserAccountByName(
+					userName, "*");
+			if (oacc != null) {
+				List<OtfCustomField> operms = oacc.getCustData().getApps();
+				for (OtfCustomField cf : operms) {
+					OtfCustomFieldApplication cfapp = (OtfCustomFieldApplication) cf
+							.getModel();
+					if (cfapp.getApp().equals(appName)) {
+						if (membership == null || membership.length() == 0) {
+							perms.add(getAp(cfapp));
+						} else {
+							if (membership.equals(cfapp.getMember())) {
+								perms.add(getAp(cfapp));
+							}
 						}
 
 					}
+
 				}
 			}
 		}

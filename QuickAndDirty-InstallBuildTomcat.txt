@@ -1,0 +1,60 @@
+For those you simply want it up & running with no explanation.
+{HERE} = the folder where this file is. 
+
+
+1) Install java & Tomcat.
+
+2) Use maven to build (clean install):
+2.1) {HERE}/security/pom-orig.xml
+2.2) {HERE}/security-web/pom-orig.xml
+2.3) {HERE}/security-web-example/pom.xml
+
+3) Copy wars created by 2.2 & 2.3 to the webapps folder of tomcat
+
+4) In the tomcat /bin folder create a text file call setenv.bat (if windows) or
+setenv.sh if linux (mac?) 
+
+If windows paste in:
+SET CATALINA_OPTS=-DSecurityServiceProps={HERE}/security/TextFiles/MinimalExampleSecuritySettings.props
+
+If linux paste in:
+
+EXPORT CATALINA_OPTS="$CATALINA_OPTS -DSecurityServiceProps={HERE}/security/TextFiles/MinimalExampleSecuritySettings.props"
+
+5) Edit {HERE}/security/TextFiles/MinimalExampleSecuritySettings.props
+
+5.1) Decide if Stormpath or XML. XML is faster but the only auth is against the 
+default password in the settings object.
+
+5.2) If XML:
+5.2.1) Make sure you are point to your own XML Model file or use the included example:
+XmlUserSecurity.configFile={HERE}/security/TextFiles/Example.xml
+
+
+5.3) If Stormpath:
+5.3.1) Sign up for an account @ Stormpath: https://stormpath.com/
+5.3.2) Sign in with your (admin user) and create an api key 
+https://http://docs.stormpath.com/rest/quickstart
+Save properties file to {SOMEWHERE}/apiKey.properties
+
+5.3.3) Choose Stormpath UserSecurityHandler:
+
+# UserSecurityHandler
+#UserSecurityHandler=XmlUserSecurity
+UserSecurityHandler=StormPathUserSecurity
+
+5.3.4) Point to the properties file you created from Stormpath:
+
+StormPathUserSecurity.keyPath={SOMEWHERE}/apiKey.properties
+
+5.4)  If you want to be able to save your changes to another file then set a 
+save property which makes sense for your system. 
+e.g.:
+save={HERE}/security/TextFiles/Example-save1.xml
+
+6) Start Tomcat.
+
+7) Open a Web Browser and go to :
+localhost:8080/security-web-example/home.jsp
+
+For example rest URLs.

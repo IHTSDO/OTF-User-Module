@@ -37,7 +37,7 @@ public class ExampleDto {
 
 	private final static String QUERY_URL = "/query/";
 
-	public static final String BASE_URL = "baseUrl";
+	public static final String BASE_URL = "secWebBaseUrl";
 
 	private String baseUrl = "/security-web";
 

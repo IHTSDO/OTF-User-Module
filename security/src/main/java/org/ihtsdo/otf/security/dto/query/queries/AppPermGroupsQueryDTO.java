@@ -40,23 +40,20 @@ public class AppPermGroupsQueryDTO extends AbstractSecurityQuery {
 			perms = new ArrayList<GroupPermDTO>();
 		}
 
-		if (!perms.isEmpty()) {
-			if (ush != null) {
-				boolean checkGrpName = groupName != null
-						&& groupName.length() > 0;
-				for (OtfApplication oApp : ush.getUserSecurity().getApps()
-						.getApplications().values()) {
+		if (perms.isEmpty() && ush != null) {
+			boolean checkGrpName = groupName != null && groupName.length() > 0;
+			for (OtfApplication oApp : ush.getUserSecurity().getApps()
+					.getApplications().values()) {
 
-					if (oApp.getName().equals(appName)) {
-						for (OtfAccountStore oAst : oApp.getAccountStores()
-								.values()) {
-							String name = oAst.getName();
+				if (oApp.getName().equals(appName)) {
+					for (OtfAccountStore oAst : oApp.getAccountStores()
+							.values()) {
+						String name = oAst.getName();
 
-							OtfDirectory dir = ush.getUserSecurity().getDirs()
-									.getDirByName(name);
-							if (dir != null) {
-								getGroupsForDir(dir, checkGrpName);
-							}
+						OtfDirectory dir = ush.getUserSecurity().getDirs()
+								.getDirByName(name);
+						if (dir != null) {
+							getGroupsForDir(dir, checkGrpName);
 						}
 					}
 				}
