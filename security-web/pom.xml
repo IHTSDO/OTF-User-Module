@@ -140,6 +140,30 @@
 										<filemode>0640</filemode>
 									</mapper>
 								</data>
+								<!-- example html page used for testing -->
+								<data>
+									<src>${basedir}/src/deb/stormpath.properties</src>
+									<dst>/etc/opt/${packageName}/stormpath.properties</dst>
+									<type>file</type>
+									<conffile>true</conffile>
+									<mapper>
+										<type>perm</type>
+										<group>${packageName}</group>
+										<filemode>0640</filemode>
+									</mapper>
+								</data>
+								<!-- example development stormpath id etc used for testing -->
+								<data>
+									<src>${basedir}/src/deb/testUseradmin-localUrl.html</src>
+									<dst>/etc/opt/${packageName}/testUseradmin-localUrl.html</dst>
+									<type>file</type>
+									<conffile>true</conffile>
+									<mapper>
+										<type>perm</type>
+										<group>${packageName}</group>
+										<filemode>0640</filemode>
+									</mapper>
+								</data>
 								<!-- nginx config file -->
 								<data>
 									<src>${basedir}/src/deb/nginx/sites-available/default</src>

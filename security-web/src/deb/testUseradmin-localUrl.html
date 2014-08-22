@@ -1,0 +1,337 @@
+
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="./security-web-example/src/main/webapp/style.css">
+
+<title>IHTSDO OTF User Management Web Example</title>
+</head>
+<body>
+
+	<h1>IHTSDO OTF User Management Web Example</h1>
+	
+
+	<table class="sampleNoBorder">
+		<tr VALIGN="top">
+			<td>
+				<form name="setParamsform" action="./home.jsp" method="post">
+					<table class="sampleNoBorder">
+						<th>Set the Parameters</th>
+						<tr>
+							<td>User:</td>
+							<td><input type="text" class="w100"
+								name="User" value="Bob"></td>
+						</tr>
+						<tr>
+							<td>Application:</td>
+							<td><input type="text" class="w100"
+								name="Application" value="Refset"></td>
+						</tr>
+						<tr>
+							<td>Group:</td>
+							<td><input type="text" class="w100"
+								name="Group" value="Admin"></td>
+						</tr>
+						<tr>
+							<td>Member:</td>
+							<td><input type="text" class="w100"
+								name="Member" value="*"></td>
+						</tr>
+					</table>
+				</form>
+			</td>
+			<td>
+				<form name="checkUserform" action="http://localhost:8080/security-web/query/"
+					method="post">
+					<input type="hidden" name="queryName" value="getUserByNameAuth" />
+					<table class="sampleNoBorder">
+						<th>Authenticate a user</th>
+						<tr>
+							<td>User:</td>
+							<td><input type="text" class="w100" name="username"
+								value="Bob"></td>
+						</tr>
+						<tr>
+							<td>Password:</td>
+							<td><input type="password" class="w100" name="password"></td>
+						</tr>
+
+						<tr>
+							<td colspan="2" align="center"><input type="submit"
+								class="w100" name="submit" value="Submit"></td>
+						</tr>
+					</table>
+				</form>
+				<table class="sampleNoBorder">
+					<th>Change A User Password</th>
+					<tr>
+						<td>Click on Link</td>
+						<td><a class="pseudoLabel"
+							href="http://localhost:8080/security-web/requestPwChange.jsp" target="_blank">http://localhost:8080/security-web/requestPwChange.jsp</a></td>
+					</tr>
+
+				</table>
+			</td>
+		</tr>
+	</table>
+
+	<table class="sample">
+		<tr>
+			<td><span class="docSubTitle">Action:</span></td>
+			<td><span class="docSubTitle">As Rest URL: </span></td>
+			<td><span class="docSubTitle">As Parameters: </span></td>
+		</tr>
+
+		<!--<tr class="green">
+			<td><span class="docSubSubTitle">Reload Model:</span></td>
+			<td><a class="pseudoLabel" href="http://localhost:8080/security-web/query/reload"target="_blank">http://localhost:8080/security-web/query/reload</a></td>
+			<td align="center">
+				<form name="Reloadform" action="http://localhost:8080/security-web/query/" method="get"
+					class="centered">
+					<input type="hidden" name="reload" value="true" /> <input
+						type="submit" class="w100" name="submit" value="Submit" />
+				</form>
+			</td>
+		</tr> -->
+		<tr class="green">
+			<td><span class="docSubSubTitle">Members:</span></td>
+			<td><a class="pseudoLabel" href="http://localhost:8080/security-web/query/members"target="_blank">http://localhost:8080/security-web/query/members</a></td>
+			<td>
+				<form name="listMembersform" action="http://localhost:8080/security-web/query/"
+					method="get" class="centered">
+					<input type="hidden" name="queryName" value="getMembers" />  
+					<input type="submit" class="w100" name="submit" value="Submit" />
+				</form>
+			</td>
+		</tr>
+		<tr class="green">
+			<td colspan="3" align="left"><span class="docSubTitleRed">Users:</span></td>
+		</tr>
+		<tr class="green">
+			<td><span class="docSubSubTitle">Users:</span></td>
+			<td><a class="pseudoLabel" href="http://localhost:8080/security-web/query/users"target="_blank">http://localhost:8080/security-web/query/users</a></td>
+			<td>
+				<form name="listUsersform" action="http://localhost:8080/security-web/query/"
+					method="get" class="centered">
+					<input type="hidden" name="queryName" value="getUsers" />  
+					<input type="submit" class="w100" name="submit" value="Submit" />
+				</form>
+			</td>
+		</tr>
+
+		<tr class="green">
+			<td><span class="docSubSubTitle">User Details:</span></td>
+			<td><a class="pseudoLabel" href="http://localhost:8080/security-web/query/users/Bob"target="_blank">http://localhost:8080/security-web/query/users/Bob</a></td>
+			<td>
+				<form name="UserByName" action="http://localhost:8080/security-web/query/" method="get"
+					class="centered">
+					<input type="hidden" name="queryName" value="getUserByName" />  
+					<table class="sampleNoBorder">
+						<tr>
+							<td>User:</td>
+							<td><input type="text" class="w100" name="username"
+								value="Bob"></td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center"><input type="submit"
+								class="w100" name="submit" value="Submit"></td>
+						</tr>
+					</table>
+				</form>
+			</td>
+		</tr>
+		<tr class="green">
+			<td><span class="docSubSubTitle">User Apps:</span></td>
+			<td><a class="pseudoLabel" href="http://localhost:8080/security-web/query/users/Bob/apps"target="_blank">http://localhost:8080/security-web/query/users/Bob/apps</a></td>
+			<td>
+				<form name="UserAppform" action="http://localhost:8080/security-web/query/" method="get"
+					class="centered">
+					<input type="hidden" name="queryName" value="getUserApps" />  
+					<table class="sampleNoBorder">
+						<tr>
+							<td>User:</td>
+							<td><input type="text" class="w100" name="username"
+								value="Bob"></td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center"><input type="submit"
+								class="w100" name="submit" value="Submit"></td>
+						</tr>
+					</table>
+				</form>
+			</td>
+		</tr>
+		<tr class="green">
+			<td><span class="docSubSubTitle">User App Groups:</span></td>
+			<td><a class="pseudoLabel" href="http://localhost:8080/security-web/query/users/Bob/apps/Refset"target="_blank">http://localhost:8080/security-web/query/users/Bob/apps/Refset</a></td>
+			<td>
+				<form name="UserAppPermform" action="http://localhost:8080/security-web/query/"
+					method="get" class="centered">
+					<input type="hidden" name="queryName" value="getUserAppPerms" />  
+					<table class="sampleNoBorder">
+						<tr>
+							<td>User:</td>
+							<td><input type="text" class="w100" name="username"
+								value="Bob"></td>
+						</tr>
+						<tr>
+							<td>Application:</td>
+							<td><input type="text" class="w100" name="appName"
+								value="Refset"></td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center"><input type="submit"
+								class="w100" name="submit" value="Submit"></td>
+						</tr>
+					</table>
+				</form>
+			</td>
+		</tr>
+
+		<tr class="green">
+			<td><span class="docSubSubTitle">User App Groups By
+					Member:</span></td>
+			<td><a class="pseudoLabel" href="http://localhost:8080/security-web/query/users/Bob/apps/Refset/members/*"target="_blank">http://localhost:8080/security-web/query/users/Bob/apps/Refset/members/*</a></td>
+			<td>
+				<form name="UserAppPermform" action="http://localhost:8080/security-web/query/"
+					method="get" class="centered">
+					<input type="hidden" name="queryName" value="getUserAppPerms" />  
+					<table class="sampleNoBorder">
+						<tr>
+							<td>User:</td>
+							<td><input type="text" class="w100" name="username"
+								value="Bob"></td>
+						</tr>
+						<tr>
+							<td>Application:</td>
+							<td><input type="text" class="w100" name="appName"
+								value="Refset"></td>
+						</tr>
+						<tr>
+							<td>Member:</td>
+							<td><input type="text" class="w100" name="member"
+								value="*"></td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center"><input type="submit"
+								class="w100" name="submit" value="Submit"></td>
+						</tr>
+					</table>
+				</form>
+			</td>
+		</tr>
+		<tr class="green">
+			<td><span class="docSubSubTitle">User Memberships:</span></td>
+			<td><a class="pseudoLabel" href="http://localhost:8080/security-web/query/users/Bob/members"target="_blank">http://localhost:8080/security-web/query/users/Bob/members</a></td>
+			<td>
+				<form name="UserMemform" action="http://localhost:8080/security-web/query/" method="get"
+					class="centered">
+					<input type="hidden" name="queryName" value="getUserMemberships" />
+					<input type="hidden" name="redirect" value="/result.jsp" /> 
+					<table class="sampleNoBorder">
+						<tr>
+							<td>User:</td>
+							<td><input type="text" class="w100" name="username"
+								value="Bob"></td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center"><input type="submit"
+								class="w100" name="submit" value="Submit"></td>
+						</tr>
+					</table>
+				</form>
+			</td>
+		</tr>
+
+		<tr class="green">
+			<td colspan="3" align="left"><span class="docSubTitleRed">Applications:</span></td>
+		</tr>
+		<tr class="green">
+			<td><span class="docSubSubTitle">Apps:</span></td>
+			<td><a class="pseudoLabel" href="http://localhost:8080/security-web/query/apps"target="_blank">http://localhost:8080/security-web/query/apps</a></td>
+			<td>
+				<form name="listAppsform" action="http://localhost:8080/security-web/query/"
+					method="get" class="centered">
+					<input type="hidden" name="queryName" value="getApps" />  
+					<input type="submit" class="w100" name="submit" value="Submit" />
+				</form>
+			</td>
+		</tr>
+		<tr class="green">
+			<td><span class="docSubSubTitle">App Users:</span></td>
+			<td><a class="pseudoLabel" href="http://localhost:8080/security-web/query/apps/Refset/users"target="_blank">http://localhost:8080/security-web/query/apps/Refset/users</a></td>
+			<td>
+				<form name="AppUsersform" action="/security-web" method="get"
+					class="centered">
+					<input type="hidden" name="queryName" value="getAppUsers" />  
+					<table class="sampleNoBorder">
+						<tr>
+							<td>Application:</td>
+							<td><input type="text" class="w100" name="appName"
+								value="Refset"></td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center"><input type="submit"
+								class="w100" name="submit" value="Submit"></td>
+						</tr>
+					</table>
+				</form>
+			</td>
+		</tr>
+		<tr class="green">
+			<td><span class="docSubSubTitle">App Permission Groups:</span></td>
+			<td><a class="pseudoLabel" href="http://localhost:8080/security-web/query/apps/Refset/perms"target="_blank">http://localhost:8080/security-web/query/apps/Refset/perms</a></td>
+			<td>
+				<form name="AppPermGroupform" action="http://localhost:8080/security-web/query/"
+					method="get" class="centered">
+					<input type="hidden" name="queryName" value="getAppPermGroups" />
+					<input type="hidden" name="redirect" value="/result.jsp" /> 
+					<table class="sampleNoBorder">
+						<tr>
+							<td>Application:</td>
+							<td><input type="text" class="w100" name="appName"
+								value="Refset"></td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center"><input type="submit"
+								class="w100" name="submit" value="Submit"></td>
+						</tr>
+					</table>
+				</form>
+			</td>
+		</tr>
+		<tr class="green">
+			<td><span class="docSubSubTitle">App Permission Groups by
+					Group:</span></td>
+			<td><a class="pseudoLabel" href="http://localhost:8080/security-web/query/apps/Refset/perms/Admin"target="_blank">http://localhost:8080/security-web/query/apps/Refset/perms/Admin</a></td>
+			<td>
+				<form name="AppPermGroupform" action="http://localhost:8080/security-web/query/"
+					method="get" class="centered">
+					<input type="hidden" name="queryName" value="getAppPermGroups" />
+					<input type="hidden" name="redirect" value="/result.jsp" /> 
+					<table class="sampleNoBorder">
+						<tr>
+							<td>Application:</td>
+							<td><input type="text" class="w100" name="appName"
+								value="Refset"></td>
+						</tr>
+						<tr>
+							<td>Group:</td>
+							<td><input type="text" class="w100" name="groupName"
+								value="Admin"></td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center"><input type="submit"
+								class="w100" name="submit" value="Submit"></td>
+						</tr>
+					</table>
+				</form>
+			</td>
+		</tr>
+
+
+
+	</table>
+
+</body>
+</html>
