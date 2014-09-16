@@ -1,0 +1,582 @@
+package org.ihtsdo.otf.security.dto;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
+
+import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldApplication;
+import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldSetting;
+
+public class UserSecurityCached extends UserSecurity {
+
+	public UserSecurityCached() {
+		super();
+	}
+
+	/**
+	 * <p>
+	 * logger.
+	 * </p>
+	 */
+	private static final Logger LOG = Logger.getLogger(UserSecurityCached.class
+			.getName());
+
+	// private OtfCachedListsDTO cachedListMaps = new OtfCachedListsDTO();
+
+	private String usersApp;
+	private String membersApp;
+	private String adminApp;
+
+	@Override
+	public void init() {
+		initCachedValues();
+	}
+
+	@Override
+	public void reset() {
+		resetAllCachedValues();
+	}
+
+	public final void initCachedValues() {
+		getSettings();
+		getAllAccounts();
+		getDirsMap();
+		getAppsMap();
+		if (getSettings() != null && !getSettings().getSettings().isEmpty()) {
+			getMembers();
+			getAppsNotMembersOrUsers();
+			getAdminUsers();
+		}
+		// getMembersList();
+
+	}
+
+	public final void resetAllCachedValues() {
+		resetAllAccounts();
+		resetDirsMap();
+		resetAppsMap();
+		resetMembers();
+		resetSettings();
+		resetAppsNotMembersOrUsers();
+		resetAdminUsers();
+
+	}
+
+	// public final String getDefaultpw() {
+	// if (!stringOK(defaultpw)) {
+	// defaultpw = getSettings().getSettings()
+	// .get(OtfCustomFieldSetting.DEFPW).getVal().trim();
+	// }
+	// return defaultpw;
+	// }
+	//
+	// public final void setDefaultpw(final String defaultpwIn) {
+	// defaultpw = defaultpwIn;
+	// }
+
+	public final String getUsersApp() {
+		if (!stringOK(usersApp)) {
+			usersApp = getSettings().getSettings()
+					.get(OtfCustomFieldSetting.USERS).getVal().trim();
+		}
+		return usersApp;
+	}
+
+	public final void setUsersApp(final String usersAppIn) {
+		usersApp = usersAppIn;
+	}
+
+	public final String getMembersApp() {
+		if (!stringOK(membersApp)) {
+			membersApp = getSettings().getSettings()
+					.get(OtfCustomFieldSetting.MEMBERS).getVal().trim();
+		}
+		return membersApp;
+	}
+
+	public final void setMembersApp(final String membersAppIn) {
+		membersApp = membersAppIn;
+	}
+
+	public void resetSettings() {
+		OtfCachedListsDTO.remSettings();
+		getSettings();
+	}
+
+	public final OtfSettings getSettings() {
+		OtfSettings settings = OtfCachedListsDTO.getSettings();
+		if (settings == null) {
+			// Get settings dir
+			OtfDirectory setDirectory = getDirs().getDirByName(SETTINGS);
+			if (setDirectory != null) {
+				// get settings group
+				OtfGroup setgrp = setDirectory.getGroups().getGroupByName(
+						SETTINGS);
+				setgrp.setParentDirName(SETTINGS);
+				settings = new OtfSettings(setgrp);
+				OtfCachedListsDTO.setSettings(settings);
+				setDefaultpw(settings.getDefPw());
+				initCachedValues();
+			}
+		}
+		return settings;
+	}
+
+	public final void setSettings(OtfSettings settingsIn) {
+		OtfCachedListsDTO.setSettings(settingsIn);
+	}
+
+	public final boolean stringOK(final String chk) {
+		return chk != null && chk.length() > 0;
+	}
+
+	public final List<OtfGroup> getGroupsByAppName(String appname) {
+		OtfApplication app = getApps().getAppByName(appname);
+		return getGroupsByApp(app);
+	}
+
+	public final List<String> getDirsByAppName(String appname) {
+		List<String> dirs = new ArrayList<String>();
+		for (OtfAccountStore acs : getApps().getAppByName(appname)
+				.getAccountStores().values()) {
+			if (acs.isDir()) {
+				dirs.add(acs.getName());
+			}
+		}
+
+		return dirs;
+	}
+
+	public final List<OtfGroup> getGroupsByApp(OtfApplication app) {
+		List<OtfGroup> groups = new ArrayList<OtfGroup>();
+		for (OtfAccountStore acs : app.getAccountStores().values()) {
+			if (acs.isDir()) {
+				String dirName = acs.getName();
+				groups.addAll(getGroupsByDirName(dirName));
+			}
+		}
+		return groups;
+
+	}
+
+	public final List<OtfGroup> getGroupsByDirName(String dirName) {
+		List<OtfGroup> groups = new ArrayList<OtfGroup>();
+		OtfDirectory dir = getDirs().getDirByName(dirName);
+		for (OtfGroup grp : dir.getGroups().getGroups().values()) {
+			grp.getId();
+			grp.setParentDirName(dirName);
+			groups.add(grp);
+		}
+		return groups;
+	}
+
+	public final Map<String, List<String>> getAppsMap() {
+		Map<String, List<String>> appsMap = OtfCachedListsDTO.getAppsMap();
+		if (appsMap == null || appsMap.size() == 0) {
+			appsMap = new HashMap<String, List<String>>();
+			for (OtfApplication app : getApps().getApplications().values()) {
+				List<String> grpNames = new ArrayList<String>();
+				List<OtfGroup> grps = getGroupsByApp(app);
+				for (OtfGroup grp : grps) {
+					grpNames.add(grp.getName());
+				}
+				Collections.sort(grpNames);
+				appsMap.put(app.getName(), grpNames);
+			}
+			setAppsMap(appsMap);
+		}
+
+		return appsMap;
+	}
+
+	public final void setAppsMap(Map<String, List<String>> appsMap) {
+		OtfCachedListsDTO.setAppsMap(appsMap);
+	}
+
+	public final void resetAppsMap() {
+		OtfCachedListsDTO.remAppsMap();
+		getAppsMap();
+	}
+
+	public final Map<String, List<String>> getDirsMap() {
+		Map<String, List<String>> dirsMap = OtfCachedListsDTO.getDirsMap();
+		if (dirsMap == null) {
+			dirsMap = new HashMap<String, List<String>>();
+			for (String dirName : getDirs().getDirectories().keySet()) {
+				List<String> grpNames = new ArrayList<String>();
+				List<OtfGroup> grps = getGroupsByDirName(dirName);
+				for (OtfGroup grp : grps) {
+					grpNames.add(grp.getName());
+				}
+				Collections.sort(grpNames);
+				dirsMap.put(dirName, grpNames);
+			}
+			setDirsMap(dirsMap);
+		}
+
+		return dirsMap;
+	}
+
+	public final void setDirsMap(Map<String, List<String>> dirsMap) {
+		OtfCachedListsDTO.setDirsMap(dirsMap);
+	}
+
+	public final void resetDirsMap() {
+		OtfCachedListsDTO.remDirsMap();
+		getDirsMap();
+	}
+
+	public final List<String> getMembers() {
+		List<String> members = OtfCachedListsDTO.getMembersList();
+		if (members == null) {
+			members = new ArrayList<String>();
+			OtfDirectory mDirectory = getMembersDir();
+			if (mDirectory != null) {
+				// getAll groups within
+				for (OtfGroup grp : mDirectory.getGroups().getGroups().values()) {
+					members.add(grp.getName());
+				}
+			}
+			Collections.sort(members);
+			setMembers(members);
+		}
+
+		return members;
+	}
+
+	public final void setMembers(List<String> membersIn) {
+		OtfCachedListsDTO.setMembersList(membersIn);
+	}
+
+	public final void resetMembers() {
+		OtfCachedListsDTO.remMembersList();
+		getMembers();
+	}
+
+	public final OtfGroup getMemberByName(final String name) {
+		OtfDirectory mDirectory = getMembersDir();
+		if (mDirectory != null) {
+			for (OtfGroup grp : mDirectory.getGroups().getGroups().values()) {
+				if (grp.getName().equals(name)) {
+					return grp;
+				}
+			}
+		}
+		return null;
+
+	}
+
+	public final OtfGroup getMemberById(final String id) {
+		OtfDirectory mDirectory = getMembersDir();
+		if (mDirectory != null) {
+			for (OtfGroup grp : mDirectory.getGroups().getGroups().values()) {
+				if (grp.getIdIfSet().equals(id)) {
+					return grp;
+				}
+			}
+		}
+		return null;
+
+	}
+
+	public final OtfGroup getGroupById(final String id) {
+		for (OtfDirectory mDirectory : getDirs().getDirectories().values()) {
+			if (mDirectory != null) {
+				for (OtfGroup grp : mDirectory.getGroups().getGroups().values()) {
+					if (grp.getIdIfSet().equals(id)) {
+						return grp;
+					}
+				}
+			}
+		}
+		return null;
+
+	}
+
+	public final OtfDirectory getMembersDir() {
+		return getDirs().getDirByName(getMembersApp());
+	}
+
+	public final OtfDirectory getUsersDir() {
+		return getDirs().getDirByName(getUsersApp());
+	}
+
+	public final OtfDirectory getDirByName(final String dirName) {
+		return getDirs().getDirByName(dirName);
+	}
+
+	public final Collection<OtfAccount> getUsers(final String dirname) {
+		if (dirname == null) {
+			// Get members dir
+			return getUsersbyDir(getUsersApp());
+		}
+		if (dirname.equals(ALL)) {
+			return getAllUsers();
+		}
+		return getUsersbyDir(dirname);
+	}
+
+	public final Map<String, OtfAccount> getAdminUsersMap() {
+
+		Map<String, OtfAccount> adminUsers = new HashMap<String, OtfAccount>();
+		// First get all StormPath Admins
+		if (stringOK(getHandlerAdminDir())) {
+			String ucAdminDir = getHandlerAdminDir().toUpperCase();
+			for (String dirName : getDirs().getDirectories().keySet()) {
+				if (dirName.toUpperCase().startsWith(ucAdminDir)) {
+					Collection<OtfAccount> handleradmins = getUsersbyDir(dirName);
+					for (OtfAccount acc : handleradmins) {
+						adminUsers.put(acc.getName(), acc);
+					}
+				}
+			}
+		}
+
+		// Then add any users who have a role in the relevant admin app.
+		String adminA = getAdminApp();
+		if (stringOK(adminA)) {
+			for (OtfAccount acc : getAllUsers()) {
+				if (acc.getCustData() != null) {
+					List<OtfCustomField> apps = acc.getCustData().getApps();
+					for (OtfCustomField app : apps) {
+						OtfCustomFieldApplication oca = (OtfCustomFieldApplication) app
+								.getModel();
+						if (oca.getApp().equals(adminA)) {
+							adminUsers.put(acc.getName(), acc);
+						}
+					}
+				}
+
+			}
+		}
+
+		return adminUsers;
+	}
+
+	public final List<String> getAdminUsers() {
+		List<String> adminUsers = OtfCachedListsDTO.getAdminUsersList();
+		if (adminUsers == null) {
+			adminUsers = new ArrayList<String>();
+			Map<String, OtfAccount> adminUserMap = getAdminUsersMap();
+			if (adminUserMap != null && !adminUserMap.isEmpty()) {
+				adminUsers.addAll(adminUserMap.keySet());
+			}
+			Collections.sort(adminUsers, String.CASE_INSENSITIVE_ORDER);
+			setAdminUsers(adminUsers);
+		}
+
+		return adminUsers;
+	}
+
+	public final void setAdminUsers(List<String> listIn) {
+		OtfCachedListsDTO.setAdminUsersList(listIn);
+	}
+
+	public final void resetAdminUsers() {
+		OtfCachedListsDTO.remAdminUsersList();
+		getAdminUsers();
+	}
+
+	public final Collection<OtfAccount> getAllUsers() {
+		return getAllAccounts().values();
+	}
+
+	public final Collection<OtfAccount> getUsersbyDir(final String dirName) {
+		OtfDirectory uDirectory = getDirs().getDirByName(dirName);
+		if (uDirectory != null) {
+			return getUsersByDir(uDirectory);
+		}
+		return null;
+	}
+
+	public final Collection<OtfAccount> getUsersByDir(final OtfDirectory dirIn) {
+		if (dirIn != null) {
+			return dirIn.getAllAccounts().values();
+		}
+		return null;
+	}
+
+	public final Collection<String> getDirNamesForUser(final String username) {
+		ArrayList<String> dirs = new ArrayList<String>();
+
+		for (OtfDirectory dir : getDirs().getDirectories().values()) {
+			if (!dir.getAccounts().getAccounts().isEmpty()) {
+				for (OtfAccount user : dir.getAccounts().getAccounts().values()) {
+					if (user.getName().equals(username)) {
+						dirs.add(dir.getName());
+					}
+				}
+			}
+		}
+		return dirs;
+	}
+
+	public final List<String> getOtfAppNamesForUser(final String username) {
+		ArrayList<String> appsList = new ArrayList<String>();
+		Collection<String> dirsforUser = getDirNamesForUser(username);
+
+		for (OtfApplication app : getApps().getApplications().values()) {
+			for (String key : app.getAccountStores().keySet()) {
+				if (dirsforUser.contains(key)) {
+					appsList.add(app.getName());
+				}
+			}
+		}
+
+		return appsList;
+	}
+
+	public final String getFirstAppForUser(final String username) {
+
+		List<String> appsList = getOtfAppNamesForUser(username);
+
+		Collections.sort(appsList);
+		if (appsList.isEmpty()) {
+			return null;
+		}
+		return appsList.get(0);
+
+	}
+
+	public final Collection<OtfAccountMin> getMinUsers(final String dirName) {
+		Collection<OtfAccount> users = getUsers(dirName);
+		Collection<OtfAccountMin> usersMin = new ArrayList<OtfAccountMin>();
+		if (users != null) {
+			for (OtfAccount user : users) {
+				usersMin.add((new OtfAccountMin(user)));
+			}
+		}
+		return usersMin;
+	}
+
+	public final OtfAccount getUserAccountByName(final String name,
+			final String dirName) {
+		for (OtfAccount acc : getUsers(dirName)) {
+			if (acc.getName().equalsIgnoreCase(name)) {
+				return acc;
+			}
+		}
+		return null;
+	}
+
+	public final OtfAccount getUserAccountById(final String id,
+			final String dirName) {
+		for (OtfAccount acc : getUsers(dirName)) {
+			if (acc.getId().equalsIgnoreCase(id)) {
+				return acc;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append("UserSecurity:\n");
+		sbuild.append("Directories:\n");
+		sbuild.append(getDirs().toString());
+		sbuild.append("Applications:\n");
+		sbuild.append(getApps().toString());
+		return sbuild.toString();
+
+	}
+
+	public final Collection<String> getAppNames() {
+		return getAppsMap().keySet();
+	}
+
+	public final List<String> getAppsNotMembersOrUsers() {
+		List<String> appsNotMembersOrUsers = OtfCachedListsDTO
+				.getAppsNotUserMemberList();
+		if (appsNotMembersOrUsers == null || appsNotMembersOrUsers.size() == 0) {
+			Collection<String> all = getAppNames();
+			appsNotMembersOrUsers = new ArrayList<String>();
+			if (all != null && !all.isEmpty()) {
+				String users = getUsersApp();
+				String members = getMembersApp();
+				for (String appname : all) {
+					boolean remove = appname.equals(users)
+							|| appname.equals(members);
+					if (!remove) {
+						appsNotMembersOrUsers.add(appname);
+					}
+				}
+
+			}
+			setAppsNotMembersOrUsers(appsNotMembersOrUsers);
+		}
+		return appsNotMembersOrUsers;
+	}
+
+	public final void setAppsNotMembersOrUsers(
+			List<String> appsNotMembersOrUsersIn) {
+		OtfCachedListsDTO.setAppsNotUserMemberList(appsNotMembersOrUsersIn);
+	}
+
+	public final void resetAppsNotMembersOrUsers() {
+		OtfCachedListsDTO.remAppsNotUserMemberList();
+		getAppsNotMembersOrUsers();
+	}
+
+	public final Map<String, OtfAccount> getAllAccounts() {
+		Map<String, OtfAccount> allAccounts = OtfCachedListsDTO
+				.getAllAccountsMap();
+
+		if (allAccounts == null || allAccounts.size() == 0) {
+			allAccounts = new HashMap<String, OtfAccount>();
+			for (OtfDirectory dir : getDirs().getDirectories().values()) {
+				if (!dir.getAccounts().getAccounts().isEmpty()) {
+					for (OtfAccount user : dir.getAccounts().getAccounts()
+							.values()) {
+						allAccounts.put(user.getName(), user);
+					}
+				}
+			}
+			setAllAccounts(allAccounts);
+		}
+		return allAccounts;
+	}
+
+	public final void setAllAccounts(final Map<String, OtfAccount> allAccountsIn) {
+		OtfCachedListsDTO.setAllAccountsMap(allAccountsIn);
+	}
+
+	public final void resetAllAccounts() {
+		OtfCachedListsDTO.remAllAccountsMap();
+		getAllAccounts();
+	}
+
+	public final boolean accountExists(final String accName) {
+		for (String key : getAllAccounts().keySet()) {
+			if (key.equalsIgnoreCase(accName)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public final String getAdminApp() {
+		if (!stringOK(adminApp)) {
+			adminApp = getSettings().getSettings()
+					.get(OtfCustomFieldSetting.ADMIN).getVal().trim();
+		}
+		return adminApp;
+	}
+
+	public final void setAdminApp(String adminAppIn) {
+		adminApp = adminAppIn;
+	}
+
+	// public final String getHandlerAdminDir() {
+	// return handlerAdminDir;
+	// }
+	//
+	// public final void setHandlerAdminDir(String handlerAdminDirIn) {
+	// handlerAdminDir = handlerAdminDirIn;
+	// }
+
+}
