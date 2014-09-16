@@ -30,6 +30,11 @@
 			<version>1.0.0-SNAPSHOT</version>
 			<scope>runtime</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.stormpath.sdk</groupId>
+			<artifactId>stormpath-sdk-impl</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
 		
 		
 		
