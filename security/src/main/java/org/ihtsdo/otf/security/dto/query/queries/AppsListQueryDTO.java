@@ -24,8 +24,8 @@ public class AppsListQueryDTO extends AbstractSecurityQuery {
 		if (apps == null || apps.isEmpty()) {
 			if (ush != null) {
 				apps = new ArrayList<String>();
-				for (OtfApplication app : ush.getUserSecurity().getApps()
-						.getApplications().values()) {
+				for (OtfApplication app : ush.getUserSecurityModel().getModel()
+						.getApps().getApplications().values()) {
 					String val = app.getName();
 					if (!apps.contains(val)) {
 						apps.add(app.getName());

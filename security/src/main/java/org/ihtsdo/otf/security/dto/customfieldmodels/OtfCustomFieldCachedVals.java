@@ -10,7 +10,7 @@ import org.ihtsdo.otf.security.dto.OtfCachedListsDTO;
 
 public abstract class OtfCustomFieldCachedVals extends OtfCustomFieldModel {
 
-	private OtfCachedListsDTO cache;
+	// private OtfCachedListsDTO cache;
 	private List<String> members;
 	private Map<String, List<String>> appsMap;
 	private Map<String, List<String>> dirsMap;
@@ -30,7 +30,7 @@ public abstract class OtfCustomFieldCachedVals extends OtfCustomFieldModel {
 
 	public final List<String> getMembers() {
 		if (members == null) {
-			members = getCache().getMembersList();
+			members = OtfCachedListsDTO.getMembersList();
 		}
 		return members;
 	}
@@ -48,14 +48,14 @@ public abstract class OtfCustomFieldCachedVals extends OtfCustomFieldModel {
 
 	public final Map<String, List<String>> getAppsMap() {
 		if (appsMap == null) {
-			appsMap = getCache().getAppsMap();
+			appsMap = OtfCachedListsDTO.getAppsMap();
 		}
 		return appsMap;
 	}
 
 	public final Map<String, List<String>> getDirsMap() {
 		if (dirsMap == null) {
-			dirsMap = getCache().getDirsMap();
+			dirsMap = OtfCachedListsDTO.getDirsMap();
 		}
 		return dirsMap;
 	}
@@ -96,16 +96,9 @@ public abstract class OtfCustomFieldCachedVals extends OtfCustomFieldModel {
 
 	}
 
-	public final OtfCachedListsDTO getCache() {
-		if (cache == null) {
-			cache = new OtfCachedListsDTO();
-		}
-		return cache;
-	}
-
 	public final List<String> getAppsNotUserMembers() {
 		if (appsNotUserMembers == null) {
-			appsNotUserMembers = getCache().getAppsNotUserMemberList();
+			appsNotUserMembers = OtfCachedListsDTO.getAppsNotUserMemberList();
 		}
 		return appsNotUserMembers;
 	}
@@ -122,7 +115,7 @@ public abstract class OtfCustomFieldCachedVals extends OtfCustomFieldModel {
 	}
 
 	public String getAdminServletContextURL() {
-		return getCache().getAdminServletContextUrl();
+		return OtfCachedListsDTO.getAdminServletContextUrl();
 	}
 
 	@Override
@@ -135,8 +128,8 @@ public abstract class OtfCustomFieldCachedVals extends OtfCustomFieldModel {
 
 	public final List<String> getUsersList() {
 		if (usersList == null) {
-			usersList = new ArrayList<String>(getCache().getAllAccountsMap()
-					.keySet());
+			usersList = new ArrayList<String>(OtfCachedListsDTO
+					.getAllAccountsMap().keySet());
 		}
 		return usersList;
 	}
@@ -144,7 +137,8 @@ public abstract class OtfCustomFieldCachedVals extends OtfCustomFieldModel {
 	public final List<String> getUserEmailList() {
 		if (userEmailList == null) {
 			userEmailList = new ArrayList<String>();
-			for (OtfAccount acc : getCache().getAllAccountsMap().values()) {
+			for (OtfAccount acc : OtfCachedListsDTO.getAllAccountsMap()
+					.values()) {
 				userEmailList.add(acc.getEmail());
 			}
 		}

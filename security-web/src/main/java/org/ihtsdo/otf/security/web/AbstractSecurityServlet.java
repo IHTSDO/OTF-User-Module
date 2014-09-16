@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,7 +28,8 @@ import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.query.SecurityService;
 import org.ihtsdo.otf.security.objectcache.ObjectCacheClassHandler;
 import org.ihtsdo.otf.security.util.PropertiesLoader;
-import org.ihtsdo.otf.security.xml.XmlUserSecurity;
+import org.ihtsdo.otf.security.util.UuidConverter;
+import org.ihtsdo.otf.security.xml.XmlUserSecurityHandler;
 
 /**
  * 
@@ -156,7 +158,7 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 			token = (String) request.getSession().getAttribute(
 					WebStatics.AUTH_TOKEN);
 			if (stringOK(token)) {
-				return uname;
+				return authUserByToken(uname, token);
 			}
 		}
 
@@ -164,16 +166,46 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 		uname = getNamedParam(WebStatics.USERNAME, request);
 		String password = getNamedParam(WebStatics.PASSWD, request);
 		// auth users
+		return authUser(uname, password, request);
+
+	}
+
+	private String authUser(final String uname, String password,
+			final HttpServletRequest request) {
 		if (stringOK(uname) && stringOK(password)) {
 			OtfAccount oacc = getUsh().authAccount(uname, password);
 			if (oacc != null) {
-				token = oacc.getAuthToken();
+				String token = oacc.getAuthToken();
+				if (!stringOK(token)) {
+					token = UuidConverter.format(UUID.randomUUID());
+					oacc.setAuthToken(token);
+				}
+
+				OtfAccount oacc2 = getUsh().getUserSecurityModel()
+						.getUserAccountByName(uname);
+				if (oacc2 != null) {
+					oacc2.setAuthToken(token);
+				}
+
 				request.getSession().setAttribute(WebStatics.USERNAME, uname);
 				request.getSession().setAttribute(WebStatics.AUTH_TOKEN, token);
 				password = null;
 				return uname;
 			}
 		}
+		return null;
+	}
+
+	private String authUserByToken(final String uname, String token) {
+
+		OtfAccount oacc = getUsh().getUserSecurityModel().getUserAccountByName(
+				uname);
+		if (oacc != null) {
+			if (token.equals(oacc.getAuthToken())) {
+				return uname;
+			}
+		}
+
 		return null;
 	}
 
@@ -354,7 +386,6 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 		if (ush == null) {
 			String ushName = getParamsProps().getProperty(
 					WebStatics.USER_SECURITY_HANDLER);
-
 			Properties props = new Properties();
 			String key = new StringBuilder().append(ushName).append(".")
 					.toString();
@@ -539,9 +570,10 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 	public void save() {
 		if (getCanSave()) {
-			XmlUserSecurity xmlUsOut = new XmlUserSecurity();
+			XmlUserSecurityHandler xmlUsOut = new XmlUserSecurityHandler();
 			xmlUsOut.setConfigFN(getSavePath());
-			xmlUsOut.setUserSecurity(getUsh().getUserSecurity());
+			xmlUsOut.getUserSecurityModel().setModel(
+					(getUsh().getUserSecurityModel().getFullModel()));
 			try {
 				xmlUsOut.saveUserSecurity();
 			} catch (Exception e) {
@@ -549,5 +581,4 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 			}
 		}
 	}
-
 }

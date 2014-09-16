@@ -21,14 +21,18 @@ public class UsersListQueryDTO extends AbstractSecurityQuery {
 	}
 
 	public final List<OtfAccountMin> getUsers() {
-		if (users == null || users.isEmpty()) {
-			if (ush != null) {
-				users = (List<OtfAccountMin>) ush.getUserSecurity()
-						.getMinUsers("*");
-			} else {
-				users = new ArrayList<OtfAccountMin>();
-			}
+		if (users == null) {
+			users = new ArrayList<OtfAccountMin>();
 		}
+		// if (users == null || users.isEmpty()) {
+		// if (ush != null) {
+
+		users = (List<OtfAccountMin>) ush.getUserSecurityModel().getUsersMin(
+				"*");
+		// } else {
+
+		// }
+		// }
 		Collections.sort(users);
 		return users;
 	}

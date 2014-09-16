@@ -6,10 +6,14 @@ If IHTSDO Staff the preferred option is to run and adjusted jenkins job on https
 
 1) Get the deb
 
-1.1) Build from Source - Run the pom.xml in security-web clean install
+1.1) Build from Source - Run the pom.xml in security-web clean install.
+
 1.2) Download from nexus
+The Deb is stored in nexus. You can use the Nexus UI or the nexus Rest URL to get the latest deb (snapshot or release).
 
 2) Install the deb
+
+
 
 3) Test the Install
 

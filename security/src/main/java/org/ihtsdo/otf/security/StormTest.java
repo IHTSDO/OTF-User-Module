@@ -5,8 +5,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.stormpath.StormPathBaseDTO;
-import org.ihtsdo.otf.security.stormpath.StormPathUserSecurity;
-import org.ihtsdo.otf.security.xml.XmlUserSecurity;
+import org.ihtsdo.otf.security.stormpath.StormPathUserSecurityHandler;
+import org.ihtsdo.otf.security.xml.XmlUserSecurityHandler;
 
 public class StormTest {
 	/**
@@ -14,13 +14,13 @@ public class StormTest {
 	 * logger.
 	 * </p>
 	 */
-	private static final Logger LOG = Logger.getLogger(XmlUserSecurity.class
+	private static final Logger LOG = Logger.getLogger(XmlUserSecurityHandler.class
 			.getName());
 
 	private static String fn = "./TextFiles/Example.xml";
 	private static String apiKeyFile = "C:/Users/adamf/stormpath/apiKey.properties";
-	private static XmlUserSecurity xmlUs;
-	private static StormPathUserSecurity spu;
+	private static XmlUserSecurityHandler xmlUs;
+	private static StormPathUserSecurityHandler spu;
 
 	public static void main(final String[] args) {
 		StormTest sTest = new StormTest();
@@ -57,7 +57,7 @@ public class StormTest {
 	}
 
 	private String stormToString(final boolean log) {
-		String ustr = getSpu().getUserSecurity().toString();
+		String ustr = getSpu().getUserSecurityModel().getFullModel().toString();
 		if (log) {
 			LOG.info("Storm as String : \n" + ustr);
 			LOG.info(UserSecurityCompare.remSpaceLineEnds(ustr));
@@ -67,11 +67,12 @@ public class StormTest {
 	}
 
 	private void storm2Xml(final boolean log) {
-		StormPathUserSecurity spu = getSpu();
-		XmlUserSecurity xmlUs = new XmlUserSecurity();
+		StormPathUserSecurityHandler spu = getSpu();
+		XmlUserSecurityHandler xmlUs = new XmlUserSecurityHandler();
 		try {
 			spu.buildUserSecurity();
-			xmlUs.setUserSecurity(spu.getUserSecurity());
+			xmlUs.getUserSecurityModel().setModel(
+					(spu.getUserSecurityModel().getFullModel()));
 			if (log) {
 				LOG.info("storm2Xml : \n"
 						+ xmlUs.getXMLFromUserSecurityAsString());
@@ -86,14 +87,15 @@ public class StormTest {
 
 	private void Xml2Storm(final boolean log) {
 
-		StormPathUserSecurity spu = getSpu();
+		StormPathUserSecurityHandler spu = getSpu();
 		try {
 			getXmlUs();
 			if (log) {
 				LOG.info("Xml2Storm : \n"
 						+ xmlUs.getXMLFromUserSecurityAsString());
 			}
-			spu.sendUserSecuritytoStormPath(xmlUs.getUserSecurity());
+			spu.sendUserSecuritytoStormPath(xmlUs.getUserSecurityModel()
+					.getFullModel());
 
 		} catch (Exception e) {
 
@@ -103,7 +105,7 @@ public class StormTest {
 	}
 
 	private void clearSP() {
-		StormPathUserSecurity spu = getSpu();
+		StormPathUserSecurityHandler spu = getSpu();
 		try {
 			spu.clearSP();
 		} catch (Exception e) {
@@ -123,31 +125,31 @@ public class StormTest {
 		}
 	}
 
-	public static XmlUserSecurity getXmlUs() {
+	public static XmlUserSecurityHandler getXmlUs() {
 		if (xmlUs == null) {
 			Properties xmlP = new Properties();
-			xmlP.setProperty(XmlUserSecurity.CONF_PROPS_FN, fn);
-			xmlUs = new XmlUserSecurity(xmlP);
+			xmlP.setProperty(XmlUserSecurityHandler.CONF_PROPS_FN, fn);
+			xmlUs = new XmlUserSecurityHandler(xmlP);
 		}
 
 		return xmlUs;
 	}
 
-	public static void setXmlUs(final XmlUserSecurity xmlUsIn) {
+	public static void setXmlUs(final XmlUserSecurityHandler xmlUsIn) {
 		xmlUs = xmlUsIn;
 	}
 
-	public static StormPathUserSecurity getSpu() {
+	public static StormPathUserSecurityHandler getSpu() {
 		if (spu == null) {
 			Properties spuP = new Properties();
 			spuP.setProperty(StormPathBaseDTO.KEY_PATH, apiKeyFile);
-			spu = new StormPathUserSecurity(spuP);
+			spu = new StormPathUserSecurityHandler(spuP);
 		}
 
 		return spu;
 	}
 
-	public static void setSpu(final StormPathUserSecurity spuIn) {
+	public static void setSpu(final StormPathUserSecurityHandler spuIn) {
 		spu = spuIn;
 	}
 

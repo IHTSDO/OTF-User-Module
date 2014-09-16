@@ -11,6 +11,7 @@ import org.ihtsdo.otf.security.dto.OtfCustomField;
 import org.ihtsdo.otf.security.dto.OtfDirectory;
 import org.ihtsdo.otf.security.dto.OtfGroup;
 import org.ihtsdo.otf.security.dto.UserSecurity;
+import org.ihtsdo.otf.security.dto.UserSecurityCached;
 import org.ihtsdo.otf.security.xml.Xml2Model;
 import org.ihtsdo.otf.security.xml.XmlStatics;
 
@@ -36,11 +37,13 @@ public class Storm2Model {
 			.getName());
 
 	private UserSecurity userSecurity;
+
 	private final StormPathBaseDTO spbd;
 
 	public Storm2Model(final StormPathBaseDTO spbdIn) {
 		super();
 		spbd = spbdIn;
+		LOG.info("Storm2Model Tenant = " + spbd.getTenant().getName());
 	}
 
 	public final UserSecurity build() throws Exception {
@@ -48,13 +51,19 @@ public class Storm2Model {
 		return userSecurity;
 	}
 
-	private void buildUserSecurity() {
-		userSecurity = new UserSecurity();
+	public UserSecurity buildCachedUserSecurity() {
+		userSecurity = new UserSecurityCached();
 		buildDirs();
 		buildApps();
+		return userSecurity;
 	}
 
-	private void buildDirs() {
+	public UserSecurity buildUserSecurity() {
+		userSecurity = new UserSecurityStormpath();
+		return userSecurity;
+	}
+
+	public void buildDirs() {
 		DirectoryList directories = spbd.getTenant().getDirectories();
 		for (Directory directory : directories) {
 			OtfDirectory odir = buildDirectory(directory);
@@ -66,10 +75,14 @@ public class Storm2Model {
 	}
 
 	public final Directory getDirByName(final String dirName) {
+		spbd.resetTenant();
 		DirectoryList directories = spbd.getTenant().getDirectories();
+
 		for (Directory dir : directories) {
 			if (dir.getName().equals(dirName)) {
-				return dir;
+				String dirHref = dir.getHref();
+				Directory d2 = spbd.getResourceByHrefDirectory(dirHref);
+				return d2;
 			}
 		}
 		return null;
@@ -79,38 +92,61 @@ public class Storm2Model {
 		GroupList groups = dir.getGroups();
 		for (Group group : groups) {
 			if (group.getName().equals(grpName)) {
-				return group;
+				String dirHref = group.getHref();
+				Group group2 = spbd.getResourceByHrefGroup(dirHref);
+				return group2;
 			}
 		}
 		return null;
 	}
 
 	public final Account getAccountByName(final String name, final Directory dir) {
+		// LOG.info("getAccountByName name = " + name);
 		for (Account acc : dir.getAccounts()) {
+			// LOG.info("getAccountByName acc = " + acc.getUsername());
 			if (acc.getUsername().equals(name)) {
 				return acc;
 			}
 		}
+
+		// try to reload the directory and check again
+		//
+		// LOG.info("Was null reloading directory");
+		// String dirHref = dir.getHref();
+		// LOG.info("dirHref = " + dirHref);
+		// Directory d2 = spbd.getResourceByHrefDirectory(dirHref);
+		//
+		// for (Account acc : d2.getAccounts()) {
+		// LOG.info("XXXXX --- getAccountByName acc = " + acc.getUsername());
+		// if (acc.getUsername().equals(name)) {
+		// return acc;
+		// }
+		// }
+
 		return null;
 	}
 
 	public final Application getAppByName(final String name) {
+		spbd.resetTenant();
 		ApplicationList apps = spbd.getTenant().getApplications();
 		for (Application app : apps) {
 			if (app.getName().equals(name)) {
-				return app;
+				String href = app.getHref();
+				Application app2 = spbd.getResourceByHrefApp(href);
+
+				return app2;
 			}
 		}
 
 		return null;
 	}
 
-	private OtfDirectory buildDirectory(final Directory dirIn) {
+	public OtfDirectory buildDirectory(final Directory dirIn) {
 
 		Directory dir = null;
 		OtfDirectory oDir = null;
 		try {
-			dir = spbd.getResourceByHref_Directory(dirIn.getHref());
+			dir = spbd.getResourceByHrefDirectory(dirIn.getHref());
 		} catch (ResourceException re) {
 			LOG.severe("Directory at this href does not exist Dir = "
 					+ dirIn.getName() + " href = " + dirIn.getHref());
@@ -121,9 +157,7 @@ public class Storm2Model {
 			oDir.setName(dir.getName());
 			oDir.setDescription(dir.getDescription());
 			oDir.setStatus(dir.getStatus().toString());
-
 			GroupList groups = dir.getGroups();
-
 			for (Group group : groups) {
 				OtfGroup ogroup = buildGroup(group);
 				ogroup.setParentDirName(dir.getName());
@@ -137,10 +171,8 @@ public class Storm2Model {
 		return oDir;
 	}
 
-	private OtfGroup buildGroup(final Group grpIn) {
-
-		final Group grp = spbd.getResourceByHref_Group(grpIn.getHref());
-
+	public OtfGroup buildGroup(final Group grpIn) {
+		final Group grp = spbd.getResourceByHrefGroup(grpIn.getHref());
 		OtfGroup ogrp = new OtfGroup();
 		ogrp.setIdref(grp.getHref());
 		ogrp.setName(grp.getName());
@@ -151,7 +183,7 @@ public class Storm2Model {
 			ogrp.getAccounts().getAccounts().put(oacc.getName(), oacc);
 		}
 
-		Map<String, Object> cd = spbd.getResourceByHref_CustomData(grp
+		Map<String, Object> cd = spbd.getResourceByHrefCustomData(grp
 				.getCustomData().getHref());
 		for (String key : cd.keySet()) {
 			if (!OtfCustomData.getReservedWords().contains(key)) {
@@ -163,8 +195,8 @@ public class Storm2Model {
 		return ogrp;
 	}
 
-	private OtfAccount buildAccount(final Account accIn) {
-		final Account acc = spbd.getResourceByHref_Account(accIn.getHref());
+	public OtfAccount buildAccount(final Account accIn) {
+		final Account acc = spbd.getResourceByHrefAccount(accIn.getHref());
 
 		OtfAccount oacc = new OtfAccount();
 		oacc.setIdref(acc.getHref());
@@ -175,7 +207,7 @@ public class Storm2Model {
 		oacc.setSurname(acc.getSurname());
 		oacc.setStatus(acc.getStatus().toString());
 		String cdHref = acc.getCustomData().getHref();
-		Map<String, Object> cd = spbd.getResourceByHref_CustomData(cdHref);
+		Map<String, Object> cd = spbd.getResourceByHrefCustomData(cdHref);
 
 		if (cd != null) {
 			oacc.getCustData().setIdref(cdHref);
@@ -193,7 +225,7 @@ public class Storm2Model {
 
 	}
 
-	private void buildApps() {
+	public void buildApps() {
 		// Get Applications
 		ApplicationList applications = spbd.getTenant().getApplications();
 		for (Application application : applications) {
@@ -202,9 +234,9 @@ public class Storm2Model {
 		}
 	}
 
-	private OtfApplication buildApp(final Application appIn) {
+	public OtfApplication buildApp(final Application appIn) {
 
-		final Application app = spbd.getResourceByHref_App(appIn.getHref());
+		final Application app = spbd.getResourceByHrefApp(appIn.getHref());
 
 		OtfApplication oapp = new OtfApplication();
 		oapp.setIdref(app.getHref());
@@ -223,7 +255,7 @@ public class Storm2Model {
 		return oapp;
 	}
 
-	private OtfAccountStore buildAccountStore(final AccountStoreMapping asm) {
+	public OtfAccountStore buildAccountStore(final AccountStoreMapping asm) {
 
 		AccountStore accountStore1 = asm.getAccountStore();
 		SPAccountStoreVisitor spa = new SPAccountStoreVisitor();
@@ -248,4 +280,13 @@ public class Storm2Model {
 		}
 
 	}
+
+	public final UserSecurity getUserSecurity() {
+		return userSecurity;
+	}
+
+	public final void setUserSecurity(UserSecurity userSecurityIn) {
+		userSecurity = userSecurityIn;
+	}
+
 }

@@ -1,12 +1,10 @@
 package org.ihtsdo.otf.security.dto;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldBasic;
-import org.ihtsdo.otf.security.util.UuidConverter;
 
 public class OtfAccountMin extends OtfBaseName {
 
@@ -26,7 +24,7 @@ public class OtfAccountMin extends OtfBaseName {
 	private String authToken = "";
 	private boolean auth;
 
-	private long expirytime = -1;
+	private final long expirytime = -1;
 	// 16 hours
 	private static final long TTL = 57600000;
 	// 5 minutes
@@ -54,7 +52,6 @@ public class OtfAccountMin extends OtfBaseName {
 		setAuthToken(orig.getAuthToken());
 		setAuth(orig.isAuth());
 
-		System.currentTimeMillis();
 	}
 
 	@Override
@@ -214,13 +211,13 @@ public class OtfAccountMin extends OtfBaseName {
 	public final String getAuthToken() {
 		// Temporary until Oauth etc.
 		// Check expired
-		if (isExpired()) {
-			authToken = "";
-			setNewExpiryTime();
-		}
-		if (!stringOK(authToken)) {
-			authToken = UuidConverter.format(UUID.randomUUID());
-		}
+		// if (isExpired()) {
+		// authToken = "";
+		// setNewExpiryTime();
+		// }
+		// if (!stringOK(authToken)) {
+		// authToken = UuidConverter.format(UUID.randomUUID());
+		// }
 		return authToken;
 	}
 
@@ -244,33 +241,33 @@ public class OtfAccountMin extends OtfBaseName {
 		auth = authIn;
 	}
 
-	@JsonIgnore
-	public final long getExpirytime() {
-		if (expirytime == -1) {
-			setNewExpiryTime();
-		}
-		return expirytime;
-	}
+	// @JsonIgnore
+	// public final long getExpirytime() {
+	// if (expirytime == -1) {
+	// setNewExpiryTime();
+	// }
+	// return expirytime;
+	// }
+	//
+	// public final void setExpiryTtl(long expirytimeIn) {
+	// expirytime = expirytimeIn + TTL;
+	// }
+	//
+	// public final void setExpirytime(long expirytimeIn) {
+	// expirytime = expirytimeIn;
+	// }
+	//
+	// private void setNewExpiryTime() {
+	// setExpiryTtl(System.currentTimeMillis());
+	// }
 
-	public final void setExpiryTtl(long expirytimeIn) {
-		expirytime = expirytimeIn + TTL;
-	}
-
-	public final void setExpirytime(long expirytimeIn) {
-		expirytime = expirytimeIn;
-	}
-
-	private void setNewExpiryTime() {
-		setExpiryTtl(System.currentTimeMillis());
-	}
-
-	@JsonIgnore
-	private boolean isExpired() {
-		if (getExpirytime() > System.currentTimeMillis()) {
-			return false;
-		}
-		return true;
-	}
+	// @JsonIgnore
+	// private boolean isExpired() {
+	// if (getExpirytime() > System.currentTimeMillis()) {
+	// return false;
+	// }
+	// return true;
+	// }
 
 	@JsonIgnore
 	public boolean checkAuthToken(String token) {

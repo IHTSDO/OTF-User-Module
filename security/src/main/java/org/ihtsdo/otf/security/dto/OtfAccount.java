@@ -19,8 +19,6 @@ public class OtfAccount extends OtfAccountMin {
 	private OtfCustomData custData = new OtfCustomData(
 			OtfCustomData.CustomParentType.ACCOUNT);
 
-	private final OtfCachedListsDTO ocache = new OtfCachedListsDTO();
-
 	public OtfAccount() {
 		super();
 

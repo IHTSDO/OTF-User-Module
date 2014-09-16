@@ -40,9 +40,11 @@ public class OtfCustomField {
 		CD_TYPE_PERM,
 		/** An Application. */
 		CD_TYPE_APP,
-		/** An Setting. */
+		/** A Setting. */
 		CD_TYPE_SETTING,
-		/** An Setting. */
+		/** A token. */
+		CD_TYPE_TOKEN,
+		/** A key val. */
 		CD_TYPE_KEY_VAL;
 
 		public static CustomType getCustomTypeByString(String tval) {
@@ -58,6 +60,9 @@ public class OtfCustomField {
 			}
 			if (tval.equalsIgnoreCase(CD_TYPE_SETTING.name())) {
 				return CD_TYPE_SETTING;
+			}
+			if (tval.equalsIgnoreCase(CD_TYPE_TOKEN.name())) {
+				return CD_TYPE_TOKEN;
 			}
 			if (tval.equalsIgnoreCase(CD_TYPE_KEY_VAL.name())) {
 				return CD_TYPE_KEY_VAL;

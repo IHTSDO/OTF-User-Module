@@ -11,7 +11,7 @@
 	</context-param>
 	<context-param>
 		<param-name>XmlUserSecurity.class</param-name>
-		<param-value>org.ihtsdo.otf.security.xml.XmlUserSecurity</param-value>
+		<param-value>org.ihtsdo.otf.security.xml.XmlUserSecurityHandler</param-value>
 	</context-param>
 	<context-param>
 		<param-name>XmlUserSecurity.configFile</param-name>
@@ -27,7 +27,7 @@
 	</context-param>  -->
 	<context-param>
 		<param-name>StormPathUserSecurity.class</param-name>
-		<param-value>org.ihtsdo.otf.security.stormpath.StormPathUserSecurity</param-value>
+		<param-value>org.ihtsdo.otf.security.stormpath.StormPathUserSecurityHandler</param-value>
 	</context-param>
 	<context-param>
 		<param-name>StormPathUserSecurity.keyPath</param-name>
@@ -90,7 +90,7 @@
 		</init-param>
 		<!-- <init-param> <param-name>debug</param-name> <param-value>true</param-value> 
 			<description>Do we startup in debug mode?</description> </init-param> -->
-		<load-on-startup>1</load-on-startup> 
+		<load-on-startup>1</load-on-startup>
 	</servlet>
 	
 	<servlet-mapping>

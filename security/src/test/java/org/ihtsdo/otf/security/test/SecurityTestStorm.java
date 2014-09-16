@@ -6,8 +6,8 @@ import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.UserSecurityHandler;
 import org.ihtsdo.otf.security.stormpath.StormPathBaseDTO;
-import org.ihtsdo.otf.security.stormpath.StormPathUserSecurity;
-import org.ihtsdo.otf.security.xml.XmlUserSecurity;
+import org.ihtsdo.otf.security.stormpath.StormPathUserSecurityHandler;
+import org.ihtsdo.otf.security.xml.XmlUserSecurityHandler;
 import org.junit.After;
 import org.junit.BeforeClass;
 
@@ -26,8 +26,8 @@ public class SecurityTestStorm extends AbstractSecurityTest {
 	private static String apiKeyId = "2ZCPRU919FXQYF49HRUXK8905";
 	private static String apiKeySecret = "ORDQyayhl1wmFputDIrEh8xIKi4amFGGcKsF9zn94L0";
 
-	private static XmlUserSecurity xmlUs;
-	private static StormPathUserSecurity spu;
+	private static XmlUserSecurityHandler xmlUs;
+	private static StormPathUserSecurityHandler spu;
 
 	@BeforeClass
 	public static void createTestInstance() {
@@ -39,11 +39,13 @@ public class SecurityTestStorm extends AbstractSecurityTest {
 			getSpu().clearSP();
 			// Then build using the model generated from XML
 			refreshSpu();
-			getSpu().sendUserSecuritytoStormPath(getXmlUs().getUserSecurity());
+			getSpu().sendUserSecuritytoStormPath(
+					getXmlUs().getUserSecurityModel().getModel());
 			// the build from Stormpath and test.
 			refreshSpu();
 			getSpu().buildUserSecurity();
-			getXmlUs().setUserSecurity(getSpu().getUserSecurity());
+			getXmlUs().getUserSecurityModel().setModel(
+					(getSpu().getUserSecurityModel().getModel()));
 		} catch (Exception e) {
 			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
@@ -64,31 +66,31 @@ public class SecurityTestStorm extends AbstractSecurityTest {
 		return getSpu();
 	}
 
-	public static StormPathUserSecurity getSpu() {
+	public static StormPathUserSecurityHandler getSpu() {
 		if (spu == null) {
 			Properties spuP = new Properties();
 			spuP.setProperty(StormPathBaseDTO.KEY_PATH, apiKeyFile);
 			spuP.setProperty(StormPathBaseDTO.API_KEY_ID, apiKeyId);
 			spuP.setProperty(StormPathBaseDTO.API_KEY_SECRET, apiKeySecret);
-			spu = new StormPathUserSecurity(spuP);
+			spu = new StormPathUserSecurityHandler(spuP);
 		}
 		return spu;
 	}
 
-	public static void setSpu(final StormPathUserSecurity spuIn) {
+	public static void setSpu(final StormPathUserSecurityHandler spuIn) {
 		spu = spuIn;
 	}
 
-	public static XmlUserSecurity getXmlUs() {
+	public static XmlUserSecurityHandler getXmlUs() {
 		if (xmlUs == null) {
 			Properties xmlP = new Properties();
-			xmlP.setProperty(XmlUserSecurity.CONF_PROPS_FN, fn);
-			xmlUs = new XmlUserSecurity(xmlP);
+			xmlP.setProperty(XmlUserSecurityHandler.CONF_PROPS_FN, fn);
+			xmlUs = new XmlUserSecurityHandler(xmlP);
 		}
 		return xmlUs;
 	}
 
-	public static void setXmlUs(final XmlUserSecurity xmlUsIn) {
+	public static void setXmlUs(final XmlUserSecurityHandler xmlUsIn) {
 		xmlUs = xmlUsIn;
 	}
 

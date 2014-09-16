@@ -58,7 +58,7 @@ public class Model2Storm {
 	}
 
 	private void clear() {
-		String UCSP = StormPathUserSecurity.STORMPATH.toUpperCase();
+		String UCSP = StormPathUserSecurityHandler.STORMPATH.toUpperCase();
 		// Clear apps not SP
 		ApplicationList apps = spbd.getTenant().getApplications();
 		for (Application app : apps) {
@@ -184,7 +184,7 @@ public class Model2Storm {
 			buildAccounts(ogrp, grp);
 			// add customFields
 			if (!ogrp.getCustData().getCustFields().isEmpty()) {
-				CustomData cd = spbd.getResourceByHref_CustomData(grp
+				CustomData cd = spbd.getResourceByHrefCustomData(grp
 						.getCustomData().getHref());
 				buildCustomData(ogrp.getCustData().getCustFields(), cd);
 				cd.save();
@@ -235,9 +235,12 @@ public class Model2Storm {
 		if (oacc != null && acc != null) {
 			// update
 			acc.setUsername(oacc.getName());
+			acc.setGivenName(oacc.getGivenName());
+			acc.setMiddleName(oacc.getMiddleName());
+			acc.setSurname(oacc.getSurname());
 			acc.setEmail(oacc.getEmail());
 			if (!oacc.getCustData().getCustFields().isEmpty()) {
-				CustomData cd = spbd.getResourceByHref_CustomData(acc
+				CustomData cd = spbd.getResourceByHrefCustomData(acc
 						.getCustomData().getHref());
 				buildCustomData(oacc.getCustData().getCustFields(), cd);
 				cd.save();
@@ -302,12 +305,15 @@ public class Model2Storm {
 
 	private void buildApps() {
 
+		// spbd.resetTenant
+
 		ApplicationList apps = spbd.getTenant().getApplications();
+
 		for (OtfApplication oApp : userSecurity.getApps().getApplications()
 				.values()) {
 			boolean found = false;
 			// refresh spbd in order to pick up new directories
-			spbd.load();
+
 			for (Application app : apps) {
 				if (app.getName().equals(oApp.getName())) {
 					buildApp(oApp, app);

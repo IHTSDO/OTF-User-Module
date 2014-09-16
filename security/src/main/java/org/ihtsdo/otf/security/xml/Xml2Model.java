@@ -15,6 +15,7 @@ import org.ihtsdo.otf.security.dto.OtfDirectory;
 import org.ihtsdo.otf.security.dto.OtfGroup;
 import org.ihtsdo.otf.security.dto.OtfGroups;
 import org.ihtsdo.otf.security.dto.UserSecurity;
+import org.ihtsdo.otf.security.dto.UserSecurityCached;
 import org.ihtsdo.otf.security.xml.base.XMLUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -37,9 +38,10 @@ public class Xml2Model {
 	}
 
 	private void buildUserSecurity(final Element elem) {
-		userSecurity = new UserSecurity();
+		userSecurity = new UserSecurityCached();
 		buildTopDirs(elem);
 		buildTopApps(elem);
+		// userSecurity.init();
 
 	}
 

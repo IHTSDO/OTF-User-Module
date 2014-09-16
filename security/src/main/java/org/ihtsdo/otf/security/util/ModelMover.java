@@ -8,8 +8,8 @@ import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.UserSecurityCompare;
 import org.ihtsdo.otf.security.stormpath.StormPathBaseDTO;
-import org.ihtsdo.otf.security.stormpath.StormPathUserSecurity;
-import org.ihtsdo.otf.security.xml.XmlUserSecurity;
+import org.ihtsdo.otf.security.stormpath.StormPathUserSecurityHandler;
+import org.ihtsdo.otf.security.xml.XmlUserSecurityHandler;
 
 public class ModelMover {
 
@@ -26,9 +26,9 @@ public class ModelMover {
 	public static final String REBUILD_SP = "rebuild";
 	public static final String LOG_EVENTS = "log";
 
-	private XmlUserSecurity xmlUsIn;
-	private XmlUserSecurity xmlUsOut;
-	private StormPathUserSecurity spu;
+	private XmlUserSecurityHandler xmlUsIn;
+	private XmlUserSecurityHandler xmlUsOut;
+	private StormPathUserSecurityHandler spu;
 
 	public ModelMover() {
 		super();
@@ -79,7 +79,7 @@ public class ModelMover {
 	}
 
 	private String stormToString(final boolean log) {
-		String ustr = getSpu().getUserSecurity().toString();
+		String ustr = getSpu().getUserSecurityModel().getModel().toString();
 		if (log) {
 			LOG.info("Storm as String : \n" + ustr);
 			LOG.info(UserSecurityCompare.remSpaceLineEnds(ustr));
@@ -89,11 +89,12 @@ public class ModelMover {
 	}
 
 	private void storm2Xml(final boolean log) {
-		StormPathUserSecurity spu = getSpu();
+		StormPathUserSecurityHandler spu = getSpu();
 
 		try {
 			spu.buildUserSecurity();
-			getXmlUsOut().setUserSecurity(spu.getUserSecurity());
+			getXmlUsOut().getUserSecurityModel().setModel(
+					(spu.getUserSecurityModel().getModel()));
 			getXmlUsOut().saveUserSecurity();
 			if (log) {
 				LOG.info("storm2Xml : \n"
@@ -109,14 +110,15 @@ public class ModelMover {
 
 	private void Xml2Storm(final boolean log) {
 
-		StormPathUserSecurity spu = getSpu();
+		StormPathUserSecurityHandler spu = getSpu();
 		try {
 			getXmlUsIn();
 			if (log) {
 				LOG.info("Xml2Storm : \n"
 						+ xmlUsIn.getXMLFromUserSecurityAsString());
 			}
-			spu.sendUserSecuritytoStormPath(xmlUsIn.getUserSecurity());
+			spu.sendUserSecuritytoStormPath(xmlUsIn.getUserSecurityModel()
+					.getModel());
 
 		} catch (Exception e) {
 
@@ -127,7 +129,7 @@ public class ModelMover {
 
 	private void clearSP() {
 		setSpu(null);
-		StormPathUserSecurity spu = getSpu();
+		StormPathUserSecurityHandler spu = getSpu();
 		try {
 			spu.clearSP();
 		} catch (Exception e) {
@@ -207,21 +209,21 @@ public class ModelMover {
 		return false;
 	}
 
-	public final XmlUserSecurity getXmlUsIn() {
+	public final XmlUserSecurityHandler getXmlUsIn() {
 		if (xmlUsIn == null) {
 			Properties xmlP = new Properties();
-			xmlP.setProperty(XmlUserSecurity.CONF_PROPS_FN,
+			xmlP.setProperty(XmlUserSecurityHandler.CONF_PROPS_FN,
 					settings.getProperty(XML_FN_IN));
-			xmlUsIn = new XmlUserSecurity(xmlP);
+			xmlUsIn = new XmlUserSecurityHandler(xmlP);
 		}
 		return xmlUsIn;
 	}
 
-	public final void setXmlUsIn(XmlUserSecurity xmlUsInIn) {
+	public final void setXmlUsIn(XmlUserSecurityHandler xmlUsInIn) {
 		xmlUsIn = xmlUsInIn;
 	}
 
-	public final XmlUserSecurity getXmlUsOut() {
+	public final XmlUserSecurityHandler getXmlUsOut() {
 		if (xmlUsOut == null) {
 
 			String xmlIn = settings.getProperty(XML_FN_IN);
@@ -231,7 +233,7 @@ public class ModelMover {
 					xmlUsOut = getXmlUsIn();
 					return xmlUsOut;
 				} else {
-					xmlUsOut = new XmlUserSecurity();
+					xmlUsOut = new XmlUserSecurityHandler();
 					xmlUsOut.setConfigFN(settings.getProperty(XML_FN_OUT));
 				}
 			}
@@ -239,19 +241,19 @@ public class ModelMover {
 		return xmlUsOut;
 	}
 
-	public final void setXmlUsOut(XmlUserSecurity xmlUsOutIn) {
+	public final void setXmlUsOut(XmlUserSecurityHandler xmlUsOutIn) {
 		xmlUsOut = xmlUsOutIn;
 	}
 
-	public final StormPathUserSecurity getSpu() {
+	public final StormPathUserSecurityHandler getSpu() {
 		if (spu == null) {
-			spu = new StormPathUserSecurity(getSettings());
+			spu = new StormPathUserSecurityHandler(getSettings());
 		}
 
 		return spu;
 	}
 
-	public final void setSpu(StormPathUserSecurity spuIn) {
+	public final void setSpu(StormPathUserSecurityHandler spuIn) {
 		spu = spuIn;
 	}
 

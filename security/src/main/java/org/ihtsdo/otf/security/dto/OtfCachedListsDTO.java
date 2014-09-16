@@ -2,11 +2,13 @@ package org.ihtsdo.otf.security.dto;
 
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.objectcache.ObjectCache;
 
 public class OtfCachedListsDTO {
-
+	private static final Logger LOG = Logger.getLogger(OtfCachedListsDTO.class
+			.getName());
 	// Keys for getting lists/Denormalized maps from cache.
 	public static final String APPS_MAP = "Apps_Map";
 	public static final String DIRS_MAP = "Dirs_Map";
@@ -20,120 +22,122 @@ public class OtfCachedListsDTO {
 
 	public static final String ADMIN_CONTEXT_URL = "OtfAdminServletContextUrl";
 
-	public final void setSettings(OtfSettings settingsIn) {
+	public static final void setSettings(OtfSettings settingsIn) {
 		ObjectCache.INSTANCE.put(SETTINGS, settingsIn);
 	}
 
-	public final OtfSettings getSettings() {
+	public static final OtfSettings getSettings() {
 		OtfSettings settings = (OtfSettings) ObjectCache.INSTANCE.get(SETTINGS);
 		return settings;
 	}
 
-	public final void remSettings() {
+	public static final void remSettings() {
 		ObjectCache.INSTANCE.remove(SETTINGS);
 	}
 
-	public final List<String> getMembersList() {
+	public static final List<String> getMembersList() {
 		@SuppressWarnings("unchecked")
 		List<String> list = (List<String>) ObjectCache.INSTANCE
 				.get(MEMBERS_LIST);
 		return list;
 	}
 
-	public final void setMembersList(List<String> membersIn) {
+	public static final void setMembersList(List<String> membersIn) {
 		ObjectCache.INSTANCE.put(MEMBERS_LIST, membersIn);
 	}
 
-	public final void remMembersList() {
+	public static final void remMembersList() {
 		ObjectCache.INSTANCE.remove(MEMBERS_LIST);
 	}
 
-	public final List<String> getAdminUsersList() {
+	public static final List<String> getAdminUsersList() {
 		@SuppressWarnings("unchecked")
 		List<String> list = (List<String>) ObjectCache.INSTANCE
 				.get(ADMINUSERS_LIST);
 		return list;
 	}
 
-	public final void setAdminUsersList(List<String> listIn) {
+	public static final void setAdminUsersList(List<String> listIn) {
 		ObjectCache.INSTANCE.put(ADMINUSERS_LIST, listIn);
 	}
 
-	public final void remAdminUsersList() {
+	public static final void remAdminUsersList() {
 		ObjectCache.INSTANCE.remove(ADMINUSERS_LIST);
 	}
 
-	public final Map<String, OtfAccount> getAllAccountsMap() {
+	public static final Map<String, OtfAccount> getAllAccountsMap() {
 		@SuppressWarnings("unchecked")
 		Map<String, OtfAccount> allAccounts = (Map<String, OtfAccount>) ObjectCache.INSTANCE
 				.get(ACCOUNTS_LIST);
 		return allAccounts;
 	}
 
-	public final void setAllAccountsMap(Map<String, OtfAccount> allAccountsIn) {
+	public static final void setAllAccountsMap(
+			Map<String, OtfAccount> allAccountsIn) {
 		ObjectCache.INSTANCE.put(ACCOUNTS_LIST, allAccountsIn);
 	}
 
-	public final void remAllAccountsMap() {
+	public static final void remAllAccountsMap() {
 		ObjectCache.INSTANCE.remove(ACCOUNTS_LIST);
 	}
 
-	public final Map<String, List<String>> getAppsMap() {
+	public static final Map<String, List<String>> getAppsMap() {
 		@SuppressWarnings("unchecked")
 		Map<String, List<String>> appsMap = (Map<String, List<String>>) ObjectCache.INSTANCE
 				.get(APPS_MAP);
 		return appsMap;
 	}
 
-	public final void setAppsMap(Map<String, List<String>> appsMapIn) {
+	public static final void setAppsMap(Map<String, List<String>> appsMapIn) {
 		ObjectCache.INSTANCE.put(APPS_MAP, appsMapIn);
 	}
 
-	public final void remAppsMap() {
+	public static final void remAppsMap() {
 		ObjectCache.INSTANCE.remove(APPS_MAP);
 	}
 
-	public final Map<String, List<String>> getDirsMap() {
+	public static final Map<String, List<String>> getDirsMap() {
 		@SuppressWarnings("unchecked")
 		Map<String, List<String>> dirsMap = (Map<String, List<String>>) ObjectCache.INSTANCE
 				.get(DIRS_MAP);
 		return dirsMap;
 	}
 
-	public final void setDirsMap(Map<String, List<String>> dirsMapIn) {
+	public static final void setDirsMap(Map<String, List<String>> dirsMapIn) {
 		ObjectCache.INSTANCE.put(DIRS_MAP, dirsMapIn);
 	}
 
-	public final void remDirsMap() {
+	public static final void remDirsMap() {
 		ObjectCache.INSTANCE.remove(DIRS_MAP);
 	}
 
-	public final List<String> getAppsNotUserMemberList() {
+	public static final List<String> getAppsNotUserMemberList() {
 		@SuppressWarnings("unchecked")
 		List<String> appsNotUserMemberList = (List<String>) ObjectCache.INSTANCE
 				.get(APPS_NOT_USER_MEM_LIST);
 		return appsNotUserMemberList;
 	}
 
-	public final void setAppsNotUserMemberList(
+	public static final void setAppsNotUserMemberList(
 			List<String> appsNotUserMemberListIn) {
 		ObjectCache.INSTANCE.put(APPS_NOT_USER_MEM_LIST,
 				appsNotUserMemberListIn);
 	}
 
-	public final void remAppsNotUserMemberList() {
+	public static final void remAppsNotUserMemberList() {
 		ObjectCache.INSTANCE.remove(APPS_NOT_USER_MEM_LIST);
 	}
 
-	public final String getAdminServletContextUrl() {
+	public static final String getAdminServletContextUrl() {
 		return (String) ObjectCache.INSTANCE.get(ADMIN_CONTEXT_URL);
 	}
 
-	public final void setAdminServletContextUrl(String adminServletContextUrlIn) {
+	public static final void setAdminServletContextUrl(
+			final String adminServletContextUrlIn) {
 		ObjectCache.INSTANCE.put(ADMIN_CONTEXT_URL, adminServletContextUrlIn);
 	}
 
-	public final void remAdminServletContextUrl() {
+	public static final void remAdminServletContextUrl() {
 		ObjectCache.INSTANCE.remove(ADMIN_CONTEXT_URL);
 	}
 

@@ -1,6 +1,7 @@
 package org.ihtsdo.otf.security.dto;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldSetting;
@@ -32,6 +35,13 @@ public class OtfSettings extends OtfBaseId {
 	private DateFormat df = null;
 
 	private OtfGroup grp;
+	/**
+	 * <p>
+	 * logger.
+	 * </p>
+	 */
+	private static final Logger LOG = Logger.getLogger(OtfSettings.class
+			.getName());
 
 	public OtfSettings() {
 		super();
@@ -271,6 +281,32 @@ public class OtfSettings extends OtfBaseId {
 
 	public final void setModDate(String modDateIn) {
 		modDate = modDateIn;
+	}
+
+	public final long getDateTime(final String dateTimeStr) {
+		long dt = -1;
+
+		if (stringOK(dateTimeStr)) {
+			try {
+				Date dtd = getDf().parse(dateTimeStr);
+				dt = dtd.getTime();
+			} catch (ParseException pe) {
+				LOG.log(Level.SEVERE, "Could not parse date String = "
+						+ dateTimeStr, pe);
+			}
+		}
+
+		return dt;
+	}
+
+	public final boolean shouldRefresh(String dtRemote) {
+
+		long thisTime = getDateTime(getModDate());
+		long remoteTime = getDateTime(dtRemote);
+		boolean shouldRefresh = remoteTime > thisTime;
+
+		LOG.info("shouldRefresh remoteTime > thisTime = " + shouldRefresh);
+		return shouldRefresh;
 	}
 
 	public final DateFormat getDf() {
