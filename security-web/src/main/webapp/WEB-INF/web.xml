@@ -97,6 +97,11 @@
 		<servlet-name>SecurityAdmin</servlet-name>
 		<url-pattern>/admin/*</url-pattern>
 	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>SecurityAdmin</servlet-name>
+		<url-pattern>/security-web/admin/*</url-pattern>
+	</servlet-mapping>
 
 	
 	<!--  <servlet-mapping>
@@ -107,6 +112,11 @@
 	<servlet-mapping>
 		<servlet-name>SecurityQuery</servlet-name>
 		<url-pattern>/query/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>SecurityQuery</servlet-name>
+		<url-pattern>/security-web/query/*</url-pattern>
 	</servlet-mapping>
 
 
