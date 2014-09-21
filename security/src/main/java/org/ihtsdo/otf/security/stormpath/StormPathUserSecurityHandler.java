@@ -8,6 +8,7 @@ import org.ihtsdo.otf.security.AbstractUserSecurityHandler;
 import org.ihtsdo.otf.security.UserSecurityModel;
 import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.OtfApplication;
+import org.ihtsdo.otf.security.dto.OtfCachedListsDTO;
 import org.ihtsdo.otf.security.dto.OtfDirectory;
 import org.ihtsdo.otf.security.dto.OtfGroup;
 import org.ihtsdo.otf.security.dto.UserSecurity;
@@ -121,53 +122,6 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 	public void saveUserSecurity() throws Exception {
 	}
 
-	public final Application getUsersApplication(String username) {
-		return getApplicationByUser(username);
-
-	}
-
-	public final Application getApplicationByName(final String appName) {
-		ApplicationList applications = spbd.getTenant().getApplications();
-		for (Application application : applications) {
-			if (application.getName().equals(appName)) {
-				return application;
-			}
-		}
-		return null;
-	}
-
-	public final Application getApplicationByUser(final String userName) {
-		ApplicationList applications = spbd.getTenant().getApplications();
-		// First try users or admin app as most likely
-		for (Application application : applications) {
-			if (userOrAdminApp(application.getName())) {
-				AccountList acc = application.getAccounts(Accounts
-						.where(Accounts.username().eqIgnoreCase(userName)));
-				if (acc.iterator().hasNext()) {
-					return application;
-				}
-			}
-		}
-		// then try others
-		for (Application application : applications) {
-			if (!userOrAdminApp(application.getName())) {
-				AccountList acc = application.getAccounts(Accounts
-						.where(Accounts.username().eqIgnoreCase(userName)));
-				if (acc.iterator().hasNext()) {
-					return application;
-				}
-			}
-		}
-		return null;
-	}
-
-	public boolean userOrAdminApp(String appname) {
-		if (appname.equalsIgnoreCase(STORMPATH)) {
-			return true;
-		}
-		return appname.equalsIgnoreCase(getUsersAppName());
-	}
-
 	public final Application getFirstApplicationByUserName(final String userName) {
 
 		String appname = getUserSecurityModel().getAppNameForUser(userName);
@@ -196,10 +150,24 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 		spbd = spbdIn;
 	}
 
-	@Override
-	public final OtfAccount authAccountLocal(final String acNameIn, String pwIn) {
-		Account acc = authSPAccount(acNameIn, pwIn);
-		pwIn = null;
+	public final OtfAccount getAcKeys(Account acc) {
+		if (acc != null) {
+			OtfAccount accIn = getStorm2Mod().buildAccount(acc);
+			ApiKeyList apList = acc.getApiKeys();
+			for (ApiKey apiKey : apList) {
+				if (apiKey.getStatus().equals(ApiKeyStatus.ENABLED)) {
+					accIn.setAuthToken(apiKey.getId());
+				} else {
+					accIn.addAuthToken(apiKey.getId());
+				}
+			}
+			return accIn;
+		}
+
+		return null;
+	}
+
+	public final OtfAccount getResetAcKeys(Account acc) {
 		if (acc != null) {
 			OtfAccount accIn = getStorm2Mod().buildAccount(acc);
 			ApiKeyList apList = acc.getApiKeys();
@@ -216,8 +184,8 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 			// Stormpath admins are responsible for updating etc their own keys.
 			// Consider having an "App user" whose key never changes/is manually
 			// changed.
-			if (!getApplicationByUser(acNameIn).getName().equalsIgnoreCase(
-					STORMPATH)) {
+			if (!getApplicationByUser(acc.getUsername()).getName()
+					.equalsIgnoreCase(STORMPATH)) {
 				if (apikeyCount == 1) {
 					// add an apikey
 					ApiKey apiKey = acc.createApiKey();
@@ -226,6 +194,7 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 					ApiKey apiKeyOld = apList.iterator().next();
 					apiKeyOld.setStatus(ApiKeyStatus.DISABLED);
 					apiKeyOld.save();
+					accIn.addAuthToken(apiKey.getId());
 				}
 				if (apikeyCount > 1) {
 					// Roll through keys
@@ -238,6 +207,7 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 						if (ak.getStatus() == ApiKeyStatus.ENABLED) {
 							ak.setStatus(ApiKeyStatus.DISABLED);
 							ak.save();
+							accIn.addAuthToken(ak.getId());
 						}
 					}
 					// add an new apikey
@@ -246,6 +216,31 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 				}
 			}
 			return accIn;
+		}
+		return null;
+
+	}
+
+	@Override
+	public final OtfAccount authAccountLocal(final String acNameIn,
+			String pwIn, final String tokenIn) {
+		if (stringOK(acNameIn)) {
+			// see if the pw is a token
+			if (stringOK(tokenIn)) {
+				Account accTok = getAccountByUsername(acNameIn);
+				if (accTok != null) {
+					OtfAccount oacc = getAcKeys(accTok);
+					if (oacc.checkAuthToken(tokenIn)) {
+						return oacc;
+					}
+				}
+			}
+			if (stringOK(pwIn)) {
+				Account acc = authSPAccount(acNameIn, pwIn);
+				// The moment pwIn finshed with set to null
+				pwIn = null;
+				return getResetAcKeys(acc);
+			}
 		}
 		return null;
 	}
@@ -451,12 +446,9 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 
 	@Override
 	public UserSecurityModel getLocalUserSecurityModel() {
-
 		if (isCacheModel()) {
 			return new UserSecurityModelCached();
-		}
-
-		else {
+		} else {
 			return new StormpathUserSecurityModel();
 		}
 	}
@@ -467,6 +459,100 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 
 	public final void setCacheModel(boolean cacheModelIn) {
 		cacheModel = cacheModelIn;
+	}
+
+	public final Application getUsersApplication(String username) {
+		return getApplicationByUser(username);
+
+	}
+
+	public final Account getAccountByUsername(String username) {
+
+		// See if the account is in the accList locally
+		if (OtfCachedListsDTO.getAllAccountsMap() != null) {
+			OtfAccount oacc = OtfCachedListsDTO.getAllAccountsMap().get(
+					username);
+			if (oacc != null) {
+				// get the href
+				String href = oacc.getIdref();
+				if (stringOK(href)) {
+					final Account acc = spbd.getResourceByHrefAccount(href);
+					if (acc != null) {
+						return acc;
+					}
+				}
+			}
+		}
+		// else....get from remote via apps
+		// Possibly use href is account is untrustworthy.
+		return getRemoteAccountByUser(username);
+	}
+
+	public final Application getApplicationByName(final String appName) {
+		ApplicationList applications = spbd.getTenant().getApplications();
+		for (Application application : applications) {
+			if (application.getName().equals(appName)) {
+				return application;
+			}
+		}
+		return null;
+	}
+
+	public final Account getRemoteAccountByUser(final String userName) {
+		ApplicationList applications = spbd.getTenant().getApplications();
+		// First try users or admin app as most likely
+		for (Application application : applications) {
+			if (userOrAdminApp(application.getName())) {
+				AccountList acc = application.getAccounts(Accounts
+						.where(Accounts.username().eqIgnoreCase(userName)));
+				if (acc.iterator().hasNext()) {
+					return acc.iterator().next();
+				}
+			}
+		}
+		// then try others
+		for (Application application : applications) {
+			if (!userOrAdminApp(application.getName())) {
+				AccountList acc = application.getAccounts(Accounts
+						.where(Accounts.username().eqIgnoreCase(userName)));
+				if (acc.iterator().hasNext()) {
+					return acc.iterator().next();
+				}
+			}
+		}
+		return null;
+	}
+
+	public final Application getApplicationByUser(final String userName) {
+		ApplicationList applications = spbd.getTenant().getApplications();
+		// First try users or admin app as most likely
+		for (Application application : applications) {
+			if (userOrAdminApp(application.getName())) {
+				AccountList acc = application.getAccounts(Accounts
+						.where(Accounts.username().eqIgnoreCase(userName)));
+				if (acc.iterator().hasNext()) {
+					return application;
+				}
+			}
+		}
+		// then try others
+		for (Application application : applications) {
+			if (!userOrAdminApp(application.getName())) {
+				AccountList acc = application.getAccounts(Accounts
+						.where(Accounts.username().eqIgnoreCase(userName)));
+				if (acc.iterator().hasNext()) {
+					return application;
+				}
+			}
+		}
+		return null;
+	}
+
+	public boolean userOrAdminApp(String appname) {
+		if (appname.equalsIgnoreCase(StormPathUserSecurityHandler.STORMPATH)) {
+			return true;
+		}
+		return appname.equalsIgnoreCase(getUsersAppName());
 	}
 
 }

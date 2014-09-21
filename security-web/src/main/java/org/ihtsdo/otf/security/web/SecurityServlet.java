@@ -343,8 +343,18 @@ public class SecurityServlet extends AbstractSecurityServlet {
 				sqd.getArgs().put(SecurityService.PASSWORD, "*******");
 
 				if (stringOK(rval)) {
-					hr.getSession().setAttribute(SecurityService.USER_NAME,
-							sqd.getArgs().get(SecurityService.USER_NAME));
+
+					String username = sqd.getArgs().get(
+							SecurityService.USER_NAME);
+
+					if (stringOK(username)) {
+						hr.getSession().setAttribute(SecurityService.USER_NAME,
+								username);
+					}
+
+					else {
+						LOG.severe("No Username set!");
+					}
 
 				}
 			}

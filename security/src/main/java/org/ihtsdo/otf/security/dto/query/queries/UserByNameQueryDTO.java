@@ -28,7 +28,7 @@ public class UserByNameQueryDTO extends AbstractSecurityQuery {
 
 	public final OtfAccountMin getUser() {
 		if (user == null) {
-			OtfAccount oacc = ush.getUser(userName, pw);
+			OtfAccount oacc = ush.getUser(userName, pw, null);
 			if (oacc != null) {
 				user = new OtfAccountMin(oacc);
 				oacc.setAuth(false);

@@ -142,21 +142,25 @@ public class XmlUserSecurityHandler extends AbstractUserSecurityHandler {
 
 	@Override
 	public final OtfAccount authAccountLocal(final String acNameIn,
-			final String pwIn) {
+			final String pwIn, final String tokenIn) {
 		// check acc exists
 		OtfAccount acc = getUserSecurityModel().getUserAccountByName(acNameIn);
 		if (acc == null) {
 			return null;
 		}
 		// check if uuid/token
-		if (acc.checkAuthToken(pwIn)) {
-			return acc;
+		if (stringOK(tokenIn)) {
+			if (acc.checkAuthToken(tokenIn)) {
+				return acc;
+			}
 		}
 
 		// Really for use in testing - simply check if password is defaultPw and
 		// that user account exists.
-		if (pwIn.equals(getUserSecurityModel().getSettings().getDefPw())) {
-			return acc;
+		if (stringOK(pwIn)) {
+			if (pwIn.equals(getUserSecurityModel().getSettings().getDefPw())) {
+				return acc;
+			}
 		}
 		return null;
 	}

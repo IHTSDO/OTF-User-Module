@@ -153,27 +153,28 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 		// See if UN and Token are set in the session
 		String uname = (String) request.getSession().getAttribute(
 				WebStatics.USERNAME);
-		String token = null;
-		if (stringOK(uname)) {
-			token = (String) request.getSession().getAttribute(
-					WebStatics.AUTH_TOKEN);
-			if (stringOK(token)) {
-				return authUserByToken(uname, token);
-			}
-		}
+		String token = (String) request.getSession().getAttribute(
+				WebStatics.AUTH_TOKEN);
 
 		// Get the UN + pw strings
-		uname = getNamedParam(WebStatics.USERNAME, request);
+		if (!stringOK(uname)) {
+			uname = getNamedParam(WebStatics.USERNAME, request);
+		}
 		String password = getNamedParam(WebStatics.PASSWD, request);
 		// auth users
-		return authUser(uname, password, request);
+
+		// test to see if token
+
+		// HERE
+
+		return authUser(uname, password, token, request);
 
 	}
 
 	private String authUser(final String uname, String password,
-			final HttpServletRequest request) {
-		if (stringOK(uname) && stringOK(password)) {
-			OtfAccount oacc = getUsh().authAccount(uname, password);
+			final String tokenIn, final HttpServletRequest request) {
+		if (stringOK(uname)) {
+			OtfAccount oacc = getUsh().authAccount(uname, password, tokenIn);
 			if (oacc != null) {
 				String token = oacc.getAuthToken();
 				if (!stringOK(token)) {
@@ -193,19 +194,6 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 				return uname;
 			}
 		}
-		return null;
-	}
-
-	private String authUserByToken(final String uname, String token) {
-
-		OtfAccount oacc = getUsh().getUserSecurityModel().getUserAccountByName(
-				uname);
-		if (oacc != null) {
-			if (token.equals(oacc.getAuthToken())) {
-				return uname;
-			}
-		}
-
 		return null;
 	}
 

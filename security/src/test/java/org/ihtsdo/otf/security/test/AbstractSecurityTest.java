@@ -138,7 +138,7 @@ public abstract class AbstractSecurityTest {
 
 	@Test
 	public final void testAccountAuth() {
-		OtfAccount testAcc = getUsh().authAccount(TEST_USER, TEST_PW);
+		OtfAccount testAcc = getUsh().authAccount(TEST_USER, TEST_PW, null);
 		String json = secS.getUserByName(TEST_USER, TEST_PW);
 
 		String name = "";

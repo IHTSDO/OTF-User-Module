@@ -36,7 +36,8 @@ public abstract class AbstractUserSecurityHandler implements
 	@Override
 	public abstract void saveUserSecurity() throws Exception;
 
-	public abstract OtfAccount authAccountLocal(String acNameIn, String pwIn);
+	public abstract OtfAccount authAccountLocal(String acNameIn, String pwIn,
+			String tokenIn);
 
 	@Override
 	public abstract void init(Properties propsIn) throws Exception;
@@ -65,33 +66,22 @@ public abstract class AbstractUserSecurityHandler implements
 	public abstract UserSecurityModel getLocalUserSecurityModel();
 
 	@Override
-	public OtfAccount getUser(String acNameIn, String pwIn) {
-		if (pwIn != null && pwIn.length() > 0) {
+	public OtfAccount getUser(final String acNameIn, final String pwIn,
+			final String tokenIn) {
+		if (stringOK(pwIn) || stringOK(tokenIn)) {
 			// first auth
-			return authAccount(acNameIn, pwIn);
+			return authAccount(acNameIn, pwIn, tokenIn);
 		}
-		if (pwIn == null || pwIn.length() == 0) {
+		if (!stringOK(pwIn) && !stringOK(tokenIn)) {
 			return getUserSecurityModel().getUserAccountByName(acNameIn);
 		}
 		return null;
 	}
 
 	@Override
-	public OtfAccount authAccount(String acNameIn, String pwIn) {
-
-		// move all this to the local method
-		// check acc exists
-		// OtfAccount acc = getUserSecurity().getUserAccountByName(acNameIn,
-		// UserSecurity.ALL);
-		// if (acc == null) {
-		// return null;
-		// }
-		// // check if uuid/token
-		// if (acc.checkAuthToken(pwIn)) {
-		// return acc;
-		// }
-
-		OtfAccount acc = authAccountLocal(acNameIn, pwIn);
+	public OtfAccount authAccount(final String acNameIn, final String pwIn,
+			final String tokenIn) {
+		OtfAccount acc = authAccountLocal(acNameIn, pwIn, tokenIn);
 		if (acc != null) {
 			acc.setAuth(true);
 		}

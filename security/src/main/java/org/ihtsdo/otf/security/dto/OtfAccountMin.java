@@ -1,5 +1,6 @@
 package org.ihtsdo.otf.security.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -23,6 +24,7 @@ public class OtfAccountMin extends OtfBaseName {
 
 	private String authToken = "";
 	private boolean auth;
+	private List<String> authTokens = new ArrayList<String>();
 
 	private final long expirytime = -1;
 	// 16 hours
@@ -208,6 +210,26 @@ public class OtfAccountMin extends OtfBaseName {
 	}
 
 	@JsonIgnore
+	public final List<String> getAuthTokens() {
+		if (authTokens == null) {
+			authTokens = new ArrayList<String>();
+		}
+		return authTokens;
+	}
+
+	public final void setAuthTokens(List<String> authTokensIn) {
+		authTokens = authTokensIn;
+	}
+
+	public final void addAuthToken(String authTokenIn) {
+		getAuthTokens().add(authTokenIn);
+	}
+
+	public final void resetAuthTokens() {
+		authTokens = new ArrayList<String>();
+	}
+
+	@JsonIgnore
 	public final String getAuthToken() {
 		// Temporary until Oauth etc.
 		// Check expired
@@ -223,6 +245,7 @@ public class OtfAccountMin extends OtfBaseName {
 
 	public final void setAuthToken(String authTokenIn) {
 		authToken = authTokenIn;
+		addAuthToken(authTokenIn);
 	}
 
 	public final String getToken() {
@@ -271,7 +294,7 @@ public class OtfAccountMin extends OtfBaseName {
 
 	@JsonIgnore
 	public boolean checkAuthToken(String token) {
-		if (token.equals(authToken)) {
+		if (getAuthTokens().contains(authToken)) {
 			setAuth(true);
 			getAuthToken();
 			return true;

@@ -21,9 +21,9 @@ public interface UserSecurityHandler {
 
 	UserSecurityModel getLocalUserSecurityModel();
 
-	OtfAccount authAccount(String acName, String pw);
+	OtfAccount authAccount(String acName, String pw, String token);
 
-	OtfAccount getUser(String acName, String pw);
+	OtfAccount getUser(String acName, String pw, String token);
 
 	void init(Properties props) throws Exception;
 
