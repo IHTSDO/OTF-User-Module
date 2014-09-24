@@ -42,6 +42,7 @@ public class SecurityService {
 	public static final String APPS = "apps";
 	public static final String PERMS = "perms";
 	public static final String SETTINGS = "settings";
+	public static final String DIR = "dir";
 
 	public static final String GET_USER_BY_NAME = "getUserByName";
 	public static final String GET_USER_MEMBERSHIPS = "getUserMemberships";

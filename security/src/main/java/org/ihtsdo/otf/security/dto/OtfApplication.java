@@ -46,8 +46,7 @@ public class OtfApplication extends OtfBaseNameDesc {
 
 	@Override
 	public void processParams() {
-		LOG.info("APPLICATION: ");
-		printParams();
+		// printParams();
 		resetErrors();
 		validateParams();
 

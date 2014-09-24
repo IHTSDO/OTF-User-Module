@@ -14,7 +14,7 @@ public abstract class OtfCustomFieldCachedVals extends OtfCustomFieldModel {
 	private List<String> members;
 	private Map<String, List<String>> appsMap;
 	private Map<String, List<String>> dirsMap;
-	private List<String> appsNotUserMembers;
+	private List<String> appsNotAdmin;
 	private List<String> usersList;
 	private List<String> userEmailList;
 
@@ -66,6 +66,9 @@ public abstract class OtfCustomFieldCachedVals extends OtfCustomFieldModel {
 			roles = getAppsMap().get(appName);
 		}
 		if (roles == null) {
+			roles = getDirsMap().get(appName);
+		}
+		if (roles == null) {
 			roles = new ArrayList<String>();
 		}
 		return roles;
@@ -84,8 +87,8 @@ public abstract class OtfCustomFieldCachedVals extends OtfCustomFieldModel {
 
 	public String getAppsOptionsSelect(String selVal, String onChangeJS,
 			String controlName) {
-		return getObw().getHtmlRowOptions(null, getAppsNotUserMembers(),
-				selVal, controlName, onChangeJS, null);
+		return getObw().getHtmlRowOptions(null, getAppsNotAdmin(), selVal,
+				controlName, onChangeJS, null);
 	}
 
 	public final List<String> getAppNames() {
@@ -96,17 +99,17 @@ public abstract class OtfCustomFieldCachedVals extends OtfCustomFieldModel {
 
 	}
 
-	public final List<String> getAppsNotUserMembers() {
-		if (appsNotUserMembers == null) {
-			appsNotUserMembers = OtfCachedListsDTO.getAppsNotUserMemberList();
+	public final List<String> getAppsNotAdmin() {
+		if (appsNotAdmin == null) {
+			appsNotAdmin = OtfCachedListsDTO.getAppsNotAdminList();
 		}
-		return appsNotUserMembers;
+		return appsNotAdmin;
 	}
 
 	public final String getHiddenDivRoleOptions() {
 		StringBuilder sbuild = new StringBuilder();
 
-		for (String app : getAppsNotUserMembers()) {
+		for (String app : getAppsNotAdmin()) {
 			sbuild.append(
 					(getRolesOptionsSelect("", app, app, app
 							+ HIDDEN_DIV_ROLES_ID))).append("\n");

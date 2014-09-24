@@ -51,7 +51,7 @@ public interface UserSecurityModel {
 
 	List<String> getMembers();
 
-	List<String> getAppsNotMembersOrUsers();
+	List<String> getAppsNotAdmin();
 
 	// Should be just the member name or object....
 	OtfGroup getMemberByName(final String accNameIn);
@@ -63,6 +63,8 @@ public interface UserSecurityModel {
 	Map<String, List<String>> getAppsMap();
 
 	List<OtfGroup> getGroupsByAppName(final String appnameIn);
+
+	List<OtfGroup> getGroupsByDirName(final String dirnameIn);
 
 	List<String> getDirsByAppName(String appname);
 

@@ -23,6 +23,7 @@ import org.ihtsdo.otf.security.dto.OtfBasicWeb;
 import org.ihtsdo.otf.security.dto.OtfCachedListsDTO;
 import org.ihtsdo.otf.security.dto.OtfCustomData;
 import org.ihtsdo.otf.security.dto.OtfCustomField;
+import org.ihtsdo.otf.security.dto.OtfDirectory;
 import org.ihtsdo.otf.security.dto.OtfGroup;
 import org.ihtsdo.otf.security.dto.OtfSettings;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldApplication;
@@ -127,6 +128,12 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		if (webObject instanceof OtfApplication) {
 			OtfApplication otfObj = (OtfApplication) webObject;
 			String retval = getUsh().addUpdateApp(otfObj);
+			getUsh().getUserSecurityModel().getModel().reset();
+			return retval;
+		}
+		if (webObject instanceof OtfDirectory) {
+			OtfDirectory otfObj = (OtfDirectory) webObject;
+			String retval = getUsh().addUpdateDir(otfObj);
 			getUsh().getUserSecurityModel().getModel().reset();
 			return retval;
 		}
@@ -267,7 +274,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 
 	public final String getAppsTreeHtml(final String path) {
 		return getList("Applications", path + SecurityService.APPS, getUsh()
-				.getUserSecurityModel().getAppsNotMembersOrUsers());
+				.getUserSecurityModel().getAppsNotAdmin());
 	}
 
 	public final String getList(String title, String baseUrl, List<String> vals) {
@@ -317,6 +324,13 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 						.getAppById(id);
 			} else {
 				return new OtfApplication();
+			}
+		case SecurityService.DIR:
+			if (exists) {
+				return getUsh().getUserSecurityModel().getModel().getDirs()
+						.getDirById(id);
+			} else {
+				return new OtfDirectory();
 			}
 		case SecurityService.SETTINGS:
 			return getSettings();
@@ -505,6 +519,13 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			if (oacc != null) {
 				oacc.getId();
 			}
+			if (oacc == null) {
+				// try dir
+				if (getUsh().getUserSecurityModel().getModel().getDirs()
+						.getDirByName(val) != null) {
+					return getDirForm();
+				}
+			}
 		}
 		if (oacc == null) {
 			oacc = new OtfApplication();
@@ -532,6 +553,46 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			String dirname = getUsh().getUserSecurityModel()
 					.getDirsByAppName(oacc.getName()).iterator().next();
 			newGrp.setParentDirName(dirname);
+			grps.add(newGrp);
+
+			Collections.sort(grps);
+			sbuild.append(OtfBaseWeb.getRepeatingSubForms("Roles/Groups", grps));
+		}
+		return sbuild.toString();
+	}
+
+	public final String getDirForm() {
+		OtfDirectory oacc = null;
+		if (getUrlNodes().length > 1) {
+			String val = getUrlNodes()[1];
+			oacc = getUsh().getUserSecurityModel().getModel().getDirs()
+					.getDirByName(val);
+			if (oacc != null) {
+				oacc.getId();
+			}
+		}
+		if (oacc == null) {
+			oacc = new OtfDirectory();
+		}
+		oacc.setAction(getDecString(getHr().getRequestURI()));
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append(oacc.getRHS());
+
+		// get the groups via the accountStores
+		if (stringOK(oacc.getName())) {
+			List<OtfGroup> grps = getUsh().getUserSecurityModel()
+					.getGroupsByDirName(oacc.getName());
+
+			String action = getDecString(getHr().getRequestURI());
+			for (OtfGroup grp : grps) {
+				grp.setAction(action);
+				grp.getId();
+			}
+
+			// add a new grp
+			OtfGroup newGrp = new OtfGroup();
+			newGrp.setAction(action);
+			newGrp.setParentDirName(oacc.getName());
 			grps.add(newGrp);
 
 			Collections.sort(grps);

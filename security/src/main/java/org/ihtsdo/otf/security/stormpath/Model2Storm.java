@@ -327,6 +327,7 @@ public class Model2Storm {
 	}
 
 	public void buildApp(final OtfApplication oApp, Application app) {
+		spbd.resetTenant();
 		if (oApp == null && app == null) {
 			LOG.severe("buildApp all is null");
 			return;
@@ -352,6 +353,9 @@ public class Model2Storm {
 				// Get list of accountStores
 				int accStores = oApp.getAccountStores().size();
 
+				LOG.info("App called " + oApp.getName() + " has " + accStores
+						+ " accstores set");
+
 				if (accStores == 0) {
 					// Build App with default DIR
 					spbd.getTenant().createApplication(
@@ -361,7 +365,13 @@ public class Model2Storm {
 
 				if (accStores > 0) {
 					DirectoryList dl = spbd.getTenant().getDirectories();
-
+					LOG.info("dl has next = " + dl.iterator().hasNext());
+					// if (!dl.iterator().hasNext()) {
+					// String href = spbd.getTenant().getHref();
+					// Tenant ten = spbd.getResourceByHrefTenant(href);
+					// DirectoryList dl2 = ten.getDirectories();
+					// LOG.info("dl2 has next  = = " + dl.iterator().hasNext());
+					// }
 					spbd.getTenant().createApplication(
 							Applications.newCreateRequestFor(app).build());
 					boolean isDefStore = true;
@@ -369,8 +379,10 @@ public class Model2Storm {
 					for (OtfAccountStore oAst : oApp.getAccountStores()
 							.values()) {
 						String name = oAst.getName();
+						LOG.info("Acc store name = " + name);
 
 						for (Directory dir : dl) {
+							LOG.info("dir name = " + dir.getName());
 							if (dir.getName().equals(name)) {
 								AccountStoreMapping accountStoreMapping = spbd
 										.getClient().instantiate(

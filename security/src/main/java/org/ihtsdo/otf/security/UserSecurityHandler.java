@@ -6,6 +6,7 @@ import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.OtfApplication;
 import org.ihtsdo.otf.security.dto.OtfDirectory;
 import org.ihtsdo.otf.security.dto.OtfGroup;
+import org.ihtsdo.otf.security.dto.UserSecurity;
 
 public interface UserSecurityHandler {
 
@@ -18,6 +19,8 @@ public interface UserSecurityHandler {
 	UserSecurityModel getUserSecurityModel();
 
 	void setUserSecurityModel(UserSecurityModel userSecurityModelIn);
+
+	UserSecurityModel getUserSecurityModel(UserSecurity userSecurityIn);
 
 	UserSecurityModel getLocalUserSecurityModel();
 

@@ -89,6 +89,7 @@ public class ModelMover {
 	}
 
 	private void storm2Xml(final boolean log) {
+		setSpu(null);
 		StormPathUserSecurityHandler spu = getSpu();
 
 		try {
@@ -113,10 +114,13 @@ public class ModelMover {
 		StormPathUserSecurityHandler spu = getSpu();
 		try {
 			getXmlUsIn();
-			if (log) {
-				LOG.info("Xml2Storm : \n"
-						+ xmlUsIn.getXMLFromUserSecurityAsString());
-			}
+			// if (log) {
+			// LOG.info("Xml2Storm : \n"
+			// + xmlUsIn.getXMLFromUserSecurityAsString());
+			// }
+
+			// Make sure settings have been init'ed by called defpw
+			xmlUsIn.getUserSecurityModel().getSettings().getDefPw();
 			spu.sendUserSecuritytoStormPath(xmlUsIn.getUserSecurityModel()
 					.getModel());
 

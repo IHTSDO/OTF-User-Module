@@ -32,12 +32,12 @@ public class UserSecurityCached extends UserSecurity {
 	private String adminApp;
 
 	@Override
-	public void init() {
+	public final void init() {
 		initCachedValues();
 	}
 
 	@Override
-	public void reset() {
+	public final void reset() {
 		resetAllCachedValues();
 	}
 
@@ -46,12 +46,12 @@ public class UserSecurityCached extends UserSecurity {
 		getAllAccounts();
 		getDirsMap();
 		getAppsMap();
+
 		if (getSettings() != null && !getSettings().getSettings().isEmpty()) {
 			getMembers();
-			getAppsNotMembersOrUsers();
+			getAppsNotAdmin();
 			getAdminUsers();
 		}
-		// getMembersList();
 
 	}
 
@@ -65,18 +65,6 @@ public class UserSecurityCached extends UserSecurity {
 		resetAdminUsers();
 
 	}
-
-	// public final String getDefaultpw() {
-	// if (!stringOK(defaultpw)) {
-	// defaultpw = getSettings().getSettings()
-	// .get(OtfCustomFieldSetting.DEFPW).getVal().trim();
-	// }
-	// return defaultpw;
-	// }
-	//
-	// public final void setDefaultpw(final String defaultpwIn) {
-	// defaultpw = defaultpwIn;
-	// }
 
 	public final String getUsersApp() {
 		if (!stringOK(usersApp)) {
@@ -102,7 +90,7 @@ public class UserSecurityCached extends UserSecurity {
 		membersApp = membersAppIn;
 	}
 
-	public void resetSettings() {
+	public final void resetSettings() {
 		OtfCachedListsDTO.remSettings();
 		getSettings();
 	}
@@ -120,13 +108,12 @@ public class UserSecurityCached extends UserSecurity {
 				settings = new OtfSettings(setgrp);
 				OtfCachedListsDTO.setSettings(settings);
 				setDefaultpw(settings.getDefPw());
-				initCachedValues();
 			}
 		}
 		return settings;
 	}
 
-	public final void setSettings(OtfSettings settingsIn) {
+	public final void setSettings(final OtfSettings settingsIn) {
 		OtfCachedListsDTO.setSettings(settingsIn);
 	}
 
@@ -134,12 +121,12 @@ public class UserSecurityCached extends UserSecurity {
 		return chk != null && chk.length() > 0;
 	}
 
-	public final List<OtfGroup> getGroupsByAppName(String appname) {
+	public final List<OtfGroup> getGroupsByAppName(final String appname) {
 		OtfApplication app = getApps().getAppByName(appname);
 		return getGroupsByApp(app);
 	}
 
-	public final List<String> getDirsByAppName(String appname) {
+	public final List<String> getDirsByAppName(final String appname) {
 		List<String> dirs = new ArrayList<String>();
 		for (OtfAccountStore acs : getApps().getAppByName(appname)
 				.getAccountStores().values()) {
@@ -151,7 +138,7 @@ public class UserSecurityCached extends UserSecurity {
 		return dirs;
 	}
 
-	public final List<OtfGroup> getGroupsByApp(OtfApplication app) {
+	public final List<OtfGroup> getGroupsByApp(final OtfApplication app) {
 		List<OtfGroup> groups = new ArrayList<OtfGroup>();
 		for (OtfAccountStore acs : app.getAccountStores().values()) {
 			if (acs.isDir()) {
@@ -163,7 +150,7 @@ public class UserSecurityCached extends UserSecurity {
 
 	}
 
-	public final List<OtfGroup> getGroupsByDirName(String dirName) {
+	public final List<OtfGroup> getGroupsByDirName(final String dirName) {
 		List<OtfGroup> groups = new ArrayList<OtfGroup>();
 		OtfDirectory dir = getDirs().getDirByName(dirName);
 		for (OtfGroup grp : dir.getGroups().getGroups().values()) {
@@ -187,13 +174,22 @@ public class UserSecurityCached extends UserSecurity {
 				Collections.sort(grpNames);
 				appsMap.put(app.getName(), grpNames);
 			}
+
+			// add user admin even if only dir
+			String useradminapp = getAdminApp();
+
+			if (!appsMap.containsKey(useradminapp)) {
+				if (getDirsMap().containsKey(useradminapp)) {
+					appsMap.put(useradminapp, getDirsMap().get(useradminapp));
+				}
+			}
 			setAppsMap(appsMap);
 		}
 
 		return appsMap;
 	}
 
-	public final void setAppsMap(Map<String, List<String>> appsMap) {
+	public final void setAppsMap(final Map<String, List<String>> appsMap) {
 		OtfCachedListsDTO.setAppsMap(appsMap);
 	}
 
@@ -204,7 +200,7 @@ public class UserSecurityCached extends UserSecurity {
 
 	public final Map<String, List<String>> getDirsMap() {
 		Map<String, List<String>> dirsMap = OtfCachedListsDTO.getDirsMap();
-		if (dirsMap == null) {
+		if (dirsMap == null || dirsMap.isEmpty()) {
 			dirsMap = new HashMap<String, List<String>>();
 			for (String dirName : getDirs().getDirectories().keySet()) {
 				List<String> grpNames = new ArrayList<String>();
@@ -221,7 +217,7 @@ public class UserSecurityCached extends UserSecurity {
 		return dirsMap;
 	}
 
-	public final void setDirsMap(Map<String, List<String>> dirsMap) {
+	public final void setDirsMap(final Map<String, List<String>> dirsMap) {
 		OtfCachedListsDTO.setDirsMap(dirsMap);
 	}
 
@@ -248,7 +244,7 @@ public class UserSecurityCached extends UserSecurity {
 		return members;
 	}
 
-	public final void setMembers(List<String> membersIn) {
+	public final void setMembers(final List<String> membersIn) {
 		OtfCachedListsDTO.setMembersList(membersIn);
 	}
 
@@ -350,10 +346,9 @@ public class UserSecurityCached extends UserSecurity {
 						}
 					}
 				}
-
 			}
 		}
-
+		// USer Admin is now just a dir.......special thing like members...
 		return adminUsers;
 	}
 
@@ -372,7 +367,7 @@ public class UserSecurityCached extends UserSecurity {
 		return adminUsers;
 	}
 
-	public final void setAdminUsers(List<String> listIn) {
+	public final void setAdminUsers(final List<String> listIn) {
 		OtfCachedListsDTO.setAdminUsersList(listIn);
 	}
 
@@ -474,7 +469,7 @@ public class UserSecurityCached extends UserSecurity {
 	}
 
 	@Override
-	public String toString() {
+	public final String toString() {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append("UserSecurity:\n");
 		sbuild.append("Directories:\n");
@@ -489,37 +484,46 @@ public class UserSecurityCached extends UserSecurity {
 		return getAppsMap().keySet();
 	}
 
-	public final List<String> getAppsNotMembersOrUsers() {
-		List<String> appsNotMembersOrUsers = OtfCachedListsDTO
-				.getAppsNotUserMemberList();
-		if (appsNotMembersOrUsers == null || appsNotMembersOrUsers.size() == 0) {
+	public final List<String> getAppsNotAdmin() {
+		List<String> appsNotAdmin = OtfCachedListsDTO.getAppsNotAdminList();
+		if (appsNotAdmin == null || appsNotAdmin.isEmpty()) {
 			Collection<String> all = getAppNames();
-			appsNotMembersOrUsers = new ArrayList<String>();
+			appsNotAdmin = new ArrayList<String>();
 			if (all != null && !all.isEmpty()) {
 				String users = getUsersApp();
 				String members = getMembersApp();
+				String adminhandler = getHandlerAdminDir();
+				List<String> adminApps = new ArrayList<String>();
+				if (stringOK(users)) {
+					adminApps.add(users);
+				}
+				if (stringOK(members)) {
+					adminApps.add(members);
+				}
+				if (stringOK(adminhandler)) {
+					adminApps.add(adminhandler);
+				}
+
 				for (String appname : all) {
-					boolean remove = appname.equals(users)
-							|| appname.equals(members);
-					if (!remove) {
-						appsNotMembersOrUsers.add(appname);
+					if (!adminApps.contains(appname)) {
+						appsNotAdmin.add(appname);
 					}
 				}
 
 			}
-			setAppsNotMembersOrUsers(appsNotMembersOrUsers);
+
+			setAppsNotAdmin(appsNotAdmin);
 		}
-		return appsNotMembersOrUsers;
+		return appsNotAdmin;
 	}
 
-	public final void setAppsNotMembersOrUsers(
-			List<String> appsNotMembersOrUsersIn) {
-		OtfCachedListsDTO.setAppsNotUserMemberList(appsNotMembersOrUsersIn);
+	public final void setAppsNotAdmin(final List<String> appsNotMembersOrUsersIn) {
+		OtfCachedListsDTO.setAppsNotAdminList(appsNotMembersOrUsersIn);
 	}
 
 	public final void resetAppsNotMembersOrUsers() {
-		OtfCachedListsDTO.remAppsNotUserMemberList();
-		getAppsNotMembersOrUsers();
+		OtfCachedListsDTO.remAppsNotAdminList();
+		getAppsNotAdmin();
 	}
 
 	public final Map<String, OtfAccount> getAllAccounts() {
@@ -561,22 +565,16 @@ public class UserSecurityCached extends UserSecurity {
 
 	public final String getAdminApp() {
 		if (!stringOK(adminApp)) {
-			adminApp = getSettings().getSettings()
-					.get(OtfCustomFieldSetting.ADMIN).getVal().trim();
+			if (getSettings() != null) {
+				adminApp = getSettings().getSettings()
+						.get(OtfCustomFieldSetting.ADMIN).getVal().trim();
+			}
 		}
 		return adminApp;
 	}
 
-	public final void setAdminApp(String adminAppIn) {
+	public final void setAdminApp(final String adminAppIn) {
 		adminApp = adminAppIn;
 	}
-
-	// public final String getHandlerAdminDir() {
-	// return handlerAdminDir;
-	// }
-	//
-	// public final void setHandlerAdminDir(String handlerAdminDirIn) {
-	// handlerAdminDir = handlerAdminDirIn;
-	// }
 
 }

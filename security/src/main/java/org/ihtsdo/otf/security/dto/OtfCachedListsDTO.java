@@ -16,7 +16,11 @@ public class OtfCachedListsDTO {
 	public static final String SETTINGS = "Settings";
 	public static final String MEMBERS_LIST = "Members_List";
 	public static final String ACCOUNTS_LIST = "Accounts_List";
-	public static final String APPS_NOT_USER_MEM_LIST = "AppNotUserMember_List";
+	public static final String APPS_NOT_ADMIN = "AppNotAdmin_List";
+
+	public static final String APPS_WITH_ACCOUNTS = "AppWithAcc_List";
+	public static final String DIRS_WITH_ACCOUNTS = "DirWithAcc_List";
+	public static final String DIRS_WITH_GROUPS = "DirWithGrp_List";
 
 	public static final String ADMINUSERS_LIST = "AdminUsers_List";
 
@@ -111,21 +115,20 @@ public class OtfCachedListsDTO {
 		ObjectCache.INSTANCE.remove(DIRS_MAP);
 	}
 
-	public static final List<String> getAppsNotUserMemberList() {
+	public static final List<String> getAppsNotAdminList() {
 		@SuppressWarnings("unchecked")
 		List<String> appsNotUserMemberList = (List<String>) ObjectCache.INSTANCE
-				.get(APPS_NOT_USER_MEM_LIST);
+				.get(APPS_NOT_ADMIN);
 		return appsNotUserMemberList;
 	}
 
-	public static final void setAppsNotUserMemberList(
+	public static final void setAppsNotAdminList(
 			List<String> appsNotUserMemberListIn) {
-		ObjectCache.INSTANCE.put(APPS_NOT_USER_MEM_LIST,
-				appsNotUserMemberListIn);
+		ObjectCache.INSTANCE.put(APPS_NOT_ADMIN, appsNotUserMemberListIn);
 	}
 
-	public static final void remAppsNotUserMemberList() {
-		ObjectCache.INSTANCE.remove(APPS_NOT_USER_MEM_LIST);
+	public static final void remAppsNotAdminList() {
+		ObjectCache.INSTANCE.remove(APPS_NOT_ADMIN);
 	}
 
 	public static final String getAdminServletContextUrl() {

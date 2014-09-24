@@ -122,11 +122,6 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 	}
 
 	@Override
-	public List<String> getAppsNotMembersOrUsers() {
-		return getLocalModel().getAppsNotMembersOrUsers();
-	}
-
-	@Override
 	public OtfGroup getMemberByName(String accNameIn) {
 		return getLocalModel().getMemberByName(accNameIn);
 	}
@@ -152,6 +147,11 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 	}
 
 	@Override
+	public List<OtfGroup> getGroupsByDirName(final String dirnameIn) {
+		return getLocalModel().getGroupsByDirName(dirnameIn);
+	}
+
+	@Override
 	public OtfAccount getUserAccountByName(String nameIn) {
 		return getLocalModel().getUserAccountByName(nameIn, "*");
 	}
@@ -164,6 +164,11 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 	@Override
 	public OtfDirectory getDirByName(String dirNameIn) {
 		return getLocalModel().getDirByName(dirNameIn);
+	}
+
+	@Override
+	public List<String> getAppsNotAdmin() {
+		return getLocalModel().getAppsNotAdmin();
 	}
 
 }

@@ -95,13 +95,21 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 			// UserSecurity us = new UserSecurityCached();
 			UserSecurity us = getStorm2Mod().buildCachedUserSecurity();
 			us.setHandlerAdminDir(STORMPATH);
-			getUserSecurityModel().setModel(us);
+			getUserSecurityModel(us);
 		}
 		if (!isCacheModel()) {
 			UserSecurity us = new UserSecurityStormpath();
 			us.setHandlerAdminDir(STORMPATH);
-			getUserSecurityModel().setModel(us);
+			getUserSecurityModel(us);
 		}
+
+	}
+
+	public final void checkDirsWithUsersHaveApp() {
+		// Check that any dirs with users have an application set to
+		// authenticate against.
+
+		// If not then first NOT STORMPATH App.
 
 	}
 
@@ -114,6 +122,8 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 			spbd = new StormPathBaseDTO(props);
 			spbd.load();
 		}
+		// Make sure settings inited by called defpw
+		getUserSecurityModel().getSettings().getDefPw();
 
 		getMod2Storm().sendToStormPath(getUserSecurityModel().getModel());
 	}

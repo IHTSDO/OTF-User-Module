@@ -130,12 +130,6 @@ public class StormpathUserSecurityModel extends AbstractUserSecurityModel {
 	}
 
 	@Override
-	public List<String> getAppsNotMembersOrUsers() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public OtfGroup getMemberByName(String accNameIn) {
 		// TODO Auto-generated method stub
 		return null;
@@ -179,6 +173,18 @@ public class StormpathUserSecurityModel extends AbstractUserSecurityModel {
 
 	@Override
 	public OtfDirectory getDirByName(String dirNameIn) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<String> getAppsNotAdmin() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<OtfGroup> getGroupsByDirName(String dirnameIn) {
 		// TODO Auto-generated method stub
 		return null;
 	}

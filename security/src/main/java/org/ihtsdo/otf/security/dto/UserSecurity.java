@@ -49,7 +49,7 @@ public abstract class UserSecurity {
 		return handlerAdminDir;
 	}
 
-	public final void setHandlerAdminDir(String handlerAdminDirIn) {
+	public final void setHandlerAdminDir(final String handlerAdminDirIn) {
 		handlerAdminDir = handlerAdminDirIn;
 	}
 
@@ -57,7 +57,7 @@ public abstract class UserSecurity {
 		return defaultpw;
 	}
 
-	public final void setDefaultpw(String defaultpwIn) {
+	public final void setDefaultpw(final String defaultpwIn) {
 		defaultpw = defaultpwIn;
 	}
 

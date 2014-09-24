@@ -56,6 +56,13 @@ public class OtfCustomFieldApplication extends OtfCustomFieldCachedVals {
 		if (app == null) {
 			app = "";
 		}
+		// Set the first (allows the ui to get the roles).
+		if (!stringOK(app)) {
+			if (getAppsNotAdmin().size() > 0) {
+				app = getAppsNotAdmin().get(0);
+			}
+		}
+
 		return app;
 	}
 

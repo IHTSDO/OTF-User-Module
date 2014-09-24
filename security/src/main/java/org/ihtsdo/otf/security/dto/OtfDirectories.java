@@ -28,6 +28,15 @@ public class OtfDirectories {
 		return directories.get(name);
 	}
 
+	public final OtfDirectory getDirById(final String id) {
+		for (OtfDirectory dir : directories.values()) {
+			if (dir.getIdIfSet().equals(id)) {
+				return dir;
+			}
+		}
+		return null;
+	}
+
 	public final boolean dirExists(final String name) {
 		return directories.keySet().contains(name);
 	}

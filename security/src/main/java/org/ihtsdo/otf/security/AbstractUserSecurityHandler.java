@@ -8,6 +8,7 @@ import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.OtfApplication;
 import org.ihtsdo.otf.security.dto.OtfDirectory;
 import org.ihtsdo.otf.security.dto.OtfGroup;
+import org.ihtsdo.otf.security.dto.UserSecurity;
 import org.ihtsdo.otf.security.objectcache.ObjectCache;
 
 public abstract class AbstractUserSecurityHandler implements
@@ -107,6 +108,16 @@ public abstract class AbstractUserSecurityHandler implements
 	public void removeUserSecurityModel() {
 		userSecurityModel = null;
 		ObjectCache.INSTANCE.remove(getKey());
+	}
+
+	@Override
+	public UserSecurityModel getUserSecurityModel(UserSecurity userSecurityIn) {
+
+		UserSecurityModel usm = getLocalUserSecurityModel();
+		usm.setModel(userSecurityIn);
+		setUserSecurityModel(usm);
+
+		return userSecurityModel;
 	}
 
 	@Override

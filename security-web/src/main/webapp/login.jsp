@@ -16,6 +16,7 @@
                 <input type="submit" value="Login" />
             </form>
 
+<a class="pseudoLabel" href="<%= request.getContextPath()%>/requestPwChange.jsp" target="_blank">Forgot password? Click here</a>
         
 </body>
 </html>
