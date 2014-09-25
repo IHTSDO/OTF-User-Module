@@ -87,6 +87,9 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 				handleGetRequest(requestIn, responseIn);
 			} else {
 				OtfBaseWeb obw = handlePostAction(requestIn, responseIn);
+				if (obw == null) {
+					loadScreen(requestIn, responseIn, null);
+				}
 				if (obw.getErrors().isEmpty()) {
 					// update remotely using obw
 					String ok = updateFromWebObject(obw);
@@ -299,7 +302,13 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		String id = getNamedParam(OtfBaseId.ID_KEY, requestIn);
 
 		OtfBaseWeb obw = getWebObjectFromId(inputKey, id);
-		handleParams(requestIn, responseIn, obw);
+		if (obw == null) {
+			LOG.severe("No Web Object found for inputKey : " + inputKey
+					+ " id = " + id);
+		}
+		if (obw != null) {
+			handleParams(requestIn, responseIn, obw);
+		}
 		return obw;
 
 	}
