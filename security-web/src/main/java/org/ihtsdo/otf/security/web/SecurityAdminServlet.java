@@ -89,6 +89,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 				OtfBaseWeb obw = handlePostAction(requestIn, responseIn);
 				if (obw == null) {
 					loadScreen(requestIn, responseIn, null);
+					return;
 				}
 				if (obw.getErrors().isEmpty()) {
 					// update remotely using obw
@@ -300,7 +301,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 
 		String inputKey = getNamedParam(OtfBaseWeb.INPUT_KEY_NAME, requestIn);
 		String id = getNamedParam(OtfBaseId.ID_KEY, requestIn);
-
+		LOG.info("get Web Object using inputKey : " + inputKey + " id = " + id);
 		OtfBaseWeb obw = getWebObjectFromId(inputKey, id);
 		if (obw == null) {
 			LOG.severe("No Web Object found for inputKey : " + inputKey
