@@ -255,6 +255,7 @@ public class Model2Storm {
 				acc.setMiddleName(oacc.getMiddleName());
 				acc.setSurname(oacc.getSurname());
 				acc.setEmail(oacc.getEmail());
+				userSecurity.getDefaultpw();
 				acc.setPassword(userSecurity.getDefaultpw());
 				if (!oacc.getCustData().getCustFields().isEmpty()) {
 					CustomData cd = acc.getCustomData();
