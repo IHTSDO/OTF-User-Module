@@ -255,8 +255,14 @@ public class Model2Storm {
 				acc.setMiddleName(oacc.getMiddleName());
 				acc.setSurname(oacc.getSurname());
 				acc.setEmail(oacc.getEmail());
-				userSecurity.getDefaultpw();
-				acc.setPassword(userSecurity.getDefaultpw());
+
+				String defPw = userSecurity.getDefaultpw();
+				if (defPw == null || defPw.length() == 0) {
+					LOG.info("no def pw set so setting to changeme");
+					defPw = "changeme";
+				}
+
+				acc.setPassword(defPw);
 				if (!oacc.getCustData().getCustFields().isEmpty()) {
 					CustomData cd = acc.getCustomData();
 					buildCustomData(oacc.getCustData().getCustFields(), cd);
