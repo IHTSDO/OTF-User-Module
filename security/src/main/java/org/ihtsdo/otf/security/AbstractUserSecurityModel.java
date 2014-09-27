@@ -1,11 +1,26 @@
 package org.ihtsdo.otf.security;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.ihtsdo.otf.security.dto.OtfAccount;
+import org.ihtsdo.otf.security.dto.OtfAccountMin;
+import org.ihtsdo.otf.security.dto.OtfCustomField;
 import org.ihtsdo.otf.security.dto.UserSecurity;
+import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldApplication;
+import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldSetting;
 
 public abstract class AbstractUserSecurityModel implements UserSecurityModel {
 
 	protected UserSecurity model;
+	private String handlerAdminDir;
+	private String usersApp;
+	private String membersApp;
+	private String adminApp;
 
 	@Override
 	public abstract UserSecurity getModel();
@@ -27,4 +42,158 @@ public abstract class AbstractUserSecurityModel implements UserSecurityModel {
 	@Override
 	public abstract OtfAccount getUserAccountByName(final String name);
 
+	@Override
+	public final String getAdminApp() {
+		if (!stringOK(adminApp)) {
+			if (getSettings() != null) {
+				adminApp = getSettings().getSettings()
+						.get(OtfCustomFieldSetting.ADMIN).getVal().trim();
+			}
+		}
+		return adminApp;
+	}
+
+	@Override
+	public final void setAdminApp(final String adminAppIn) {
+		adminApp = adminAppIn;
+	}
+
+	@Override
+	public final String getUsersApp() {
+		if (!stringOK(usersApp)) {
+			usersApp = getSettings().getSettings()
+					.get(OtfCustomFieldSetting.USERS).getVal().trim();
+		}
+		return usersApp;
+	}
+
+	@Override
+	public final void setUsersApp(final String usersAppIn) {
+		usersApp = usersAppIn;
+	}
+
+	@Override
+	public final String getMembersApp() {
+		if (!stringOK(membersApp)) {
+			membersApp = getSettings().getSettings()
+					.get(OtfCustomFieldSetting.MEMBERS).getVal().trim();
+		}
+		return membersApp;
+	}
+
+	@Override
+	public final void setMembersApp(final String membersAppIn) {
+		membersApp = membersAppIn;
+	}
+
+	public final boolean stringOK(final String chk) {
+		return chk != null && chk.length() > 0;
+	}
+
+	@Override
+	public final Collection<OtfAccountMin> getUsersMin() {
+		Collection<OtfAccount> users = getUsers();
+		Collection<OtfAccountMin> usersMin = new ArrayList<OtfAccountMin>();
+		if (users != null) {
+			for (OtfAccount user : users) {
+				usersMin.add((new OtfAccountMin(user)));
+			}
+		}
+		return usersMin;
+	}
+
+	@Override
+	public final void setHandlerAdminDir(final String handlerAdminDirIn) {
+		handlerAdminDir = handlerAdminDirIn;
+	}
+
+	@Override
+	public final String getHandlerAdminDir() {
+		if (handlerAdminDir == null) {
+			handlerAdminDir = "";
+		}
+		return handlerAdminDir;
+	}
+
+	@Override
+	public List<String> getAppsNotAdmin() {
+		List<String> appsNotAdminList = new ArrayList<String>();
+
+		Collection<String> all = getApps();
+		if (all != null && !all.isEmpty()) {
+			String users = getUsersApp();
+			String members = getMembersApp();
+			String adminhandler = getHandlerAdminDir();
+			List<String> adminApps = new ArrayList<String>();
+			if (stringOK(users)) {
+				adminApps.add(users);
+			}
+			if (stringOK(members)) {
+				adminApps.add(members);
+			}
+			if (stringOK(adminhandler)) {
+				adminApps.add(adminhandler);
+			}
+
+			for (String appname : all) {
+				if (!adminApps.contains(appname)) {
+					appsNotAdminList.add(appname);
+				}
+			}
+
+		}
+		return appsNotAdminList;
+	}
+
+	public final Map<String, OtfAccount> getAdminUsersMap() {
+		Map<String, OtfAccount> adminUsers = new HashMap<String, OtfAccount>();
+		String adminA = getAdminApp();
+		String admindir = getHandlerAdminDir();
+
+		boolean adminAok = stringOK(adminA);
+		boolean admindirok = stringOK(admindir);
+
+		for (OtfAccount acc : getUsers()) {
+			// see if parent dir =
+			if (admindirok && acc.getParentDir().equalsIgnoreCase(admindir)) {
+				adminUsers.put(acc.getName(), acc);
+			}
+			if (adminAok) {
+				if (acc.getCustData() != null) {
+					List<OtfCustomField> apps = acc.getCustData().getApps();
+					for (OtfCustomField app : apps) {
+						OtfCustomFieldApplication oca = (OtfCustomFieldApplication) app
+								.getModel();
+						if (oca.getApp().equals(adminA)) {
+							adminUsers.put(acc.getName(), acc);
+						}
+					}
+				}
+			}
+
+		}
+		return adminUsers;
+
+	}
+
+	@Override
+	public List<String> getAdminUsers() {
+		List<String> adminUsers = new ArrayList<String>();
+		Map<String, OtfAccount> adminUserMap = getAdminUsersMap();
+		if (adminUserMap != null && !adminUserMap.isEmpty()) {
+			adminUsers.addAll(adminUserMap.keySet());
+		}
+		Collections.sort(adminUsers, String.CASE_INSENSITIVE_ORDER);
+		return adminUsers;
+	}
+
+	@Override
+	public final boolean accountExists(final String accName) {
+		for (String name : getUserNames()) {
+			if (name.equalsIgnoreCase(accName)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

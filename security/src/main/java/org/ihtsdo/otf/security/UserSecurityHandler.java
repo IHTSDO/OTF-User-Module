@@ -1,5 +1,6 @@
 package org.ihtsdo.otf.security;
 
+import java.util.List;
 import java.util.Properties;
 
 import org.ihtsdo.otf.security.dto.OtfAccount;
@@ -21,6 +22,9 @@ public interface UserSecurityHandler {
 	void setUserSecurityModel(UserSecurityModel userSecurityModelIn);
 
 	UserSecurityModel getUserSecurityModel(UserSecurity userSecurityIn);
+
+	UserSecurityModel getUserSecurityModel(UserSecurity userSecurityIn,
+			String handlerAdminDir);
 
 	UserSecurityModel getLocalUserSecurityModel();
 
@@ -62,5 +66,13 @@ public interface UserSecurityHandler {
 	 *         change of the password.
 	 */
 	int updateUserPassword(String username, String password, String token);
+
+	List<String> getUserNames();
+
+	List<String> getMembers();
+
+	List<String> getApps();
+
+	List<String> getAppsNotAdmin();
 
 }

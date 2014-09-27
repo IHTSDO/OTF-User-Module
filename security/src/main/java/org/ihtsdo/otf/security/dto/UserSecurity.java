@@ -19,7 +19,7 @@ public abstract class UserSecurity {
 	private OtfDirectories dirs = new OtfDirectories();
 	private OtfApplications apps = new OtfApplications();
 
-	private String handlerAdminDir;
+	// private String handlerAdminDir;
 	private String defaultpw;
 
 	public static final String SETTINGS = "OTFSettings";
@@ -28,6 +28,10 @@ public abstract class UserSecurity {
 	public abstract void init();
 
 	public abstract void reset();
+
+	public final boolean stringOK(final String chk) {
+		return chk != null && chk.length() > 0;
+	}
 
 	public final OtfApplications getApps() {
 		return apps;
@@ -45,13 +49,13 @@ public abstract class UserSecurity {
 		dirs = dirsIn;
 	}
 
-	public final String getHandlerAdminDir() {
-		return handlerAdminDir;
-	}
-
-	public final void setHandlerAdminDir(final String handlerAdminDirIn) {
-		handlerAdminDir = handlerAdminDirIn;
-	}
+	// public final String getHandlerAdminDir() {
+	// return handlerAdminDir;
+	// }
+	//
+	// public final void setHandlerAdminDir(final String handlerAdminDirIn) {
+	// handlerAdminDir = handlerAdminDirIn;
+	// }
 
 	public final String getDefaultpw() {
 		return defaultpw;

@@ -113,7 +113,7 @@ public abstract class AbstractSecurityTest {
 		List<OtfAccountMin> user2 = SecurityClient.getUsers(json);
 
 		int jsonI = user2.size();
-		int origI = getUsh().getUserSecurityModel().getUsers("*").size();
+		int origI = getUsh().getUserSecurityModel().getUsers().size();
 
 		assertEquals(getNumUsers(), origI);
 		assertEquals(origI, jsonI);

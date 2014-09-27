@@ -77,15 +77,15 @@ public class OtfCustomField {
 		super();
 	}
 
-	public OtfCustomField(String value) {
-		this.value = value;
+	public OtfCustomField(String valueIn) {
+		this.value = valueIn;
 		init();
 	}
 
-	public OtfCustomField(String key, String value) {
+	public OtfCustomField(String keyIn, String valueIn) {
 		super();
-		this.key = key;
-		this.value = value;
+		this.key = keyIn;
+		this.value = valueIn;
 		init();
 	}
 
@@ -186,8 +186,8 @@ public class OtfCustomField {
 		return type;
 	}
 
-	public void setType(CustomType type) {
-		this.type = type;
+	public void setType(CustomType typeIn) {
+		this.type = typeIn;
 	}
 
 	public String[] getVals() {

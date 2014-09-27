@@ -134,6 +134,7 @@ public class Model2Xml {
 		elemNew.setAttribute(XmlStatics.XML_A_MNAME, acc.getMiddleName());
 		elemNew.setAttribute(XmlStatics.XML_A_SNAME, acc.getSurname());
 		elemNew.setAttribute(XmlStatics.XML_A_EMAIL, acc.getEmail());
+		elemNew.setAttribute(XmlStatics.XML_A_PDIR, acc.getParentDir());
 		elemNew.setAttribute(XmlStatics.XML_A_STAT, acc.getStatus().toString());
 		if (!acc.getCustData().getCustFields().isEmpty()) {
 			buildCustData(elemNew, acc.getCustData());

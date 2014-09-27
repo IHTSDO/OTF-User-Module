@@ -1,5 +1,7 @@
 package org.ihtsdo.otf.security.stormpath;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -94,13 +96,12 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 			// Then use the cached User Security impl
 			// UserSecurity us = new UserSecurityCached();
 			UserSecurity us = getStorm2Mod().buildCachedUserSecurity();
-			us.setHandlerAdminDir(STORMPATH);
-			getUserSecurityModel(us);
+			getUserSecurityModel(us, STORMPATH);
+
 		}
 		if (!isCacheModel()) {
 			UserSecurity us = new UserSecurityStormpath();
-			us.setHandlerAdminDir(STORMPATH);
-			getUserSecurityModel(us);
+			getUserSecurityModel(us, STORMPATH);
 		}
 
 	}
@@ -459,7 +460,7 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 		if (isCacheModel()) {
 			return new UserSecurityModelCached();
 		} else {
-			return new StormpathUserSecurityModel();
+			return new StormpathUserSecurityModel(getSpbd());
 		}
 	}
 
@@ -565,4 +566,36 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 		return appname.equalsIgnoreCase(getUsersAppName());
 	}
 
+	@Override
+	public List<String> getUserNames() {
+		ArrayList<String> accnames = new ArrayList<String>();
+		ApplicationList applications = spbd.getTenant().getApplications();
+		for (Application application : applications) {
+			AccountList accList = application.getAccounts();
+			for (Account acc : accList) {
+				accnames.add(acc.getUsername());
+			}
+		}
+		return accnames;
+	}
+
+	@Override
+	public List<String> getMembers() {
+		return getUserSecurityModel().getMembers();
+	}
+
+	@Override
+	public List<String> getApps() {
+		ArrayList<String> accnames = new ArrayList<String>();
+		ApplicationList applications = spbd.getTenant().getApplications();
+		for (Application application : applications) {
+			accnames.add(application.getName());
+		}
+		return accnames;
+	}
+
+	@Override
+	public List<String> getAppsNotAdmin() {
+		return getUserSecurityModel().getAppsNotAdmin();
+	}
 }

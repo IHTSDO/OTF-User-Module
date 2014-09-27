@@ -13,6 +13,10 @@ import org.ihtsdo.otf.security.dto.UserSecurity;
 
 public interface UserSecurityModel {
 
+	void init();
+
+	void reset();
+
 	UserSecurity getModel();
 
 	void setModel(UserSecurity userSecurityIn);
@@ -27,11 +31,9 @@ public interface UserSecurityModel {
 
 	OtfAccount getUserAccountById(final String idIn);
 
-	Collection<OtfAccount> getUsers(final String dirnameIn);
+	Collection<OtfAccount> getUsers();
 
-	Collection<OtfAccountMin> getUsersMin(final String dirnameIn);
-
-	List<String> getAdminUsers();
+	Collection<OtfAccountMin> getUsersMin();
 
 	boolean accountExists(final String accNameIn);
 
@@ -49,10 +51,6 @@ public interface UserSecurityModel {
 
 	OtfSettings getSettings();
 
-	List<String> getMembers();
-
-	List<String> getAppsNotAdmin();
-
 	// Should be just the member name or object....
 	OtfGroup getMemberByName(final String accNameIn);
 
@@ -60,12 +58,40 @@ public interface UserSecurityModel {
 
 	OtfGroup getMemberById(final String idIn);
 
-	Map<String, List<String>> getAppsMap();
-
 	List<OtfGroup> getGroupsByAppName(final String appnameIn);
 
 	List<OtfGroup> getGroupsByDirName(final String dirnameIn);
 
 	List<String> getDirsByAppName(String appname);
+
+	List<String> getUserNames();
+
+	List<String> getAdminUsers();
+
+	List<String> getMembers();
+
+	List<String> getApps();
+
+	List<String> getAppsNotAdmin();
+
+	Map<String, List<String>> getAppsMap();
+
+	Map<String, OtfAccount> getAllAccounts();
+
+	void setHandlerAdminDir(String handlerAdminDirIn);
+
+	String getHandlerAdminDir();
+
+	String getAdminApp();
+
+	void setAdminApp(String adminAppIn);
+
+	String getMembersApp();
+
+	void setMembersApp(String membersAppIn);
+
+	String getUsersApp();
+
+	void setUsersApp(String usersAppIn);
 
 }

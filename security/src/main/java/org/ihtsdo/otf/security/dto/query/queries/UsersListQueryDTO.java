@@ -24,15 +24,7 @@ public class UsersListQueryDTO extends AbstractSecurityQuery {
 		if (users == null) {
 			users = new ArrayList<OtfAccountMin>();
 		}
-		// if (users == null || users.isEmpty()) {
-		// if (ush != null) {
-
-		users = (List<OtfAccountMin>) ush.getUserSecurityModel().getUsersMin(
-				"*");
-		// } else {
-
-		// }
-		// }
+		users = (List<OtfAccountMin>) ush.getUserSecurityModel().getUsersMin();
 		Collections.sort(users);
 		return users;
 	}

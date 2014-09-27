@@ -112,11 +112,19 @@ public abstract class AbstractUserSecurityHandler implements
 
 	@Override
 	public UserSecurityModel getUserSecurityModel(UserSecurity userSecurityIn) {
-
 		UserSecurityModel usm = getLocalUserSecurityModel();
 		usm.setModel(userSecurityIn);
 		setUserSecurityModel(usm);
+		return userSecurityModel;
+	}
 
+	@Override
+	public UserSecurityModel getUserSecurityModel(UserSecurity userSecurityIn,
+			String handlerAdminDirIn) {
+		UserSecurityModel usm = getLocalUserSecurityModel();
+		usm.setHandlerAdminDir(handlerAdminDirIn);
+		usm.setModel(userSecurityIn);
+		setUserSecurityModel(usm);
 		return userSecurityModel;
 	}
 

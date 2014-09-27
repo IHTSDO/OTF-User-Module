@@ -172,6 +172,7 @@ public class Xml2Model {
 		acc.setSurname(elem.getAttribute(XmlStatics.XML_A_SNAME));
 		acc.setEmail(elem.getAttribute(XmlStatics.XML_A_EMAIL));
 		acc.setStatus(elem.getAttribute(XmlStatics.XML_A_STAT));
+		acc.setParentDir(elem.getAttribute(XmlStatics.XML_A_PDIR));
 
 		// CustomData
 		List<Element> namedChildren = XMLUtil.getChildElemsListByName(

@@ -2,7 +2,6 @@ package org.ihtsdo.otf.security.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -252,24 +251,26 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		reqd.forward(requestIn, responseIn);
 	}
 
-	public final String getMembersTreeHtml(final String path) {
-		return getList("Members", path + SecurityService.MEMBERS, getUsh()
-				.getUserSecurityModel().getMembers());
-	}
-
 	public final List<String> getUsers() {
-		UsersListQueryDTO ulq = new UsersListQueryDTO(getUsh());
-		List<String> usersL = new ArrayList<String>();
-		for (OtfAccountMin acc : ulq.getUsers()) {
-			usersL.add(acc.getName());
-		}
-		Collections.sort(usersL);
-
-		return usersL;
+		List<String> users = getUsh().getUserNames();
+		Collections.sort(users);
+		return users;
 	}
 
-	public final OtfSettings getSettings() {
-		return getUsh().getUserSecurityModel().getSettings();
+	public final List<String> getApps() {
+		List<String> users = getUsh().getApps();
+		Collections.sort(users);
+		return users;
+	}
+
+	public final List<String> getMembers() {
+		List<String> users = getUsh().getMembers();
+		Collections.sort(users);
+		return users;
+	}
+
+	public final String getMembersTreeHtml(final String path) {
+		return getList("Members", path + SecurityService.MEMBERS, getMembers());
 	}
 
 	public final String getUsersTreeHtml(final String path) {
@@ -278,7 +279,11 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 
 	public final String getAppsTreeHtml(final String path) {
 		return getList("Applications", path + SecurityService.APPS, getUsh()
-				.getUserSecurityModel().getAppsNotAdmin());
+				.getAppsNotAdmin());
+	}
+
+	public final OtfSettings getSettings() {
+		return getUsh().getUserSecurityModel().getSettings();
 	}
 
 	public final String getList(String title, String baseUrl, List<String> vals) {
@@ -314,7 +319,6 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 	}
 
 	private OtfBaseWeb getWebObjectFromId(String inputKey, String id) {
-
 		if (!stringOK(inputKey)) {
 			return null;
 		}
@@ -610,9 +614,9 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		return sbuild.toString();
 	}
 
-	public final Map<String, List<String>> getApps() {
-		return getUsh().getUserSecurityModel().getAppsMap();
-	}
+	// public final Map<String, List<String>> getApps() {
+	// return getUsh().getUserSecurityModel().getAppsMap();
+	// }
 
 	public final String requestResetUserPassword(final String userdetail) {
 		// First find if there is an account with that name or email

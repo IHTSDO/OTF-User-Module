@@ -14,8 +14,8 @@ public class StormTest {
 	 * logger.
 	 * </p>
 	 */
-	private static final Logger LOG = Logger.getLogger(XmlUserSecurityHandler.class
-			.getName());
+	private static final Logger LOG = Logger
+			.getLogger(XmlUserSecurityHandler.class.getName());
 
 	private static String fn = "./TextFiles/Example.xml";
 	private static String apiKeyFile = "C:/Users/adamf/stormpath/apiKey.properties";
@@ -68,14 +68,14 @@ public class StormTest {
 
 	private void storm2Xml(final boolean log) {
 		StormPathUserSecurityHandler spu = getSpu();
-		XmlUserSecurityHandler xmlUs = new XmlUserSecurityHandler();
+		XmlUserSecurityHandler xmlUsloc = new XmlUserSecurityHandler();
 		try {
 			spu.buildUserSecurity();
-			xmlUs.getUserSecurityModel().setModel(
+			xmlUsloc.getUserSecurityModel().setModel(
 					(spu.getUserSecurityModel().getFullModel()));
 			if (log) {
 				LOG.info("storm2Xml : \n"
-						+ xmlUs.getXMLFromUserSecurityAsString());
+						+ xmlUsloc.getXMLFromUserSecurityAsString());
 			}
 
 		} catch (Exception e) {

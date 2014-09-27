@@ -21,6 +21,7 @@ public class OtfAccountMin extends OtfBaseName {
 	private String givenName;
 	private String middleName;
 	private String surname;
+	private String parentDir;
 
 	private String authToken = "";
 	private boolean auth;
@@ -48,6 +49,7 @@ public class OtfAccountMin extends OtfBaseName {
 		givenName = orig.getGivenName();
 		middleName = orig.getMiddleName();
 		surname = orig.getSurname();
+		parentDir = orig.getParentDir();
 		setIdref(orig.getIdref());
 		setId(orig.getId());
 		setStatus(orig.getStatus().toString());
@@ -108,15 +110,26 @@ public class OtfAccountMin extends OtfBaseName {
 		surname = surnameIn;
 	}
 
+	public final String getParentDir() {
+		if (parentDir == null) {
+			parentDir = "";
+		}
+		return parentDir;
+	}
+
+	public final void setParentDir(final String parentDirIn) {
+		parentDir = parentDirIn;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append(super.toString());
 		sbuild.append("idRef:").append(getIdref()).append(", GivenName:")
 				.append(givenName).append(", MiddleName:").append(middleName)
-				.append(", Surname:").append(surname).append(", Email:")
-				.append(email).append(", Status:")
-				.append(getStatus().toString());
+				.append(", Surname:").append(surname).append(", ParentDir:")
+				.append(parentDir).append(", Email:").append(email)
+				.append(", Status:").append(getStatus().toString());
 		return sbuild.toString();
 
 	}
@@ -293,7 +306,7 @@ public class OtfAccountMin extends OtfBaseName {
 	// }
 
 	@JsonIgnore
-	public boolean checkAuthToken(String token) {
+	public boolean checkAuthToken(final String token) {
 		if (getAuthTokens().contains(authToken)) {
 			setAuth(true);
 			getAuthToken();
@@ -302,4 +315,5 @@ public class OtfAccountMin extends OtfBaseName {
 		setAuth(false);
 		return false;
 	}
+
 }

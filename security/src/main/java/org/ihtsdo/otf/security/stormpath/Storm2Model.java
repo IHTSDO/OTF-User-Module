@@ -1,5 +1,6 @@
 package org.ihtsdo.otf.security.stormpath;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -51,19 +52,19 @@ public class Storm2Model {
 		return userSecurity;
 	}
 
-	public UserSecurity buildCachedUserSecurity() {
+	public final UserSecurity buildCachedUserSecurity() {
 		userSecurity = new UserSecurityCached();
 		buildDirs();
 		buildApps();
 		return userSecurity;
 	}
 
-	public UserSecurity buildUserSecurity() {
+	public final UserSecurity buildUserSecurity() {
 		userSecurity = new UserSecurityStormpath();
 		return userSecurity;
 	}
 
-	public void buildDirs() {
+	public final void buildDirs() {
 		DirectoryList directories = spbd.getTenant().getDirectories();
 		for (Directory directory : directories) {
 			OtfDirectory odir = buildDirectory(directory);
@@ -101,28 +102,38 @@ public class Storm2Model {
 	}
 
 	public final Account getAccountByName(final String name, final Directory dir) {
-		// LOG.info("getAccountByName name = " + name);
 		for (Account acc : dir.getAccounts()) {
-			// LOG.info("getAccountByName acc = " + acc.getUsername());
 			if (acc.getUsername().equals(name)) {
 				return acc;
 			}
 		}
+		return null;
+	}
 
-		// try to reload the directory and check again
-		//
-		// LOG.info("Was null reloading directory");
-		// String dirHref = dir.getHref();
-		// LOG.info("dirHref = " + dirHref);
-		// Directory d2 = spbd.getResourceByHrefDirectory(dirHref);
-		//
-		// for (Account acc : d2.getAccounts()) {
-		// LOG.info("XXXXX --- getAccountByName acc = " + acc.getUsername());
-		// if (acc.getUsername().equals(name)) {
-		// return acc;
-		// }
-		// }
+	public final Collection<Account> getAccounts() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
+	public final Collection<OtfAccount> getOtfAccounts() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public final OtfAccount getOtfAccountById(final String idIn) {
+		Account acc = getAccountById(idIn);
+		if (acc != null) {
+			return buildAccount(acc);
+		}
+
+		return null;
+	}
+
+	public final Account getAccountById(final String idIn) {
+		final Account acc = spbd.getResourceByHrefAccount(idIn);
+		if (acc != null) {
+			return acc;
+		}
 		return null;
 	}
 
@@ -141,7 +152,7 @@ public class Storm2Model {
 		return null;
 	}
 
-	public OtfDirectory buildDirectory(final Directory dirIn) {
+	public final OtfDirectory buildDirectory(final Directory dirIn) {
 
 		Directory dir = null;
 		OtfDirectory oDir = null;
@@ -171,7 +182,7 @@ public class Storm2Model {
 		return oDir;
 	}
 
-	public OtfGroup buildGroup(final Group grpIn) {
+	public final OtfGroup buildGroup(final Group grpIn) {
 		final Group grp = spbd.getResourceByHrefGroup(grpIn.getHref());
 		OtfGroup ogrp = new OtfGroup();
 		ogrp.setIdref(grp.getHref());
@@ -195,7 +206,7 @@ public class Storm2Model {
 		return ogrp;
 	}
 
-	public OtfAccount buildAccount(final Account accIn) {
+	public final OtfAccount buildAccount(final Account accIn) {
 		final Account acc = spbd.getResourceByHrefAccount(accIn.getHref());
 
 		OtfAccount oacc = new OtfAccount();
@@ -206,6 +217,7 @@ public class Storm2Model {
 		oacc.setMiddleName(acc.getMiddleName());
 		oacc.setSurname(acc.getSurname());
 		oacc.setStatus(acc.getStatus().toString());
+		oacc.setParentDir(acc.getDirectory().getName());
 		String cdHref = acc.getCustomData().getHref();
 		Map<String, Object> cd = spbd.getResourceByHrefCustomData(cdHref);
 
@@ -225,7 +237,7 @@ public class Storm2Model {
 
 	}
 
-	public void buildApps() {
+	public final void buildApps() {
 		// Get Applications
 		ApplicationList applications = spbd.getTenant().getApplications();
 		for (Application application : applications) {
@@ -234,7 +246,7 @@ public class Storm2Model {
 		}
 	}
 
-	public OtfApplication buildApp(final Application appIn) {
+	public final OtfApplication buildApp(final Application appIn) {
 
 		final Application app = spbd.getResourceByHrefApp(appIn.getHref());
 
@@ -255,7 +267,7 @@ public class Storm2Model {
 		return oapp;
 	}
 
-	public OtfAccountStore buildAccountStore(final AccountStoreMapping asm) {
+	public final OtfAccountStore buildAccountStore(final AccountStoreMapping asm) {
 
 		AccountStore accountStore1 = asm.getAccountStore();
 		SPAccountStoreVisitor spa = new SPAccountStoreVisitor();
@@ -285,7 +297,7 @@ public class Storm2Model {
 		return userSecurity;
 	}
 
-	public final void setUserSecurity(UserSecurity userSecurityIn) {
+	public final void setUserSecurity(final UserSecurity userSecurityIn) {
 		userSecurity = userSecurityIn;
 	}
 
