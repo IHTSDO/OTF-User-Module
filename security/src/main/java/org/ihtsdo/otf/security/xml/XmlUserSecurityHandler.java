@@ -2,7 +2,6 @@ package org.ihtsdo.otf.security.xml;
 
 import java.io.File;
 import java.net.URL;
-import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -232,26 +231,6 @@ public class XmlUserSecurityHandler extends AbstractUserSecurityHandler {
 	@Override
 	public UserSecurityModel getLocalUserSecurityModel() {
 		return new UserSecurityModelCached();
-	}
-
-	@Override
-	public List<String> getUserNames() {
-		return getUserSecurityModel().getUserNames();
-	}
-
-	@Override
-	public List<String> getMembers() {
-		return getUserSecurityModel().getMembers();
-	}
-
-	@Override
-	public List<String> getApps() {
-		return getUserSecurityModel().getApps();
-	}
-
-	@Override
-	public List<String> getAppsNotAdmin() {
-		return getUserSecurityModel().getAppsNotAdmin();
 	}
 
 }

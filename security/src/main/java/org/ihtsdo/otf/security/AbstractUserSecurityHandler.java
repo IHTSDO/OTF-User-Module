@@ -191,15 +191,15 @@ public abstract class AbstractUserSecurityHandler implements
 		// + dirnames.size());
 		// }
 		// // get the user using the 1st...there should only be one.....
-		String parentIn = null;
+		String parentIn = accIn.getParentDir();
 		// }
 
-		if (!isNew) {
-			parentIn = getUserSecurityModel()
-					.getDirNameForUser(accIn.getName());
-		}
+		// if (!isNew) {
+		// parentIn = getUserSecurityModel()
+		// .getDirNameForUser(accIn.getName());
+		// }
 
-		if (parentIn == null) {
+		if (!stringOK(parentIn)) {
 			// use the std one in settings.
 			parentIn = getUserSecurityModel().getUsersDirName();
 		}

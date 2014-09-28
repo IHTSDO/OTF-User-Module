@@ -10,6 +10,9 @@ import java.util.Map;
 import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.OtfAccountMin;
 import org.ihtsdo.otf.security.dto.OtfCustomField;
+import org.ihtsdo.otf.security.dto.OtfDirectory;
+import org.ihtsdo.otf.security.dto.OtfGroup;
+import org.ihtsdo.otf.security.dto.OtfSettings;
 import org.ihtsdo.otf.security.dto.UserSecurity;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldApplication;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldSetting;
@@ -196,4 +199,74 @@ public abstract class AbstractUserSecurityModel implements UserSecurityModel {
 		}
 		return false;
 	}
+
+	@Override
+	public final String getUsersDirName() {
+		return getUsersApp();
+	}
+
+	public final OtfSettings getSettings(final OtfDirectory setDirectoryIn) {
+
+		if (setDirectoryIn != null) {
+			// get settings group
+			OtfGroup setgrp = setDirectoryIn.getGroups().getGroupByName(
+					UserSecurity.SETTINGS);
+			setgrp.setParentDirName(UserSecurity.SETTINGS);
+			OtfSettings settings = new OtfSettings(setgrp);
+			return settings;
+		}
+		return null;
+	}
+
+	@Override
+	public List<String> getMembers() {
+		List<String> members = new ArrayList<String>();
+		OtfDirectory mDirectory = getMembersDir();
+		if (mDirectory != null) {
+			// getAll groups within
+			for (OtfGroup grp : mDirectory.getGroups().getGroups().values()) {
+				members.add(grp.getName());
+			}
+		}
+		Collections.sort(members);
+		return members;
+	}
+
+	@Override
+	public final OtfGroup getMemberByName(final String memberNameIn) {
+		OtfDirectory mDirectory = getMembersDir();
+		if (mDirectory != null) {
+			for (OtfGroup grp : mDirectory.getGroups().getGroups().values()) {
+				if (grp.getName().equals(memberNameIn)) {
+					return grp;
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public final OtfGroup getMemberById(final String idIn) {
+		OtfDirectory mDirectory = getMembersDir();
+		if (mDirectory != null) {
+			for (OtfGroup grp : mDirectory.getGroups().getGroups().values()) {
+				if (grp.getIdIfSet().equals(idIn)) {
+					return grp;
+				}
+			}
+		}
+		return null;
+	}
+
+	public final List<OtfGroup> getOtfGroupsByOtfDir(final OtfDirectory odirIn) {
+		List<OtfGroup> groups = new ArrayList<OtfGroup>();
+		String dname = odirIn.getName();
+		for (OtfGroup grp : odirIn.getGroups().getGroups().values()) {
+			grp.getId();
+			grp.setParentDirName(dname);
+			groups.add(grp);
+		}
+		return groups;
+	}
+
 }

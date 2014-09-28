@@ -252,19 +252,19 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 	}
 
 	public final List<String> getUsers() {
-		List<String> users = getUsh().getUserNames();
+		List<String> users = getUsh().getUserSecurityModel().getUserNames();
 		Collections.sort(users);
 		return users;
 	}
 
 	public final List<String> getApps() {
-		List<String> users = getUsh().getApps();
+		List<String> users = getUsh().getUserSecurityModel().getApps();
 		Collections.sort(users);
 		return users;
 	}
 
 	public final List<String> getMembers() {
-		List<String> users = getUsh().getMembers();
+		List<String> users = getUsh().getUserSecurityModel().getMembers();
 		Collections.sort(users);
 		return users;
 	}
@@ -279,7 +279,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 
 	public final String getAppsTreeHtml(final String path) {
 		return getList("Applications", path + SecurityService.APPS, getUsh()
-				.getAppsNotAdmin());
+				.getUserSecurityModel().getAppsNotAdmin());
 	}
 
 	public final OtfSettings getSettings() {

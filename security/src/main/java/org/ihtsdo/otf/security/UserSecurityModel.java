@@ -2,7 +2,6 @@ package org.ihtsdo.otf.security;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.OtfAccountMin;
@@ -37,9 +36,9 @@ public interface UserSecurityModel {
 
 	boolean accountExists(final String accNameIn);
 
-	String getDirNameForUser(final String accNameIn);
+	// String getDirNameForUser(final String accNameIn);
 
-	String getAppNameForUser(final String accNameIn);
+	// String getAppNameForUser(final String accNameIn);
 
 	String getUsersDirName();
 
@@ -74,9 +73,9 @@ public interface UserSecurityModel {
 
 	List<String> getAppsNotAdmin();
 
-	Map<String, List<String>> getAppsMap();
+	// Map<String, List<String>> getAppsMap();
 
-	Map<String, OtfAccount> getAllAccounts();
+	// Map<String, OtfAccount> getAllAccounts();
 
 	void setHandlerAdminDir(String handlerAdminDirIn);
 

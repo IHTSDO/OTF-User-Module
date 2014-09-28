@@ -2,7 +2,6 @@ package org.ihtsdo.otf.security.stormpath;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.AbstractUserSecurityModel;
@@ -36,11 +35,13 @@ public class StormpathUserSecurityModel extends AbstractUserSecurityModel {
 	}
 
 	@Override
-	public void init() {
+	public final void init() {
+		LOG.info("Init tenant = " + spbd.getTenant().getName());
 	}
 
 	@Override
-	public void reset() {
+	public final void reset() {
+		spbd.resetTenant();
 	}
 
 	@Override
@@ -88,149 +89,72 @@ public class StormpathUserSecurityModel extends AbstractUserSecurityModel {
 		return getStorm2Mod().getOtfAccounts();
 	}
 
-	// @Override
-	// public final List<String> getAdminUsers() {
-	// String ucAdminDir = null;
-	// if (stringOK(getHandlerAdminDir())) {
-	// ucAdminDir = getHandlerAdminDir().toUpperCase();
-	// }
-	// //
-	// String adminA = getSettings().getAdmin();
-	// // String adminA = "test";
-	//
-	// // add get dir to OtfAccount & use that
-	//
-	// // move to
-	//
-	// if (stringOK(adminA)) {
-	// for (OtfAccount acc : getUsers()) {
-	// // acc.get
-	//
-	// }
-	// }
-	//
-	// return null;
-	// }
-
-	@Override
-	public final String getDirNameForUser(final String accNameIn) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public final String getAppNameForUser(final String accNameIn) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public final String getUsersDirName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	@Override
 	public final OtfDirectory getMembersDir() {
-		// TODO Auto-generated method stub
-		return null;
+		return getStorm2Mod().getOtfDirByName(getMembersApp());
 	}
 
 	@Override
 	public final OtfDirectory getUsersDir() {
-		// TODO Auto-generated method stub
-		return null;
+		return getStorm2Mod().getOtfDirByName(getUsersApp());
 	}
 
 	@Override
 	public final OtfSettings getSettings() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public final List<String> getMembers() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public final OtfGroup getMemberByName(final String accNameIn) {
-		// TODO Auto-generated method stub
+		OtfDirectory setDir = getStorm2Mod().getOtfDirByName(
+				UserSecurity.SETTINGS);
+		if (setDir != null) {
+			return getSettings(setDir);
+		}
 		return null;
 	}
 
 	@Override
 	public final OtfGroup getGroupById(final String idIn) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public final OtfGroup getMemberById(final String idIn) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public final Map<String, List<String>> getAppsMap() {
-		// TODO Auto-generated method stub
-		return null;
+		return getStorm2Mod().buildGroup(idIn);
 	}
 
 	@Override
 	public final List<OtfGroup> getGroupsByAppName(final String appnameIn) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public final OtfAccount getUserAccountByName(final String nameIn) {
-		// TODO Auto-generated method stub
-		return null;
+		return getStorm2Mod().getGroupsByAppName(appnameIn);
 	}
 
 	@Override
 	public final List<String> getDirsByAppName(final String appnameIn) {
-		// TODO Auto-generated method stub
-		return null;
+		return getStorm2Mod().getDirsByAppName(appnameIn);
+	}
+
+	@Override
+	public final OtfAccount getUserAccountByName(final String nameIn) {
+		return getStorm2Mod().getOtfAccountByUsername(nameIn);
 	}
 
 	@Override
 	public final OtfDirectory getDirByName(final String dirNameIn) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public final List<String> getAppsNotAdmin() {
-		// TODO Auto-generated method stub
-		return null;
+		return getStorm2Mod().getOtfDirByName(dirNameIn);
 	}
 
 	@Override
 	public final List<OtfGroup> getGroupsByDirName(final String dirnameIn) {
-		// TODO Auto-generated method stub
-		return null;
+		OtfDirectory odir = getDirByName(dirnameIn);
+		return getOtfGroupsByOtfDir(odir);
 	}
 
 	@Override
 	public final List<String> getUserNames() {
-		// TODO Auto-generated method stub
-		return null;
+		return getStorm2Mod().getUserNames();
 	}
 
 	@Override
 	public final List<String> getApps() {
-		// TODO Auto-generated method stub
-		return null;
+		return getStorm2Mod().getApps();
 	}
 
-	@Override
-	public final Map<String, OtfAccount> getAllAccounts() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	// @Override
+	// public final Map<String, OtfAccount> getAllAccounts() {
+	// // TODO Auto-generated method stub
+	// return null;
+	// }
 
 	public final StormPathBaseDTO getSpbd() {
 		return spbd;

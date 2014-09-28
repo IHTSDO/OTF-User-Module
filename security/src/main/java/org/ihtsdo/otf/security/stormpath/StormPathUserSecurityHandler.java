@@ -1,7 +1,5 @@
 package org.ihtsdo.otf.security.stormpath;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,25 +8,15 @@ import org.ihtsdo.otf.security.AbstractUserSecurityHandler;
 import org.ihtsdo.otf.security.UserSecurityModel;
 import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.OtfApplication;
-import org.ihtsdo.otf.security.dto.OtfCachedListsDTO;
 import org.ihtsdo.otf.security.dto.OtfDirectory;
 import org.ihtsdo.otf.security.dto.OtfGroup;
 import org.ihtsdo.otf.security.dto.UserSecurity;
 import org.ihtsdo.otf.security.dto.UserSecurityModelCached;
 
 import com.stormpath.sdk.account.Account;
-import com.stormpath.sdk.account.AccountList;
-import com.stormpath.sdk.account.Accounts;
-import com.stormpath.sdk.api.ApiKey;
-import com.stormpath.sdk.api.ApiKeyList;
-import com.stormpath.sdk.api.ApiKeyStatus;
 import com.stormpath.sdk.application.Application;
-import com.stormpath.sdk.application.ApplicationList;
-import com.stormpath.sdk.authc.AuthenticationRequest;
-import com.stormpath.sdk.authc.UsernamePasswordRequest;
 import com.stormpath.sdk.directory.Directory;
 import com.stormpath.sdk.group.Group;
-import com.stormpath.sdk.resource.ResourceException;
 
 public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 
@@ -78,9 +66,7 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 			spbd = new StormPathBaseDTO(props);
 			spbd.load();
 		}
-
 		getMod2Storm().sendToStormPath(null);
-
 	}
 
 	@Override
@@ -90,27 +76,14 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 			spbd.load();
 
 		}
-
 		if (isCacheModel()) {
-			// Don't build unless calling full build.
-			// Then use the cached User Security impl
-			// UserSecurity us = new UserSecurityCached();
 			UserSecurity us = getStorm2Mod().buildCachedUserSecurity();
 			getUserSecurityModel(us, STORMPATH);
-
 		}
 		if (!isCacheModel()) {
 			UserSecurity us = new UserSecurityStormpath();
 			getUserSecurityModel(us, STORMPATH);
 		}
-
-	}
-
-	public final void checkDirsWithUsersHaveApp() {
-		// Check that any dirs with users have an application set to
-		// authenticate against.
-
-		// If not then first NOT STORMPATH App.
 
 	}
 
@@ -125,21 +98,11 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 		}
 		// Make sure settings inited by called defpw
 		getUserSecurityModel().getSettings().getDefPw();
-
 		getMod2Storm().sendToStormPath(getUserSecurityModel().getModel());
 	}
 
 	@Override
 	public void saveUserSecurity() throws Exception {
-	}
-
-	public final Application getFirstApplicationByUserName(final String userName) {
-
-		String appname = getUserSecurityModel().getAppNameForUser(userName);
-		if (stringOK(appname)) {
-			return getApplicationByName(appname);
-		}
-		return null;
 	}
 
 	public final String getUsersAppName() {
@@ -161,121 +124,10 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 		spbd = spbdIn;
 	}
 
-	public final OtfAccount getAcKeys(Account acc) {
-		if (acc != null) {
-			OtfAccount accIn = getStorm2Mod().buildAccount(acc);
-			ApiKeyList apList = acc.getApiKeys();
-			for (ApiKey apiKey : apList) {
-				if (apiKey.getStatus().equals(ApiKeyStatus.ENABLED)) {
-					accIn.setAuthToken(apiKey.getId());
-				} else {
-					accIn.addAuthToken(apiKey.getId());
-				}
-			}
-			return accIn;
-		}
-
-		return null;
-	}
-
-	public final OtfAccount getResetAcKeys(Account acc) {
-		if (acc != null) {
-			OtfAccount accIn = getStorm2Mod().buildAccount(acc);
-			ApiKeyList apList = acc.getApiKeys();
-			int apikeyCount = 0;
-			for (ApiKey ak : apList) {
-				apikeyCount++;
-			}
-
-			if (apikeyCount == 0) {
-				// add an apikey
-				ApiKey apiKey = acc.createApiKey();
-				accIn.setAuthToken(apiKey.getId());
-			}
-			// Stormpath admins are responsible for updating etc their own keys.
-			// Consider having an "App user" whose key never changes/is manually
-			// changed.
-			if (!getApplicationByUser(acc.getUsername()).getName()
-					.equalsIgnoreCase(STORMPATH)) {
-				if (apikeyCount == 1) {
-					// add an apikey
-					ApiKey apiKey = acc.createApiKey();
-					accIn.setAuthToken(apiKey.getId());
-					// set old apikey to
-					ApiKey apiKeyOld = apList.iterator().next();
-					apiKeyOld.setStatus(ApiKeyStatus.DISABLED);
-					apiKeyOld.save();
-					accIn.addAuthToken(apiKey.getId());
-				}
-				if (apikeyCount > 1) {
-					// Roll through keys
-					for (ApiKey ak : apList) {
-						// if status = disabled > delete
-						if (ak.getStatus() == ApiKeyStatus.DISABLED) {
-							ak.delete();
-						}
-						// if status = enabled status > disabled
-						if (ak.getStatus() == ApiKeyStatus.ENABLED) {
-							ak.setStatus(ApiKeyStatus.DISABLED);
-							ak.save();
-							accIn.addAuthToken(ak.getId());
-						}
-					}
-					// add an new apikey
-					ApiKey apiKey = acc.createApiKey();
-					accIn.setAuthToken(apiKey.getId());
-				}
-			}
-			return accIn;
-		}
-		return null;
-
-	}
-
 	@Override
 	public final OtfAccount authAccountLocal(final String acNameIn,
-			String pwIn, final String tokenIn) {
-		if (stringOK(acNameIn)) {
-			// see if the pw is a token
-			if (stringOK(tokenIn)) {
-				Account accTok = getAccountByUsername(acNameIn);
-				if (accTok != null) {
-					OtfAccount oacc = getAcKeys(accTok);
-					if (oacc.checkAuthToken(tokenIn)) {
-						return oacc;
-					}
-				}
-			}
-			if (stringOK(pwIn)) {
-				Account acc = authSPAccount(acNameIn, pwIn);
-				// The moment pwIn finshed with set to null
-				pwIn = null;
-				return getResetAcKeys(acc);
-			}
-		}
-		return null;
-	}
-
-	private Account authSPAccount(final String acName, final String pw) {
-		// Create an authentication request using the credentials
-		AuthenticationRequest request = new UsernamePasswordRequest(acName, pw);
-		Application userApp = getUsersApplication(acName);
-		if (userApp == null) {
-			LOG.severe("Auth error: User " + acName + " not found. ");
-			return null;
-		}
-		// Now let's authenticate the account with the application:
-		try {
-			Account userAcc = userApp.authenticateAccount(request).getAccount();
-			return userAcc;
-		} catch (ResourceException name) {
-			// ...catch the error and print it to the syslog if it wasn't.
-			LOG.severe("Auth error: " + name.getDeveloperMessage());
-			return null;
-		} finally {
-			// Clear the request data to prevent later memory access
-			request.clear();
-		}
+			final String pwIn, final String tokenIn) {
+		return getStorm2Mod().authAccountLocal(acNameIn, pwIn, tokenIn);
 	}
 
 	public final Properties getProps() {
@@ -407,56 +259,19 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 	@Override
 	public final String requestUpdateUserPassword(final String userNameIn,
 			final String emailAddrIn) {
-
-		Application uApp = getFirstApplicationByUserName(userNameIn);
-		if (uApp != null) {
-			Account account = uApp.sendPasswordResetEmail(emailAddrIn);
-			if (account != null) {
-				return "Password Mail requested";
-			}
-		}
-
-		return null;
+		return getStorm2Mod()
+				.requestUpdateUserPassword(userNameIn, emailAddrIn);
 	}
 
 	@Override
 	public final int updateUserPassword(final String userNameIn,
 			final String passwordIn, final String tokenIn) {
-		Account acc = null;
-		Application uApp = getFirstApplicationByUserName(userNameIn);
-		if (uApp != null) {
-			acc = getUsersApplication(userNameIn).verifyPasswordResetToken(
-					tokenIn);
-		}
-
-		if (acc == null) {
-			return -1;
-		}
-
-		else {
-			// check username & acc username agree
-			boolean namesMatch = userNameIn.equals(acc.getUsername());
-			if (!namesMatch) {
-				return -2;
-			}
-			if (namesMatch) {
-				if (stringOK(passwordIn)) {
-					acc.setPassword(passwordIn);
-					acc.save();
-					return 1;
-				} else {
-					return 0;
-				}
-
-			}
-
-		}
-
-		return -3;
+		return getStorm2Mod().updateUserPassword(userNameIn, passwordIn,
+				tokenIn);
 	}
 
 	@Override
-	public UserSecurityModel getLocalUserSecurityModel() {
+	public final UserSecurityModel getLocalUserSecurityModel() {
 		if (isCacheModel()) {
 			return new UserSecurityModelCached();
 		} else {
@@ -468,134 +283,78 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 		return cacheModel;
 	}
 
-	public final void setCacheModel(boolean cacheModelIn) {
+	public final void setCacheModel(final boolean cacheModelIn) {
 		cacheModel = cacheModelIn;
 	}
 
-	public final Application getUsersApplication(String username) {
-		return getApplicationByUser(username);
+	// public final Application getUsersApplication(String username) {
+	// return getStorm2Mod().getApplicationByUser(username);
+	// }
 
-	}
+	// public final Account getAccountByUsername(String username) {
 
-	public final Account getAccountByUsername(String username) {
+	// // See if the account is in the accList locally
+	// if (OtfCachedListsDTO.getAllAccountsMap() != null) {
+	// OtfAccount oacc = OtfCachedListsDTO.getAllAccountsMap().get(
+	// username);
+	// if (oacc != null) {
+	// // get the href
+	// String href = oacc.getIdref();
+	// if (stringOK(href)) {
+	// final Account acc = spbd.getResourceByHrefAccount(href);
+	// if (acc != null) {
+	// return acc;
+	// }
+	// }
+	// }
+	// }
+	// // else....get from remote via apps
+	// // Possibly use href is account is untrustworthy.
+	// return getRemoteAccountByUser(username);
+	// }
 
-		// See if the account is in the accList locally
-		if (OtfCachedListsDTO.getAllAccountsMap() != null) {
-			OtfAccount oacc = OtfCachedListsDTO.getAllAccountsMap().get(
-					username);
-			if (oacc != null) {
-				// get the href
-				String href = oacc.getIdref();
-				if (stringOK(href)) {
-					final Account acc = spbd.getResourceByHrefAccount(href);
-					if (acc != null) {
-						return acc;
-					}
-				}
-			}
-		}
-		// else....get from remote via apps
-		// Possibly use href is account is untrustworthy.
-		return getRemoteAccountByUser(username);
-	}
+	// public final Application getApplicationByName(final String appName) {
+	// ApplicationList applications = spbd.getTenant().getApplications();
+	// for (Application application : applications) {
+	// if (application.getName().equals(appName)) {
+	// return application;
+	// }
+	// }
+	// return null;
+	// }
 
-	public final Application getApplicationByName(final String appName) {
-		ApplicationList applications = spbd.getTenant().getApplications();
-		for (Application application : applications) {
-			if (application.getName().equals(appName)) {
-				return application;
-			}
-		}
-		return null;
-	}
+	// public final Account getRemoteAccountByUser(final String userName) {
+	// ApplicationList applications = spbd.getTenant().getApplications();
+	// for (Application application : applications) {
+	// AccountList acc = application.getAccounts(Accounts.where(Accounts
+	// .username().eqIgnoreCase(userName)));
+	// if (acc.iterator().hasNext()) {
+	// return acc.iterator().next();
+	// }
+	// }
+	// return null;
+	// }
 
-	public final Account getRemoteAccountByUser(final String userName) {
-		ApplicationList applications = spbd.getTenant().getApplications();
-		// First try users or admin app as most likely
-		for (Application application : applications) {
-			if (userOrAdminApp(application.getName())) {
-				AccountList acc = application.getAccounts(Accounts
-						.where(Accounts.username().eqIgnoreCase(userName)));
-				if (acc.iterator().hasNext()) {
-					return acc.iterator().next();
-				}
-			}
-		}
-		// then try others
-		for (Application application : applications) {
-			if (!userOrAdminApp(application.getName())) {
-				AccountList acc = application.getAccounts(Accounts
-						.where(Accounts.username().eqIgnoreCase(userName)));
-				if (acc.iterator().hasNext()) {
-					return acc.iterator().next();
-				}
-			}
-		}
-		return null;
-	}
+	// public final Application getApplicationByUser(final String userName) {
+	// ApplicationList applications = spbd.getTenant().getApplications();
+	// for (Application application : applications) {
+	// AccountList acc = application.getAccounts(Accounts.where(Accounts
+	// .username().eqIgnoreCase(userName)));
+	// if (acc.iterator().hasNext()) {
+	// return application;
+	// }
+	// }
+	//
+	// return null;
+	// }
 
-	public final Application getApplicationByUser(final String userName) {
-		ApplicationList applications = spbd.getTenant().getApplications();
-		// First try users or admin app as most likely
-		for (Application application : applications) {
-			if (userOrAdminApp(application.getName())) {
-				AccountList acc = application.getAccounts(Accounts
-						.where(Accounts.username().eqIgnoreCase(userName)));
-				if (acc.iterator().hasNext()) {
-					return application;
-				}
-			}
-		}
-		// then try others
-		for (Application application : applications) {
-			if (!userOrAdminApp(application.getName())) {
-				AccountList acc = application.getAccounts(Accounts
-						.where(Accounts.username().eqIgnoreCase(userName)));
-				if (acc.iterator().hasNext()) {
-					return application;
-				}
-			}
-		}
-		return null;
-	}
+	// public boolean userOrAdminApp(String appname) {
+	// if (appname.equalsIgnoreCase(StormPathUserSecurityHandler.STORMPATH)) {
+	// return true;
+	// }
+	// return appname.equalsIgnoreCase(getUsersAppName());
+	// }
 
-	public boolean userOrAdminApp(String appname) {
-		if (appname.equalsIgnoreCase(StormPathUserSecurityHandler.STORMPATH)) {
-			return true;
-		}
-		return appname.equalsIgnoreCase(getUsersAppName());
-	}
+	// Get the f1st NOT SP app in case users need to be added to it.
 
-	@Override
-	public List<String> getUserNames() {
-		ArrayList<String> accnames = new ArrayList<String>();
-		ApplicationList applications = spbd.getTenant().getApplications();
-		for (Application application : applications) {
-			AccountList accList = application.getAccounts();
-			for (Account acc : accList) {
-				accnames.add(acc.getUsername());
-			}
-		}
-		return accnames;
-	}
-
-	@Override
-	public List<String> getMembers() {
-		return getUserSecurityModel().getMembers();
-	}
-
-	@Override
-	public List<String> getApps() {
-		ArrayList<String> accnames = new ArrayList<String>();
-		ApplicationList applications = spbd.getTenant().getApplications();
-		for (Application application : applications) {
-			accnames.add(application.getName());
-		}
-		return accnames;
-	}
-
-	@Override
-	public List<String> getAppsNotAdmin() {
-		return getUserSecurityModel().getAppsNotAdmin();
-	}
 }

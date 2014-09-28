@@ -126,20 +126,20 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 		getAdminUsers();
 	}
 
-	@Override
-	public final String getDirNameForUser(final String accNameIn) {
-		Collection<String> dirnames = getDirNamesForUser(accNameIn);
-		if (dirnames != null && dirnames.size() > 0) {
-			return dirnames.iterator().next();
-		}
-		return null;
+	// @Override
+	// public final String getDirNameForUser(final String accNameIn) {
+	// Collection<String> dirnames = getDirNamesForUser(accNameIn);
+	// if (dirnames != null && dirnames.size() > 0) {
+	// return dirnames.iterator().next();
+	// }
+	// return null;
+	//
+	// }
 
-	}
-
-	@Override
-	public final String getAppNameForUser(final String accNameIn) {
-		return getFirstAppForUser(accNameIn);
-	}
+	// @Override
+	// public final String getAppNameForUser(final String accNameIn) {
+	// return getFirstAppForUser(accNameIn);
+	// }
 
 	public final String getFirstAppForUser(final String username) {
 		List<String> appsList = getOtfAppNamesForUser(username);
@@ -182,11 +182,6 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 	}
 
 	@Override
-	public final String getUsersDirName() {
-		return getUsersDir().getName();
-	}
-
-	@Override
 	public final OtfDirectory getMembersDir() {
 		return getLocalModel().getDirs().getDirByName(getMembersApp());
 	}
@@ -203,15 +198,8 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 			// Get settings dir
 			OtfDirectory setDirectory = getLocalModel().getDirs().getDirByName(
 					UserSecurity.SETTINGS);
-			if (setDirectory != null) {
-				// get settings group
-				OtfGroup setgrp = setDirectory.getGroups().getGroupByName(
-						UserSecurity.SETTINGS);
-				setgrp.setParentDirName(UserSecurity.SETTINGS);
-				settings = new OtfSettings(setgrp);
-				OtfCachedListsDTO.setSettings(settings);
-				// setDefaultpw(settings.getDefPw());
-			}
+			settings = getSettings(setDirectory);
+			OtfCachedListsDTO.setSettings(settings);
 		}
 		return settings;
 	}
@@ -229,18 +217,9 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 	public final List<String> getMembers() {
 		List<String> members = OtfCachedListsDTO.getMembersList();
 		if (members == null) {
-			members = new ArrayList<String>();
-			OtfDirectory mDirectory = getMembersDir();
-			if (mDirectory != null) {
-				// getAll groups within
-				for (OtfGroup grp : mDirectory.getGroups().getGroups().values()) {
-					members.add(grp.getName());
-				}
-			}
-			Collections.sort(members);
+			members = super.getMembers();
 			setMembers(members);
 		}
-
 		return members;
 	}
 
@@ -251,19 +230,6 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 	public final void resetMembers() {
 		OtfCachedListsDTO.remMembersList();
 		getMembers();
-	}
-
-	@Override
-	public final OtfGroup getMemberByName(final String memberNameIn) {
-		OtfDirectory mDirectory = getMembersDir();
-		if (mDirectory != null) {
-			for (OtfGroup grp : mDirectory.getGroups().getGroups().values()) {
-				if (grp.getName().equals(memberNameIn)) {
-					return grp;
-				}
-			}
-		}
-		return null;
 	}
 
 	@Override
@@ -281,20 +247,6 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 		return null;
 	}
 
-	@Override
-	public final OtfGroup getMemberById(final String idIn) {
-		OtfDirectory mDirectory = getMembersDir();
-		if (mDirectory != null) {
-			for (OtfGroup grp : mDirectory.getGroups().getGroups().values()) {
-				if (grp.getIdIfSet().equals(idIn)) {
-					return grp;
-				}
-			}
-		}
-		return null;
-	}
-
-	@Override
 	public final Map<String, List<String>> getAppsMap() {
 		Map<String, List<String>> appsMap = OtfCachedListsDTO.getAppsMap();
 		if (appsMap == null || appsMap.size() == 0) {
@@ -377,19 +329,12 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 			}
 		}
 		return groups;
-
 	}
 
 	@Override
 	public final List<OtfGroup> getGroupsByDirName(final String dirNameIn) {
-		List<OtfGroup> groups = new ArrayList<OtfGroup>();
 		OtfDirectory dir = getLocalModel().getDirs().getDirByName(dirNameIn);
-		for (OtfGroup grp : dir.getGroups().getGroups().values()) {
-			grp.getId();
-			grp.setParentDirName(dirNameIn);
-			groups.add(grp);
-		}
-		return groups;
+		return getOtfGroupsByOtfDir(dir);
 	}
 
 	@Override
@@ -449,7 +394,6 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 		return new ArrayList<String>(getAppsMap().keySet());
 	}
 
-	@Override
 	public final Map<String, OtfAccount> getAllAccounts() {
 		Map<String, OtfAccount> allAccounts = OtfCachedListsDTO
 				.getAllAccountsMap();
