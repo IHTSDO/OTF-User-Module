@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.AbstractUserSecurityModel;
 import org.ihtsdo.otf.security.dto.OtfAccount;
+import org.ihtsdo.otf.security.dto.OtfApplication;
 import org.ihtsdo.otf.security.dto.OtfDirectory;
 import org.ihtsdo.otf.security.dto.OtfGroup;
 import org.ihtsdo.otf.security.dto.OtfSettings;
@@ -150,12 +151,6 @@ public class StormpathUserSecurityModel extends AbstractUserSecurityModel {
 		return getStorm2Mod().getApps();
 	}
 
-	// @Override
-	// public final Map<String, OtfAccount> getAllAccounts() {
-	// // TODO Auto-generated method stub
-	// return null;
-	// }
-
 	public final StormPathBaseDTO getSpbd() {
 		return spbd;
 	}
@@ -169,6 +164,11 @@ public class StormpathUserSecurityModel extends AbstractUserSecurityModel {
 
 	public final void setStorm2Mod(final Storm2Model storm2ModIn) {
 		storm2Mod = storm2ModIn;
+	}
+
+	@Override
+	public OtfApplication getAppbyName(String appNameIn) {
+		return getStorm2Mod().getOtfAppbyName(appNameIn);
 	}
 
 }

@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.OtfAccountMin;
@@ -18,6 +19,9 @@ import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldApplication;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldSetting;
 
 public abstract class AbstractUserSecurityModel implements UserSecurityModel {
+
+	private static final Logger LOG = Logger
+			.getLogger(AbstractUserSecurityModel.class.getName());
 
 	protected UserSecurity model;
 	private String handlerAdminDir;
@@ -213,6 +217,8 @@ public abstract class AbstractUserSecurityModel implements UserSecurityModel {
 					UserSecurity.SETTINGS);
 			setgrp.setParentDirName(UserSecurity.SETTINGS);
 			OtfSettings settings = new OtfSettings(setgrp);
+			getModel().setDefaultpw(settings.getDefPw());
+
 			return settings;
 		}
 		return null;

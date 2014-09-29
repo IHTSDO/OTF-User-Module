@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.OtfAccountMin;
+import org.ihtsdo.otf.security.dto.OtfApplication;
 import org.ihtsdo.otf.security.dto.OtfDirectory;
 import org.ihtsdo.otf.security.dto.OtfGroup;
 import org.ihtsdo.otf.security.dto.OtfSettings;
@@ -38,7 +39,7 @@ public interface UserSecurityModel {
 
 	// String getDirNameForUser(final String accNameIn);
 
-	// String getAppNameForUser(final String accNameIn);
+	OtfApplication getAppbyName(final String appNameIn);
 
 	String getUsersDirName();
 

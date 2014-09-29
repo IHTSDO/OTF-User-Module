@@ -72,6 +72,7 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 	}
 
 	private UserSecurityCached getLocalModel() {
+		// LOG.info("getLocalModel localModel = " + localModel);
 		if (localModel == null) {
 			if (getModel() != null
 					&& (getModel() instanceof UserSecurityCached)) {
@@ -350,10 +351,15 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 	@Override
 	public final List<String> getDirsByAppName(final String appnameIn) {
 		List<String> dirs = new ArrayList<String>();
-		for (OtfAccountStore acs : getLocalModel().getApps()
-				.getAppByName(appnameIn).getAccountStores().values()) {
-			if (acs.isDir()) {
-				dirs.add(acs.getName());
+		OtfApplication oapp = getLocalModel().getApps().getAppByName(appnameIn);
+		if (oapp != null) {
+			Map<String, OtfAccountStore> acsmap = oapp.getAccountStores();
+			if (acsmap != null && acsmap.size() > 0) {
+				for (OtfAccountStore acs : acsmap.values()) {
+					if (acs.isDir()) {
+						dirs.add(acs.getName());
+					}
+				}
 			}
 		}
 
@@ -420,6 +426,17 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 	public final void resetAllAccounts() {
 		OtfCachedListsDTO.remAllAccountsMap();
 		getAllAccounts();
+	}
+
+	@Override
+	public OtfApplication getAppbyName(String appNameIn) {
+		for (OtfApplication app : getLocalModel().getApps().getApplications()
+				.values()) {
+			if (app.getName().equals(appNameIn)) {
+				return app;
+			}
+		}
+		return null;
 	}
 
 }

@@ -49,14 +49,6 @@ public abstract class UserSecurity {
 		dirs = dirsIn;
 	}
 
-	// public final String getHandlerAdminDir() {
-	// return handlerAdminDir;
-	// }
-	//
-	// public final void setHandlerAdminDir(final String handlerAdminDirIn) {
-	// handlerAdminDir = handlerAdminDirIn;
-	// }
-
 	public final String getDefaultpw() {
 		return defaultpw;
 	}

@@ -58,6 +58,7 @@ public class XmlUserSecurityHandler extends AbstractUserSecurityHandler {
 	@Override
 	public final void buildUserSecurity() throws Exception {
 		initFromFile();
+		postbuildUserSecurity();
 	}
 
 	public final void initFromFile() throws Exception {
@@ -231,6 +232,16 @@ public class XmlUserSecurityHandler extends AbstractUserSecurityHandler {
 	@Override
 	public UserSecurityModel getLocalUserSecurityModel() {
 		return new UserSecurityModelCached();
+	}
+
+	@Override
+	public String addExistDirToAppLocal(final OtfDirectory dir,
+			final OtfApplication app, boolean defAcStIn, boolean defGrpStIn,
+			int orderIn) {
+
+		// Nothing to do
+
+		return "";
 	}
 
 }

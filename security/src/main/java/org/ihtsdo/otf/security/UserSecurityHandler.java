@@ -37,6 +37,8 @@ public interface UserSecurityHandler {
 
 	void buildUserSecurity() throws Exception;
 
+	void postbuildUserSecurity();
+
 	String addUpdateAccount(OtfAccount acc);
 
 	String addUpdateMember(OtfGroup grp);

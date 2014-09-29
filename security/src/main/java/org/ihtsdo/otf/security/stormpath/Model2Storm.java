@@ -334,6 +334,8 @@ public class Model2Storm {
 	}
 
 	public void buildApp(final OtfApplication oApp, Application app) {
+		LOG.info("buildApp called oApp = " + oApp.getName());
+		LOG.info("buildApp called App = " + app.getName());
 		spbd.resetTenant();
 		if (oApp == null && app == null) {
 			LOG.severe("buildApp all is null");
@@ -413,6 +415,19 @@ public class Model2Storm {
 				app = null;
 			}
 		}
+
+	}
+
+	public final void addDirToApp(Directory dir, Application app,
+			boolean defAcSt, boolean defGrpSt, int order) {
+		AccountStoreMapping accountStoreMapping = spbd.getClient().instantiate(
+				AccountStoreMapping.class);
+		accountStoreMapping.setAccountStore(dir);
+		accountStoreMapping.setApplication(app);
+		accountStoreMapping.setDefaultAccountStore(defAcSt);
+		accountStoreMapping.setDefaultGroupStore(defGrpSt);
+		accountStoreMapping.setListIndex(order);
+		app.createAccountStoreMapping(accountStoreMapping);
 
 	}
 

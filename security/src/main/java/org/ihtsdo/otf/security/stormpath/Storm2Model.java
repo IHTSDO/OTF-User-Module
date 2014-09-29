@@ -275,6 +275,26 @@ public class Storm2Model {
 
 	}
 
+	public OtfApplication getOtfAppbyName(String appNameIn) {
+		Application app = getAppbyName(appNameIn);
+		if (app != null) {
+			return buildApp(app);
+		}
+		return null;
+	}
+
+	public Application getAppbyName(String appNameIn) {
+
+		ApplicationList applications = spbd.getTenant().getApplications();
+		for (Application application : applications) {
+			if (application.getName().equals(appNameIn)) {
+				return application;
+			}
+		}
+
+		return null;
+	}
+
 	public final void buildApps() {
 		// Get Applications
 		ApplicationList applications = spbd.getTenant().getApplications();

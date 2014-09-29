@@ -85,6 +85,8 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 			getUserSecurityModel(us, STORMPATH);
 		}
 
+		postbuildUserSecurity();
+
 	}
 
 	public final void sendUserSecuritytoStormPath(
@@ -164,11 +166,13 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 	@Override
 	public final String addUpdateAppLocal(final OtfApplication appIn,
 			final boolean isNewIn) {
+		LOG.info("addUpdateAppLocal appIn = " + appIn.getName());
 		// Remember to create a new dir? Before adding app
 		if (isNewIn) {
 			getMod2Storm().buildApp(appIn, null);
 		} else {
 			Application app = getStorm2Mod().getAppByName(appIn.getName());
+			LOG.info("addUpdateAppLocal app = " + app.getName());
 			getMod2Storm().buildApp(appIn, app);
 		}
 		return REMOTE_COMMIT_OK;
@@ -287,74 +291,14 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 		cacheModel = cacheModelIn;
 	}
 
-	// public final Application getUsersApplication(String username) {
-	// return getStorm2Mod().getApplicationByUser(username);
-	// }
-
-	// public final Account getAccountByUsername(String username) {
-
-	// // See if the account is in the accList locally
-	// if (OtfCachedListsDTO.getAllAccountsMap() != null) {
-	// OtfAccount oacc = OtfCachedListsDTO.getAllAccountsMap().get(
-	// username);
-	// if (oacc != null) {
-	// // get the href
-	// String href = oacc.getIdref();
-	// if (stringOK(href)) {
-	// final Account acc = spbd.getResourceByHrefAccount(href);
-	// if (acc != null) {
-	// return acc;
-	// }
-	// }
-	// }
-	// }
-	// // else....get from remote via apps
-	// // Possibly use href is account is untrustworthy.
-	// return getRemoteAccountByUser(username);
-	// }
-
-	// public final Application getApplicationByName(final String appName) {
-	// ApplicationList applications = spbd.getTenant().getApplications();
-	// for (Application application : applications) {
-	// if (application.getName().equals(appName)) {
-	// return application;
-	// }
-	// }
-	// return null;
-	// }
-
-	// public final Account getRemoteAccountByUser(final String userName) {
-	// ApplicationList applications = spbd.getTenant().getApplications();
-	// for (Application application : applications) {
-	// AccountList acc = application.getAccounts(Accounts.where(Accounts
-	// .username().eqIgnoreCase(userName)));
-	// if (acc.iterator().hasNext()) {
-	// return acc.iterator().next();
-	// }
-	// }
-	// return null;
-	// }
-
-	// public final Application getApplicationByUser(final String userName) {
-	// ApplicationList applications = spbd.getTenant().getApplications();
-	// for (Application application : applications) {
-	// AccountList acc = application.getAccounts(Accounts.where(Accounts
-	// .username().eqIgnoreCase(userName)));
-	// if (acc.iterator().hasNext()) {
-	// return application;
-	// }
-	// }
-	//
-	// return null;
-	// }
-
-	// public boolean userOrAdminApp(String appname) {
-	// if (appname.equalsIgnoreCase(StormPathUserSecurityHandler.STORMPATH)) {
-	// return true;
-	// }
-	// return appname.equalsIgnoreCase(getUsersAppName());
-	// }
-
-	// Get the f1st NOT SP app in case users need to be added to it.
+	@Override
+	public String addExistDirToAppLocal(OtfDirectory dirIn,
+			OtfApplication appIn, boolean defAcStIn, boolean defGrpStIn,
+			int orderIn) {
+		Application app = getStorm2Mod().getApplicationByName(appIn.getName());
+		Directory dir = getStorm2Mod().getDirByName(dirIn.getName());
+		getMod2Storm().addDirToApp(dir, app, defAcStIn, defGrpStIn, orderIn);
+		return null;
+	}
 
 }

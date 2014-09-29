@@ -1,5 +1,7 @@
 package org.ihtsdo.otf.security;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,6 +65,10 @@ public abstract class AbstractUserSecurityHandler implements
 	public abstract String addUpdateDirLocal(final OtfDirectory parentIn,
 			boolean isNew);
 
+	public abstract String addExistDirToAppLocal(final OtfDirectory dir,
+			final OtfApplication app, boolean defAcSt, boolean defGrpSt,
+			int order);
+
 	@Override
 	public abstract UserSecurityModel getLocalUserSecurityModel();
 
@@ -87,6 +93,14 @@ public abstract class AbstractUserSecurityHandler implements
 			acc.setAuth(true);
 		}
 		return acc;
+	}
+
+	public String addExistDirToApp(final OtfDirectory dir,
+			final OtfApplication app, boolean defAcSt, boolean defGrpSt,
+			int order) {
+		app.getAccountStores().put(dir.getName(), dir);
+		return addExistDirToAppLocal(dir, app, defAcSt, defGrpSt, order);
+
 	}
 
 	// @Override
@@ -319,4 +333,61 @@ public abstract class AbstractUserSecurityHandler implements
 		return toCheck != null && toCheck.length() > 0;
 	}
 
+	@Override
+	public void postbuildUserSecurity() {
+
+		// See if there is a User Dir
+		String userDir = getUserSecurityModel().getUsersApp();
+		boolean userDirFound = false;
+		OtfDirectory udir = getUserSecurityModel().getDirByName(userDir);
+		// if no User Dir create it
+		if (udir == null) {
+			udir = new OtfDirectory();
+			udir.setName(userDir);
+			addUpdateDir(udir);
+		}
+
+		List<String> apps = getUserSecurityModel().getApps();
+
+		for (String appname : apps) {
+			List<String> appDirs = getUserSecurityModel().getDirsByAppName(
+					appname);
+			if (appDirs.contains(userDir)) {
+				userDirFound = true;
+				break;
+			}
+
+		}
+		// if user dir not part of an app then get an app
+		if (!userDirFound) {
+			OtfApplication existApp = null;
+			// if users app exists add it to that
+			if (apps.contains(userDir)) {
+				existApp = getUserSecurityModel().getAppbyName(userDir);
+			}
+
+			if (existApp == null) {
+
+				List<String> adminapps = new ArrayList<String>();
+				adminapps.add(getUserSecurityModel().getMembersApp());
+				adminapps.add(getUserSecurityModel().getAdminApp());
+				adminapps.add(getUserSecurityModel().getHandlerAdminDir());
+
+				// get the first not AdminHandler App
+				for (String appname : apps) {
+					if (!adminapps.contains(appname)) {
+						existApp = getUserSecurityModel().getAppbyName(appname);
+						break;
+					}
+				}
+			}
+
+			if (existApp != null) {
+				// add the dir to it.
+				existApp.getAccountStores().put(udir.getName(), udir);
+				// update
+				addExistDirToApp(udir, existApp, true, false, 0);
+			}
+		}
+	}
 }
