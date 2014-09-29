@@ -94,4 +94,17 @@ public interface UserSecurityModel {
 
 	void setUsersApp(String usersAppIn);
 
+	// From model
+	boolean appExists(String appname);
+
+	boolean dirExists(String appname);
+
+	Collection<OtfApplication> getOtfApps();
+
+	Collection<OtfDirectory> getOtfDirs();
+
+	OtfApplication getAppById(String idIn);
+
+	OtfDirectory getDirById(String idIn);
+
 }

@@ -333,15 +333,13 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			}
 		case SecurityService.APPS:
 			if (exists) {
-				return getUsh().getUserSecurityModel().getModel().getApps()
-						.getAppById(id);
+				return getUsh().getUserSecurityModel().getAppById(id);
 			} else {
 				return new OtfApplication();
 			}
 		case SecurityService.DIR:
 			if (exists) {
-				return getUsh().getUserSecurityModel().getModel().getDirs()
-						.getDirById(id);
+				return getUsh().getUserSecurityModel().getDirById(id);
 			} else {
 				return new OtfDirectory();
 			}
@@ -527,15 +525,13 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		OtfApplication oacc = null;
 		if (getUrlNodes().length > 1) {
 			String val = getUrlNodes()[1];
-			oacc = getUsh().getUserSecurityModel().getModel().getApps()
-					.getAppByName(val);
+			oacc = getUsh().getUserSecurityModel().getAppbyName(val);
 			if (oacc != null) {
 				oacc.getId();
 			}
 			if (oacc == null) {
 				// try dir
-				if (getUsh().getUserSecurityModel().getModel().getDirs()
-						.getDirByName(val) != null) {
+				if (getUsh().getUserSecurityModel().getDirByName(val) != null) {
 					return getDirForm();
 				}
 			}
@@ -578,8 +574,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		OtfDirectory oacc = null;
 		if (getUrlNodes().length > 1) {
 			String val = getUrlNodes()[1];
-			oacc = getUsh().getUserSecurityModel().getModel().getDirs()
-					.getDirByName(val);
+			oacc = getUsh().getUserSecurityModel().getDirByName(val);
 			if (oacc != null) {
 				oacc.getId();
 			}

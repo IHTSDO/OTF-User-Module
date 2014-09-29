@@ -440,4 +440,36 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 		return null;
 	}
 
+	// from model
+
+	@Override
+	public final boolean appExists(final String appname) {
+		return getModel().getApps().appExists(appname);
+	}
+
+	@Override
+	public final boolean dirExists(final String appname) {
+		return getModel().getDirs().dirExists(appname);
+	}
+
+	@Override
+	public final Collection<OtfApplication> getOtfApps() {
+		return getModel().getApps().getApplications().values();
+	}
+
+	@Override
+	public final Collection<OtfDirectory> getOtfDirs() {
+		return getModel().getDirs().getDirectories().values();
+	}
+
+	@Override
+	public final OtfApplication getAppById(final String idIn) {
+		return getModel().getApps().getAppById(idIn);
+	}
+
+	@Override
+	public final OtfDirectory getDirById(final String idIn) {
+		return getModel().getDirs().getDirById(idIn);
+	}
+
 }

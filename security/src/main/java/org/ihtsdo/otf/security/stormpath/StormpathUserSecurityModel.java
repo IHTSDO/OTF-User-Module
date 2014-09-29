@@ -11,7 +11,6 @@ import org.ihtsdo.otf.security.dto.OtfDirectory;
 import org.ihtsdo.otf.security.dto.OtfGroup;
 import org.ihtsdo.otf.security.dto.OtfSettings;
 import org.ihtsdo.otf.security.dto.UserSecurity;
-import org.ihtsdo.otf.security.dto.UserSecurityCached;
 import org.ihtsdo.otf.security.dto.UserSecurityModelCached;
 
 public class StormpathUserSecurityModel extends AbstractUserSecurityModel {
@@ -50,13 +49,13 @@ public class StormpathUserSecurityModel extends AbstractUserSecurityModel {
 		if (model == null) {
 			model = new UserSecurityStormpath();
 		}
-		return null;
+		return model;
 	}
 
 	@Override
 	public final UserSecurity getFullModel() {
-		// TODO Auto-generated method stub
-		return null;
+
+		return getModel();
 	}
 
 	@Override
@@ -68,7 +67,7 @@ public class StormpathUserSecurityModel extends AbstractUserSecurityModel {
 	private UserSecurityStormpath getLocalModel() {
 		if (localModel == null) {
 			if (getModel() != null
-					&& (getModel() instanceof UserSecurityCached)) {
+					&& (getModel() instanceof UserSecurityStormpath)) {
 				localModel = (UserSecurityStormpath) model;
 			}
 		}
@@ -171,4 +170,37 @@ public class StormpathUserSecurityModel extends AbstractUserSecurityModel {
 		return getStorm2Mod().getOtfAppbyName(appNameIn);
 	}
 
+	@Override
+	public boolean appExists(String appnameIn) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean dirExists(String appnameIn) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Collection<OtfApplication> getOtfApps() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<OtfDirectory> getOtfDirs() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public OtfApplication getAppById(final String idIn) {
+		return getModel().getApps().getAppById(idIn);
+	}
+
+	@Override
+	public OtfDirectory getDirById(final String idIn) {
+		return getModel().getDirs().getDirById(idIn);
+	}
 }

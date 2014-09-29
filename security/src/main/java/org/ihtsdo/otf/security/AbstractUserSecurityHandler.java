@@ -247,8 +247,7 @@ public abstract class AbstractUserSecurityHandler implements
 	public final String addUpdateGroup(final OtfGroup grpIn) {
 		String pDir = grpIn.getParentDirName();
 		boolean isNew = grpIn.isNew();
-		OtfDirectory mDirectory = getUserSecurityModel().getModel().getDirs()
-				.getDirByName(pDir);
+		OtfDirectory mDirectory = getUserSecurityModel().getDirByName(pDir);
 		if (isNew && mDirectory.getGroups().groupExists(grpIn.getName())) {
 			// names must be unique
 			return NAME_NOT_UNIQUE;
@@ -277,9 +276,7 @@ public abstract class AbstractUserSecurityHandler implements
 	public final String addUpdateDir(OtfDirectory dirIn) {
 		boolean isNew = dirIn.isNew();
 
-		if (isNew
-				&& getUserSecurityModel().getModel().getDirs()
-						.dirExists(dirIn.getName())) {
+		if (isNew && getUserSecurityModel().dirExists(dirIn.getName())) {
 			return NAME_NOT_UNIQUE;
 		}
 		if (!stringOK(dirIn.getName())) {
@@ -295,9 +292,7 @@ public abstract class AbstractUserSecurityHandler implements
 	@Override
 	public final String addUpdateApp(final OtfApplication appIn) {
 		boolean isNew = appIn.isNew();
-		if (isNew
-				&& getUserSecurityModel().getModel().getApps()
-						.appExists(appIn.getName())) {
+		if (isNew && getUserSecurityModel().appExists(appIn.getName())) {
 			// names must be unique
 			return NAME_NOT_UNIQUE;
 		}

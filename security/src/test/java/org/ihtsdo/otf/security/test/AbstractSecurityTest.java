@@ -52,8 +52,8 @@ public abstract class AbstractSecurityTest {
 
 	@Test
 	public final void testNumDirs() {
-		assertEquals(getNumDirs(), getUsh().getUserSecurityModel().getModel()
-				.getDirs().getDirectories().size());
+		assertEquals(getNumDirs(), getUsh().getUserSecurityModel().getOtfDirs()
+				.size());
 	}
 
 	public abstract int getNumApps();
@@ -65,8 +65,7 @@ public abstract class AbstractSecurityTest {
 		String json = secS.getApps();
 		List<String> member2 = SecurityClient.getApps(json);
 		int jsonI = member2.size();
-		int origI = getUsh().getUserSecurityModel().getModel().getApps()
-				.getApplications().size();
+		int origI = getUsh().getUserSecurityModel().getOtfApps().size();
 		assertEquals(getNumApps(), origI);
 		assertEquals(origI, jsonI);
 	}
