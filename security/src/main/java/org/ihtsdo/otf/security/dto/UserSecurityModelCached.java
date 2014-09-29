@@ -33,6 +33,7 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 	}
 
 	public final void initCachedValues() {
+
 		getSettings();
 		getAllAccounts();
 		getDirsMap();

@@ -87,6 +87,7 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 
 		postbuildUserSecurity();
 
+		getUserSecurityModel().init();
 	}
 
 	public final void sendUserSecuritytoStormPath(

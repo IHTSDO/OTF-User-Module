@@ -59,6 +59,7 @@ public class XmlUserSecurityHandler extends AbstractUserSecurityHandler {
 	public final void buildUserSecurity() throws Exception {
 		initFromFile();
 		postbuildUserSecurity();
+		getUserSecurityModel().init();
 	}
 
 	public final void initFromFile() throws Exception {
