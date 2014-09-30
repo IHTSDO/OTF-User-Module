@@ -161,9 +161,6 @@ public abstract class AbstractUserSecurityModel implements UserSecurityModel {
 		boolean admindirok = stringOK(admindir);
 
 		for (OtfAccount acc : getUsers()) {
-			LOG.info("getAdminUsersMap admindir = " + admindir);
-			LOG.info("getAdminUsersMap acc.getParentDir() = "
-					+ acc.getParentDir());
 			// see if parent dir =
 			if (admindirok && acc.getParentDir().equalsIgnoreCase(admindir)) {
 				adminUsers.put(acc.getName(), acc);
