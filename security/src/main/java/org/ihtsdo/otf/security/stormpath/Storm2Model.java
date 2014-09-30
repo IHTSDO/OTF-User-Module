@@ -221,6 +221,7 @@ public class Storm2Model {
 		OtfGroup ogrp = new OtfGroup();
 		ogrp.setIdref(grp.getHref());
 		ogrp.setName(grp.getName());
+		ogrp.setDescription(grp.getDescription());
 		ogrp.setStatus(grp.getStatus().toString());
 
 		for (Account acc : grp.getAccounts()) {
