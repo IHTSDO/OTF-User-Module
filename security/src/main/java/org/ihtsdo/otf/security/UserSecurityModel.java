@@ -78,9 +78,9 @@ public interface UserSecurityModel {
 
 	// Map<String, OtfAccount> getAllAccounts();
 
-	void setHandlerAdminDir(String handlerAdminDirIn);
+	void setHandlerAdmin(HandlerAdmin handlerAdmin);
 
-	String getHandlerAdminDir();
+	HandlerAdmin getHandlerAdmin();
 
 	String getAdminApp();
 

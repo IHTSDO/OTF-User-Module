@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.AbstractUserSecurityHandler;
+import org.ihtsdo.otf.security.HandlerAdmin;
 import org.ihtsdo.otf.security.UserSecurityModel;
 import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.OtfApplication;
@@ -32,7 +33,8 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 
 	private StormPathBaseDTO spbd;
 
-	public static final String STORMPATH = "Stormpath";
+	public static final String STORMPATH_APP = "Stormpath";
+	public static final String STORMPATH_DIR = "Stormpath Administrators";
 
 	private Properties props;
 
@@ -76,13 +78,18 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 			spbd.load();
 
 		}
+
+		HandlerAdmin handlerAdmin = new HandlerAdmin();
+		handlerAdmin.setAppName(STORMPATH_APP);
+		handlerAdmin.setDirName(STORMPATH_DIR);
+
 		if (isCacheModel()) {
 			UserSecurity us = getStorm2Mod().buildCachedUserSecurity();
-			getUserSecurityModel(us, STORMPATH);
+			getUserSecurityModel(us, handlerAdmin);
 		}
 		if (!isCacheModel()) {
 			UserSecurity us = new UserSecurityStormpath();
-			getUserSecurityModel(us, STORMPATH);
+			getUserSecurityModel(us, handlerAdmin);
 		}
 
 		postbuildUserSecurity();

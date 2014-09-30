@@ -23,7 +23,7 @@ public interface UserSecurityHandler {
 	UserSecurityModel getUserSecurityModel(UserSecurity userSecurityIn);
 
 	UserSecurityModel getUserSecurityModel(UserSecurity userSecurityIn,
-			String handlerAdminDir);
+			HandlerAdmin handlerAdmin);
 
 	UserSecurityModel getLocalUserSecurityModel();
 

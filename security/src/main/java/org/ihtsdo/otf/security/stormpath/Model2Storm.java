@@ -58,7 +58,7 @@ public class Model2Storm {
 	}
 
 	private void clear() {
-		String UCSP = StormPathUserSecurityHandler.STORMPATH.toUpperCase();
+		String UCSP = StormPathUserSecurityHandler.STORMPATH_APP.toUpperCase();
 		// Clear apps not SP
 		ApplicationList apps = spbd.getTenant().getApplications();
 		for (Application app : apps) {

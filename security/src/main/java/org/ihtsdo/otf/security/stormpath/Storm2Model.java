@@ -499,7 +499,7 @@ public class Storm2Model {
 			// Consider having an "App user" whose key never changes/is manually
 			// changed.
 			if (!getApplicationByUser(acc.getUsername()).getName()
-					.equalsIgnoreCase(StormPathUserSecurityHandler.STORMPATH)) {
+					.equalsIgnoreCase(StormPathUserSecurityHandler.STORMPATH_APP)) {
 				if (apikeyCount == 1) {
 					// add an apikey
 					ApiKey apiKey = acc.createApiKey();

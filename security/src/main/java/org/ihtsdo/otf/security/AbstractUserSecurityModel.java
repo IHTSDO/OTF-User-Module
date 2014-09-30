@@ -24,7 +24,7 @@ public abstract class AbstractUserSecurityModel implements UserSecurityModel {
 			.getLogger(AbstractUserSecurityModel.class.getName());
 
 	protected UserSecurity model;
-	private String handlerAdminDir;
+	private HandlerAdmin handlerAdmin;
 	private String usersApp;
 	private String membersApp;
 	private String adminApp;
@@ -110,16 +110,16 @@ public abstract class AbstractUserSecurityModel implements UserSecurityModel {
 	}
 
 	@Override
-	public final void setHandlerAdminDir(final String handlerAdminDirIn) {
-		handlerAdminDir = handlerAdminDirIn;
+	public final void setHandlerAdmin(final HandlerAdmin handlerAdminIn) {
+		handlerAdmin = handlerAdminIn;
 	}
 
 	@Override
-	public final String getHandlerAdminDir() {
-		if (handlerAdminDir == null) {
-			handlerAdminDir = "";
+	public final HandlerAdmin getHandlerAdmin() {
+		if (handlerAdmin == null) {
+			handlerAdmin = new HandlerAdmin();
 		}
-		return handlerAdminDir;
+		return handlerAdmin;
 	}
 
 	@Override
@@ -130,7 +130,7 @@ public abstract class AbstractUserSecurityModel implements UserSecurityModel {
 		if (all != null && !all.isEmpty()) {
 			String users = getUsersApp();
 			String members = getMembersApp();
-			String adminhandler = getHandlerAdminDir();
+			String adminhandler = getHandlerAdmin().getAppName();
 			List<String> adminApps = new ArrayList<String>();
 			if (stringOK(users)) {
 				adminApps.add(users);
@@ -155,12 +155,15 @@ public abstract class AbstractUserSecurityModel implements UserSecurityModel {
 	public final Map<String, OtfAccount> getAdminUsersMap() {
 		Map<String, OtfAccount> adminUsers = new HashMap<String, OtfAccount>();
 		String adminA = getAdminApp();
-		String admindir = getHandlerAdminDir();
+		String admindir = getHandlerAdmin().getDirName();
 
 		boolean adminAok = stringOK(adminA);
 		boolean admindirok = stringOK(admindir);
 
 		for (OtfAccount acc : getUsers()) {
+			LOG.info("getAdminUsersMap admindir = " + admindir);
+			LOG.info("getAdminUsersMap acc.getParentDir() = "
+					+ acc.getParentDir());
 			// see if parent dir =
 			if (admindirok && acc.getParentDir().equalsIgnoreCase(admindir)) {
 				adminUsers.put(acc.getName(), acc);

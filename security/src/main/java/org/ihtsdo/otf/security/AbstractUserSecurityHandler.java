@@ -95,9 +95,9 @@ public abstract class AbstractUserSecurityHandler implements
 		return acc;
 	}
 
-	public String addExistDirToApp(final OtfDirectory dir,
-			final OtfApplication app, boolean defAcSt, boolean defGrpSt,
-			int order) {
+	public final String addExistDirToApp(final OtfDirectory dir,
+			final OtfApplication app, final boolean defAcSt,
+			final boolean defGrpSt, final int order) {
 		app.getAccountStores().put(dir.getName(), dir);
 		return addExistDirToAppLocal(dir, app, defAcSt, defGrpSt, order);
 
@@ -134,9 +134,9 @@ public abstract class AbstractUserSecurityHandler implements
 
 	@Override
 	public UserSecurityModel getUserSecurityModel(UserSecurity userSecurityIn,
-			String handlerAdminDirIn) {
+			HandlerAdmin handlerAdmin) {
 		UserSecurityModel usm = getLocalUserSecurityModel();
-		usm.setHandlerAdminDir(handlerAdminDirIn);
+		usm.setHandlerAdmin(handlerAdmin);
 		usm.setModel(userSecurityIn);
 		setUserSecurityModel(usm);
 		return userSecurityModel;
@@ -366,7 +366,8 @@ public abstract class AbstractUserSecurityHandler implements
 				List<String> adminapps = new ArrayList<String>();
 				adminapps.add(getUserSecurityModel().getMembersApp());
 				adminapps.add(getUserSecurityModel().getAdminApp());
-				adminapps.add(getUserSecurityModel().getHandlerAdminDir());
+				adminapps.add(getUserSecurityModel().getHandlerAdmin()
+						.getAppName());
 
 				// get the first not AdminHandler App
 				for (String appname : apps) {
