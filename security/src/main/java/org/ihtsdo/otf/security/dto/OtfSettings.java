@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -111,12 +112,13 @@ public class OtfSettings extends OtfBaseId {
 		// TODO: FInd out how & where StormPath Sets it's pw length
 		// complexity/pattern etc & if this is available
 		// Check memb app in List
-		List<String> appNames = new OtfCustomFieldSetting().getAppNames();
-		checkWebFieldInList(membIn, MEMBER_APP_LABEL, appNames, true,
-				"Member App must exist as an application");
+		Collection<String> dirNames = new OtfCustomFieldSetting().getDirsMap()
+				.keySet();
+		checkWebFieldInList(membIn, MEMBER_APP_LABEL, dirNames, true,
+				"Member  must exist as an directory");
 		// Check user app in list.
-		checkWebFieldInList(usersIn, USER_APP_LABEL, appNames, true,
-				"Users App must exist as an application");
+		checkWebFieldInList(usersIn, USER_APP_LABEL, dirNames, true,
+				"Users must exist as an directory");
 	}
 
 	@Override

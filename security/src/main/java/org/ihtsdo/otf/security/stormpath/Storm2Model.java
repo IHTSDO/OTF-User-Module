@@ -2,11 +2,13 @@ package org.ihtsdo.otf.security.stormpath;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.dto.OtfAccount;
+import org.ihtsdo.otf.security.dto.OtfAccountMin;
 import org.ihtsdo.otf.security.dto.OtfAccountStore;
 import org.ihtsdo.otf.security.dto.OtfApplication;
 import org.ihtsdo.otf.security.dto.OtfCustomData;
@@ -27,9 +29,11 @@ import com.stormpath.sdk.api.ApiKeyStatus;
 import com.stormpath.sdk.application.AccountStoreMapping;
 import com.stormpath.sdk.application.Application;
 import com.stormpath.sdk.application.ApplicationList;
+import com.stormpath.sdk.application.Applications;
 import com.stormpath.sdk.authc.AuthenticationRequest;
 import com.stormpath.sdk.authc.UsernamePasswordRequest;
 import com.stormpath.sdk.directory.AccountStore;
+import com.stormpath.sdk.directory.Directories;
 import com.stormpath.sdk.directory.Directory;
 import com.stormpath.sdk.directory.DirectoryList;
 import com.stormpath.sdk.group.Group;
@@ -53,7 +57,6 @@ public class Storm2Model {
 	public Storm2Model(final StormPathBaseDTO spbdIn) {
 		super();
 		spbd = spbdIn;
-		LOG.info("Storm2Model Tenant = " + spbd.getTenant().getName());
 	}
 
 	public final UserSecurity build() throws Exception {
@@ -74,14 +77,21 @@ public class Storm2Model {
 	}
 
 	public final void buildDirs() {
+		for (OtfDirectory odir : getOtfDirList()) {
+			userSecurity.getDirs().getDirectories().put(odir.getName(), odir);
+		}
+	}
+
+	public final List<OtfDirectory> getOtfDirList() {
 		DirectoryList directories = spbd.getTenant().getDirectories();
+		List<OtfDirectory> dirList = new ArrayList<OtfDirectory>();
 		for (Directory directory : directories) {
 			OtfDirectory odir = buildDirectory(directory);
 			if (odir != null) {
-				userSecurity.getDirs().getDirectories()
-						.put(odir.getName(), odir);
+				dirList.add(odir);
 			}
 		}
+		return dirList;
 	}
 
 	public final OtfDirectory getOtfDirByName(final String dirName) {
@@ -93,12 +103,13 @@ public class Storm2Model {
 		return null;
 	}
 
-	public final Directory getDirByName(final String dirName) {
+	public final Directory getDirByName(final String dirNameIn) {
 		spbd.resetTenant();
-		DirectoryList directories = spbd.getTenant().getDirectories();
+		DirectoryList directories = spbd.getTenant().getDirectories(
+				Directories.where(Directories.name().eqIgnoreCase(dirNameIn)));
 
 		for (Directory dir : directories) {
-			if (dir.getName().equals(dirName)) {
+			if (dir.getName().equals(dirNameIn)) {
 				String dirHref = dir.getHref();
 				Directory d2 = spbd.getResourceByHrefDirectory(dirHref);
 				return d2;
@@ -182,14 +193,19 @@ public class Storm2Model {
 	}
 
 	public final OtfDirectory buildDirectory(final Directory dirIn) {
+		String href = dirIn.getHref();
+		return buildDirectory(href);
+	}
+
+	public final OtfDirectory buildDirectory(final String hrefId) {
 
 		Directory dir = null;
 		OtfDirectory oDir = null;
 		try {
-			dir = spbd.getResourceByHrefDirectory(dirIn.getHref());
+			dir = spbd.getResourceByHrefDirectory(hrefId);
 		} catch (ResourceException re) {
 			LOG.severe("Directory at this href does not exist Dir = "
-					+ dirIn.getName() + " href = " + dirIn.getHref());
+					+ " href = " + hrefId);
 		}
 		if (dir != null) {
 			oDir = new OtfDirectory();
@@ -239,6 +255,19 @@ public class Storm2Model {
 			}
 		}
 		return ogrp;
+	}
+
+	public final OtfAccountMin buildMinAccount(final Account acc) {
+		OtfAccountMin oacc = new OtfAccountMin();
+		oacc.setIdref(acc.getHref());
+		oacc.setName(acc.getUsername());
+		oacc.setEmail(acc.getEmail());
+		oacc.setGivenName(acc.getGivenName());
+		oacc.setMiddleName(acc.getMiddleName());
+		oacc.setSurname(acc.getSurname());
+		oacc.setStatus(acc.getStatus().toString());
+		oacc.setParentDir(acc.getDirectory().getName());
+		return oacc;
 	}
 
 	public final OtfAccount buildAccount(final Account accIn) {
@@ -298,11 +327,22 @@ public class Storm2Model {
 
 	public final void buildApps() {
 		// Get Applications
+		for (OtfApplication app : getOtfApps()) {
+			userSecurity.getApps().getApplications().put(app.getName(), app);
+		}
+	}
+
+	public final List<OtfApplication> getOtfApps() {
+		List<OtfApplication> apps = new ArrayList<OtfApplication>();
 		ApplicationList applications = spbd.getTenant().getApplications();
 		for (Application application : applications) {
 			OtfApplication app = buildApp(application);
-			userSecurity.getApps().getApplications().put(app.getName(), app);
+			if (app != null) {
+				apps.add(app);
+			}
 		}
+
+		return apps;
 	}
 
 	public final OtfApplication buildApp(final Application appIn) {
@@ -499,7 +539,8 @@ public class Storm2Model {
 			// Consider having an "App user" whose key never changes/is manually
 			// changed.
 			if (!getApplicationByUser(acc.getUsername()).getName()
-					.equalsIgnoreCase(StormPathUserSecurityHandler.STORMPATH_APP)) {
+					.equalsIgnoreCase(
+							StormPathUserSecurityHandler.STORMPATH_APP)) {
 				if (apikeyCount == 1) {
 					// add an apikey
 					ApiKey apiKey = acc.createApiKey();
@@ -641,6 +682,14 @@ public class Storm2Model {
 		return accnames;
 	}
 
+	public final Collection<OtfAccountMin> getOtfMinAccounts() {
+		ArrayList<OtfAccountMin> accnames = new ArrayList<OtfAccountMin>();
+		for (Account acc : getAccounts()) {
+			accnames.add(buildMinAccount(acc));
+		}
+		return accnames;
+	}
+
 	public final List<String> getApps() {
 		ArrayList<String> accnames = new ArrayList<String>();
 		ApplicationList applications = spbd.getTenant().getApplications();
@@ -648,6 +697,50 @@ public class Storm2Model {
 			accnames.add(application.getName());
 		}
 		return accnames;
+	}
+
+	public Map<String, List<String>> getAppsMap() {
+		Map<String, List<String>> appsMap = new HashMap<String, List<String>>();
+		ApplicationList applications = spbd.getTenant().getApplications();
+		for (Application application : applications) {
+			ArrayList<String> grps = new ArrayList<String>();
+			for (Group grp : application.getGroups()) {
+				grps.add(grp.getName());
+			}
+			appsMap.put(application.getName(), grps);
+		}
+
+		return appsMap;
+	}
+
+	public Map<String, List<String>> getDirsMap() {
+		Map<String, List<String>> dirsMap = new HashMap<String, List<String>>();
+		DirectoryList directories = spbd.getTenant().getDirectories();
+		for (Directory directory : directories) {
+			ArrayList<String> grps = new ArrayList<String>();
+			for (Group grp : directory.getGroups()) {
+				grps.add(grp.getName());
+			}
+			dirsMap.put(directory.getName(), grps);
+		}
+
+		return dirsMap;
+	}
+
+	public boolean appExists(String appnameIn) {
+		ApplicationList applications = spbd.getTenant()
+				.getApplications(
+						Applications.where(Applications.name().eqIgnoreCase(
+								appnameIn)));
+
+		return applications.iterator().hasNext();
+
+	}
+
+	public boolean dirExists(String dirnameIn) {
+		DirectoryList directories = spbd.getTenant().getDirectories(
+				Directories.where(Directories.name().eqIgnoreCase(dirnameIn)));
+		return directories.iterator().hasNext();
 	}
 
 }

@@ -2,6 +2,7 @@ package org.ihtsdo.otf.security;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.OtfAccountMin;
@@ -51,6 +52,8 @@ public interface UserSecurityModel {
 
 	OtfSettings getSettings();
 
+	void resetSettings();
+
 	// Should be just the member name or object....
 	OtfGroup getMemberByName(final String accNameIn);
 
@@ -94,6 +97,8 @@ public interface UserSecurityModel {
 
 	void setUsersApp(String usersAppIn);
 
+	void setUsersToken(String userNameIn, String tokenIn);
+
 	// From model
 	boolean appExists(String appname);
 
@@ -106,5 +111,13 @@ public interface UserSecurityModel {
 	OtfApplication getAppById(String idIn);
 
 	OtfDirectory getDirById(String idIn);
+
+	Map<String, List<String>> getAppsMap();
+
+	Map<String, List<String>> getDirsMap();
+
+	Map<String, OtfAccount> getAllAccounts();
+
+	void resetAllAccounts();
 
 }

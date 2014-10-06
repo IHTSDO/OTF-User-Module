@@ -92,8 +92,7 @@ public abstract class OtfCustomFieldCachedVals extends OtfCustomFieldModel {
 	}
 
 	public final List<String> getAppNames() {
-		List<String> names = new ArrayList<String>();
-		names.addAll(getAppsMap().keySet());
+		List<String> names = OtfCachedListsDTO.getAppNamesList();
 		Collections.sort(names);
 		return names;
 

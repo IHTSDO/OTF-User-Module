@@ -195,23 +195,7 @@ public abstract class AbstractUserSecurityHandler implements
 			return NAME_NOT_SET;
 		}
 
-		// if (parentIn == null) {
-		// Collection<String> dirnames = getUserSecurityModel().getModel()
-		// .getDirNamesForUser(accIn.getName());
-		// if (!dirnames.isEmpty()) {
-		// if (dirnames.size() > 1) {
-		// LOG.severe("MORE THAN 1 directory found for user called "
-		// + accIn.getName() + " num dirs = "
-		// + dirnames.size());
-		// }
-		// // get the user using the 1st...there should only be one.....
 		String parentIn = accIn.getParentDir();
-		// }
-
-		// if (!isNew) {
-		// parentIn = getUserSecurityModel()
-		// .getDirNameForUser(accIn.getName());
-		// }
 
 		if (!stringOK(parentIn)) {
 			// use the std one in settings.
@@ -330,7 +314,7 @@ public abstract class AbstractUserSecurityHandler implements
 
 	@Override
 	public void postbuildUserSecurity() {
-
+		LOG.info("postbuildUserSecurity called");
 		// See if there is a User Dir
 		String userDir = getUserSecurityModel().getUsersApp();
 		boolean userDirFound = false;
@@ -385,5 +369,6 @@ public abstract class AbstractUserSecurityHandler implements
 				addExistDirToApp(udir, existApp, true, false, 0);
 			}
 		}
+		LOG.info("leaving postbuildUserSecurity");
 	}
 }

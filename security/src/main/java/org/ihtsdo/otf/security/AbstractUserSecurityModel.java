@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.OtfAccountMin;
+import org.ihtsdo.otf.security.dto.OtfCachedListsDTO;
 import org.ihtsdo.otf.security.dto.OtfCustomField;
 import org.ihtsdo.otf.security.dto.OtfDirectory;
 import org.ihtsdo.otf.security.dto.OtfGroup;
@@ -125,7 +126,6 @@ public abstract class AbstractUserSecurityModel implements UserSecurityModel {
 	@Override
 	public List<String> getAppsNotAdmin() {
 		List<String> appsNotAdminList = new ArrayList<String>();
-
 		Collection<String> all = getApps();
 		if (all != null && !all.isEmpty()) {
 			String users = getUsersApp();
@@ -149,6 +149,7 @@ public abstract class AbstractUserSecurityModel implements UserSecurityModel {
 			}
 
 		}
+		OtfCachedListsDTO.setAppsNotAdminList(appsNotAdminList);
 		return appsNotAdminList;
 	}
 
@@ -217,24 +218,38 @@ public abstract class AbstractUserSecurityModel implements UserSecurityModel {
 					UserSecurity.SETTINGS);
 			setgrp.setParentDirName(UserSecurity.SETTINGS);
 			OtfSettings settings = new OtfSettings(setgrp);
-			getModel().setDefaultpw(settings.getDefPw());
 
+			getModel().setDefaultpw(settings.getDefPw());
+			getModel().getDefaultpw();
+			OtfCachedListsDTO.setSettings(settings);
+			LOG.info("Get settings defpw set to " + getModel().getDefaultpw());
 			return settings;
 		}
 		return null;
 	}
 
 	@Override
+	public final void resetSettings() {
+		OtfCachedListsDTO.remSettings();
+		getSettings();
+	}
+
+	@Override
 	public List<String> getMembers() {
-		List<String> members = new ArrayList<String>();
-		OtfDirectory mDirectory = getMembersDir();
-		if (mDirectory != null) {
-			// getAll groups within
-			for (OtfGroup grp : mDirectory.getGroups().getGroups().values()) {
-				members.add(grp.getName());
+		List<String> members = OtfCachedListsDTO.getMembersList();
+		if (members == null || members.size() == 0
+				|| OtfCachedListsDTO.updatecache()) {
+			members = new ArrayList<String>();
+			OtfDirectory mDirectory = getMembersDir();
+			if (mDirectory != null) {
+				// getAll groups within
+				for (OtfGroup grp : mDirectory.getGroups().getGroups().values()) {
+					members.add(grp.getName());
+				}
 			}
+			Collections.sort(members);
+			OtfCachedListsDTO.setMembersList(members);
 		}
-		Collections.sort(members);
 		return members;
 	}
 
@@ -273,6 +288,22 @@ public abstract class AbstractUserSecurityModel implements UserSecurityModel {
 			groups.add(grp);
 		}
 		return groups;
+	}
+
+	@Override
+	public final void resetAllAccounts() {
+		OtfCachedListsDTO.remAllAccountsMap();
+		getAllAccounts();
+	}
+
+	@Override
+	public final Collection<OtfAccount> getUsers() {
+		return getAllAccounts().values();
+	}
+
+	@Override
+	public final List<String> getUserNames() {
+		return new ArrayList<String>(getAllAccounts().keySet());
 	}
 
 }

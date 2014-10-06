@@ -105,11 +105,6 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 	}
 
 	@Override
-	public final Collection<OtfAccount> getUsers() {
-		return getAllAccounts().values();
-	}
-
-	@Override
 	public final List<String> getAdminUsers() {
 		List<String> adminUsers = OtfCachedListsDTO.getAdminUsersList();
 		if (adminUsers == null) {
@@ -194,6 +189,20 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 	}
 
 	@Override
+	public final List<String> getMembers() {
+		List<String> members = OtfCachedListsDTO.getMembersList();
+		if (members == null) {
+			members = super.getMembers();
+		}
+		return members;
+	}
+
+	public final void resetMembers() {
+		OtfCachedListsDTO.remMembersList();
+		getMembers();
+	}
+
+	@Override
 	public final OtfSettings getSettings() {
 		OtfSettings settings = OtfCachedListsDTO.getSettings();
 		if (settings == null) {
@@ -201,37 +210,8 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 			OtfDirectory setDirectory = getLocalModel().getDirs().getDirByName(
 					UserSecurity.SETTINGS);
 			settings = getSettings(setDirectory);
-			OtfCachedListsDTO.setSettings(settings);
 		}
 		return settings;
-	}
-
-	public final void setSettings(final OtfSettings settingsIn) {
-		OtfCachedListsDTO.setSettings(settingsIn);
-	}
-
-	public final void resetSettings() {
-		OtfCachedListsDTO.remSettings();
-		getSettings();
-	}
-
-	@Override
-	public final List<String> getMembers() {
-		List<String> members = OtfCachedListsDTO.getMembersList();
-		if (members == null) {
-			members = super.getMembers();
-			setMembers(members);
-		}
-		return members;
-	}
-
-	public final void setMembers(final List<String> membersIn) {
-		OtfCachedListsDTO.setMembersList(membersIn);
-	}
-
-	public final void resetMembers() {
-		OtfCachedListsDTO.remMembersList();
-		getMembers();
 	}
 
 	@Override
@@ -249,6 +229,18 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 		return null;
 	}
 
+	@Override
+	public final List<String> getApps() {
+		List<String> apps = OtfCachedListsDTO.getAppNamesList();
+		if (apps == null || apps.size() == 0) {
+			apps = new ArrayList<String>(getAppsMap().keySet());
+			OtfCachedListsDTO.setAppNamesList(apps);
+		}
+
+		return apps;
+	}
+
+	@Override
 	public final Map<String, List<String>> getAppsMap() {
 		Map<String, List<String>> appsMap = OtfCachedListsDTO.getAppsMap();
 		if (appsMap == null || appsMap.size() == 0) {
@@ -287,6 +279,7 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 		getAppsMap();
 	}
 
+	@Override
 	public final Map<String, List<String>> getDirsMap() {
 		Map<String, List<String>> dirsMap = OtfCachedListsDTO.getDirsMap();
 		if (dirsMap == null || dirsMap.isEmpty()) {
@@ -377,13 +370,8 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 		List<String> appsNotAdmin = OtfCachedListsDTO.getAppsNotAdminList();
 		if (appsNotAdmin == null || appsNotAdmin.isEmpty()) {
 			appsNotAdmin = super.getAppsNotAdmin();
-			setAppsNotAdmin(appsNotAdmin);
 		}
 		return appsNotAdmin;
-	}
-
-	public final void setAppsNotAdmin(final List<String> appsNotMembersOrUsersIn) {
-		OtfCachedListsDTO.setAppsNotAdminList(appsNotMembersOrUsersIn);
 	}
 
 	public final void resetAppsNotMembersOrUsers() {
@@ -392,15 +380,6 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 	}
 
 	@Override
-	public final List<String> getUserNames() {
-		return new ArrayList<String>(getAllAccounts().keySet());
-	}
-
-	@Override
-	public final List<String> getApps() {
-		return new ArrayList<String>(getAppsMap().keySet());
-	}
-
 	public final Map<String, OtfAccount> getAllAccounts() {
 		Map<String, OtfAccount> allAccounts = OtfCachedListsDTO
 				.getAllAccountsMap();
@@ -422,11 +401,6 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 
 	public final void setAllAccounts(final Map<String, OtfAccount> allAccountsIn) {
 		OtfCachedListsDTO.setAllAccountsMap(allAccountsIn);
-	}
-
-	public final void resetAllAccounts() {
-		OtfCachedListsDTO.remAllAccountsMap();
-		getAllAccounts();
 	}
 
 	@Override
@@ -470,6 +444,16 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 	@Override
 	public final OtfDirectory getDirById(final String idIn) {
 		return getModel().getDirs().getDirById(idIn);
+	}
+
+	@Override
+	public final void setUsersToken(final String userNameIn,
+			final String tokenIn) {
+		OtfAccount oacc2 = getUserAccountByName(userNameIn);
+		if (oacc2 != null) {
+			oacc2.setAuthToken(tokenIn);
+		}
+
 	}
 
 }

@@ -68,6 +68,8 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 	private String savePath = null;
 	private Boolean canSave = null;
 
+	public static final String NO_PERM = "NO_Admin_Edit_Perm";
+
 	@Override
 	public void init(final ServletConfig config) throws ServletException {
 
@@ -156,6 +158,12 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 		String token = (String) request.getSession().getAttribute(
 				WebStatics.AUTH_TOKEN);
 
+		// if un & tok OK & set in the Session assume OK
+
+		if (stringOK(uname) && stringOK(token)) {
+			return uname;
+		}
+
 		// Get the UN + pw strings
 		if (!stringOK(uname)) {
 			uname = getNamedParam(WebStatics.USERNAME, request);
@@ -174,6 +182,13 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 	private String authUser(final String uname, String password,
 			final String tokenIn, final HttpServletRequest request) {
 		if (stringOK(uname)) {
+			// First see if user is admin
+			Boolean perm = getUsh().getUserSecurityModel().getAdminUsers()
+					.contains(uname);
+			if (!perm) {
+				return NO_PERM;
+			}
+
 			OtfAccount oacc = getUsh().authAccount(uname, password, tokenIn);
 			if (oacc != null) {
 				String token = oacc.getAuthToken();
@@ -182,11 +197,7 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 					oacc.setAuthToken(token);
 				}
 
-				OtfAccount oacc2 = getUsh().getUserSecurityModel()
-						.getUserAccountByName(uname);
-				if (oacc2 != null) {
-					oacc2.setAuthToken(token);
-				}
+				getUsh().getUserSecurityModel().setUsersToken(uname, token);
 
 				request.getSession().setAttribute(WebStatics.USERNAME, uname);
 				request.getSession().setAttribute(WebStatics.AUTH_TOKEN, token);

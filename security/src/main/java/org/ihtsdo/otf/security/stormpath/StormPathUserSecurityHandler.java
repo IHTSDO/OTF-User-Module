@@ -38,7 +38,7 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 
 	private Properties props;
 
-	private boolean cacheModel = true;
+	private boolean cacheModel = false;
 
 	private Storm2Model storm2Mod;
 	private Model2Storm mod2Storm;
@@ -107,7 +107,7 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 			spbd.load();
 		}
 		// Make sure settings inited by called defpw
-		getUserSecurityModel().getSettings().getDefPw();
+		LOG.info("DefPw = " + getUserSecurityModel().getSettings().getDefPw());
 		getMod2Storm().sendToStormPath(getUserSecurityModel().getModel());
 	}
 
@@ -202,6 +202,11 @@ public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 
 		if (isNewIn) {
 			getMod2Storm().buildAccount(accIn, null, mdir);
+			if (getMod2Storm().getErrors().size() > 0) {
+				for (Exception ex : getMod2Storm().getErrors()) {
+					LOG.log(Level.SEVERE, "SP Error", ex);
+				}
+			}
 			if (parentDirNameIn != null) {
 				OtfDirectory parentIn = getUserSecurityModel().getDirByName(
 						parentDirNameIn);

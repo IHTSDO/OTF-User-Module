@@ -1,12 +1,16 @@
 package org.ihtsdo.otf.security.stormpath;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.AbstractUserSecurityModel;
 import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.OtfApplication;
+import org.ihtsdo.otf.security.dto.OtfCachedListsDTO;
 import org.ihtsdo.otf.security.dto.OtfDirectory;
 import org.ihtsdo.otf.security.dto.OtfGroup;
 import org.ihtsdo.otf.security.dto.OtfSettings;
@@ -54,13 +58,11 @@ public class StormpathUserSecurityModel extends AbstractUserSecurityModel {
 
 	@Override
 	public final UserSecurity getFullModel() {
-
 		return getModel();
 	}
 
 	@Override
 	public void buildFullModel() {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -85,11 +87,6 @@ public class StormpathUserSecurityModel extends AbstractUserSecurityModel {
 	}
 
 	@Override
-	public final Collection<OtfAccount> getUsers() {
-		return getStorm2Mod().getOtfAccounts();
-	}
-
-	@Override
 	public final OtfDirectory getMembersDir() {
 		return getStorm2Mod().getOtfDirByName(getMembersApp());
 	}
@@ -101,12 +98,18 @@ public class StormpathUserSecurityModel extends AbstractUserSecurityModel {
 
 	@Override
 	public final OtfSettings getSettings() {
-		OtfDirectory setDir = getStorm2Mod().getOtfDirByName(
-				UserSecurity.SETTINGS);
-		if (setDir != null) {
-			return getSettings(setDir);
+
+		OtfSettings settings = OtfCachedListsDTO.getSettings();
+		if (settings == null) {
+			OtfDirectory setDir = getStorm2Mod().getOtfDirByName(
+					UserSecurity.SETTINGS);
+			if (setDir != null) {
+				settings = getSettings(setDir);
+				OtfCachedListsDTO.setSettings(settings);
+				return settings;
+			}
 		}
-		return null;
+		return settings;
 	}
 
 	@Override
@@ -141,13 +144,11 @@ public class StormpathUserSecurityModel extends AbstractUserSecurityModel {
 	}
 
 	@Override
-	public final List<String> getUserNames() {
-		return getStorm2Mod().getUserNames();
-	}
-
-	@Override
 	public final List<String> getApps() {
-		return getStorm2Mod().getApps();
+		// List<String> apps = getStorm2Mod().getApps();
+		List<String> apps = new ArrayList<String>(getAppsMap().keySet());
+		OtfCachedListsDTO.setAppNamesList(apps);
+		return apps;
 	}
 
 	public final StormPathBaseDTO getSpbd() {
@@ -166,41 +167,91 @@ public class StormpathUserSecurityModel extends AbstractUserSecurityModel {
 	}
 
 	@Override
-	public OtfApplication getAppbyName(String appNameIn) {
+	public final OtfApplication getAppbyName(final String appNameIn) {
 		return getStorm2Mod().getOtfAppbyName(appNameIn);
 	}
 
 	@Override
-	public boolean appExists(String appnameIn) {
-		// TODO Auto-generated method stub
-		return false;
+	public final boolean appExists(final String appnameIn) {
+		return getStorm2Mod().appExists(appnameIn);
 	}
 
 	@Override
-	public boolean dirExists(String appnameIn) {
-		// TODO Auto-generated method stub
-		return false;
+	public final boolean dirExists(final String dirnameIn) {
+		return getStorm2Mod().dirExists(dirnameIn);
 	}
 
 	@Override
-	public Collection<OtfApplication> getOtfApps() {
-		// TODO Auto-generated method stub
-		return null;
+	public final Collection<OtfApplication> getOtfApps() {
+		return getStorm2Mod().getOtfApps();
 	}
 
 	@Override
-	public Collection<OtfDirectory> getOtfDirs() {
-		// TODO Auto-generated method stub
-		return null;
+	public final Collection<OtfDirectory> getOtfDirs() {
+		return getStorm2Mod().getOtfDirList();
 	}
 
 	@Override
-	public OtfApplication getAppById(final String idIn) {
-		return getModel().getApps().getAppById(idIn);
+	public final OtfApplication getAppById(final String idIn) {
+		return getStorm2Mod().buildApp(idIn);
 	}
 
 	@Override
-	public OtfDirectory getDirById(final String idIn) {
-		return getModel().getDirs().getDirById(idIn);
+	public final OtfDirectory getDirById(final String idIn) {
+		return getStorm2Mod().buildDirectory(idIn);
+	}
+
+	@Override
+	public final Map<String, List<String>> getAppsMap() {
+
+		Map<String, List<String>> appsMap = OtfCachedListsDTO.getAppsMap();
+		if (appsMap == null || appsMap.size() == 0
+				|| OtfCachedListsDTO.updatecache()) {
+			appsMap = getStorm2Mod().getAppsMap();
+
+			// add user admin even if only dir
+			String useradminapp = getAdminApp();
+
+			if (!appsMap.containsKey(useradminapp)) {
+				if (getDirsMap().containsKey(useradminapp)) {
+					appsMap.put(useradminapp, getDirsMap().get(useradminapp));
+				}
+			}
+
+			OtfCachedListsDTO.setAppsMap(appsMap);
+		}
+		return appsMap;
+	}
+
+	@Override
+	public final Map<String, List<String>> getDirsMap() {
+		Map<String, List<String>> dirsMap = OtfCachedListsDTO.getDirsMap();
+		if (dirsMap == null || dirsMap.size() == 0
+				|| OtfCachedListsDTO.updatecache()) {
+			dirsMap = getStorm2Mod().getDirsMap();
+			OtfCachedListsDTO.setDirsMap(dirsMap);
+		}
+		return dirsMap;
+	}
+
+	@Override
+	public void setUsersToken(String userNameIn, String tokenIn) {
+		// Don't do anything as everything is remote.
+
+	}
+
+	@Override
+	public final Map<String, OtfAccount> getAllAccounts() {
+		Map<String, OtfAccount> allAccounts = OtfCachedListsDTO
+				.getAllAccountsMap();
+		if (allAccounts == null || allAccounts.size() == 0
+				|| OtfCachedListsDTO.updatecache()) {
+			allAccounts = new HashMap<String, OtfAccount>();
+			for (OtfAccount oacc : getStorm2Mod().getOtfAccounts()) {
+				allAccounts.put(oacc.getName(), oacc);
+			}
+			OtfCachedListsDTO.setAllAccountsMap(allAccounts);
+		}
+		return allAccounts;
 	}
 }

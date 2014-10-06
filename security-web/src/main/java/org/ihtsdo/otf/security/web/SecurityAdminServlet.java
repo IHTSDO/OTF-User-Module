@@ -50,6 +50,8 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 
 	private String treetype;
 
+	private final String curUser = "";
+
 	@Override
 	protected void handlePostRequest(HttpServletRequest requestIn,
 			HttpServletResponse responseIn) throws ServletException,
@@ -171,7 +173,6 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			reqd.forward(requestIn, responseIn);
 			return;
 		}
-
 		boolean userok = checkCred(requestIn, responseIn);
 		if (userok) {
 			if (decPath.startsWith(WebStatics.NEW_FORM_URL)) {
@@ -198,21 +199,6 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			HttpServletResponse responseIn) throws IOException,
 			ServletException {
 		String usern = authUser(requestIn);
-		if (usern != null) {
-			// check perm - is the uname in the list of admin users
-			Boolean perm = getUsh().getUserSecurityModel().getAdminUsers()
-					.contains(usern);
-			// if not perm send to sorry page
-			if (!perm) {
-				requestIn.getSession().removeAttribute(WebStatics.USERNAME);
-				requestIn.getSession().removeAttribute(WebStatics.AUTH_TOKEN);
-				setRedirect("/NoAdmin.jsp");
-				final RequestDispatcher reqd = sc.getServletContext()
-						.getRequestDispatcher(redirect);
-				reqd.forward(requestIn, responseIn);
-				return false;
-			}
-		}
 		if (usern == null) {
 			setRedirect("/login.jsp");
 			final RequestDispatcher reqd = sc.getServletContext()
@@ -221,6 +207,15 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			return false;
 		}
 
+		if (usern.equals(NO_PERM)) {
+			requestIn.getSession().removeAttribute(WebStatics.USERNAME);
+			requestIn.getSession().removeAttribute(WebStatics.AUTH_TOKEN);
+			setRedirect("/NoAdmin.jsp");
+			final RequestDispatcher reqd = sc.getServletContext()
+					.getRequestDispatcher(redirect);
+			reqd.forward(requestIn, responseIn);
+			return false;
+		}
 		return true;
 
 	}
@@ -231,20 +226,19 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		String curl = getContextUrl(requestIn);
 		OtfCachedListsDTO.setAdminServletContextUrl(curl);
 		hr.getSession().setAttribute(WebStatics.BASEURL, curl);
+		hr.getSession().setAttribute(WebStatics.TREE, getTreeHtml(curl));
 		boolean loadObw = false;
 		if (obw != null) {
 			if (obw instanceof OtfBaseId) {
 				OtfBaseId obi = (OtfBaseId) obw;
 				loadObw = obi.isNew() && !obw.getErrors().isEmpty();
 			}
-
 		}
 		if (loadObw) {
 			hr.getSession().setAttribute(WebStatics.FORM, obw.getRHS());
 		} else {
 			hr.getSession().setAttribute(WebStatics.FORM, getForm());
 		}
-		hr.getSession().setAttribute(WebStatics.TREE, getTreeHtml(curl));
 		setRedirect("/index-admin.jsp");
 		final RequestDispatcher reqd = sc.getServletContext()
 				.getRequestDispatcher(redirect);
@@ -258,15 +252,22 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 	}
 
 	public final List<String> getApps() {
-		List<String> users = getUsh().getUserSecurityModel().getApps();
-		Collections.sort(users);
-		return users;
+		// List<String> users = getUsh().getUserSecurityModel().getApps();
+		List<String> apps = getUsh().getUserSecurityModel().getAppsNotAdmin();
+		Collections.sort(apps);
+		return apps;
 	}
 
 	public final List<String> getMembers() {
-		List<String> users = getUsh().getUserSecurityModel().getMembers();
-		Collections.sort(users);
-		return users;
+		List<String> members = getUsh().getUserSecurityModel().getMembers();
+		Collections.sort(members);
+		return members;
+	}
+
+	public final OtfSettings getSettings() {
+		// get dirs map for use in validation
+		getUsh().getUserSecurityModel().getDirsMap();
+		return getUsh().getUserSecurityModel().getSettings();
 	}
 
 	public final String getMembersTreeHtml(final String path) {
@@ -274,16 +275,17 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 	}
 
 	public final String getUsersTreeHtml(final String path) {
+		// get info needed for validation/drop downs
+		getUsh().getUserSecurityModel().getAppsMap();
+		getUsh().getUserSecurityModel().getDirsMap();
+		getUsh().getUserSecurityModel().getAppsNotAdmin();
+		getMembers();
+
 		return getList("Users", path + SecurityService.USERS, getUsers());
 	}
 
 	public final String getAppsTreeHtml(final String path) {
-		return getList("Applications", path + SecurityService.APPS, getUsh()
-				.getUserSecurityModel().getAppsNotAdmin());
-	}
-
-	public final OtfSettings getSettings() {
-		return getUsh().getUserSecurityModel().getSettings();
+		return getList("Applications", path + SecurityService.APPS, getApps());
 	}
 
 	public final String getList(String title, String baseUrl, List<String> vals) {
@@ -381,7 +383,9 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 	}
 
 	public final String getTreeHtml(final String path) {
-		if (isLoadTree()) {
+
+		boolean loadTree = isLoadTree();
+		if (loadTree) {
 			switch (getTreetype()) {
 			case SecurityService.MEMBERS:
 				treeHtml = getMembersTreeHtml(path);
@@ -516,8 +520,8 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 
 		member.setAction(getDecString(getHr().getRequestURI()));
 		member.setGrptype(OtfGroup.TYPE_MEMBER);
-		member.setParentDirName(getUsh().getUserSecurityModel().getMembersDir()
-				.getName());
+		member.setParentDirName(getUsh().getUserSecurityModel().getSettings()
+				.getMembers());
 		return member.getRHS();
 	}
 

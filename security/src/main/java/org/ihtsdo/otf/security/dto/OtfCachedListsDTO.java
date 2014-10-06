@@ -16,6 +16,7 @@ public class OtfCachedListsDTO {
 	public static final String SETTINGS = "Settings";
 	public static final String MEMBERS_LIST = "Members_List";
 	public static final String ACCOUNTS_LIST = "Accounts_List";
+	public static final String APP_NAMES = "App_Names";
 	public static final String APPS_NOT_ADMIN = "AppNotAdmin_List";
 
 	public static final String APPS_WITH_ACCOUNTS = "AppWithAcc_List";
@@ -25,6 +26,10 @@ public class OtfCachedListsDTO {
 	public static final String ADMINUSERS_LIST = "AdminUsers_List";
 
 	public static final String ADMIN_CONTEXT_URL = "OtfAdminServletContextUrl";
+
+	private static long lastmod = -1;
+	/** 5 minutes ttl **/
+	private static long ttl = 300000;
 
 	public static final void setSettings(OtfSettings settingsIn) {
 		ObjectCache.INSTANCE.put(SETTINGS, settingsIn);
@@ -37,6 +42,20 @@ public class OtfCachedListsDTO {
 
 	public static final void remSettings() {
 		ObjectCache.INSTANCE.remove(SETTINGS);
+	}
+
+	public static final List<String> getAppNamesList() {
+		@SuppressWarnings("unchecked")
+		List<String> list = (List<String>) ObjectCache.INSTANCE.get(APP_NAMES);
+		return list;
+	}
+
+	public static final void setAppNamesList(List<String> membersIn) {
+		ObjectCache.INSTANCE.put(APP_NAMES, membersIn);
+	}
+
+	public static final void remAppNamesList() {
+		ObjectCache.INSTANCE.remove(APP_NAMES);
 	}
 
 	public static final List<String> getMembersList() {
@@ -77,7 +96,7 @@ public class OtfCachedListsDTO {
 	}
 
 	public static final void setAllAccountsMap(
-			Map<String, OtfAccount> allAccountsIn) {
+			final Map<String, OtfAccount> allAccountsIn) {
 		ObjectCache.INSTANCE.put(ACCOUNTS_LIST, allAccountsIn);
 	}
 
@@ -142,6 +161,25 @@ public class OtfCachedListsDTO {
 
 	public static final void remAdminServletContextUrl() {
 		ObjectCache.INSTANCE.remove(ADMIN_CONTEXT_URL);
+	}
+
+	public static final long getLastmod() {
+		return lastmod;
+	}
+
+	public static final void setLastmod(long lastmodIn) {
+		lastmod = lastmodIn;
+	}
+
+	public static boolean updatecache() {
+		long now = System.currentTimeMillis();
+		if ((lastmod + ttl) > now) {
+			return false;
+		} else {
+			setLastmod(now);
+			return true;
+		}
+
 	}
 
 }

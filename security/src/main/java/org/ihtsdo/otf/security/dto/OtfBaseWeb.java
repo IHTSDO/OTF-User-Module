@@ -105,8 +105,8 @@ public abstract class OtfBaseWeb {
 	@JsonIgnore
 	public abstract String getTableTitle();
 
-	public static final String getRepeatingSubForms(String title,
-			Collection<? extends OtfBaseWeb> items) {
+	public static final String getRepeatingSubForms(final String title,
+			final Collection<? extends OtfBaseWeb> items) {
 		StringBuilder sbuild = new StringBuilder();
 		// getTableSubview
 		for (OtfBaseWeb obw : items) {
@@ -126,7 +126,7 @@ public abstract class OtfBaseWeb {
 		}
 	}
 
-	public static final String getErrorsDiv(List<String> errors) {
+	public static final String getErrorsDiv(final List<String> errors) {
 		StringBuilder sbuild = new StringBuilder();
 
 		sbuild.append(HTML_DIV_ERRORS);
@@ -137,8 +137,8 @@ public abstract class OtfBaseWeb {
 		return sbuild.toString();
 	}
 
-	public static final String getTableSubview(String leftContent,
-			String rightContent) {
+	public static final String getTableSubview(final String leftContent,
+			final String rightContent) {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append(HTML_DIV_CONTAINER).append(HTML_DIV_ROW)
 				.append(HTML_DIV_COL_LEFT);
@@ -149,14 +149,14 @@ public abstract class OtfBaseWeb {
 		return sbuild.toString();
 	}
 
-	public static final String getSubForm(String content) {
+	public static final String getSubForm(final String content) {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append(HTML_SUB_FORM_TITLE).append(content)
 				.append(HTML_SUB_FORM_TITLE_CLOSE);
 		return sbuild.toString();
 	}
 
-	public static final String getForm(String content) {
+	public static final String getForm(final String content) {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append(HTML_FORM_TITLE).append(content)
 				.append(HTML_FORM_TITLE_CLOSE);
@@ -164,7 +164,7 @@ public abstract class OtfBaseWeb {
 	}
 
 	@JsonIgnore
-	protected String getHtmlForm(String formName) {
+	protected String getHtmlForm(final String formName) {
 		// clear rows
 		clearRows();
 		// get rows
@@ -182,7 +182,8 @@ public abstract class OtfBaseWeb {
 	}
 
 	@JsonIgnore
-	protected String getHtmlForm(String formName, String htmlToAppend) {
+	protected String getHtmlForm(final String formName,
+			final String htmlToAppend) {
 		// clear rows
 		clearRows();
 		// get rows
@@ -209,16 +210,16 @@ public abstract class OtfBaseWeb {
 	}
 
 	@JsonIgnore
-	public final String getSubFormHead(String title) {
+	public final String getSubFormHead(final String title) {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append(getSubForm(title));
 		return sbuild.toString();
 	}
 
-	public final String getHtmlForm(String action, String inputKey,
-			String content, String formName) {
+	public final String getHtmlForm(final String actionIn,
+			final String inputKey, final String content, final String formName) {
 		StringBuilder sbuild = new StringBuilder();
-		sbuild.append(getHtmlFormHead(formName, action)).append("\n");
+		sbuild.append(getHtmlFormHead(formName, actionIn)).append("\n");
 		sbuild.append(getHtmlInputHidden(INPUT_KEY_NAME, inputKey))
 				.append("\n");
 		sbuild.append(content).append("\n");
@@ -226,7 +227,7 @@ public abstract class OtfBaseWeb {
 		return getFormDiv(sbuild.toString());
 	}
 
-	public final String getFormDiv(String html) {
+	public final String getFormDiv(final String html) {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append(HTML_FORM_DIV_HEAD);
 		sbuild.append(html);
@@ -235,7 +236,7 @@ public abstract class OtfBaseWeb {
 
 	}
 
-	public final String getHiddenDiv(String html, String id) {
+	public final String getHiddenDiv(final String html, final String id) {
 		StringBuilder sbuild = new StringBuilder();
 
 		sbuild.append(replaceJspValue(HTML_DIV_HIDDEN, id));
@@ -246,7 +247,7 @@ public abstract class OtfBaseWeb {
 	}
 
 	public final String getHtmlTable(final String thead,
-			Collection<String> rows, boolean addSubmit) {
+			final Collection<String> rows, final boolean addSubmit) {
 		StringBuilder sbuild = new StringBuilder();
 		for (String row : rows) {
 			sbuild.append(row).append("\n");
@@ -255,7 +256,7 @@ public abstract class OtfBaseWeb {
 	}
 
 	public final String getHtmlTable(final String thead, final String rows,
-			boolean addSubmit) {
+			final boolean addSubmit) {
 		StringBuilder sbuild = new StringBuilder();
 		if (thead != null && thead.length() > 0) {
 			sbuild.append(getHtmlDiv(thead, CSS_TABLE_HEAD)).append("\n");
@@ -267,7 +268,7 @@ public abstract class OtfBaseWeb {
 		return getHtmlDiv(sbuild.toString(), CSS_TABLE);
 	}
 
-	public final String getHtmlRow(Collection<String> cells) {
+	public final String getHtmlRow(final Collection<String> cells) {
 		StringBuilder sbuild = new StringBuilder();
 		for (String cell : cells) {
 			sbuild.append(cell).append("\n");
@@ -275,18 +276,18 @@ public abstract class OtfBaseWeb {
 		return getHtmlDiv(sbuild.toString(), CSS_TABLE_ROW);
 	}
 
-	public final String getHtmlRow(String label, String value) {
+	public final String getHtmlRow(final String label, final String value) {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append(getHtmlLabelCell(label)).append("\n");
 		sbuild.append(getHtmlInputCell(value)).append("\n");
 		return getHtmlDiv(sbuild.toString(), CSS_TABLE_ROW);
 	}
 
-	public final String getHtmlRow(String value) {
+	public final String getHtmlRow(final String value) {
 		return getHtmlDiv(value, CSS_TABLE_ROW);
 	}
 
-	public final String getHtmlRowSubmit(String value) {
+	public final String getHtmlRowSubmit(final String value) {
 
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append(getHtmlDiv("", CSS_TABLE_CELL_LABEL));
@@ -294,30 +295,31 @@ public abstract class OtfBaseWeb {
 		return getHtmlDiv(sbuild.toString(), CSS_TABLE_ROW);
 	}
 
-	public final String getHtmlRowPlainText(String label, String value) {
+	public final String getHtmlRowPlainText(final String label,
+			final String value) {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append(getHtmlLabelCell(label)).append("\n");
 		sbuild.append(getHtmlInputCell(value)).append("\n");
 		return getHtmlDiv(sbuild.toString(), CSS_TABLE_ROW);
 	}
 
-	public final String getHtmlRowTextInput(String label, String value,
-			List<String> errors) {
+	public final String getHtmlRowTextInput(final String label,
+			final String value, final List<String> errorsIn) {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append(getHtmlLabelCell(label)).append("\n");
 		String inputT = getHtmlInputText(label, value);
-		if (errors != null && !errors.isEmpty()) {
+		if (errorsIn != null && !errorsIn.isEmpty()) {
 			LOG.info("errors found for label " + label);
 			inputT = inputT.replace(CSS_TEXT_INPUT, CSS_TEXT_INPUT_ERROR);
-			inputT = inputT + "\n" + getErrorsDiv(errors);
+			inputT = inputT + "\n" + getErrorsDiv(errorsIn);
 			LOG.info("inputT = " + inputT);
 		}
 		sbuild.append(getHtmlInputCell(inputT)).append("\n");
 		return getHtmlDiv(sbuild.toString(), CSS_TABLE_ROW);
 	}
 
-	public final String getHtmlRowTextArea(String label, String value,
-			String name) {
+	public final String getHtmlRowTextArea(final String label,
+			final String value, final String name) {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append(getHtmlLabelCell(label)).append("\n");
 		sbuild.append(getHtmlInputCell(getHtmlInputTextArea(value, name)))
@@ -325,8 +327,9 @@ public abstract class OtfBaseWeb {
 		return getHtmlDiv(sbuild.toString(), CSS_TABLE_ROW);
 	}
 
-	public final String getHtmlRowOptions(String label, List<String> vals,
-			String selval, String name, String onclickJS, String id) {
+	public final String getHtmlRowOptions(final String label,
+			final List<String> vals, final String selval, final String name,
+			final String onclickJS, final String id) {
 		StringBuilder sbuild = new StringBuilder();
 		if (stringOK(label)) {
 			sbuild.append(getHtmlLabelCell(label)).append("\n");
@@ -337,8 +340,9 @@ public abstract class OtfBaseWeb {
 		return getHtmlDiv(sbuild.toString(), CSS_TABLE_ROW);
 	}
 
-	public final String getHtmlOptions(List<String> vals, String selval,
-			String name, String onclickJS, String id) {
+	public final String getHtmlOptions(final List<String> vals,
+			final String selval, final String name, final String onclickJS,
+			final String id) {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append("<select class=\"").append(CSS_SELECT)
 				.append("\" name=\"").append(name).append("\"");
@@ -357,7 +361,7 @@ public abstract class OtfBaseWeb {
 		return sbuild.toString();
 	}
 
-	public final String getHtmlOption(String val, String selval) {
+	public final String getHtmlOption(final String val, final String selval) {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append("<option");
 		if (val.equals(selval)) {
@@ -407,66 +411,69 @@ public abstract class OtfBaseWeb {
 		return replaceJspValue(HTML_INPUT_SUBMIT, value);
 	}
 
-	public final String getHtmlDiv(String content, String cssClass) {
+	public final String getHtmlDiv(final String content, final String cssClass) {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append("<div class=\"").append(cssClass).append("\">");
 		sbuild.append(content).append("</div>");
 		return sbuild.toString();
 	}
 
-	public final String getHtmlAddRowBtn(String btnTitle, String onClickAction) {
+	public final String getHtmlAddRowBtn(final String btnTitle,
+			final String onClickAction) {
 		return replaceJspTitleValue(HTML_ADD_ROW_BTN, onClickAction, btnTitle);
 	}
 
-	public final String getJavaScriptAddRow(String formID, String getUrl) {
+	public final String getJavaScriptAddRow(final String formID,
+			final String getUrl) {
 		return replaceJspTitleValue(JS_ADD_ROW_AJAX, getUrl, formID);
 	}
 
-	public final String getNewCfModelElement(OtfCustomFieldModel cfm,
-			String cssClass) {
+	public final String getNewCfModelElement(final OtfCustomFieldModel cfm,
+			final String cssClass) {
 		return getHtmlRemBtnAction(getCDTable(cfm.getLabelValuesMap()),
 				cssClass);
 
 	}
 
-	public final String getHtmlRemBtnAction(String content, String cssClass) {
+	public final String getHtmlRemBtnAction(final String content,
+			final String cssClass) {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append(content);
 		sbuild.append(HTML_REM_PARENT_BTN);
 		return getHtmlDiv(sbuild.toString(), cssClass);
 	}
 
-	public final String replaceJspTitleValue(String in, String replVal,
-			String replTitle) {
+	public final String replaceJspTitleValue(final String in,
+			final String replVal, final String replTitle) {
 		String val = replaceJspValue(in, replVal);
 		return replaceJspTitle(val, replTitle);
 	}
 
-	public final String replaceJspTitleId(String in, String replId,
-			String replTitle) {
+	public final String replaceJspTitleId(final String in, final String replId,
+			final String replTitle) {
 		String val = replaceJspId(in, replId);
 		return replaceJspTitle(val, replTitle);
 	}
 
-	public final String replaceJspTitleValueId(String in, String replVal,
-			String replTitle, String replId) {
+	public final String replaceJspTitleValueId(final String in,
+			final String replVal, final String replTitle, final String replId) {
 		String val = replaceJspTitleValue(in, replVal, replTitle);
 		return replaceJspId(val, replId);
 	}
 
-	public final String replaceJspValue(String in, String replVal) {
+	public final String replaceJspValue(final String in, final String replVal) {
 		return replaceStr(JSP_VALUE, replVal, in);
 	}
 
-	public final String replaceJspTitle(String in, String replVal) {
+	public final String replaceJspTitle(final String in, final String replVal) {
 		return replaceStr(JSP_TITLE, replVal, in);
 	}
 
-	public final String replaceJspId(String in, String replVal) {
+	public final String replaceJspId(final String in, final String replVal) {
 		return replaceStr(JSP_ID, replVal, in);
 	}
 
-	public final String getCDTable(Map<String, String> rowsMap) {
+	public final String getCDTable(final Map<String, String> rowsMap) {
 		List<String> rows = new ArrayList<String>();
 		for (String key : rowsMap.keySet()) {
 			String content = rowsMap.get(key);
@@ -483,7 +490,7 @@ public abstract class OtfBaseWeb {
 		return source;
 	}
 
-	public final String getAposText(String initT) {
+	public final String getAposText(final String initT) {
 		return new StringBuilder().append("\"").append(initT).append("\"")
 				.toString();
 	}
@@ -502,7 +509,7 @@ public abstract class OtfBaseWeb {
 		return tableRows;
 	}
 
-	public final void setTableRows(LinkedHashSet<String> rowsIn) {
+	public final void setTableRows(final LinkedHashSet<String> rowsIn) {
 		tableRows = rowsIn;
 	}
 
@@ -510,7 +517,7 @@ public abstract class OtfBaseWeb {
 		return params;
 	}
 
-	public final void setParams(Map<String, String> paramsIn) {
+	public final void setParams(final Map<String, String> paramsIn) {
 		params = paramsIn;
 	}
 
@@ -521,7 +528,7 @@ public abstract class OtfBaseWeb {
 		return hiddenRows;
 	}
 
-	public final void setHiddenRows(Map<String, String> hiddenRowsIn) {
+	public final void setHiddenRows(final Map<String, String> hiddenRowsIn) {
 		hiddenRows = hiddenRowsIn;
 	}
 
@@ -532,7 +539,7 @@ public abstract class OtfBaseWeb {
 		return action;
 	}
 
-	public final void setAction(String actionIn) {
+	public final void setAction(final String actionIn) {
 		action = actionIn;
 	}
 
@@ -548,7 +555,7 @@ public abstract class OtfBaseWeb {
 		return errors;
 	}
 
-	public final void setErrors(Map<String, List<String>> errorsIn) {
+	public final void setErrors(final Map<String, List<String>> errorsIn) {
 		errors = errorsIn;
 	}
 
@@ -568,7 +575,7 @@ public abstract class OtfBaseWeb {
 		errors = new HashMap<String, List<String>>();
 	}
 
-	public final void addError(String webName, String errormessage) {
+	public final void addError(final String webName, final String errormessage) {
 		List<String> erWn = errors.get(webName);
 		if (erWn == null) {
 			erWn = new ArrayList<String>();
@@ -577,22 +584,24 @@ public abstract class OtfBaseWeb {
 		errors.put(webName, erWn);
 	}
 
-	public void checkWebFieldNotEmpty(String toCheck, String webName) {
+	public final void checkWebFieldNotEmpty(final String toCheck,
+			final String webName) {
 		if (!stringOK(toCheck)) {
 			addError(webName, "Can't be empty");
 		}
 	}
 
-	public void checkWebFieldInList(String toCheck, String webName,
-			List<String> vals, boolean inList, String err_msg) {
+	public final void checkWebFieldInList(final String toCheck,
+			final String webName, final Collection<String> vals,
+			final boolean inList, final String errMsg) {
 		boolean listContains = vals.contains(toCheck);
 		boolean err = (listContains != inList);
 		if (err) {
-			addError(webName, err_msg);
+			addError(webName, errMsg);
 		}
 	}
 
-	public final String getNotNullParam(String pname) {
+	public final String getNotNullParam(final String pname) {
 
 		String val = getParams().get(pname);
 		if (stringOK(val)) {
