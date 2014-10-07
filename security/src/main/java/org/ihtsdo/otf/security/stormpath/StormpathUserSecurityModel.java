@@ -46,6 +46,8 @@ public class StormpathUserSecurityModel extends AbstractUserSecurityModel {
 	@Override
 	public final void reset() {
 		spbd.resetTenant();
+		setStorm2Mod(null);
+		getStorm2Mod();
 	}
 
 	@Override
@@ -207,6 +209,7 @@ public class StormpathUserSecurityModel extends AbstractUserSecurityModel {
 		Map<String, List<String>> appsMap = OtfCachedListsDTO.getAppsMap();
 		if (appsMap == null || appsMap.size() == 0
 				|| OtfCachedListsDTO.updatecache()) {
+			reset();
 			appsMap = getStorm2Mod().getAppsMap();
 
 			// add user admin even if only dir
@@ -228,6 +231,7 @@ public class StormpathUserSecurityModel extends AbstractUserSecurityModel {
 		Map<String, List<String>> dirsMap = OtfCachedListsDTO.getDirsMap();
 		if (dirsMap == null || dirsMap.size() == 0
 				|| OtfCachedListsDTO.updatecache()) {
+			reset();
 			dirsMap = getStorm2Mod().getDirsMap();
 			OtfCachedListsDTO.setDirsMap(dirsMap);
 		}
@@ -244,8 +248,10 @@ public class StormpathUserSecurityModel extends AbstractUserSecurityModel {
 	public final Map<String, OtfAccount> getAllAccounts() {
 		Map<String, OtfAccount> allAccounts = OtfCachedListsDTO
 				.getAllAccountsMap();
+
 		if (allAccounts == null || allAccounts.size() == 0
 				|| OtfCachedListsDTO.updatecache()) {
+			reset();
 			allAccounts = new HashMap<String, OtfAccount>();
 			for (OtfAccount oacc : getStorm2Mod().getOtfAccounts()) {
 				allAccounts.put(oacc.getName(), oacc);

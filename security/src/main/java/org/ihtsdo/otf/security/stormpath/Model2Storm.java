@@ -309,6 +309,7 @@ public class Model2Storm {
 					}
 
 					acc.setPassword(defPw);
+					// LOG.info("acc pw set to: " + defPw);
 					if (!oacc.getCustData().getCustFields().isEmpty()) {
 						CustomData cd = acc.getCustomData();
 						buildCustomData(oacc.getCustData().getCustFields(), cd);
