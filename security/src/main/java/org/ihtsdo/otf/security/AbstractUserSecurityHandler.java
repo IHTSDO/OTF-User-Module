@@ -180,6 +180,12 @@ public abstract class AbstractUserSecurityHandler implements
 			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 		getUserSecurityModel().getModel();
+
+		// reload cached values
+		getUserSecurityModel().resetSettings();
+		getUserSecurityModel().resetAllAccounts();
+		getUserSecurityModel().resetAppsMap();
+		getUserSecurityModel().resetMembers();
 	}
 
 	@Override
@@ -315,6 +321,7 @@ public abstract class AbstractUserSecurityHandler implements
 	@Override
 	public void postbuildUserSecurity() {
 		boolean isInited = getUserSecurityModel().getSettings().isinited();
+		LOG.info("The Model is initialized");
 		if (!isInited) {
 			// See if there is a User Dir
 			String userDir = getUserSecurityModel().getUsersApp();
