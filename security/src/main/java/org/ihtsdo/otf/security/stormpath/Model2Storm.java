@@ -3,6 +3,7 @@ package org.ihtsdo.otf.security.stormpath;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.dto.OtfAccount;
@@ -230,6 +231,7 @@ public class Model2Storm {
 				}
 			}
 		} catch (ResourceException re) {
+			LOG.log(Level.SEVERE, "Problem updating group", re);
 			getErrors().add(re);
 		}
 
@@ -332,6 +334,7 @@ public class Model2Storm {
 				}
 			}
 		} catch (ResourceException re) {
+			LOG.log(Level.SEVERE, "Problem building account", re);
 			getErrors().add(re);
 		}
 
@@ -339,7 +342,6 @@ public class Model2Storm {
 
 	private void buildCustomData(final Map<String, OtfCustomField> custFields,
 			final CustomData customData) {
-
 		setErrors(null);
 		try {
 			if (custFields != null && customData != null) {
@@ -360,6 +362,7 @@ public class Model2Storm {
 				}
 			}
 		} catch (ResourceException re) {
+			LOG.log(Level.SEVERE, "Problem building custom data", re);
 			getErrors().add(re);
 		}
 	}

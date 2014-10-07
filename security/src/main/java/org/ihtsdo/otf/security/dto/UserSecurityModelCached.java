@@ -197,11 +197,6 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 		return members;
 	}
 
-	public final void resetMembers() {
-		OtfCachedListsDTO.remMembersList();
-		getMembers();
-	}
-
 	@Override
 	public final OtfSettings getSettings() {
 		OtfSettings settings = OtfCachedListsDTO.getSettings();
@@ -272,11 +267,6 @@ public class UserSecurityModelCached extends AbstractUserSecurityModel {
 
 	public final void setAppsMap(final Map<String, List<String>> appsMap) {
 		OtfCachedListsDTO.setAppsMap(appsMap);
-	}
-
-	public final void resetAppsMap() {
-		OtfCachedListsDTO.remAppsMap();
-		getAppsMap();
 	}
 
 	@Override

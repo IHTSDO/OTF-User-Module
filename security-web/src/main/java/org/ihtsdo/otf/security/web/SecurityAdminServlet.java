@@ -128,24 +128,34 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			OtfAccount otfObj = (OtfAccount) webObject;
 			String retval = getUsh().addUpdateAccount(otfObj);
 			getUsh().getUserSecurityModel().getModel().reset();
+			// update list of users
+			getUsh().getUserSecurityModel().resetAllAccounts();
+
 			return retval;
 		}
 		if (webObject instanceof OtfApplication) {
 			OtfApplication otfObj = (OtfApplication) webObject;
 			String retval = getUsh().addUpdateApp(otfObj);
 			getUsh().getUserSecurityModel().getModel().reset();
+			// update list of apps
+			getUsh().getUserSecurityModel().resetAppsMap();
 			return retval;
 		}
 		if (webObject instanceof OtfDirectory) {
 			OtfDirectory otfObj = (OtfDirectory) webObject;
 			String retval = getUsh().addUpdateDir(otfObj);
 			getUsh().getUserSecurityModel().getModel().reset();
+			// update list of apps
+
 			return retval;
 		}
 		if (webObject instanceof OtfGroup) {
 			OtfGroup otfObj = (OtfGroup) webObject;
 			String retval = getUsh().addUpdateGroup(otfObj);
 			getUsh().getUserSecurityModel().getModel().reset();
+			// update members
+			getUsh().getUserSecurityModel().resetMembers();
+
 			return retval;
 		} else {
 			return AbstractUserSecurityHandler.REMOTE_COMMIT_NOT_OK;

@@ -222,7 +222,8 @@ public abstract class AbstractUserSecurityModel implements UserSecurityModel {
 			getModel().setDefaultpw(settings.getDefPw());
 			getModel().getDefaultpw();
 			OtfCachedListsDTO.setSettings(settings);
-			LOG.info("Get settings defpw set to " + getModel().getDefaultpw());
+			// LOG.info("Get settings defpw set to " +
+			// getModel().getDefaultpw());
 			return settings;
 		}
 		return null;
@@ -294,6 +295,16 @@ public abstract class AbstractUserSecurityModel implements UserSecurityModel {
 	public final void resetAllAccounts() {
 		OtfCachedListsDTO.remAllAccountsMap();
 		getAllAccounts();
+	}
+
+	public final void resetAppsMap() {
+		OtfCachedListsDTO.remAppsMap();
+		getAppsMap();
+	}
+
+	public final void resetMembers() {
+		OtfCachedListsDTO.remMembersList();
+		getMembers();
 	}
 
 	@Override

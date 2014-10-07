@@ -120,4 +120,8 @@ public interface UserSecurityModel {
 
 	void resetAllAccounts();
 
+	void resetAppsMap();
+
+	void resetMembers();
+
 }

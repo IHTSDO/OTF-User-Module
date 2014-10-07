@@ -314,61 +314,67 @@ public abstract class AbstractUserSecurityHandler implements
 
 	@Override
 	public void postbuildUserSecurity() {
-		LOG.info("postbuildUserSecurity called");
-		// See if there is a User Dir
-		String userDir = getUserSecurityModel().getUsersApp();
-		boolean userDirFound = false;
-		OtfDirectory udir = getUserSecurityModel().getDirByName(userDir);
-		// if no User Dir create it
-		if (udir == null) {
-			udir = new OtfDirectory();
-			udir.setName(userDir);
-			addUpdateDir(udir);
-		}
-
-		List<String> apps = getUserSecurityModel().getApps();
-
-		for (String appname : apps) {
-			List<String> appDirs = getUserSecurityModel().getDirsByAppName(
-					appname);
-			if (appDirs.contains(userDir)) {
-				userDirFound = true;
-				break;
+		boolean isInited = getUserSecurityModel().getSettings().isinited();
+		if (!isInited) {
+			// See if there is a User Dir
+			String userDir = getUserSecurityModel().getUsersApp();
+			boolean userDirFound = false;
+			OtfDirectory udir = getUserSecurityModel().getDirByName(userDir);
+			// if no User Dir create it
+			if (udir == null) {
+				udir = new OtfDirectory();
+				udir.setName(userDir);
+				addUpdateDir(udir);
 			}
 
-		}
-		// if user dir not part of an app then get an app
-		if (!userDirFound) {
-			OtfApplication existApp = null;
-			// if users app exists add it to that
-			if (apps.contains(userDir)) {
-				existApp = getUserSecurityModel().getAppbyName(userDir);
+			List<String> apps = getUserSecurityModel().getApps();
+
+			for (String appname : apps) {
+				List<String> appDirs = getUserSecurityModel().getDirsByAppName(
+						appname);
+				if (appDirs.contains(userDir)) {
+					userDirFound = true;
+					break;
+				}
+
 			}
+			// if user dir not part of an app then get an app
+			if (!userDirFound) {
+				OtfApplication existApp = null;
+				// if users app exists add it to that
+				if (apps.contains(userDir)) {
+					existApp = getUserSecurityModel().getAppbyName(userDir);
+				}
 
-			if (existApp == null) {
+				if (existApp == null) {
 
-				List<String> adminapps = new ArrayList<String>();
-				adminapps.add(getUserSecurityModel().getMembersApp());
-				adminapps.add(getUserSecurityModel().getAdminApp());
-				adminapps.add(getUserSecurityModel().getHandlerAdmin()
-						.getAppName());
+					List<String> adminapps = new ArrayList<String>();
+					adminapps.add(getUserSecurityModel().getMembersApp());
+					adminapps.add(getUserSecurityModel().getAdminApp());
+					adminapps.add(getUserSecurityModel().getHandlerAdmin()
+							.getAppName());
 
-				// get the first not AdminHandler App
-				for (String appname : apps) {
-					if (!adminapps.contains(appname)) {
-						existApp = getUserSecurityModel().getAppbyName(appname);
-						break;
+					// get the first not AdminHandler App
+					for (String appname : apps) {
+						if (!adminapps.contains(appname)) {
+							existApp = getUserSecurityModel().getAppbyName(
+									appname);
+							break;
+						}
 					}
 				}
-			}
 
-			if (existApp != null) {
-				// add the dir to it.
-				existApp.getAccountStores().put(udir.getName(), udir);
-				// update
-				addExistDirToApp(udir, existApp, true, false, 0);
+				if (existApp != null) {
+					// add the dir to it.
+					existApp.getAccountStores().put(udir.getName(), udir);
+					// update
+					addExistDirToApp(udir, existApp, true, false, 0);
+				}
 			}
+			// Then update settings setting inited to true
+			getUserSecurityModel().getSettings().setInited("true");
+			getUserSecurityModel().getSettings().updateSettings();
+			addUpdateGroup(getUserSecurityModel().getSettings().getGrp());
 		}
-		LOG.info("leaving postbuildUserSecurity");
 	}
 }
