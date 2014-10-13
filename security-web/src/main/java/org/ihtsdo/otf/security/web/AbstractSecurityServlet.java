@@ -72,7 +72,7 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 	@Override
 	public void init(final ServletConfig config) throws ServletException {
-
+		LOG.info("Servelet Initializing");
 		try {
 			initParameters(config);
 			getSecServ();
