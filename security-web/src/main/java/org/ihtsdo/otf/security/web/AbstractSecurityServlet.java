@@ -253,10 +253,12 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 	protected final String getDecString(String toDec) {
 		String dec = null;
-		try {
-			dec = URLDecoder.decode(toDec, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			dec = toDec.replaceAll("%20", "");
+		if (toDec != null) {
+			try {
+				dec = URLDecoder.decode(toDec, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				dec = toDec.replaceAll("%20", "");
+			}
 		}
 		return dec;
 	}

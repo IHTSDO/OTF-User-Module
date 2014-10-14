@@ -465,19 +465,28 @@ public class Storm2Model {
 			String pwIn, final String tokenIn) {
 		if (stringOK(acNameIn)) {
 			// see if the pw is a token
-			if (stringOK(tokenIn)) {
+			String tok = tokenIn;
+			String pw = pwIn;
+			if (!stringOK(tok)) {
+				tok = pwIn;
+			}
+			if (!stringOK(pw)) {
+				pw = tokenIn;
+			}
+			if (stringOK(tok)) {
 				Account accTok = getAccountByUsername(acNameIn);
 				if (accTok != null) {
 					OtfAccount oacc = getAcKeys(accTok);
-					if (oacc.checkAuthToken(tokenIn)) {
+					if (oacc.checkAuthToken(tok)) {
 						return oacc;
 					}
 				}
 			}
-			if (stringOK(pwIn)) {
-				Account acc = authSPAccount(acNameIn, pwIn);
+			if (stringOK(pw)) {
+				Account acc = authSPAccount(acNameIn, pw);
 				// The moment pwIn finshed with set to null
 				pwIn = null;
+				pw = null;
 				return getResetAcKeys(acc);
 			}
 		}
