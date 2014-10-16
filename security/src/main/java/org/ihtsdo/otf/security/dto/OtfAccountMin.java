@@ -27,12 +27,6 @@ public class OtfAccountMin extends OtfBaseName {
 	private boolean auth;
 	private List<String> authTokens = new ArrayList<String>();
 
-	private final long expirytime = -1;
-	// 16 hours
-	private static final long TTL = 57600000;
-	// 5 minutes
-	// private static final long TTL = 300000;
-
 	public static final String EMAIL_NAME = "Email:";
 	public static final String GIVEN_NAME = "Given Name:";
 	public static final String MID_NAME = "Middle Name:";
@@ -218,7 +212,7 @@ public class OtfAccountMin extends OtfBaseName {
 
 	@Override
 	@JsonIgnore
-	public String getHtmlForm(String formName) {
+	public String getHtmlForm(final String formName) {
 		return super.getHtmlForm(formName);
 	}
 
@@ -230,11 +224,11 @@ public class OtfAccountMin extends OtfBaseName {
 		return authTokens;
 	}
 
-	public final void setAuthTokens(List<String> authTokensIn) {
+	public final void setAuthTokens(final List<String> authTokensIn) {
 		authTokens = authTokensIn;
 	}
 
-	public final void addAuthToken(String authTokenIn) {
+	public final void addAuthToken(final String authTokenIn) {
 		getAuthTokens().add(authTokenIn);
 	}
 
@@ -244,19 +238,10 @@ public class OtfAccountMin extends OtfBaseName {
 
 	@JsonIgnore
 	public final String getAuthToken() {
-		// Temporary until Oauth etc.
-		// Check expired
-		// if (isExpired()) {
-		// authToken = "";
-		// setNewExpiryTime();
-		// }
-		// if (!stringOK(authToken)) {
-		// authToken = UuidConverter.format(UUID.randomUUID());
-		// }
 		return authToken;
 	}
 
-	public final void setAuthToken(String authTokenIn) {
+	public final void setAuthToken(final String authTokenIn) {
 		authToken = authTokenIn;
 		addAuthToken(authTokenIn);
 	}
@@ -264,8 +249,9 @@ public class OtfAccountMin extends OtfBaseName {
 	public final String getToken() {
 		if (isAuth()) {
 			return getAuthToken();
-		} else
-			return "";
+		}
+		return "";
+
 	}
 
 	@JsonIgnore
@@ -273,41 +259,13 @@ public class OtfAccountMin extends OtfBaseName {
 		return auth;
 	}
 
-	public final void setAuth(boolean authIn) {
+	public final void setAuth(final boolean authIn) {
 		auth = authIn;
 	}
 
-	// @JsonIgnore
-	// public final long getExpirytime() {
-	// if (expirytime == -1) {
-	// setNewExpiryTime();
-	// }
-	// return expirytime;
-	// }
-	//
-	// public final void setExpiryTtl(long expirytimeIn) {
-	// expirytime = expirytimeIn + TTL;
-	// }
-	//
-	// public final void setExpirytime(long expirytimeIn) {
-	// expirytime = expirytimeIn;
-	// }
-	//
-	// private void setNewExpiryTime() {
-	// setExpiryTtl(System.currentTimeMillis());
-	// }
-
-	// @JsonIgnore
-	// private boolean isExpired() {
-	// if (getExpirytime() > System.currentTimeMillis()) {
-	// return false;
-	// }
-	// return true;
-	// }
-
 	@JsonIgnore
-	public boolean checkAuthToken(final String token) {
-		if (getAuthTokens().contains(authToken)) {
+	public final boolean checkAuthToken(final String token) {
+		if (getAuthTokens().contains(token)) {
 			setAuth(true);
 			getAuthToken();
 			return true;

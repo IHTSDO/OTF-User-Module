@@ -464,6 +464,12 @@ public class Storm2Model {
 	public final OtfAccount authAccountLocal(final String acNameIn,
 			String pwIn, final String tokenIn) {
 		if (stringOK(acNameIn)) {
+			// first see if un exists
+			Account accTok = getAccountByUsername(acNameIn);
+			if (accTok == null) {
+				return null;
+			}
+
 			// see if the pw is a token
 			String tok = tokenIn;
 			String pw = pwIn;
@@ -474,7 +480,7 @@ public class Storm2Model {
 				pw = tokenIn;
 			}
 			if (stringOK(tok)) {
-				Account accTok = getAccountByUsername(acNameIn);
+				// Account accTok = getAccountByUsername(acNameIn);
 				if (accTok != null) {
 					OtfAccount oacc = getAcKeys(accTok);
 					if (oacc.checkAuthToken(tok)) {
@@ -484,9 +490,12 @@ public class Storm2Model {
 			}
 			if (stringOK(pw)) {
 				Account acc = authSPAccount(acNameIn, pw);
-				// The moment pwIn finshed with set to null
+				// The moment pwIn finished with set to null
 				pwIn = null;
 				pw = null;
+				if (acc == null) {
+					return null;
+				}
 				return getResetAcKeys(acc);
 			}
 		}
@@ -495,10 +504,11 @@ public class Storm2Model {
 
 	public final Account authSPAccount(final String acName, final String pw) {
 		// Create an authentication request using the credentials
-		AuthenticationRequest request = new UsernamePasswordRequest(acName, pw);
+		AuthenticationRequest<?, ?> request = new UsernamePasswordRequest(
+				acName, pw);
 		Application userApp = getUsersApplication(acName);
 		if (userApp == null) {
-			LOG.severe("Auth error: User " + acName + " not found. ");
+			// LOG.severe("Auth error: User " + acName + " not found. ");
 			return null;
 		}
 		// Now let's authenticate the account with the application:
