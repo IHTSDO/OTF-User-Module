@@ -1,0 +1,44 @@
+/**************************/
+/* -- Basic HTML Rules -- */
+/**************************/
+/* - stop gap if only inline element in block level container - */
+img,object,embed{border:none;}
+html,body,div,pre,form,table,fieldset,h1,h2,h3,h4,h5,h6,dl,hr,p,blockquote{margin:0;padding:0;}
+a img,:link img,:visited img,fieldset{border:none; color:#FFFFFF;}
+a, a:focus {outline: none;}
+
+/* - uniform styles - */
+h1,h2,h3,h4,h5,h6,pre,code,input,textarea,select{font-size:1em;}
+
+/* -- General Styles -- */
+/* - give default font style - */
+p input, p textarea, li input, p label {font-size: 100%;}
+th dt, td dt, th dd, td dd, th li, td li, li li, dt dt, dt dd, dd dt, dd dd, legend legend{font-size:100%;}
+h1,h2,h3,h4,h5,h6,p,ul,dl,ol,pre{padding-bottom:1em;}
+/* - table - */
+table {border-collapse:collapse;}
+td, th {vertical-align:top; text-align: left;}
+
+/* -- contain -- */
+.contain:after{content:".";display:block;clear:both;visibility:hidden;height:0;}
+.contain{display:inline-table;}
+* html .contain{/* nomac \*/height:1%;/* nomac */}
+.contain{display:block;}
+
+/* -- clear -- */
+.clear {clear: both;}
+.clearLeft {clear: left;}
+.clearRight {clear: right;}
+
+/* -- Page Wrap -- */
+body {text-align:left;}
+body #pageWrap {text-align:left; margin:0 auto;}
+
+/* -- Allows accessible code without changing the visual design -- */
+label.access, .access, hr.access {background-color: inherit; color: #ffffff; position: absolute; overflow: hidden; border: none; left: -10999px; width: 990px; height: 0px;}
+
+/* -- Standard Floating Functions --*/
+.floatLeft {float: left;}
+
+.floatRight {float: right;}
+

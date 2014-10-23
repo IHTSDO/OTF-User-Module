@@ -1,0 +1,56 @@
+/* Customer Google Search Customization */
+
+.gsc-result-info {
+    text-align: left;
+    color: #999;
+    font-size: 12px;
+    padding-left: 8px;
+    margin: 10px 0 10px 0;
+}
+.gs-title {
+//    font-family: "Museo300", Arial, Helvetica, sans-serif !important;
+    height:25px !important;
+    margin-left:0px !important;
+    padding-bottom:8 px !important;
+}
+
+.gsc-url-top .gsc-thumbnail-inside {
+    padding-left:0px !important;
+}
+
+.gs-result .gs-result .gs-title *{
+    text-decoration: none;
+//    font-family: "Museo300", Arial, Helvetica, sans-serif;
+}
+.gs-result a.gs-visibleUrl, .gs-result .gs-visibleUrl {
+    color: #0052FF;
+    text-decoration: none;
+}
+.gs-result .gs-snippet {
+//    font: 12px "Museo300", Geneva, sans-serif;
+}
+.gsc-results .gsc-cursor-box .gsc-cursor-page {
+    cursor: pointer;
+    color: #07AD00;
+    text-decoration: none;
+    margin-right: 5px;
+    display: inline;
+    border: 1px solid #DDD;
+    padding: 2px 5px 2px 5px;
+}
+
+.gsc-table-result {
+    border-collapse:    initial !important;
+}
+
+table.gsc-search-box td {
+  vertical-align : top !important;
+}
+
+.gsc-control-cse {
+    padding-top: 0px  !important;
+    padding-bottom: 0px  !important;
+    border-color: #E8F5F8 !important;
+    background-color: #E8F5F8 !important;
+    height:30px !important;
+}
