@@ -4,7 +4,7 @@
 # web.xml and it's config file
 
 # e.g.
-# UserSecurityHandler=StormPathUserSecurity
+# UserSecurityHandler=StormPathUserSecurityHandler
 # StormPathUserSecurity.keyPath=/opt/api/apiKey.properties
 
 # UserSecurityHandler
@@ -15,8 +15,10 @@ UserSecurityHandler=StormPathUserSecurity
 XmlUserSecurity.configFile=D:/Data/git/OTF-User-Module/security/TextFiles/Example.xml
 
 # StormPath Security Handler
-StormPathUserSecurity.keyPath=C:/Users/adamf/stormpath/apiKey.properties
+#StormPathUserSecurity.keyPath=C:/Users/adamf/stormpath/apiKey.properties
 #StormPathUserSecurity.keyPath=C:/Users/adamf/stormpath/apiKeyDev.properties
+StormPathUserSecurity.keyPath=C:/Users/adamf/stormpath/youthfulMusket.properties
+#StormPathUserSecurity.keyPath=C:/Users/adamf/stormpath/wise-atom.properties
 #StormPathUserSecurity.keyPath=/opt/api/apiKey.properties
 
 # Where/What file you want any save actions to be written to.

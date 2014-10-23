@@ -61,9 +61,9 @@
 </customData>
 </account>
 <account email="brenda.henley@comcast.net" givenName="Brenda" idref="c9d01c9a-ad97-4c07-a006-225c7a320f46" middleName="" name="bhe" status="ENABLED" surname="Henley"/>
-<account email="bob@test.com" givenName="Bob" idref="f2b17e70-54c1-4fd1-8c7f-3c70de9e3b24" middleName="" name="Bob" status="ENABLED" surname="Bobbin">
+<account email="bob@test.com" givenName="Bob" idref="f2b17e70-54c1-4fd1-8c7f-3c70de9e3b24" middleName="the" name="Bob" status="ENABLED" surname="Bobbin">
 <customData>
-<customField key="3645e9a1-f257-405b-8439-a9c787043b5b" value="CD_TYPE_APP:Release:Manager:UK"/>
+<customField key="3645e9a1-f257-405b-8439-a9c787043b5b" value="CD_TYPE_APP:Release:Manager:DK"/>
 <customField key="903fdfe9-c8ef-4e2c-b39f-9b5d710386e7" value="CD_TYPE_APP:User Admin:Admin:*"/>
 <customField key="e08dc86a-0996-4859-8e9c-2fdb13b7ff3a" value="CD_TYPE_MEMBER:INTL"/>
 <customField key="ed28c2ce-6e7c-4678-b2f8-da4773d46b24" value="CD_TYPE_MEMBER:UK"/>
@@ -113,17 +113,14 @@
 </directory>
 </directories>
 <applications>
+<application idref="" name="Test" status="ENABLED">
+<accountStore idref="" name="Test Directory" status="ENABLED" type="dir"/>
+</application>
 <application idref="" name="Editor" status="ENABLED">
 <accountStore idref="" name="Editor Directory" status="ENABLED" type="dir"/>
 </application>
 <application idref="" name="Mapping" status="ENABLED">
 <accountStore idref="" name="Mapping Directory" status="ENABLED" type="dir"/>
-</application>
-<application description="Members Application" idref="" name="Members" status="ENABLED">
-<accountStore idref="" name="Members" status="ENABLED" type="dir"/>
-</application>
-<application description="Users Application" idref="" name="OTF Users" status="ENABLED">
-<accountStore idref="" name="OTF Users" status="ENABLED" type="dir"/>
 </application>
 <application idref="" name="Refset" status="ENABLED">
 <accountStore idref="" name="Refset Directory" status="ENABLED" type="dir"/>
@@ -131,8 +128,17 @@
 <application idref="" name="Release" status="ENABLED">
 <accountStore idref="" name="Release" status="ENABLED" type="dir"/>
 </application>
-<application description="User Administration" idref="d4975a40-eac8-4191-a09e-06ba33938bdb" name="User Admin" status="ENABLED">
-<accountStore idref="d0cddc74-7738-4951-b485-7c90d23bb796" name="User Admin" status="ENABLED" type="dir"/>
+
+
+
+<!--  <application description="Members Application" idref="" name="Members" status="ENABLED">
+<accountStore idref="" name="Members" status="ENABLED" type="dir"/>
 </application>
+<application description="Users Application" idref="" name="OTF Users" status="ENABLED">
+<accountStore idref="" name="OTF Users" status="ENABLED" type="dir"/>
+</application> 
+<application description="User Administration" idref="d4975a40-eac8-4191-a09e-06ba33938bdb" name="User Admin" status="ENABLED">
+<accountStore idref="d0cddc74-7738-4951-b485-7c90d23bb796" name="User Admin" status="ENABLED" type="dir"/> 
+</application> -->
 </applications>
 </userSecurity>
