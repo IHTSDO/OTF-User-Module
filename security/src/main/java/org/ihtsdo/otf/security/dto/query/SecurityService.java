@@ -243,10 +243,12 @@ public class SecurityService {
 	}
 
 	public final String getJSonFromObject(final Object obj) {
-		try {
-			return mapper.writeValueAsString(obj);
-		} catch (IOException e) {
-			LOG.log(Level.SEVERE, "Problem getting JSON from Object", e);
+		if (obj != null) {
+			try {
+				return mapper.writeValueAsString(obj);
+			} catch (IOException e) {
+				LOG.log(Level.SEVERE, "Problem getting JSON from Object", e);
+			}
 		}
 		return null;
 	}
