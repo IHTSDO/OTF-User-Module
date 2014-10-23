@@ -12,7 +12,7 @@
 	display: table-cell;
 	width: 20%;
 	font-size: 18px;
-	color: darkblue;
+	color: 00a4e4;
 	font-weight: bold;
 }
 
@@ -142,7 +142,7 @@ h1.blue {
 	line-height: normal;
 	font-weight: bold;
 	background-color: #f0f0f0;
-	color: #003366;
+	color: #00a4e4;
 	border-bottom: 1px solid #3c78b5;
 	padding: 2px;
 	margin: 0px 0px 0px 0px;
@@ -153,12 +153,12 @@ h2.blue {
 	line-height: normal;
 	font-weight: bold;
 	background-color: #f0f0f0;
-	color: #003366;
+	color: #00a4e4;
 	border-bottom: 1px solid #3c78b5;
 	padding: 2px;
 	margin: 0px 0px 0px 0px;
 }
 
 .formDiv {
-	border: 2px solid lightgreen;
+	border: 2px solid #00a4e4;
 }

@@ -1,0 +1,139 @@
+<userSecurity>
+<directories>
+<directory idref="" name="Editor Directory" status="ENABLED">
+<groups>
+<group idref="e29462e2-d329-467f-930e-931cd5e3a45a" name="Admin" status="ENABLED"/>
+<group idref="3f429792-94d7-4c4e-a5b4-d5148dcde069" name="Editor" status="ENABLED"/>
+<group idref="b74213fe-ca0e-4238-bb9c-37d8393b99b0" name="Owner" status="ENABLED"/>
+<group idref="fd5dfe88-aa8b-4191-a711-5b8ab18c46e2" name="Reviewer" status="ENABLED"/>
+</groups>
+</directory>
+<directory idref="" name="Mapping Directory" status="ENABLED">
+<groups>
+<group description="The Administrator" idref="43c6c264-60e1-4443-a92d-d4e4615d4c2c" name="Admin" status="ENABLED">
+<customData>
+<customField key="49f8fffa-068b-43f3-a7fc-546a7ad413f3" value="CD_TYPE_PERM:cardinality:0"/>
+<customField key="54ac8d36-3360-47ed-985c-e775da5c6a6c" value="CD_TYPE_PERM:PNAME:PVAL"/>
+</customData>
+</group>
+<group description="The Reviewer" idref="94ec1c25-443d-4dc2-a551-44b84b4d0caf" name="Reviewer" status="ENABLED">
+<customData>
+<customField key="4abaff6f-188c-4f51-acfa-2a377340596f" value="CD_TYPE_PERM:cardinality:2"/>
+</customData>
+</group>
+<group description="The Specialist" idref="470773cb-c6af-41d6-97f2-49d012b2471d" name="Specialist" status="ENABLED">
+<customData>
+<customField key="0d546b2d-5939-43fa-9cc4-b6d9c60db1cd" value="CD_TYPE_PERM:cardinality:1"/>
+</customData>
+</group>
+</groups>
+</directory>
+<directory description="List of IHTSDO Members" idref="" name="Members" status="ENABLED">
+<groups>
+<group description="All - Used for when no member needed " idref="4e4b6517-edbf-475e-989d-d4cb3d65ce0d" name="*" status="ENABLED"/>
+<group idref="94dca3d2-67a8-4d18-9892-c7ffff3b92df" name="AUS" status="ENABLED"/>
+<group idref="6de7a17b-0547-4240-bf1f-c18ee841483c" name="DK" status="ENABLED"/>
+<group description="International Edition" idref="17b7b44f-2a4b-42ef-85fb-f4a36985c685" name="INTL" status="ENABLED"/>
+<group idref="a9f9aa97-2576-4e3b-b571-d941a67806fb" name="NZ" status="ENABLED"/>
+<group description="United Kingdom" idref="207608c0-2481-41b6-8fc6-f5e5869c31e8" name="UK" status="ENABLED"/>
+<group idref="c8457633-e6fc-40df-82c5-b3086c7cf035" name="US" status="ENABLED"/>
+</groups>
+</directory>
+<directory description="OTF User Mangement Settings" idref="" name="OTFSettings" status="ENABLED">
+<groups>
+<group description="Used to store OTF Settings " idref="774dfbd4-35a0-4902-9b07-96986d7c15d9" name="OTFSettings" status="ENABLED">
+<customData>
+<customField key="a44268c9-7039-4498-a92e-824fd636cea3" value="CD_TYPE_SETTING:admin:User Admin"/>
+<customField key="c0ec1ade-e19d-4a31-913b-39c6678690f4" value="CD_TYPE_SETTING:defaultpw:Sn0m3dDefPass"/>
+<customField key="08869379-ab6f-4480-ac88-c2ab808f421e" value="CD_TYPE_SETTING:members:Members"/>
+<customField key="8c2b9fff-3f88-4501-a432-e182a4bea985" value="CD_TYPE_SETTING:modDate:2014-06-06T15-53-23.589Z"/>
+<customField key="957f86db-6e0d-4dc6-8a91-098f1f67a940" value="CD_TYPE_SETTING:users:OTF Users"/>
+</customData>
+</group>
+</groups>
+</directory>
+<directory description="List of All OTF Users" idref="" name="OTF Users" status="ENABLED">
+<accounts>
+<account email="bcarlsen@westcoastinformatics.com" givenName="Brian" idref="396dbc98-e226-444d-a9ec-9953a83fd6a7" middleName="" name="bca" status="ENABLED" surname="Carlsen">
+<customData>
+<customField key="7969ff16-1b90-430f-a097-8bd83793a88e" value="CD_TYPE_APP:Mapping:Admin:*"/>
+<customField key="2eeada3b-08d4-451e-9f60-1866b3ff6399" value="CD_TYPE_APP:User Admin:Admin:*"/>
+</customData>
+</account>
+<account email="brenda.henley@comcast.net" givenName="Brenda" idref="c9d01c9a-ad97-4c07-a006-225c7a320f46" middleName="" name="bhe" status="ENABLED" surname="Henley"/>
+<account email="bob@test.com" givenName="Bob" idref="f2b17e70-54c1-4fd1-8c7f-3c70de9e3b24" middleName="" name="Bob" status="ENABLED" surname="Bobbin">
+<customData>
+<customField key="3645e9a1-f257-405b-8439-a9c787043b5b" value="CD_TYPE_APP:Release:Manager:UK"/>
+<customField key="903fdfe9-c8ef-4e2c-b39f-9b5d710386e7" value="CD_TYPE_APP:User Admin:Admin:*"/>
+<customField key="e08dc86a-0996-4859-8e9c-2fdb13b7ff3a" value="CD_TYPE_MEMBER:INTL"/>
+<customField key="ed28c2ce-6e7c-4678-b2f8-da4773d46b24" value="CD_TYPE_MEMBER:UK"/>
+</customData>
+</account>
+<account email="dmo@ihtsdo.org" givenName="Donna" idref="fecb6937-e7d6-4140-acb2-1e9cb8e72663" middleName="" name="dmo" status="ENABLED" surname="Morgan"/>
+<account email="dshapiro@westcoastinformatics.com" givenName="Deborah" idref="389cf264-548f-4aaa-8856-c19bc64963c3" middleName="" name="dsh" status="ENABLED" surname="Shapiro">
+<customData>
+<customField key="17c04958-8252-4ba4-8871-f2c8ebc3ef86" value="CD_TYPE_APP:Mapping:Admin:*"/>
+<customField key="dde972c5-7e5f-4380-8174-67519e691395" value="CD_TYPE_APP:User Admin:Admin:*"/>
+</customData>
+</account>
+<account email="graeme.miller@sydney.edu.au" givenName="Graeme" idref="4e0fc899-37a7-4799-bac7-c18f40b44dc2" middleName="" name="gmi" status="ENABLED" surname="Miller"/>
+<account email="julie.ohalloran@sydney.edu.au" givenName="Julie" idref="e8bde2b5-8834-483a-819e-9129cb516c6f" middleName="" name="joh" status="ENABLED" surname="O'Halloran"/>
+<account email="kgi@ihtsdo.org" givenName="Kathy" idref="7561f295-5ab7-443c-94bd-4d5cb606f7fd" middleName="" name="kgi" status="ENABLED" surname="Giannangelo"/>
+<account email="kli@ihtsdo.org" givenName="Krista" idref="b894b68b-c5ab-4ed5-a877-58ecf958b1c0" middleName="" name="kli" status="ENABLED" surname="Lilly"/>
+<account email="kellyread4@yahoo.com" givenName="Kelly" idref="e2c0a8b9-9543-49bf-8757-d7d99a371e4d" middleName="" name="kre" status="ENABLED" surname="Read"/>
+<account email="mappingadmin@westcoastinformatics.com" givenName="Mapping" idref="af6b32bc-5a6a-4192-b0cb-d095fdc20396" middleName="" name="map_adm" status="ENABLED" surname="Administrator"/>
+<account email="nin@ihtsdo.org" givenName="Nicola" idref="a2deb520-cbbc-4ef1-b1bd-8d14b4fe5cc2" middleName="" name="nin" status="ENABLED" surname="Ingram"/>
+<account email="pgranvold@westcoastinformatics.com" givenName="Patrick" idref="f51a0817-16ab-4ff7-9073-58399c0b7977" middleName="" name="pgr" status="ENABLED" surname="Granvold">
+<customData>
+<customField key="dd6a0b93-4fd3-4e3d-b437-5c10e17ebec4" value="CD_TYPE_APP:Mapping:Admin:*"/>
+<customField key="b27bd0fa-5828-4df3-9dcb-fdc9176f919e" value="CD_TYPE_APP:User Admin:Admin:*"/>
+</customData>
+</account>
+<account email="tri@ihtsdo.org" givenName="Theresa" idref="98ee9253-5613-4dc0-bd60-62f77b034543" middleName="" name="tri" status="ENABLED" surname="Rihanek"/>
+</accounts>
+</directory>
+<directory idref="" name="Refset Directory" status="ENABLED">
+<groups>
+<group idref="ffa3d724-271f-4735-bf81-186739960cca" name="Admin" status="ENABLED"/>
+<group idref="fe104125-e1e2-4e89-84f6-5c74162ec421" name="Editor" status="ENABLED"/>
+<group idref="10d5ba2c-b031-4d13-9227-85e4384fc07e" name="Journalist" status="ENABLED"/>
+<group idref="09293cfa-f4df-4feb-b650-b08ba811a406" name="Reader" status="ENABLED"/>
+</groups>
+</directory>
+<directory idref="" name="Release" status="ENABLED">
+<groups>
+<group idref="30e14e55-150a-47ea-aee4-94db309479fe" name="Admin" status="ENABLED"/>
+<group idref="55aafe0e-a779-40e4-bbfe-92dd1f59682c" name="Manager" status="ENABLED"/>
+<group idref="a98c8f56-b91f-4523-a3b4-3ac7ac6d8c4b" name="Reviewer" status="ENABLED"/>
+</groups>
+</directory>
+<directory description="Auto created Directory for User Admin" idref="d0cddc74-7738-4951-b485-7c90d23bb796" name="User Admin" status="ENABLED">
+<groups>
+<group idref="850b16c9-54bd-4b59-8822-301421d1539d" name="Admin" status="ENABLED"/>
+</groups>
+</directory>
+</directories>
+<applications>
+<application idref="" name="Editor" status="ENABLED">
+<accountStore idref="" name="Editor Directory" status="ENABLED" type="dir"/>
+</application>
+<application idref="" name="Mapping" status="ENABLED">
+<accountStore idref="" name="Mapping Directory" status="ENABLED" type="dir"/>
+</application>
+<application description="Members Application" idref="" name="Members" status="ENABLED">
+<accountStore idref="" name="Members" status="ENABLED" type="dir"/>
+</application>
+<application description="Users Application" idref="" name="OTF Users" status="ENABLED">
+<accountStore idref="" name="OTF Users" status="ENABLED" type="dir"/>
+</application>
+<application idref="" name="Refset" status="ENABLED">
+<accountStore idref="" name="Refset Directory" status="ENABLED" type="dir"/>
+</application>
+<application idref="" name="Release" status="ENABLED">
+<accountStore idref="" name="Release" status="ENABLED" type="dir"/>
+</application>
+<application description="User Administration" idref="d4975a40-eac8-4191-a09e-06ba33938bdb" name="User Admin" status="ENABLED">
+<accountStore idref="d0cddc74-7738-4951-b485-7c90d23bb796" name="User Admin" status="ENABLED" type="dir"/>
+</application>
+</applications>
+</userSecurity>
