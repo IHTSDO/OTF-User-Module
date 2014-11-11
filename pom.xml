@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.ihtsdo.otf</groupId>
 	<artifactId>otf-user-module</artifactId>
@@ -18,6 +19,22 @@
 		<url>http://github.com/IHTSDO/otf-user-module</url>
 		<tag>HEAD</tag>
 	</scm>
+
+	<properties>
+		<java-version>1.7</java-version>
+		<stormpath-version>1.0.RC2.1</stormpath-version>
+		<junit-version>4.8.2</junit-version>
+		<jackson-version>1.9.11</jackson-version>
+		<commons-lang3-version>3.3.2</commons-lang3-version>
+		
+		<javax.servlet-api-version>3.0.1</javax.servlet-api-version>
+		<tomcat7-maven-plugin-version>2.2</tomcat7-maven-plugin-version>
+		<!-- 2.3-SNAPSHOT -->
+		<jdeb-version>1.1.1</jdeb-version>
+	
+		<maven-compiler-plugin-version>2.3.2</maven-compiler-plugin-version>
+		<maven-javadoc-plugin-version>2.9</maven-javadoc-plugin-version>
+	</properties>
 
 	<build>
 		<plugins>

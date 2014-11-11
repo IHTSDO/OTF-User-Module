@@ -9,31 +9,30 @@
 	</parent>
 
 	<artifactId>security</artifactId>
-
 	<name>OTF User Module</name>
-
+	
 	<dependencies>
 		<dependency>
 			<groupId>com.stormpath.sdk</groupId>
 			<artifactId>stormpath-sdk-api</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>${stormpath-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.stormpath.sdk</groupId>
 			<artifactId>stormpath-sdk-httpclient</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>${stormpath-version}</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.stormpath.sdk</groupId>
 			<artifactId>stormpath-sdk-oauth</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>${stormpath-version}</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.stormpath.sdk</groupId>
 			<artifactId>stormpath-sdk-impl</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>${stormpath-version}</version>
 		</dependency>
 		
 		
@@ -42,19 +41,19 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.8.2</version>
+			<version>${junit-version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
-			<version>1.9.11</version>
+			<version>${jackson-version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.3.2</version>
+			<version>${commons-lang3-version}</version>
 		</dependency>
 	</dependencies>
 
@@ -64,16 +63,16 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>${maven-compiler-plugin-version}</version>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>${java-version}</source>
+					<target>${java-version}</target>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9</version>
+				<version>${maven-javadoc-plugin-version}</version>
 				<configuration>
 				</configuration>
 			</plugin>
