@@ -90,7 +90,7 @@
                 </nav>
             </header>
             <section class="mainContent contain">
-                <h3>Request a user password change Email:</h3>
+                <h3>Request a user password change email:</h3>
                 <form name="loginForm" method="post" action="<%=WebStatics.getAdminReqPwChg()%>">
                     <table>
                         <tr>
