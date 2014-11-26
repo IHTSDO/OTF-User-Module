@@ -1,6 +1,15 @@
+<<<<<<< HEAD
 header h1 {
     background:url('/Content/images/nonRetina/splendidLogo.png') no-repeat bottom center #000;
 }
 header p {
     background:url('/Content/images/nonRetina/logo.png') no-repeat bottom center #000;
 }
+=======
+header h1 {
+    background:url('/Content/images/nonRetina/splendidLogo.png') no-repeat bottom center #000;
+}
+header p {
+    background:url('/Content/images/nonRetina/logo.png') no-repeat bottom center #000;
+}
+>>>>>>> refs/heads/develop

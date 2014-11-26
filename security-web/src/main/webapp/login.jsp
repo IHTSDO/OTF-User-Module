@@ -1,5 +1,4 @@
 <html>
-
     <head>
         <title>ihtsdo.org - admin login</title>
 
@@ -68,6 +67,7 @@
                     </table>
                     <input type="submit" value="Login" />
                 </form>
+                <a href="<%= request.getContextPath()%>/requestPwChange.jsp" target="_blank">Wish to change password? Click here</a>
             </section>
             <footer class="contain">
                 <p class="companyName"><span>International Health Terminology Standards Development Organisation</span>

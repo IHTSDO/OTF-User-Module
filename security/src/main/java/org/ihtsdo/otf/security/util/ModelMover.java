@@ -8,8 +8,8 @@ import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.UserSecurityCompare;
 import org.ihtsdo.otf.security.stormpath.StormPathBaseDTO;
-import org.ihtsdo.otf.security.stormpath.StormPathUserSecurity;
-import org.ihtsdo.otf.security.xml.XmlUserSecurity;
+import org.ihtsdo.otf.security.stormpath.StormPathUserSecurityHandler;
+import org.ihtsdo.otf.security.xml.XmlUserSecurityHandler;
 
 public class ModelMover {
 
@@ -18,7 +18,7 @@ public class ModelMover {
 
 	private Properties settings;
 
-	PropertiesLoader propLoad;
+	private PropertiesLoader propLoad;
 
 	public static final String SET_PROPS = "settings";
 	public static final String XML_FN_IN = "xmlFnIn";
@@ -26,26 +26,26 @@ public class ModelMover {
 	public static final String REBUILD_SP = "rebuild";
 	public static final String LOG_EVENTS = "log";
 
-	private XmlUserSecurity xmlUsIn;
-	private XmlUserSecurity xmlUsOut;
-	private StormPathUserSecurity spu;
+	private XmlUserSecurityHandler xmlUsIn;
+	private XmlUserSecurityHandler xmlUsOut;
+	private StormPathUserSecurityHandler spu;
 
 	public ModelMover() {
 		super();
 
 	}
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		ModelMover mm = new ModelMover();
 		mm.run(args);
 	}
 
-	public void run(String[] args) {
+	public final void run(final String[] args) {
 		init(args);
 		run();
 	}
 
-	public void run() {
+	public final void run() {
 		if (checkSpSettings()) {
 
 			boolean logging = PropertiesLoader.stringOK(settings
@@ -64,7 +64,7 @@ public class ModelMover {
 			boolean loadFromXML = PropertiesLoader.stringOK(xmlIn);
 			if (loadFromXML) {
 				LOG.info("About to Xml2Storm");
-				Xml2Storm(logging);
+				xml2Storm(logging);
 			}
 			String xmlOut = settings.getProperty(XML_FN_OUT);
 			boolean saveToXML = PropertiesLoader.stringOK(xmlOut);
@@ -79,7 +79,7 @@ public class ModelMover {
 	}
 
 	private String stormToString(final boolean log) {
-		String ustr = getSpu().getUserSecurity().toString();
+		String ustr = getSpu().getUserSecurityModel().getModel().toString();
 		if (log) {
 			LOG.info("Storm as String : \n" + ustr);
 			LOG.info(UserSecurityCompare.remSpaceLineEnds(ustr));
@@ -89,11 +89,13 @@ public class ModelMover {
 	}
 
 	private void storm2Xml(final boolean log) {
-		StormPathUserSecurity spu = getSpu();
+		setSpu(null);
+		StormPathUserSecurityHandler locspu = getSpu();
 
 		try {
-			spu.buildUserSecurity();
-			getXmlUsOut().setUserSecurity(spu.getUserSecurity());
+			locspu.buildUserSecurity();
+			getXmlUsOut().getUserSecurityModel().setModel(
+					(locspu.getUserSecurityModel().getModel()));
 			getXmlUsOut().saveUserSecurity();
 			if (log) {
 				LOG.info("storm2Xml : \n"
@@ -107,16 +109,20 @@ public class ModelMover {
 
 	}
 
-	private void Xml2Storm(final boolean log) {
+	private void xml2Storm(final boolean log) {
 
-		StormPathUserSecurity spu = getSpu();
+		StormPathUserSecurityHandler locspu = getSpu();
 		try {
 			getXmlUsIn();
-			if (log) {
-				LOG.info("Xml2Storm : \n"
-						+ xmlUsIn.getXMLFromUserSecurityAsString());
-			}
-			spu.sendUserSecuritytoStormPath(xmlUsIn.getUserSecurity());
+			// if (log) {
+			// LOG.info("Xml2Storm : \n"
+			// + xmlUsIn.getXMLFromUserSecurityAsString());
+			// }
+
+			// Make sure settings have been init'ed by called defpw
+			xmlUsIn.getUserSecurityModel().getSettings().getDefPw();
+			locspu.sendUserSecuritytoStormPath(xmlUsIn.getUserSecurityModel()
+					.getModel());
 
 		} catch (Exception e) {
 
@@ -127,16 +133,16 @@ public class ModelMover {
 
 	private void clearSP() {
 		setSpu(null);
-		StormPathUserSecurity spu = getSpu();
+		StormPathUserSecurityHandler spuNew = getSpu();
 		try {
-			spu.clearSP();
+			spuNew.clearSP();
 		} catch (Exception e) {
 			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
 		setSpu(null);
 	}
 
-	public void init(String[] args) {
+	public final void init(final String[] args) {
 		getPropLoad(args);
 		getSettings();
 	}
@@ -148,7 +154,7 @@ public class ModelMover {
 		return settings;
 	}
 
-	public final void setSettings(Properties settingsIn) {
+	public final void setSettings(final Properties settingsIn) {
 		settings = settingsIn;
 	}
 
@@ -160,13 +166,13 @@ public class ModelMover {
 		return propLoad;
 	}
 
-	public final PropertiesLoader getPropLoad(String[] argsIn) {
+	public final PropertiesLoader getPropLoad(final String[] argsIn) {
 		getPropLoad();
 		propLoad.setArgs(argsIn);
 		return propLoad;
 	}
 
-	public final void setPropLoad(String[] args) {
+	public final void setPropLoad(final String[] args) {
 	}
 
 	private List<String> getKeyVals() {
@@ -186,7 +192,7 @@ public class ModelMover {
 		return keyVals;
 	}
 
-	public boolean checkSpSettings() {
+	public final boolean checkSpSettings() {
 		boolean kpOK = PropertiesLoader.stringOK(settings
 				.getProperty(StormPathBaseDTO.KEY_PATH));
 
@@ -207,21 +213,21 @@ public class ModelMover {
 		return false;
 	}
 
-	public final XmlUserSecurity getXmlUsIn() {
+	public final XmlUserSecurityHandler getXmlUsIn() {
 		if (xmlUsIn == null) {
 			Properties xmlP = new Properties();
-			xmlP.setProperty(XmlUserSecurity.CONF_PROPS_FN,
+			xmlP.setProperty(XmlUserSecurityHandler.CONF_PROPS_FN,
 					settings.getProperty(XML_FN_IN));
-			xmlUsIn = new XmlUserSecurity(xmlP);
+			xmlUsIn = new XmlUserSecurityHandler(xmlP);
 		}
 		return xmlUsIn;
 	}
 
-	public final void setXmlUsIn(XmlUserSecurity xmlUsInIn) {
+	public final void setXmlUsIn(final XmlUserSecurityHandler xmlUsInIn) {
 		xmlUsIn = xmlUsInIn;
 	}
 
-	public final XmlUserSecurity getXmlUsOut() {
+	public final XmlUserSecurityHandler getXmlUsOut() {
 		if (xmlUsOut == null) {
 
 			String xmlIn = settings.getProperty(XML_FN_IN);
@@ -231,7 +237,7 @@ public class ModelMover {
 					xmlUsOut = getXmlUsIn();
 					return xmlUsOut;
 				} else {
-					xmlUsOut = new XmlUserSecurity();
+					xmlUsOut = new XmlUserSecurityHandler();
 					xmlUsOut.setConfigFN(settings.getProperty(XML_FN_OUT));
 				}
 			}
@@ -239,19 +245,19 @@ public class ModelMover {
 		return xmlUsOut;
 	}
 
-	public final void setXmlUsOut(XmlUserSecurity xmlUsOutIn) {
+	public final void setXmlUsOut(final XmlUserSecurityHandler xmlUsOutIn) {
 		xmlUsOut = xmlUsOutIn;
 	}
 
-	public final StormPathUserSecurity getSpu() {
+	public final StormPathUserSecurityHandler getSpu() {
 		if (spu == null) {
-			spu = new StormPathUserSecurity(getSettings());
+			spu = new StormPathUserSecurityHandler(getSettings());
 		}
 
 		return spu;
 	}
 
-	public final void setSpu(StormPathUserSecurity spuIn) {
+	public final void setSpu(final StormPathUserSecurityHandler spuIn) {
 		spu = spuIn;
 	}
 

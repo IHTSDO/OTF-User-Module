@@ -2,6 +2,7 @@ package org.ihtsdo.otf.security.dto.query.queries;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.UserSecurityHandler;
 import org.ihtsdo.otf.security.dto.OtfAccountStore;
@@ -14,9 +15,12 @@ import org.ihtsdo.otf.security.dto.query.AbstractSecurityQuery;
 
 public class AppPermGroupsQueryDTO extends AbstractSecurityQuery {
 
+	private static final Logger LOG = Logger
+			.getLogger(AppPermGroupsQueryDTO.class.getName());
+
 	private String appName;
 	private String groupName;
-	private List<GroupPermDTO> perms = new ArrayList<GroupPermDTO>();
+	private List<GroupPermDTO> roles = new ArrayList<GroupPermDTO>();
 
 	public AppPermGroupsQueryDTO() {
 		super();
@@ -35,22 +39,18 @@ public class AppPermGroupsQueryDTO extends AbstractSecurityQuery {
 		appName = appNameIn;
 	}
 
-	public final List<GroupPermDTO> getPerms() {
-		if (perms == null) {
-			perms = new ArrayList<GroupPermDTO>();
+	public final List<GroupPermDTO> getRoles() {
+		if (roles == null) {
+			roles = new ArrayList<GroupPermDTO>();
 		}
-
-		if (perms.isEmpty() && ush != null) {
+		if (roles.isEmpty() && ush != null) {
 			boolean checkGrpName = groupName != null && groupName.length() > 0;
-			for (OtfApplication oApp : ush.getUserSecurity().getApps()
-					.getApplications().values()) {
-
+			for (OtfApplication oApp : ush.getUserSecurityModel().getOtfApps()) {
 				if (oApp.getName().equals(appName)) {
 					for (OtfAccountStore oAst : oApp.getAccountStores()
 							.values()) {
 						String name = oAst.getName();
-
-						OtfDirectory dir = ush.getUserSecurity().getDirs()
+						OtfDirectory dir = ush.getUserSecurityModel()
 								.getDirByName(name);
 						if (dir != null) {
 							getGroupsForDir(dir, checkGrpName);
@@ -59,11 +59,11 @@ public class AppPermGroupsQueryDTO extends AbstractSecurityQuery {
 				}
 			}
 		}
-		return perms;
+		return roles;
 	}
 
-	public final void setPerms(final List<GroupPermDTO> permsIn) {
-		perms = permsIn;
+	public final void setRoles(final List<GroupPermDTO> permsIn) {
+		roles = permsIn;
 	}
 
 	private void getGroupsForDir(final OtfDirectory dir, final boolean checkName) {
@@ -75,7 +75,7 @@ public class AppPermGroupsQueryDTO extends AbstractSecurityQuery {
 			if (add) {
 				GroupPermDTO gpd = getgpd(grp);
 				if (gpd != null) {
-					perms.add(gpd);
+					roles.add(gpd);
 				}
 			}
 		}
@@ -84,16 +84,16 @@ public class AppPermGroupsQueryDTO extends AbstractSecurityQuery {
 
 	private GroupPermDTO getgpd(final OtfGroup grp) {
 		List<OtfCustomField> permsL = grp.getCustData().getPerms();
+		GroupPermDTO gpd = new GroupPermDTO(grp.getName());
 		if (!permsL.isEmpty()) {
-			GroupPermDTO gpd = new GroupPermDTO(grp.getName());
 			for (OtfCustomField cf : permsL) {
 				OtfCustomFieldPerm cfapp = (OtfCustomFieldPerm) cf.getModel();
 				PermDTO pd = new PermDTO(cfapp.getKeyVal(), cfapp.getVal());
 				gpd.getPerms().add(pd);
 			}
-			return gpd;
 		}
-		return null;
+
+		return gpd;
 	}
 
 }

@@ -10,15 +10,26 @@ import org.ihtsdo.otf.security.dto.UserSecurity;
 
 public interface UserSecurityHandler {
 
-	UserSecurity getUserSecurity();
-
-	void setUserSecurity(UserSecurity userSecurityIn);
+	// UserSecurity getUserSecurity();
+	//
+	// void setUserSecurity(UserSecurity userSecurityIn);
 
 	void saveUserSecurity() throws Exception;
 
-	OtfAccount authAccount(String acName, String pw);
+	UserSecurityModel getUserSecurityModel();
 
-	OtfAccount getUser(String acName, String pw);
+	void setUserSecurityModel(UserSecurityModel userSecurityModelIn);
+
+	UserSecurityModel getUserSecurityModel(UserSecurity userSecurityIn);
+
+	UserSecurityModel getUserSecurityModel(UserSecurity userSecurityIn,
+			HandlerAdmin handlerAdmin);
+
+	UserSecurityModel getLocalUserSecurityModel();
+
+	OtfAccount authAccount(String acName, String pw, String token);
+
+	OtfAccount getUser(String acName, String pw, String token);
 
 	void init(Properties props) throws Exception;
 
@@ -26,7 +37,9 @@ public interface UserSecurityHandler {
 
 	void buildUserSecurity() throws Exception;
 
-	String addUpdateAccount(OtfAccount acc, OtfDirectory parent);
+	void postbuildUserSecurity();
+
+	String addUpdateAccount(OtfAccount acc);
 
 	String addUpdateMember(OtfGroup grp);
 

@@ -52,8 +52,8 @@ public abstract class AbstractSecurityTest {
 
 	@Test
 	public final void testNumDirs() {
-		assertEquals(getNumDirs(), getUsh().getUserSecurity().getDirs()
-				.getDirectories().size());
+		assertEquals(getNumDirs(), getUsh().getUserSecurityModel().getOtfDirs()
+				.size());
 	}
 
 	public abstract int getNumApps();
@@ -65,8 +65,7 @@ public abstract class AbstractSecurityTest {
 		String json = secS.getApps();
 		List<String> member2 = SecurityClient.getApps(json);
 		int jsonI = member2.size();
-		int origI = getUsh().getUserSecurity().getApps().getApplications()
-				.size();
+		int origI = getUsh().getUserSecurityModel().getOtfApps().size();
 		assertEquals(getNumApps(), origI);
 		assertEquals(origI, jsonI);
 	}
@@ -75,16 +74,18 @@ public abstract class AbstractSecurityTest {
 
 	@Test
 	public final void testNumSettings() {
-		assertEquals(getNumSettings(), getUsh().getUserSecurity().getSettings()
-				.getSettings().size());
+		assertEquals(getNumSettings(), getUsh().getUserSecurityModel()
+				.getSettings().getSettings().size());
 	}
 
 	@Test
 	public final void testSettingsVals() {
-		assertEquals(TEST_PW, getUsh().getUserSecurity().getDefaultpw());
-		assertEquals(TEST_USERS_APP, getUsh().getUserSecurity().getUsersApp());
-		assertEquals(TEST_MENBERS_APP, getUsh().getUserSecurity()
-				.getMembersApp());
+		assertEquals(TEST_PW, getUsh().getUserSecurityModel().getSettings()
+				.getDefPw());
+		assertEquals(TEST_USERS_APP, getUsh().getUserSecurityModel()
+				.getSettings().getUsers());
+		assertEquals(TEST_MENBERS_APP, getUsh().getUserSecurityModel()
+				.getSettings().getMembers());
 
 	}
 
@@ -96,7 +97,7 @@ public abstract class AbstractSecurityTest {
 		String json = secS.getMembers();
 		List<String> member2 = SecurityClient.getMembers(json);
 		int jsonI = member2.size();
-		int origI = getUsh().getUserSecurity().getMembers().size();
+		int origI = getUsh().getUserSecurityModel().getMembers().size();
 		assertEquals(getNumMembers(), origI);
 		assertEquals(origI, jsonI);
 
@@ -111,7 +112,7 @@ public abstract class AbstractSecurityTest {
 		List<OtfAccountMin> user2 = SecurityClient.getUsers(json);
 
 		int jsonI = user2.size();
-		int origI = getUsh().getUserSecurity().getUsers("*").size();
+		int origI = getUsh().getUserSecurityModel().getUsers().size();
 
 		assertEquals(getNumUsers(), origI);
 		assertEquals(origI, jsonI);
@@ -120,8 +121,8 @@ public abstract class AbstractSecurityTest {
 
 	@Test
 	public final void testAccount() {
-		OtfAccount testAcc = getUsh().getUserSecurity().getUserAccountByName(
-				TEST_USER, "*");
+		OtfAccount testAcc = getUsh().getUserSecurityModel()
+				.getUserAccountByName(TEST_USER);
 		assertNotNull(testAcc);
 		if (testAcc != null) {
 			OtfCustomData accCd = testAcc.getCustData();
@@ -136,7 +137,7 @@ public abstract class AbstractSecurityTest {
 
 	@Test
 	public final void testAccountAuth() {
-		OtfAccount testAcc = getUsh().authAccount(TEST_USER, TEST_PW);
+		OtfAccount testAcc = getUsh().authAccount(TEST_USER, TEST_PW, null);
 		String json = secS.getUserByName(TEST_USER, TEST_PW);
 
 		String name = "";
@@ -153,8 +154,8 @@ public abstract class AbstractSecurityTest {
 	@Test
 	public final void testAccountMembers() {
 		List<String> members = new ArrayList<String>();
-		OtfAccount oacc = getUsh().getUserSecurity().getUserAccountByName(
-				TEST_USER, "*");
+		OtfAccount oacc = getUsh().getUserSecurityModel().getUserAccountByName(
+				TEST_USER);
 		if (oacc != null) {
 			List<OtfCustomField> mems = oacc.getCustData().getMembers();
 			for (OtfCustomField cf : mems) {
@@ -178,8 +179,8 @@ public abstract class AbstractSecurityTest {
 	@Test
 	public final void testAccountApps() {
 		List<String> members = new ArrayList<String>();
-		OtfAccount oacc = getUsh().getUserSecurity().getUserAccountByName(
-				TEST_USER, "*");
+		OtfAccount oacc = getUsh().getUserSecurityModel().getUserAccountByName(
+				TEST_USER);
 		if (oacc != null) {
 			List<OtfCustomField> mems = oacc.getCustData().getApps();
 			for (OtfCustomField cf : mems) {

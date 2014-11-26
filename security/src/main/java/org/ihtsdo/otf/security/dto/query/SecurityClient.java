@@ -126,7 +126,7 @@ public class SecurityClient {
 		try {
 			AppPermGroupsQueryDTO mlq = MAPPER.readValue(json,
 					AppPermGroupsQueryDTO.class);
-			return mlq.getPerms();
+			return mlq.getRoles();
 		} catch (IOException e) {
 
 			LOG.log(Level.SEVERE, "An exception has occurred", e);

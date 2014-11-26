@@ -8,11 +8,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import com.stormpath.sdk.account.Account;
+import com.stormpath.sdk.api.ApiKey;
 import com.stormpath.sdk.application.Application;
 import com.stormpath.sdk.client.Client;
 import com.stormpath.sdk.directory.CustomData;
 import com.stormpath.sdk.directory.Directory;
 import com.stormpath.sdk.group.Group;
+import com.stormpath.sdk.impl.api.ClientApiKeyBuilder;
+import com.stormpath.sdk.impl.client.DefaultClientBuilder;
 import com.stormpath.sdk.tenant.Tenant;
 
 public class StormPathBaseDTO {
@@ -27,9 +30,13 @@ public class StormPathBaseDTO {
 
 	private Client client;
 	private Tenant tenant;
-	private Properties apiProps;
+
+	private ApiKey apiKey;
+
 	private Properties settingsProps;
-	private OtfClientBuilder otfCb;
+	private DefaultClientBuilder otfCb;
+
+	private boolean cacheSP = false;
 
 	// Static Strings
 	/** The default Password. */
@@ -49,40 +56,38 @@ public class StormPathBaseDTO {
 		settingsProps = settingsPropsIn;
 	}
 
+	public StormPathBaseDTO(final Properties settingsPropsIn, boolean cacheSPIn) {
+		super();
+		settingsProps = settingsPropsIn;
+		cacheSP = cacheSPIn;
+	}
+
 	public final void load() throws IllegalArgumentException {
+		getOtfCb();
 
-		if (settingsProps.containsKey(API_KEY_ID)
-				&& settingsProps.containsKey(API_KEY_SECRET)) {
-			getOtfCb().loadApiKeyProperties(settingsProps);
-		} else {
-			if (settingsProps.containsKey(KEY_PATH)) {
-				getOtfCb().loadApiKeyProperties(
-						settingsProps.getProperty(KEY_PATH));
-			}
-		}
-		setApiProps(getOtfCb().getClientApiKeyProperties());
-		if (apiProps == null) {
-			throw new IllegalArgumentException(
-					"API props is null settingsProps = " + settingsProps);
+		if (cacheSP) {
+			getOtfCb().setCacheManager(
+					newCacheManager()
+							.withDefaultTimeToLive(1, TimeUnit.DAYS)
+							// general default
+							.withDefaultTimeToIdle(2, TimeUnit.HOURS)
+							// general default
+							.withCache(
+									forResource(Account.class)
+											// Account-specific cache settings
+											.withTimeToLive(1, TimeUnit.HOURS)
+											.withTimeToIdle(30,
+													TimeUnit.MINUTES))
+							.withCache(forResource(Group.class) // Group-specific
+																// cache
+																// settings
+									.withTimeToLive(2, TimeUnit.HOURS)).build() // build
+																				// the
+																				// CacheManager
+					);
 		}
 
-		client = getOtfCb().setCacheManager(
-				newCacheManager()
-						.withDefaultTimeToLive(1, TimeUnit.DAYS)
-						// general default
-						.withDefaultTimeToIdle(2, TimeUnit.HOURS)
-						// general default
-						.withCache(
-								forResource(Account.class)
-										// Account-specific cache settings
-										.withTimeToLive(1, TimeUnit.HOURS)
-										.withTimeToIdle(30, TimeUnit.MINUTES))
-						.withCache(forResource(Group.class) // Group-specific
-															// cache settings
-								.withTimeToLive(2, TimeUnit.HOURS)).build() // build
-																			// the
-																			// CacheManager
-				).build();
+		client = getOtfCb().build();
 
 		tenant = client.getCurrentTenant();
 	}
@@ -103,22 +108,24 @@ public class StormPathBaseDTO {
 		tenant = tenantIn;
 	}
 
-	public final Properties getApiProps() {
-		return apiProps;
+	public final void resetTenant() {
+		String href = getTenant().getHref();
+		Tenant tnew = getResourceByHrefTenant(href);
+		setTenant(tnew);
+
 	}
 
-	public final void setApiProps(final Properties apiPropsIn) {
-		apiProps = apiPropsIn;
-	}
-
-	public final OtfClientBuilder getOtfCb() {
+	public final DefaultClientBuilder getOtfCb() {
 		if (otfCb == null) {
-			otfCb = new OtfClientBuilder();
+			otfCb = new DefaultClientBuilder();
+			if (getApiKey() != null) {
+				otfCb.setApiKey(getApiKey());
+			}
 		}
 		return otfCb;
 	}
 
-	public final void setOtfCb(final OtfClientBuilder otfCbIn) {
+	public final void setOtfCb(final DefaultClientBuilder otfCbIn) {
 		otfCb = otfCbIn;
 	}
 
@@ -130,23 +137,76 @@ public class StormPathBaseDTO {
 		settingsProps = settingsPropsIn;
 	}
 
-	public final CustomData getResourceByHref_CustomData(final String href) {
+	public final CustomData getResourceByHrefCustomData(final String href) {
 		return getClient().getResource(href, CustomData.class);
 	}
 
-	public final Account getResourceByHref_Account(final String href) {
+	public final Account getResourceByHrefAccount(final String href) {
 		return getClient().getResource(href, Account.class);
 	}
 
-	public final Directory getResourceByHref_Directory(final String href) {
+	public final Directory getResourceByHrefDirectory(final String href) {
 		return getClient().getResource(href, Directory.class);
 	}
 
-	public final Group getResourceByHref_Group(final String href) {
+	public final Group getResourceByHrefGroup(final String href) {
 		return getClient().getResource(href, Group.class);
 	}
 
-	public final Application getResourceByHref_App(final String href) {
+	public final Application getResourceByHrefApp(final String href) {
 		return getClient().getResource(href, Application.class);
+	}
+
+	public final Tenant getResourceByHrefTenant(final String href) {
+		return getClient().getResource(href, Tenant.class);
+	}
+
+	public final boolean isCacheSP() {
+		return cacheSP;
+	}
+
+	public final void setCacheSP(boolean cacheSPIn) {
+		cacheSP = cacheSPIn;
+	}
+
+	public final ApiKey getApiKey() {
+		if (apiKey == null) {
+			setApiKey();
+		}
+		return apiKey;
+	}
+
+	public final ApiKey getApiKey(String key, String secret) {
+		apiKey = new ClientApiKeyBuilder().setId(key).setSecret(secret).build();
+		return apiKey;
+	}
+
+	public final ApiKey getApiKey(String filepath) {
+		apiKey = new ClientApiKeyBuilder().setFileLocation(filepath).build();
+		return apiKey;
+	}
+
+	public final void setApiKey(ApiKey apiKeyIn) {
+		apiKey = apiKeyIn;
+	}
+
+	public final void setApiKey() throws IllegalArgumentException {
+
+		if (settingsProps.containsKey(API_KEY_ID)
+				&& settingsProps.containsKey(API_KEY_SECRET)) {
+			String id = settingsProps.getProperty(API_KEY_ID);
+			String secret = settingsProps.getProperty(API_KEY_SECRET);
+			getApiKey(id, secret);
+		} else {
+			if (settingsProps.containsKey(KEY_PATH)) {
+
+				String keypath = settingsProps.getProperty(KEY_PATH);
+				getApiKey(keypath);
+			}
+		}
+		if (apiKey == null) {
+			throw new IllegalArgumentException(
+					"apiKey is null settingsProps = " + settingsProps);
+		}
 	}
 }

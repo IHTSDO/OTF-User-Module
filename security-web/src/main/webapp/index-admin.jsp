@@ -97,10 +97,48 @@
                     <div class="container">
                         <div class="row">
                             <div id="leftCol" class="columnLeft">
-                                <%=s ession.getAttribute( "TreeHTML") %>
+                                <%=session.getAttribute( "TreeHTML") %>
                             </div>
                             <div id="rightCol" class="columnRight">
-                                <%=s ession.getAttribute( "FormHTML") %>
+                                <%=session.getAttribute( "FormHTML") %>
+                            </div>
+                        </div>
+                    </div>
+				</section>
+				<footer class="contain">
+					<p class="companyName"><span>International Health Terminology Standards Development Organisation</span>
+					</p>
+					<ul class="social contain">
+						<li class="text">Follow us:</li>
+						<li class="linkedIn"><a href="https://www.linkedin.com/company/ihtsdo" target="_blank">LinkedIn</a>
+						</li>
+						<li class="twitter"><a href="https://twitter.com/SnomedCT" target="_blank">twitter</a>
+						</li>
+						<li class="googlePlus"><a href="http://google.com/+IhtsdoOrg" target="_blank">google+</a>
+						</li>
+					</ul>
+					<ul class="footerLinks contain">
+						<li><a href="http://www.ihtsdo.org/news-articles">News</a>
+						</li>
+						<li><a href="https://ihtsdo.freshdesk.com/support/home">FAQ</a>
+						</li>
+						<li><a href="http://www.ihtsdo.org/members/">Members</a>
+						</li>
+						<li><a href="http://www.ihtsdo.org/contact-us/">Contact Us</a>
+						</li>
+						<li><span>&copy; Copyright IHTSDO 2014</span>
+						</li>
+					</ul>
+				</footer>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div id="leftCol" class="columnLeft">
+                                <%=session.getAttribute( "TreeHTML") %>
+                            </div>
+                            <div id="rightCol" class="columnRight">
+                                <%=session.getAttribute( "FormHTML") %>
                             </div>
                         </div>
                     </div>

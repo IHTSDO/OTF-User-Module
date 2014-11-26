@@ -1,9 +1,19 @@
 For those you simply want it up & running with no explanation using the debian (deb) installer.
 Paths etc are those used as std or as std on Ubuntu 14.04 LTS 
 
+If IHTSDO Staff the preferred option is to run and adjusted jenkins job on https://ansible.ihtsdotools.org
+
+
 1) Get the deb
 
+1.1) Build from Source - Run the pom.xml in security-web clean install.
+
+1.2) Download from nexus
+The Deb is stored in nexus. You can use the Nexus UI or the nexus Rest URL to get the latest deb (snapshot or release).
+
 2) Install the deb
+
+
 
 3) Test the Install
 

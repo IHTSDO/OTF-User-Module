@@ -8,6 +8,7 @@ import org.ihtsdo.otf.security.stormpath.SPAccountStoreVisitor;
 
 import com.stormpath.sdk.account.Account;
 import com.stormpath.sdk.account.AccountList;
+import com.stormpath.sdk.api.ApiKey;
 import com.stormpath.sdk.application.AccountStoreMapping;
 import com.stormpath.sdk.application.Application;
 import com.stormpath.sdk.application.ApplicationCriteria;
@@ -16,13 +17,14 @@ import com.stormpath.sdk.application.Applications;
 import com.stormpath.sdk.authc.AuthenticationRequest;
 import com.stormpath.sdk.authc.UsernamePasswordRequest;
 import com.stormpath.sdk.client.Client;
-import com.stormpath.sdk.client.ClientBuilder;
 import com.stormpath.sdk.directory.AccountStore;
 import com.stormpath.sdk.directory.CustomData;
 import com.stormpath.sdk.directory.Directory;
 import com.stormpath.sdk.directory.DirectoryList;
 import com.stormpath.sdk.group.Group;
 import com.stormpath.sdk.group.GroupList;
+import com.stormpath.sdk.impl.api.ClientApiKeyBuilder;
+import com.stormpath.sdk.impl.client.DefaultClientBuilder;
 import com.stormpath.sdk.resource.ResourceException;
 import com.stormpath.sdk.tenant.Tenant;
 
@@ -55,8 +57,9 @@ public class BasicTest {
 
 	private void init() {
 
-		client = new ClientBuilder().setApiKeyFileLocation(getKeyPath())
+		ApiKey apiKey = new ClientApiKeyBuilder().setFileLocation(getKeyPath())
 				.build();
+		client = new DefaultClientBuilder().setApiKey(apiKey).build();
 		tenant = client.getCurrentTenant();
 		test();
 	}

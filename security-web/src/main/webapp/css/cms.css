@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿/************************** TYPOGRAPHY **************************/
 h2,
 h3 { 
@@ -288,3 +289,295 @@ textarea.form-control{
 .resourceList ul li {
     clear:both;
 }
+=======
+﻿/************************** TYPOGRAPHY **************************/
+h2,
+h3 { 
+    text-align:center;
+}
+a { 
+    color:#c9c9c9;
+}
+/************************** CORE SITE LAYOUT **************************/
+html { 
+    height:100%;
+}
+body { 
+    background:url('../images/cms-bg-sml.jpg') no-repeat bottom center #000;
+    color:#c9c9c9;
+    font-family: Arial;
+    height:100%;
+}
+@media (min-width: 992px) {
+    body { 
+        background:url('../images/cms-bg-lrg.jpg') no-repeat top left #000;
+    }
+}
+/* header */
+header h1 {
+    background:url('../images/small_logo.png') no-repeat bottom center;
+    display:block;
+    height:89px;
+    margin:0 auto;
+    text-indent:-9999px;
+    width:89px;
+}
+@media (min-width: 768px) {
+    header .sep { padding: 0px 25px; }
+}
+header p {
+    display:inline-block;
+    height:19px;
+    margin-bottom:0px;
+    width:55px;
+}
+/* header - end */
+/* footer */
+footer{
+    margin:30px 0px;
+    text-align:center;
+}
+footer ul { 
+    list-style:none;
+    margin:0px;
+    padding:0px;
+}
+footer li { 
+    display:inline-block;
+    font-size:12px;
+    text-transform:uppercase;
+    vertical-align:text-top;
+}
+footer p { 
+    margin-bottom:0px;
+}
+footer .sep { 
+    line-height:14px;
+    padding: 0px 10px;
+    vertical-align:top;
+}
+/* footer - end */
+/* side nav */
+.sidenav ul { 
+    background-color:#c9c9c9;
+    color:#5d5d5d;
+}
+.sidenav ul li a { 
+    color:#5d5d5d;
+    text-transform:capitalize;
+}
+/* side nav - end */
+.mainContent { 
+    background-color:#171717;
+    padding:15px 0px;
+}
+table tr { 
+    background-color: #171717; 
+}
+.datepicker table tr{
+    background-color: #FFFFFF;
+}
+table .alt { 
+    background-color: #5d5d5d; 
+}
+table p { 
+    margin-bottom:0px;
+}
+.lang-title { 
+    height:50px; 
+}
+@media (min-width: 768px) {
+.lang-title { 
+    width:69.3%;
+}
+}
+.lang-title h3 { 
+    margin:0px;
+    text-align:left;
+}
+/************************** FORMS **************************/
+label { 
+    color:#55c5ee;
+    font-weight:normal;
+}
+form p { 
+    margin-bottom:20px;
+}
+@media (min-width: 768px) {
+    #reorderButton, 
+    .submitBtn { float:right; }
+}
+/* edit form */
+.upload { 
+    color:#55c5ee;
+    font-weight:normal;
+    margin-bottom:10px;
+}
+.upload p { 
+    line-height:14px;
+    margin-bottom:0px;
+    width:140px;
+}
+.upload .glyphicon {
+    color:#55c5ee;
+    font-size:50px;
+}
+.upload div { 
+    margin-left:10px;
+}
+.upload label { 
+    color:#FFF;
+    font-size:20px;
+    line-height:21px;
+    margin-bottom:0px;
+    text-transform:uppercase;
+}
+/* login form */
+form.login { 
+    margin:0 auto;
+    width:250px;
+}
+form.login label { 
+    width:90px;
+}
+/* .NET validation */
+.input-validation-error,
+.field-validation-error,
+.field-summary-validation,
+.field-validation-error label,
+.validation-summary-errors {
+	color: #ff0000;
+}
+.validation-summary-errors ul { 
+    list-style:none;
+    margin:0px;
+    padding:0px;
+}
+.field-summary-validation p { 
+    margin-bottom:0px;
+}
+.validation-summary-valid.alert {
+    display: none
+}
+/* modal dialogue */
+.dialog-background {
+    background-color: #b0b0b0;
+    height:100%;
+    opacity: 0.8;
+    width:100%;
+}
+.link-dialog {
+    background-color:#000;
+    border-radius:5px;
+    padding:10px;
+    width: 400px;
+}
+
+.link-dialog ul {
+    list-style: none;
+}
+
+/************************** BOOTSTRAP OVERRIDES AND EXTENSIONS **************************/
+/* navigation */
+.navbar-default { 
+    background-color:transparent;
+    border-color:transparent;
+}
+.navbar-header { 
+    float:none;
+    margin:30px 0px 0px;
+    text-align:center;
+}
+@media (max-width: 767px) {
+    .navbar-nav { text-align:center; }
+}
+@media (min-width: 768px) {
+    .navbar-default .navbar-collapse { float:left; left:50%; position:relative; }
+    .navbar-nav { float:left; left:-50%; position:relative; }
+}
+.nav > li,
+.nav > li > a { 
+    text-transform:uppercase;
+    vertical-align:top;
+}
+.sidenav { 
+    margin-bottom:30px;
+}
+@media (max-width: 767px) {
+    .sidenav { 
+        border-bottom:1px solid #eee;
+        padding-bottom:20px;
+    }
+}
+.sidenav > li a { 
+    padding:5px;
+}
+.navbar-default .navbar-nav>li>a:hover { 
+    color:#CCC;
+}
+.navbar-default .navbar-nav>.active>a, 
+.navbar-default .navbar-nav>.active>a:hover, 
+.navbar-default .navbar-nav>.active>a:focus { 
+    background-color:transparent;
+    color:#186cd4;
+}
+.navbar-toggle { 
+    margin-top:0px;
+}
+/* navigation - end */
+/* form */
+textarea.form-control{
+    min-height:100px;
+}
+.form-control {
+    background-color:#5d5d5d;
+    border:none;
+    color:#FFF;
+}
+/* form - end */
+/* tables */
+.ui-sortable-handle { 
+    cursor:move;
+}
+.table th { 
+    text-transform:uppercase;
+}
+.table > tbody > tr > td { 
+    border-top:none;    
+}
+.table > thead > tr > th { 
+    border-bottom:none;
+}
+.infoColumn {
+    width:65%;
+}
+/* tables - end */
+.tab-content > .tab-pane { 
+    padding-top:15px;
+}
+/* resources dialog homepage */
+.resourceList {
+    height: 380px;
+    overflow-y: scroll;
+    width: 385px;
+    margin-bottom: 25px;
+}
+.resourceList ul {
+    margin:0 0 20px;
+    padding:0;
+}
+.resourceList input {
+    padding: 0;
+    float: left;
+    margin: 4px 8px 0 0;
+}
+.resourceList label {
+    float: left;
+    width: 85%;
+    line-height: 120%;
+    padding-bottom:6px;
+}
+.resourceList ul li {
+    clear:both;
+}
+>>>>>>> refs/heads/develop

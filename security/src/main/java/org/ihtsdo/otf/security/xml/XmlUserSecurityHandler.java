@@ -7,14 +7,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.AbstractUserSecurityHandler;
+import org.ihtsdo.otf.security.UserSecurityModel;
 import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.OtfApplication;
 import org.ihtsdo.otf.security.dto.OtfDirectory;
 import org.ihtsdo.otf.security.dto.OtfGroup;
+import org.ihtsdo.otf.security.dto.UserSecurityModelCached;
 import org.ihtsdo.otf.security.xml.base.XMLUtil;
 import org.w3c.dom.Document;
 
-public class XmlUserSecurity extends AbstractUserSecurityHandler {
+public class XmlUserSecurityHandler extends AbstractUserSecurityHandler {
 
 	private String configFN;
 	private String sortXsltFn = "";
@@ -28,10 +30,10 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 	 * logger.
 	 * </p>
 	 */
-	private static final Logger LOG = Logger.getLogger(XmlUserSecurity.class
-			.getName());
+	private static final Logger LOG = Logger
+			.getLogger(XmlUserSecurityHandler.class.getName());
 
-	public XmlUserSecurity(final Properties propsIn) {
+	public XmlUserSecurityHandler(final Properties propsIn) {
 		super();
 		try {
 			init(propsIn);
@@ -42,7 +44,7 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 
 	}
 
-	public XmlUserSecurity() {
+	public XmlUserSecurityHandler() {
 		super();
 
 	}
@@ -56,6 +58,8 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 	@Override
 	public final void buildUserSecurity() throws Exception {
 		initFromFile();
+		postbuildUserSecurity();
+		getUserSecurityModel().init();
 	}
 
 	public final void initFromFile() throws Exception {
@@ -63,20 +67,20 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 	}
 
 	public final void initFromDoc(final Document confDoc) throws Exception {
-		setUserSecurity(xml2Mod.build(confDoc));
+		getUserSecurityModel().setModel(xml2Mod.build(confDoc));
 	}
 
 	public final void initFromXMLString(final String confXML) throws Exception {
 		final Document confDoc = XMLUtil.getDocumentFromXMLString(confXML,
 				false);
-		setUserSecurity(xml2Mod.build(confDoc));
+		getUserSecurityModel().setModel(xml2Mod.build(confDoc));
 	}
 
 	public final void init(final String configFnIn) throws Exception {
 		final File confile = new File(configFnIn);
 		if (confile.exists() && !confile.isDirectory() && confile.canRead()) {
 			final Document confDoc = XMLUtil.getDocument(configFnIn);
-			setUserSecurity(xml2Mod.build(confDoc));
+			getUserSecurityModel().setModel(xml2Mod.build(confDoc));
 		} else {
 			LOG.severe("Something is wrong with the file you have specified file = "
 					+ configFnIn);
@@ -88,7 +92,7 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 	}
 
 	public final Document getXMLFromUserSecurity() {
-		return mod2Xml.getXML(getUserSecurity());
+		return mod2Xml.getXML(getUserSecurityModel().getModel());
 	}
 
 	public final String getXMLFromUserSecurityAsString() {
@@ -140,11 +144,25 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 
 	@Override
 	public final OtfAccount authAccountLocal(final String acNameIn,
-			final String pwIn, final OtfAccount accIn) {
+			final String pwIn, final String tokenIn) {
+		// check acc exists
+		OtfAccount acc = getUserSecurityModel().getUserAccountByName(acNameIn);
+		if (acc == null) {
+			return null;
+		}
+		// check if uuid/token
+		if (stringOK(tokenIn)) {
+			if (acc.checkAuthToken(tokenIn)) {
+				return acc;
+			}
+		}
+
 		// Really for use in testing - simply check if password is defaultPw and
 		// that user account exists.
-		if (pwIn.equals(getUserSecurity().getDefaultpw())) {
-			return accIn;
+		if (stringOK(pwIn)) {
+			if (pwIn.equals(getUserSecurityModel().getSettings().getDefPw())) {
+				return acc;
+			}
 		}
 		return null;
 	}
@@ -165,8 +183,13 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 
 	@Override
 	public final String addUpdateAccountLocal(final OtfAccount accIn,
-			final OtfDirectory parentIn, final boolean isNewIn) {
-		// Nothing to do as the entire model is written out.
+			final String parentDirNameIn, final boolean isNewIn) {
+		if (isNewIn && parentDirNameIn != null) {
+			OtfDirectory parentIn = getUserSecurityModel().getDirByName(
+					parentDirNameIn);
+			parentIn.getAccounts().getAccounts().put(accIn.getName(), accIn);
+		}
+
 		return saveUSToXML();
 	}
 
@@ -205,6 +228,21 @@ public class XmlUserSecurity extends AbstractUserSecurityHandler {
 			return 0;
 		}
 		return -1;
+	}
+
+	@Override
+	public UserSecurityModel getLocalUserSecurityModel() {
+		return new UserSecurityModelCached();
+	}
+
+	@Override
+	public String addExistDirToAppLocal(final OtfDirectory dir,
+			final OtfApplication app, boolean defAcStIn, boolean defGrpStIn,
+			int orderIn) {
+
+		// Nothing to do
+
+		return "";
 	}
 
 }

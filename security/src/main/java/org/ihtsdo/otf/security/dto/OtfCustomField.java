@@ -40,9 +40,11 @@ public class OtfCustomField {
 		CD_TYPE_PERM,
 		/** An Application. */
 		CD_TYPE_APP,
-		/** An Setting. */
+		/** A Setting. */
 		CD_TYPE_SETTING,
-		/** An Setting. */
+		/** A token. */
+		CD_TYPE_TOKEN,
+		/** A key val. */
 		CD_TYPE_KEY_VAL;
 
 		public static CustomType getCustomTypeByString(String tval) {
@@ -59,6 +61,9 @@ public class OtfCustomField {
 			if (tval.equalsIgnoreCase(CD_TYPE_SETTING.name())) {
 				return CD_TYPE_SETTING;
 			}
+			if (tval.equalsIgnoreCase(CD_TYPE_TOKEN.name())) {
+				return CD_TYPE_TOKEN;
+			}
 			if (tval.equalsIgnoreCase(CD_TYPE_KEY_VAL.name())) {
 				return CD_TYPE_KEY_VAL;
 			} else {
@@ -72,15 +77,15 @@ public class OtfCustomField {
 		super();
 	}
 
-	public OtfCustomField(String value) {
-		this.value = value;
+	public OtfCustomField(String valueIn) {
+		this.value = valueIn;
 		init();
 	}
 
-	public OtfCustomField(String key, String value) {
+	public OtfCustomField(String keyIn, String valueIn) {
 		super();
-		this.key = key;
-		this.value = value;
+		this.key = keyIn;
+		this.value = valueIn;
 		init();
 	}
 
@@ -181,8 +186,8 @@ public class OtfCustomField {
 		return type;
 	}
 
-	public void setType(CustomType type) {
-		this.type = type;
+	public void setType(CustomType typeIn) {
+		this.type = typeIn;
 	}
 
 	public String[] getVals() {

@@ -2,7 +2,6 @@ package org.ihtsdo.otf.security.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +19,10 @@ import org.ihtsdo.otf.security.dto.OtfApplication;
 import org.ihtsdo.otf.security.dto.OtfBaseId;
 import org.ihtsdo.otf.security.dto.OtfBaseWeb;
 import org.ihtsdo.otf.security.dto.OtfBasicWeb;
+import org.ihtsdo.otf.security.dto.OtfCachedListsDTO;
 import org.ihtsdo.otf.security.dto.OtfCustomData;
 import org.ihtsdo.otf.security.dto.OtfCustomField;
+import org.ihtsdo.otf.security.dto.OtfDirectory;
 import org.ihtsdo.otf.security.dto.OtfGroup;
 import org.ihtsdo.otf.security.dto.OtfSettings;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldApplication;
@@ -48,6 +49,8 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 	private String treeHtml;
 
 	private String treetype;
+
+	private final String curUser = "";
 
 	@Override
 	protected void handlePostRequest(HttpServletRequest requestIn,
@@ -85,6 +88,10 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 				handleGetRequest(requestIn, responseIn);
 			} else {
 				OtfBaseWeb obw = handlePostAction(requestIn, responseIn);
+				if (obw == null) {
+					loadScreen(requestIn, responseIn, null);
+					return;
+				}
 				if (obw.getErrors().isEmpty()) {
 					// update remotely using obw
 					String ok = updateFromWebObject(obw);
@@ -114,34 +121,41 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		if (webObject instanceof OtfSettings) {
 			OtfSettings otfObj = (OtfSettings) webObject;
 			String retval = getUsh().addUpdateGroup(otfObj.getGrp());
-			getUsh().getUserSecurity().resetSettings();
-			getUsh().getUserSecurity().resetAppsNotMembersOrUsers();
+			getUsh().getUserSecurityModel().getModel().reset();
 			return retval;
 		}
 		if (webObject instanceof OtfAccount) {
 			OtfAccount otfObj = (OtfAccount) webObject;
-			String retval = getUsh().addUpdateAccount(otfObj, null);
-			getUsh().getUserSecurity().resetAllAccounts();
-			getUsh().getUserSecurity().resetAdminUsers();
+			String retval = getUsh().addUpdateAccount(otfObj);
+			getUsh().getUserSecurityModel().getModel().reset();
+			// update list of users
+			getUsh().getUserSecurityModel().resetAllAccounts();
+
 			return retval;
 		}
 		if (webObject instanceof OtfApplication) {
 			OtfApplication otfObj = (OtfApplication) webObject;
 			String retval = getUsh().addUpdateApp(otfObj);
-			getUsh().getUserSecurity().resetAppsMap();
-			getUsh().getUserSecurity().resetAppsNotMembersOrUsers();
-			getUsh().getUserSecurity().resetDirsMap();
-			getUsh().getUserSecurity().resetAdminUsers();
+			getUsh().getUserSecurityModel().getModel().reset();
+			// update list of apps
+			getUsh().getUserSecurityModel().resetAppsMap();
+			return retval;
+		}
+		if (webObject instanceof OtfDirectory) {
+			OtfDirectory otfObj = (OtfDirectory) webObject;
+			String retval = getUsh().addUpdateDir(otfObj);
+			getUsh().getUserSecurityModel().getModel().reset();
+			// update list of apps
+
 			return retval;
 		}
 		if (webObject instanceof OtfGroup) {
 			OtfGroup otfObj = (OtfGroup) webObject;
 			String retval = getUsh().addUpdateGroup(otfObj);
-			getUsh().getUserSecurity().resetAppsMap();
-			getUsh().getUserSecurity().resetAppsNotMembersOrUsers();
-			getUsh().getUserSecurity().resetDirsMap();
-			getUsh().getUserSecurity().resetMembers();
-			getUsh().getUserSecurity().resetAdminUsers();
+			getUsh().getUserSecurityModel().getModel().reset();
+			// update members
+			getUsh().getUserSecurityModel().resetMembers();
+
 			return retval;
 		} else {
 			return AbstractUserSecurityHandler.REMOTE_COMMIT_NOT_OK;
@@ -169,7 +183,6 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			reqd.forward(requestIn, responseIn);
 			return;
 		}
-
 		boolean userok = checkCred(requestIn, responseIn);
 		if (userok) {
 			if (decPath.startsWith(WebStatics.NEW_FORM_URL)) {
@@ -196,21 +209,6 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			HttpServletResponse responseIn) throws IOException,
 			ServletException {
 		String usern = authUser(requestIn);
-		if (usern != null) {
-			// check perm - is the uname in the list of admin users
-			Boolean perm = getUsh().getUserSecurity().getAdminUsers()
-					.contains(usern);
-			// if not perm send to sorry page
-			if (!perm) {
-				requestIn.getSession().removeAttribute(WebStatics.USERNAME);
-				requestIn.getSession().removeAttribute(WebStatics.AUTH_TOKEN);
-				setRedirect("/NoAdmin.jsp");
-				final RequestDispatcher reqd = sc.getServletContext()
-						.getRequestDispatcher(redirect);
-				reqd.forward(requestIn, responseIn);
-				return false;
-			}
-		}
 		if (usern == null) {
 			setRedirect("/login.jsp");
 			final RequestDispatcher reqd = sc.getServletContext()
@@ -219,6 +217,15 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			return false;
 		}
 
+		if (usern.equals(NO_PERM)) {
+			requestIn.getSession().removeAttribute(WebStatics.USERNAME);
+			requestIn.getSession().removeAttribute(WebStatics.AUTH_TOKEN);
+			setRedirect("/NoAdmin.jsp");
+			final RequestDispatcher reqd = sc.getServletContext()
+					.getRequestDispatcher(redirect);
+			reqd.forward(requestIn, responseIn);
+			return false;
+		}
 		return true;
 
 	}
@@ -227,57 +234,68 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			HttpServletResponse responseIn, OtfBaseWeb obw)
 			throws ServletException, IOException {
 		String curl = getContextUrl(requestIn);
-		getUsh().getUserSecurity().getCachedListMaps()
-				.setAdminServletContextUrl(curl);
+		OtfCachedListsDTO.setAdminServletContextUrl(curl);
 		hr.getSession().setAttribute(WebStatics.BASEURL, curl);
+		hr.getSession().setAttribute(WebStatics.TREE, getTreeHtml(curl));
 		boolean loadObw = false;
 		if (obw != null) {
 			if (obw instanceof OtfBaseId) {
 				OtfBaseId obi = (OtfBaseId) obw;
 				loadObw = obi.isNew() && !obw.getErrors().isEmpty();
 			}
-
 		}
-
 		if (loadObw) {
 			hr.getSession().setAttribute(WebStatics.FORM, obw.getRHS());
 		} else {
 			hr.getSession().setAttribute(WebStatics.FORM, getForm());
 		}
-		hr.getSession().setAttribute(WebStatics.TREE, getTreeHtml(curl));
 		setRedirect("/index-admin.jsp");
 		final RequestDispatcher reqd = sc.getServletContext()
 				.getRequestDispatcher(redirect);
 		reqd.forward(requestIn, responseIn);
 	}
 
-	public final String getMembersTreeHtml(final String path) {
-		return getList("Members", path + SecurityService.MEMBERS, getUsh()
-				.getUserSecurity().getMembers());
+	public final List<String> getUsers() {
+		List<String> users = getUsh().getUserSecurityModel().getUserNames();
+		Collections.sort(users);
+		return users;
 	}
 
-	public final List<String> getUsers() {
-		UsersListQueryDTO ulq = new UsersListQueryDTO(getUsh());
-		List<String> usersL = new ArrayList<String>();
-		for (OtfAccountMin acc : ulq.getUsers()) {
-			usersL.add(acc.getName());
-		}
-		Collections.sort(usersL);
+	public final List<String> getApps() {
+		// List<String> users = getUsh().getUserSecurityModel().getApps();
+		List<String> apps = getUsh().getUserSecurityModel().getAppsNotAdmin();
+		Collections.sort(apps);
+		return apps;
+	}
 
-		return usersL;
+	public final List<String> getMembers() {
+		List<String> members = getUsh().getUserSecurityModel().getMembers();
+		Collections.sort(members);
+		return members;
 	}
 
 	public final OtfSettings getSettings() {
-		return getUsh().getUserSecurity().getSettings();
+		// get dirs map for use in validation
+		getUsh().getUserSecurityModel().getDirsMap();
+		return getUsh().getUserSecurityModel().getSettings();
+	}
+
+	public final String getMembersTreeHtml(final String path) {
+		return getList("Members", path + SecurityService.MEMBERS, getMembers());
 	}
 
 	public final String getUsersTreeHtml(final String path) {
+		// get info needed for validation/drop downs
+		getUsh().getUserSecurityModel().getAppsMap();
+		getUsh().getUserSecurityModel().getDirsMap();
+		getUsh().getUserSecurityModel().getAppsNotAdmin();
+		getMembers();
+
 		return getList("Users", path + SecurityService.USERS, getUsers());
 	}
 
 	public final String getAppsTreeHtml(final String path) {
-		return getList("Applications", path + SecurityService.APPS, getUsh()
-				.getUserSecurity().getAppsNotMembersOrUsers());
+		return getList("Applications", path + SecurityService.APPS, getApps());
 	}
 
 	public final String getList(String title, String baseUrl, List<String> vals) {
@@ -300,15 +318,19 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 
 		String inputKey = getNamedParam(OtfBaseWeb.INPUT_KEY_NAME, requestIn);
 		String id = getNamedParam(OtfBaseId.ID_KEY, requestIn);
-
 		OtfBaseWeb obw = getWebObjectFromId(inputKey, id);
-		handleParams(requestIn, responseIn, obw);
+		if (obw == null) {
+			LOG.severe("No Web Object found for inputKey : " + inputKey
+					+ " id = " + id);
+		}
+		if (obw != null) {
+			handleParams(requestIn, responseIn, obw);
+		}
 		return obw;
 
 	}
 
 	private OtfBaseWeb getWebObjectFromId(String inputKey, String id) {
-
 		if (!stringOK(inputKey)) {
 			return null;
 		}
@@ -317,27 +339,33 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 
 		case SecurityService.USERS:
 			if (exists) {
-				return getUsh().getUserSecurity().getUserAccountById(id, "*");
+				return getUsh().getUserSecurityModel().getUserAccountById(id);
 			} else {
 				return new OtfAccount();
 			}
 		case SecurityService.APPS:
 			if (exists) {
-				return getUsh().getUserSecurity().getApps().getAppById(id);
+				return getUsh().getUserSecurityModel().getAppById(id);
 			} else {
 				return new OtfApplication();
+			}
+		case SecurityService.DIR:
+			if (exists) {
+				return getUsh().getUserSecurityModel().getDirById(id);
+			} else {
+				return new OtfDirectory();
 			}
 		case SecurityService.SETTINGS:
 			return getSettings();
 		case OtfGroup.TYPE_NORMAL:
 			if (exists) {
-				return getUsh().getUserSecurity().getGroupById(id);
+				return getUsh().getUserSecurityModel().getGroupById(id);
 			} else {
 				return new OtfGroup();
 			}
 		case OtfGroup.TYPE_MEMBER:
 			if (exists) {
-				return getUsh().getUserSecurity().getMemberById(id);
+				return getUsh().getUserSecurityModel().getMemberById(id);
 			} else {
 				return new OtfGroup();
 			}
@@ -365,7 +393,9 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 	}
 
 	public final String getTreeHtml(final String path) {
-		if (isLoadTree()) {
+
+		boolean loadTree = isLoadTree();
+		if (loadTree) {
 			switch (getTreetype()) {
 			case SecurityService.MEMBERS:
 				treeHtml = getMembersTreeHtml(path);
@@ -466,7 +496,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 
 		if (getUrlNodes().length > 1) {
 			String val = getUrlNodes()[1];
-			oacc = getUsh().getUserSecurity().getUserAccountByName(val, "*");
+			oacc = getUsh().getUserSecurityModel().getUserAccountByName(val);
 			if (oacc != null) {
 				oacc.getId();
 			}
@@ -476,8 +506,10 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		}
 		oacc.setAction(getDecString(getHr().getRequestURI()));
 		// make sure the lists have been built.
-		getUsh().getUserSecurity().getCachedListMaps().getMembersList();
-		getUsh().getUserSecurity().getCachedListMaps().getAppsMap();
+		// getUsh().getUserSecurityModel().getModel().getCachedListMaps()
+		// .getMembersList();
+		// getUsh().getUserSecurityModel().getModel().getCachedListMaps()
+		// .getAppsMap();
 		return oacc.getRHS();
 
 	}
@@ -487,7 +519,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		OtfGroup member = null;
 		if (getUrlNodes().length > 1) {
 			String val = getUrlNodes()[1];
-			member = getUsh().getUserSecurity().getMemberByName(val);
+			member = getUsh().getUserSecurityModel().getMemberByName(val);
 			if (member != null) {
 				member.getId();
 			}
@@ -498,8 +530,8 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 
 		member.setAction(getDecString(getHr().getRequestURI()));
 		member.setGrptype(OtfGroup.TYPE_MEMBER);
-		member.setParentDirName(getUsh().getUserSecurity().getMembersDir()
-				.getName());
+		member.setParentDirName(getUsh().getUserSecurityModel().getSettings()
+				.getMembers());
 		return member.getRHS();
 	}
 
@@ -507,9 +539,15 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		OtfApplication oacc = null;
 		if (getUrlNodes().length > 1) {
 			String val = getUrlNodes()[1];
-			oacc = getUsh().getUserSecurity().getApps().getAppByName(val);
+			oacc = getUsh().getUserSecurityModel().getAppbyName(val);
 			if (oacc != null) {
 				oacc.getId();
+			}
+			if (oacc == null) {
+				// try dir
+				if (getUsh().getUserSecurityModel().getDirByName(val) != null) {
+					return getDirForm();
+				}
 			}
 		}
 		if (oacc == null) {
@@ -521,7 +559,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 
 		// get the groups via the accountStores
 		if (stringOK(oacc.getName())) {
-			List<OtfGroup> grps = getUsh().getUserSecurity()
+			List<OtfGroup> grps = getUsh().getUserSecurityModel()
 					.getGroupsByAppName(oacc.getName());
 
 			String action = getDecString(getHr().getRequestURI());
@@ -534,8 +572,8 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			OtfGroup newGrp = new OtfGroup();
 			newGrp.setAction(action);
 
-			// Set it's dir parent to the same as the
-			String dirname = getUsh().getUserSecurity()
+			// Set it's dir parent to the same as the app name
+			String dirname = getUsh().getUserSecurityModel()
 					.getDirsByAppName(oacc.getName()).iterator().next();
 			newGrp.setParentDirName(dirname);
 			grps.add(newGrp);
@@ -546,9 +584,48 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		return sbuild.toString();
 	}
 
-	public final Map<String, List<String>> getApps() {
-		return getUsh().getUserSecurity().getAppsMap();
+	public final String getDirForm() {
+		OtfDirectory oacc = null;
+		if (getUrlNodes().length > 1) {
+			String val = getUrlNodes()[1];
+			oacc = getUsh().getUserSecurityModel().getDirByName(val);
+			if (oacc != null) {
+				oacc.getId();
+			}
+		}
+		if (oacc == null) {
+			oacc = new OtfDirectory();
+		}
+		oacc.setAction(getDecString(getHr().getRequestURI()));
+		StringBuilder sbuild = new StringBuilder();
+		sbuild.append(oacc.getRHS());
+
+		// get the groups via the accountStores
+		if (stringOK(oacc.getName())) {
+			List<OtfGroup> grps = getUsh().getUserSecurityModel()
+					.getGroupsByDirName(oacc.getName());
+
+			String action = getDecString(getHr().getRequestURI());
+			for (OtfGroup grp : grps) {
+				grp.setAction(action);
+				grp.getId();
+			}
+
+			// add a new grp
+			OtfGroup newGrp = new OtfGroup();
+			newGrp.setAction(action);
+			newGrp.setParentDirName(oacc.getName());
+			grps.add(newGrp);
+
+			Collections.sort(grps);
+			sbuild.append(OtfBaseWeb.getRepeatingSubForms("Roles/Groups", grps));
+		}
+		return sbuild.toString();
 	}
+
+	// public final Map<String, List<String>> getApps() {
+	// return getUsh().getUserSecurityModel().getAppsMap();
+	// }
 
 	public final String requestResetUserPassword(final String userdetail) {
 		// First find if there is an account with that name or email

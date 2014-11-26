@@ -1,6 +1,9 @@
 package org.ihtsdo.otf.security.stormpath;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.dto.OtfAccount;
@@ -27,6 +30,7 @@ import com.stormpath.sdk.directory.DirectoryStatus;
 import com.stormpath.sdk.group.Group;
 import com.stormpath.sdk.group.GroupList;
 import com.stormpath.sdk.group.GroupStatus;
+import com.stormpath.sdk.resource.ResourceException;
 
 public class Model2Storm {
 
@@ -39,6 +43,21 @@ public class Model2Storm {
 			.getName());
 	private UserSecurity userSecurity;
 	private final StormPathBaseDTO spbd;
+
+	public static final String DEF_PW = "ChangeMe123";
+
+	private List<Exception> errors = new ArrayList<Exception>();
+
+	public final List<Exception> getErrors() {
+		if (errors == null) {
+			errors = new ArrayList<Exception>();
+		}
+		return errors;
+	}
+
+	public final void setErrors(final List<Exception> errorsIn) {
+		errors = errorsIn;
+	}
 
 	public Model2Storm(final StormPathBaseDTO spbdIn) {
 		super();
@@ -58,80 +77,98 @@ public class Model2Storm {
 	}
 
 	private void clear() {
-		String UCSP = StormPathUserSecurity.STORMPATH.toUpperCase();
+		String ucsp = StormPathUserSecurityHandler.STORMPATH_APP.toUpperCase();
 		// Clear apps not SP
-		ApplicationList apps = spbd.getTenant().getApplications();
-		for (Application app : apps) {
-			String UCName = app.getName().toUpperCase();
-			boolean canDel = !UCName.contains(UCSP);
-			if (canDel) {
-				app.delete();
+		setErrors(null);
+		try {
+			ApplicationList apps = spbd.getTenant().getApplications();
+			for (Application app : apps) {
+				String ucName = app.getName().toUpperCase();
+				boolean canDel = !ucName.contains(ucsp);
+				if (canDel) {
+					app.delete();
+				}
 			}
-		}
 
-		// Clear Dirs not SP
-		DirectoryList dirs = spbd.getTenant().getDirectories();
-		for (Directory dir : dirs) {
-			String UCName = dir.getName().toUpperCase();
-			boolean canDel = !UCName.contains(UCSP);
-			if (canDel) {
-				dir.delete();
+			// Clear Dirs not SP
+			DirectoryList dirs = spbd.getTenant().getDirectories();
+			for (Directory dir : dirs) {
+				String ucName = dir.getName().toUpperCase();
+				boolean canDel = !ucName.contains(ucsp);
+				if (canDel) {
+					dir.delete();
+				}
 			}
+		} catch (ResourceException re) {
+			getErrors().add(re);
 		}
 
 	}
 
 	private void buildDirs() {
-		DirectoryList directories = spbd.getTenant().getDirectories();
-		for (OtfDirectory oDir : userSecurity.getDirs().getDirectories()
-				.values()) {
-			boolean found = false;
-			for (Directory directory : directories) {
-				if (directory.getName().equals(oDir.getName())) {
-					buildDirectory(oDir, directory);
-					found = true;
+
+		setErrors(null);
+		try {
+			DirectoryList directories = spbd.getTenant().getDirectories();
+			for (OtfDirectory oDir : userSecurity.getDirs().getDirectories()
+					.values()) {
+				boolean found = false;
+				for (Directory directory : directories) {
+					if (directory.getName().equals(oDir.getName())) {
+						buildDirectory(oDir, directory);
+						found = true;
+					}
+				}
+				if (!found) {
+					buildDirectory(oDir, null);
 				}
 			}
-			if (!found) {
-				buildDirectory(oDir, null);
-			}
+		} catch (ResourceException re) {
+			getErrors().add(re);
 		}
 	}
 
-	public void buildDirectory(final OtfDirectory oDir, Directory dir) {
-		if (oDir == null && dir == null) {
-			LOG.severe("buildDirectory all is null");
-			return;
-		}
+	public final void buildDirectory(final OtfDirectory oDir, Directory dir) {
 
-		if (oDir != null && dir != null) {
-			// update dir
-			dir.setName(oDir.getName());
-			dir.setDescription(oDir.getDescription());
-			dir.setStatus(DirectoryStatus.valueOf(oDir.getStatus().toString()));
-			dir.save();
-		} else {
-			if (dir == null) {
-				// Add new
-				dir = spbd.getClient().getDataStore()
-						.instantiate(Directory.class);
+		setErrors(null);
+		try {
+			if (oDir == null && dir == null) {
+				LOG.severe("buildDirectory all is null");
+				return;
+			}
+
+			if (oDir != null && dir != null) {
+				// update dir
 				dir.setName(oDir.getName());
 				dir.setDescription(oDir.getDescription());
+				dir.setStatus(DirectoryStatus.valueOf(oDir.getStatus()
+						.toString()));
+				dir.save();
+			} else {
+				if (dir == null) {
+					// Add new
+					dir = spbd.getClient().getDataStore()
+							.instantiate(Directory.class);
+					dir.setName(oDir.getName());
+					dir.setDescription(oDir.getDescription());
 
-				spbd.getTenant().createDirectory(dir);
+					spbd.getTenant().createDirectory(dir);
 
+				}
+				if (oDir == null) {
+					// delete existing? NOT STORMPATH
+					dir = null;
+
+				}
 			}
-			if (oDir == null) {
-				// delete existing? NOT STORMPATH
-				dir = null;
 
+			if (oDir != null && dir != null) {
+				// add groups and accounts
+				buildGroups(oDir, dir);
+				buildAccounts(oDir, dir);
 			}
-		}
-
-		if (oDir != null && dir != null) {
-			// add groups and accounts
-			buildGroups(oDir, dir);
-			buildAccounts(oDir, dir);
+		} catch (ResourceException re) {
+			getErrors().add(re);
 		}
 
 	}
@@ -154,41 +191,48 @@ public class Model2Storm {
 
 	}
 
-	public void buildGroup(final OtfGroup ogrp, Group grp, final Directory dir) {
-		if (ogrp == null && grp == null) {
-			LOG.severe("buildGroup all is null");
-			return;
-		}
-		if (ogrp != null && grp != null) {
-			// update dir
-			grp.setName(ogrp.getName());
-			grp.setDescription(ogrp.getDescription());
-			grp.setStatus(GroupStatus.valueOf(ogrp.getStatus().toString()));
-			grp.save();
-		} else {
-			if (grp == null) {
-				// Add new
-				grp = spbd.getClient().instantiate(Group.class);
+	public final void buildGroup(final OtfGroup ogrp, Group grp,
+			final Directory dir) {
+		setErrors(null);
+		try {
+			if (ogrp == null && grp == null) {
+				LOG.severe("buildGroup all is null");
+				return;
+			}
+			if (ogrp != null && grp != null) {
+				// update dir
 				grp.setName(ogrp.getName());
 				grp.setDescription(ogrp.getDescription());
-				dir.createGroup(grp);
+				grp.setStatus(GroupStatus.valueOf(ogrp.getStatus().toString()));
+				grp.save();
+			} else {
+				if (grp == null) {
+					// Add new
+					grp = spbd.getClient().instantiate(Group.class);
+					grp.setName(ogrp.getName());
+					grp.setDescription(ogrp.getDescription());
+					dir.createGroup(grp);
 
+				}
+				if (ogrp == null) {
+					grp = null;
+				}
 			}
-			if (ogrp == null) {
-				grp = null;
-			}
-		}
 
-		if (ogrp != null && grp != null) {
-			// add accounts
-			buildAccounts(ogrp, grp);
-			// add customFields
-			if (!ogrp.getCustData().getCustFields().isEmpty()) {
-				CustomData cd = spbd.getResourceByHref_CustomData(grp
-						.getCustomData().getHref());
-				buildCustomData(ogrp.getCustData().getCustFields(), cd);
-				cd.save();
+			if (ogrp != null && grp != null) {
+				// add accounts
+				buildAccounts(ogrp, grp);
+				// add customFields
+				if (!ogrp.getCustData().getCustFields().isEmpty()) {
+					CustomData cd = spbd.getResourceByHrefCustomData(grp
+							.getCustomData().getHref());
+					buildCustomData(ogrp.getCustData().getCustFields(), cd);
+					cd.save();
+				}
 			}
+		} catch (ResourceException re) {
+			LOG.log(Level.SEVERE, "Problem updating group", re);
+			getErrors().add(re);
 		}
 
 	}
@@ -226,88 +270,115 @@ public class Model2Storm {
 
 	public void buildAccount(final OtfAccount oacc, Account acc,
 			final AccountStore accSt) {
-		boolean log = false;
-
-		if (oacc == null && acc == null) {
-			LOG.severe("buildAccount all is null");
-			return;
-		}
-		if (oacc != null && acc != null) {
-			// update
-			acc.setUsername(oacc.getName());
-			acc.setEmail(oacc.getEmail());
-			if (!oacc.getCustData().getCustFields().isEmpty()) {
-				CustomData cd = spbd.getResourceByHref_CustomData(acc
-						.getCustomData().getHref());
-				buildCustomData(oacc.getCustData().getCustFields(), cd);
-				cd.save();
+		setErrors(null);
+		try {
+			boolean log = false;
+			if (oacc == null && acc == null) {
+				LOG.severe("buildAccount all is null");
+				return;
 			}
-			acc.save();
-		} else {
-			if (acc == null) {
-				// Add new
-				acc = spbd.getClient().instantiate(Account.class);
+
+			if (oacc != null && acc != null) {
+				// update
 				acc.setUsername(oacc.getName());
 				acc.setGivenName(oacc.getGivenName());
 				acc.setMiddleName(oacc.getMiddleName());
 				acc.setSurname(oacc.getSurname());
 				acc.setEmail(oacc.getEmail());
-				acc.setPassword(userSecurity.getDefaultpw());
 				if (!oacc.getCustData().getCustFields().isEmpty()) {
-					CustomData cd = acc.getCustomData();
+					CustomData cd = spbd.getResourceByHrefCustomData(acc
+							.getCustomData().getHref());
 					buildCustomData(oacc.getCustData().getCustFields(), cd);
-					if (log) {
-						LOG.info("Acc1 = " + acc);
+					cd.save();
+				}
+				acc.save();
+			} else {
+				if (acc == null) {
+					// Add new
+					acc = spbd.getClient().instantiate(Account.class);
+					acc.setUsername(oacc.getName());
+					acc.setGivenName(oacc.getGivenName());
+					acc.setMiddleName(oacc.getMiddleName());
+					acc.setSurname(oacc.getSurname());
+					acc.setEmail(oacc.getEmail());
+
+					String defPw = userSecurity.getDefaultpw();
+					if (defPw == null || defPw.length() == 0) {
+						LOG.info("no def pw set so setting to DEF_PW");
+						defPw = DEF_PW;
 					}
-				}
 
-				SPAccountStoreVisitor spa = new SPAccountStoreVisitor();
-				accSt.accept(spa);
-				if (spa.getType().equals(
-						SPAccountStoreVisitor.AccountStoreType.DIR)) {
-					Directory dir = (Directory) accSt;
-					dir.createAccount(acc);
-				}
-				if (spa.getType().equals(
-						SPAccountStoreVisitor.AccountStoreType.GROUP)) {
-					Group grp = (Group) accSt;
-					grp.addAccount(acc);
+					acc.setPassword(defPw);
+					// LOG.info("acc pw set to: " + defPw);
+					if (!oacc.getCustData().getCustFields().isEmpty()) {
+						CustomData cd = acc.getCustomData();
+						buildCustomData(oacc.getCustData().getCustFields(), cd);
+						if (log) {
+							LOG.info("Acc1 = " + acc);
+						}
+					}
+
+					SPAccountStoreVisitor spa = new SPAccountStoreVisitor();
+					accSt.accept(spa);
+					if (spa.getType().equals(
+							SPAccountStoreVisitor.AccountStoreType.DIR)) {
+						Directory dir = (Directory) accSt;
+						dir.createAccount(acc);
+					}
+					if (spa.getType().equals(
+							SPAccountStoreVisitor.AccountStoreType.GROUP)) {
+						Group grp = (Group) accSt;
+						grp.addAccount(acc);
+
+					}
 
 				}
-
 			}
+		} catch (ResourceException re) {
+			LOG.log(Level.SEVERE, "Problem building account", re);
+			getErrors().add(re);
 		}
+
 	}
 
 	private void buildCustomData(final Map<String, OtfCustomField> custFields,
 			final CustomData customData) {
-		if (custFields != null && customData != null) {
-			for (String key : custFields.keySet()) {
-				String value = custFields.get(key).getValFromVals();
-				// roll through keys in cust field
-				if (!OtfCustomData.getReservedWords().contains(key)) {
-					customData.put(key, value);
+		setErrors(null);
+		try {
+			if (custFields != null && customData != null) {
+				for (String key : custFields.keySet()) {
+					String value = custFields.get(key).getValFromVals();
+					// roll through keys in cust field
+					if (!OtfCustomData.getReservedWords().contains(key)) {
+						customData.put(key, value);
+					}
 				}
-			}
-			for (String key : customData.keySet()) {
-				// roll through keys checking not reserved.
-				if (!OtfCustomData.getReservedWords().contains(key)) {
-					if (!custFields.containsKey(key)) {
-						customData.remove(key);
+				for (String key : customData.keySet()) {
+					// roll through keys checking not reserved.
+					if (!OtfCustomData.getReservedWords().contains(key)) {
+						if (!custFields.containsKey(key)) {
+							customData.remove(key);
+						}
 					}
 				}
 			}
+		} catch (ResourceException re) {
+			LOG.log(Level.SEVERE, "Problem building custom data", re);
+			getErrors().add(re);
 		}
 	}
 
 	private void buildApps() {
 
+		// spbd.resetTenant
+
 		ApplicationList apps = spbd.getTenant().getApplications();
+
 		for (OtfApplication oApp : userSecurity.getApps().getApplications()
 				.values()) {
 			boolean found = false;
 			// refresh spbd in order to pick up new directories
-			spbd.load();
+
 			for (Application app : apps) {
 				if (app.getName().equals(oApp.getName())) {
 					buildApp(oApp, app);
@@ -321,74 +392,104 @@ public class Model2Storm {
 	}
 
 	public void buildApp(final OtfApplication oApp, Application app) {
-		if (oApp == null && app == null) {
-			LOG.severe("buildApp all is null");
-			return;
-		}
-		if (oApp != null && app != null) {
-			// update dir
-			app.setName(oApp.getName());
-			app.setDescription(oApp.getDescription());
-			app.setStatus(ApplicationStatus
-					.valueOf(oApp.getStatus().toString()));
-			app.save();
-		} else {
-			if (app == null) {
-				// Add new
-
-				app = spbd.getClient().instantiate(Application.class);
+		setErrors(null);
+		try {
+			spbd.resetTenant();
+			if (oApp == null && app == null) {
+				LOG.severe("buildApp all is null");
+				return;
+			}
+			if (oApp != null && app != null) {
+				// update dir
 				app.setName(oApp.getName());
 				app.setDescription(oApp.getDescription());
+				app.setStatus(ApplicationStatus.valueOf(oApp.getStatus()
+						.toString()));
+				app.save();
+			} else {
+				if (app == null) {
+					// Add new
 
-				// TODO: NOTE not creating groups. This is on purpose as we do
-				// not require groups and it makes the coding and logic simpler.
+					app = spbd.getClient().instantiate(Application.class);
+					app.setName(oApp.getName());
+					app.setDescription(oApp.getDescription());
 
-				// Get list of accountStores
-				int accStores = oApp.getAccountStores().size();
+					// TODO: NOTE not creating groups. This is on purpose as we
+					// do
+					// not require groups and it makes the coding and logic
+					// simpler.
 
-				if (accStores == 0) {
-					// Build App with default DIR
-					spbd.getTenant().createApplication(
-							Applications.newCreateRequestFor(app)
-									.createDirectory().build());
-				}
+					// Get list of accountStores
+					int accStores = oApp.getAccountStores().size();
 
-				if (accStores > 0) {
-					DirectoryList dl = spbd.getTenant().getDirectories();
+					LOG.info("App called " + oApp.getName() + " has "
+							+ accStores + " accstores set");
 
-					spbd.getTenant().createApplication(
-							Applications.newCreateRequestFor(app).build());
-					boolean isDefStore = true;
-					int i = 0;
-					for (OtfAccountStore oAst : oApp.getAccountStores()
-							.values()) {
-						String name = oAst.getName();
+					if (accStores == 0) {
+						// Build App with default DIR
+						spbd.getTenant().createApplication(
+								Applications.newCreateRequestFor(app)
+										.createDirectory().build());
+					}
 
-						for (Directory dir : dl) {
-							if (dir.getName().equals(name)) {
-								AccountStoreMapping accountStoreMapping = spbd
-										.getClient().instantiate(
-												AccountStoreMapping.class);
-								accountStoreMapping.setAccountStore(dir);
-								accountStoreMapping.setApplication(app);
-								accountStoreMapping
-										.setDefaultAccountStore(isDefStore);
-								accountStoreMapping
-										.setDefaultGroupStore(isDefStore);
-								accountStoreMapping.setListIndex(i);
-								app.createAccountStoreMapping(accountStoreMapping);
-								isDefStore = false;
-								i++;
+					if (accStores > 0) {
+						DirectoryList dl = spbd.getTenant().getDirectories();
+						spbd.getTenant().createApplication(
+								Applications.newCreateRequestFor(app).build());
+						boolean isDefStore = true;
+						int i = 0;
+						for (OtfAccountStore oAst : oApp.getAccountStores()
+								.values()) {
+							String name = oAst.getName();
+							LOG.info("Acc store name = " + name);
+
+							for (Directory dir : dl) {
+								LOG.info("dir name = " + dir.getName());
+								if (dir.getName().equals(name)) {
+									AccountStoreMapping accountStoreMapping = spbd
+											.getClient().instantiate(
+													AccountStoreMapping.class);
+									accountStoreMapping.setAccountStore(dir);
+									accountStoreMapping.setApplication(app);
+									accountStoreMapping
+											.setDefaultAccountStore(isDefStore);
+									accountStoreMapping
+											.setDefaultGroupStore(isDefStore);
+									accountStoreMapping.setListIndex(i);
+									app.createAccountStoreMapping(accountStoreMapping);
+									isDefStore = false;
+									i++;
+								}
 							}
 						}
 					}
 				}
+				if (oApp == null) {
+					app = null;
+				}
 			}
-			if (oApp == null) {
-				app = null;
-			}
+		} catch (ResourceException re) {
+			getErrors().add(re);
 		}
 
+	}
+
+	public final void addDirToApp(final Directory dir, final Application app,
+			final boolean defAcSt, final boolean defGrpSt, final int order) {
+		setErrors(null);
+		try {
+
+			AccountStoreMapping accountStoreMapping = spbd.getClient()
+					.instantiate(AccountStoreMapping.class);
+			accountStoreMapping.setAccountStore(dir);
+			accountStoreMapping.setApplication(app);
+			accountStoreMapping.setDefaultAccountStore(defAcSt);
+			accountStoreMapping.setDefaultGroupStore(defGrpSt);
+			accountStoreMapping.setListIndex(order);
+			app.createAccountStoreMapping(accountStoreMapping);
+		} catch (ResourceException re) {
+			getErrors().add(re);
+		}
 	}
 
 	public final UserSecurity getUserSecurity() {

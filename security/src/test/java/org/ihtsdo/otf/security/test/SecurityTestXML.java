@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.UserSecurityCompare;
 import org.ihtsdo.otf.security.UserSecurityHandler;
-import org.ihtsdo.otf.security.xml.XmlUserSecurity;
+import org.ihtsdo.otf.security.xml.XmlUserSecurityHandler;
 import org.junit.After;
 import org.junit.BeforeClass;
 
@@ -21,7 +21,7 @@ public class SecurityTestXML extends AbstractSecurityTest {
 			.getName());
 
 	private static String fn = "./TextFiles/Example.xml";
-	private static XmlUserSecurity xmlUs;
+	private static XmlUserSecurityHandler xmlUs;
 
 	@BeforeClass
 	public static void createTestInstance() {
@@ -30,7 +30,7 @@ public class SecurityTestXML extends AbstractSecurityTest {
 			stx.getSecS();
 			LOG.info(xmlUs.getXMLFromUserSecurityAsString());
 			LOG.info("String representation: \n");
-			String uStr = xmlUs.getUserSecurity().toString();
+			String uStr = xmlUs.getUserSecurityModel().getModel().toString();
 			LOG.info(uStr);
 			LOG.info(UserSecurityCompare.remSpaceLineEnds(uStr));
 
@@ -45,17 +45,17 @@ public class SecurityTestXML extends AbstractSecurityTest {
 		return getXmlUs();
 	}
 
-	public static XmlUserSecurity getXmlUs() {
+	public static XmlUserSecurityHandler getXmlUs() {
 
 		if (xmlUs == null) {
 			Properties xmlP = new Properties();
-			xmlP.setProperty(XmlUserSecurity.CONF_PROPS_FN, fn);
-			xmlUs = new XmlUserSecurity(xmlP);
+			xmlP.setProperty(XmlUserSecurityHandler.CONF_PROPS_FN, fn);
+			xmlUs = new XmlUserSecurityHandler(xmlP);
 		}
 		return xmlUs;
 	}
 
-	public static void setXmlUs(final XmlUserSecurity xmlUsIn) {
+	public static void setXmlUs(final XmlUserSecurityHandler xmlUsIn) {
 		xmlUs = xmlUsIn;
 	}
 

@@ -10,11 +10,11 @@ import org.ihtsdo.otf.security.dto.OtfCachedListsDTO;
 
 public abstract class OtfCustomFieldCachedVals extends OtfCustomFieldModel {
 
-	private OtfCachedListsDTO cache;
+	// private OtfCachedListsDTO cache;
 	private List<String> members;
 	private Map<String, List<String>> appsMap;
 	private Map<String, List<String>> dirsMap;
-	private List<String> appsNotUserMembers;
+	private List<String> appsNotAdmin;
 	private List<String> usersList;
 	private List<String> userEmailList;
 
@@ -30,7 +30,7 @@ public abstract class OtfCustomFieldCachedVals extends OtfCustomFieldModel {
 
 	public final List<String> getMembers() {
 		if (members == null) {
-			members = getCache().getMembersList();
+			members = OtfCachedListsDTO.getMembersList();
 		}
 		return members;
 	}
@@ -48,14 +48,14 @@ public abstract class OtfCustomFieldCachedVals extends OtfCustomFieldModel {
 
 	public final Map<String, List<String>> getAppsMap() {
 		if (appsMap == null) {
-			appsMap = getCache().getAppsMap();
+			appsMap = OtfCachedListsDTO.getAppsMap();
 		}
 		return appsMap;
 	}
 
 	public final Map<String, List<String>> getDirsMap() {
 		if (dirsMap == null) {
-			dirsMap = getCache().getDirsMap();
+			dirsMap = OtfCachedListsDTO.getDirsMap();
 		}
 		return dirsMap;
 	}
@@ -64,6 +64,9 @@ public abstract class OtfCustomFieldCachedVals extends OtfCustomFieldModel {
 		List<String> roles = null;
 		if (stringOK(appName)) {
 			roles = getAppsMap().get(appName);
+		}
+		if (roles == null) {
+			roles = getDirsMap().get(appName);
 		}
 		if (roles == null) {
 			roles = new ArrayList<String>();
@@ -84,36 +87,28 @@ public abstract class OtfCustomFieldCachedVals extends OtfCustomFieldModel {
 
 	public String getAppsOptionsSelect(String selVal, String onChangeJS,
 			String controlName) {
-		return getObw().getHtmlRowOptions(null, getAppsNotUserMembers(),
-				selVal, controlName, onChangeJS, null);
+		return getObw().getHtmlRowOptions(null, getAppsNotAdmin(), selVal,
+				controlName, onChangeJS, null);
 	}
 
 	public final List<String> getAppNames() {
-		List<String> names = new ArrayList<String>();
-		names.addAll(getAppsMap().keySet());
+		List<String> names = OtfCachedListsDTO.getAppNamesList();
 		Collections.sort(names);
 		return names;
 
 	}
 
-	public final OtfCachedListsDTO getCache() {
-		if (cache == null) {
-			cache = new OtfCachedListsDTO();
+	public final List<String> getAppsNotAdmin() {
+		if (appsNotAdmin == null) {
+			appsNotAdmin = OtfCachedListsDTO.getAppsNotAdminList();
 		}
-		return cache;
-	}
-
-	public final List<String> getAppsNotUserMembers() {
-		if (appsNotUserMembers == null) {
-			appsNotUserMembers = getCache().getAppsNotUserMemberList();
-		}
-		return appsNotUserMembers;
+		return appsNotAdmin;
 	}
 
 	public final String getHiddenDivRoleOptions() {
 		StringBuilder sbuild = new StringBuilder();
 
-		for (String app : getAppsNotUserMembers()) {
+		for (String app : getAppsNotAdmin()) {
 			sbuild.append(
 					(getRolesOptionsSelect("", app, app, app
 							+ HIDDEN_DIV_ROLES_ID))).append("\n");
@@ -122,7 +117,7 @@ public abstract class OtfCustomFieldCachedVals extends OtfCustomFieldModel {
 	}
 
 	public String getAdminServletContextURL() {
-		return getCache().getAdminServletContextUrl();
+		return OtfCachedListsDTO.getAdminServletContextUrl();
 	}
 
 	@Override
@@ -135,8 +130,8 @@ public abstract class OtfCustomFieldCachedVals extends OtfCustomFieldModel {
 
 	public final List<String> getUsersList() {
 		if (usersList == null) {
-			usersList = new ArrayList<String>(getCache().getAllAccountsMap()
-					.keySet());
+			usersList = new ArrayList<String>(OtfCachedListsDTO
+					.getAllAccountsMap().keySet());
 		}
 		return usersList;
 	}
@@ -144,7 +139,8 @@ public abstract class OtfCustomFieldCachedVals extends OtfCustomFieldModel {
 	public final List<String> getUserEmailList() {
 		if (userEmailList == null) {
 			userEmailList = new ArrayList<String>();
-			for (OtfAccount acc : getCache().getAllAccountsMap().values()) {
+			for (OtfAccount acc : OtfCachedListsDTO.getAllAccountsMap()
+					.values()) {
 				userEmailList.add(acc.getEmail());
 			}
 		}

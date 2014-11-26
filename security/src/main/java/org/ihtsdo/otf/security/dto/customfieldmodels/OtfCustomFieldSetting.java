@@ -10,6 +10,7 @@ public class OtfCustomFieldSetting extends OtfCustomFieldKeyVal {
 	public static final String MEMBERS = "members";
 	public static final String ADMIN = "admin";
 	public static final String MOD_DATE = "modDate";
+	public static final String INITED = "inited";
 
 	public OtfCustomFieldSetting() {
 		super();

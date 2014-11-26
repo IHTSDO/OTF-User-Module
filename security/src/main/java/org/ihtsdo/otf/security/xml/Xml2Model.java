@@ -15,6 +15,7 @@ import org.ihtsdo.otf.security.dto.OtfDirectory;
 import org.ihtsdo.otf.security.dto.OtfGroup;
 import org.ihtsdo.otf.security.dto.OtfGroups;
 import org.ihtsdo.otf.security.dto.UserSecurity;
+import org.ihtsdo.otf.security.dto.UserSecurityCached;
 import org.ihtsdo.otf.security.xml.base.XMLUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -37,9 +38,10 @@ public class Xml2Model {
 	}
 
 	private void buildUserSecurity(final Element elem) {
-		userSecurity = new UserSecurity();
+		userSecurity = new UserSecurityCached();
 		buildTopDirs(elem);
 		buildTopApps(elem);
+		// userSecurity.init();
 
 	}
 
@@ -170,6 +172,7 @@ public class Xml2Model {
 		acc.setSurname(elem.getAttribute(XmlStatics.XML_A_SNAME));
 		acc.setEmail(elem.getAttribute(XmlStatics.XML_A_EMAIL));
 		acc.setStatus(elem.getAttribute(XmlStatics.XML_A_STAT));
+		acc.setParentDir(elem.getAttribute(XmlStatics.XML_A_PDIR));
 
 		// CustomData
 		List<Element> namedChildren = XMLUtil.getChildElemsListByName(

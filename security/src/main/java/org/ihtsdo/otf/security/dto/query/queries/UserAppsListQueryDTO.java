@@ -31,8 +31,8 @@ public class UserAppsListQueryDTO extends AbstractSecurityQuery {
 
 		if (apps.isEmpty()) {
 			if (ush != null) {
-				OtfAccount oacc = ush.getUserSecurity().getUserAccountByName(
-						userName, "*");
+				OtfAccount oacc = ush.getUserSecurityModel()
+						.getUserAccountByName(userName);
 				if (oacc != null) {
 					List<OtfCustomField> mems = oacc.getCustData().getApps();
 					for (OtfCustomField cf : mems) {

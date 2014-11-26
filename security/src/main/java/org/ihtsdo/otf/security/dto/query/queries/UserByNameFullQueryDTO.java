@@ -27,7 +27,7 @@ public class UserByNameFullQueryDTO extends AbstractSecurityQuery {
 
 	public final OtfAccount getUser() {
 		if (user == null) {
-			user = ush.getUser(userName, pw);
+			user = ush.getUser(userName, pw, null);
 		}
 		return user;
 	}

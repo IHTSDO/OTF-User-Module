@@ -42,6 +42,7 @@ public class SecurityService {
 	public static final String APPS = "apps";
 	public static final String PERMS = "perms";
 	public static final String SETTINGS = "settings";
+	public static final String DIR = "dir";
 
 	public static final String GET_USER_BY_NAME = "getUserByName";
 	public static final String GET_USER_MEMBERSHIPS = "getUserMemberships";
@@ -186,8 +187,8 @@ public class SecurityService {
 
 	public final String getUserByName(final String username) {
 
-		OtfAccount oacc = ush.getUserSecurity().getUserAccountByName(username,
-				"*");
+		OtfAccount oacc = ush.getUserSecurityModel().getUserAccountByName(
+				username);
 
 		if (oacc != null) {
 			OtfAccountMin user = new OtfAccountMin(oacc);
@@ -242,10 +243,12 @@ public class SecurityService {
 	}
 
 	public final String getJSonFromObject(final Object obj) {
-		try {
-			return mapper.writeValueAsString(obj);
-		} catch (IOException e) {
-			LOG.log(Level.SEVERE, "Problem getting JSON from Object", e);
+		if (obj != null) {
+			try {
+				return mapper.writeValueAsString(obj);
+			} catch (IOException e) {
+				LOG.log(Level.SEVERE, "Problem getting JSON from Object", e);
+			}
 		}
 		return null;
 	}

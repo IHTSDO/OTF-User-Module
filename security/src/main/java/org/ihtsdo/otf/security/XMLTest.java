@@ -4,7 +4,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.ihtsdo.otf.security.xml.XmlUserSecurity;
+import org.ihtsdo.otf.security.xml.XmlUserSecurityHandler;
 
 public class XMLTest {
 	/**
@@ -12,7 +12,7 @@ public class XMLTest {
 	 * logger.
 	 * </p>
 	 */
-	private static final Logger LOG = Logger.getLogger(XmlUserSecurity.class
+	private static final Logger LOG = Logger.getLogger(XmlUserSecurityHandler.class
 			.getName());
 
 	private final String fn = "./TextFiles/Example.xml";
@@ -26,8 +26,8 @@ public class XMLTest {
 	private void init() {
 
 		Properties xmlP = new Properties();
-		xmlP.setProperty(XmlUserSecurity.CONF_PROPS_FN, fn);
-		XmlUserSecurity xmlUs = new XmlUserSecurity(xmlP);
+		xmlP.setProperty(XmlUserSecurityHandler.CONF_PROPS_FN, fn);
+		XmlUserSecurityHandler xmlUs = new XmlUserSecurityHandler(xmlP);
 		try {
 			xmlUs.initFromFile();
 			LOG.info(xmlUs.getXMLFromUserSecurityAsString());

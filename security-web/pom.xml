@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.ihtsdo.otf</groupId>
 		<artifactId>otf-user-module</artifactId>
-		<version>0.1.2-SNAPSHOT</version>
+		<version>1.0.0</version>
 	</parent>
 
 	<artifactId>security-web</artifactId>
@@ -18,33 +18,11 @@
 	</properties>
 
 	<url>http://maven.apache.org</url>
-	<!--<properties>
-		<spring.version>4.0.3.RELEASE</spring.version>
-	</properties> -->
 	<dependencies>
-
-		<!-- Spring 3 dependencies -->
-		<!--<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-			<version>${spring.version}</version>
-		</dependency> -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
+			<version>${junit-version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -52,16 +30,10 @@
 			<artifactId>security</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<!-- <dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-			<version>1.2</version>
-			<scope>runtime</scope>
-		</dependency>  -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>3.0.1</version>
+			<version>${javax.servlet-api-version}</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
@@ -71,32 +43,31 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>${maven-compiler-plugin-version}</version>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>${java-version}</source>
+					<target>${java-version}</target>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9</version>
+				<version>${maven-javadoc-plugin-version}</version>
 				<configuration>
 				</configuration>
 			</plugin>
-			<plugin>
+			 <plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
-				<version>2.3-SNAPSHOT</version>
+				<version>${tomcat7-maven-plugin-version}</version>
 				<configuration>
 					<server>tomcat-dev</server>
-					<!-- 	 <url>http://localhost:8082/manager/text</url> -->
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
-				<version>2.1</version>
+				<version>${tomcat7-maven-plugin-version}</version>
 				<executions>
 					<execution>
 						<id>tomcat-run</id>
@@ -115,7 +86,7 @@
 			<plugin>
 				<groupId>org.vafer</groupId>
 				<artifactId>jdeb</artifactId>
-				<version>1.1.1</version>
+				<version>${jdeb-version}</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -157,9 +128,10 @@
 										<filemode>0640</filemode>
 									</mapper>
 								</data>
+								<!-- nginx config file -->
 								<data>
-									<src>${basedir}/src/deb/usersecurity.xml</src>
-									<dst>/etc/opt/${packageName}/usersecurity.xml</dst>
+									<src>${basedir}/src/deb/nginx/sites-available/default</src>
+									<dst>/etc/opt/${packageName}/nginx/sites-available/default</dst>
 									<type>file</type>
 									<conffile>true</conffile>
 									<mapper>
@@ -180,7 +152,7 @@
 									<paths>
 										<path>/var/opt/${packageName}</path>
 										<path>/var/opt/${packageName}/run</path>
-										<path>/var/opt/${packageName}/logs</path>
+										<path>/var/opt/${packageName}/log</path>
 									</paths>
 									<mapper>
 										<type>perm</type>

@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 public class PropertiesLoader {
 
-	private static final Logger LOG = Logger.getLogger(ModelMover.class
+	private static final Logger LOG = Logger.getLogger(PropertiesLoader.class
 			.getName());
 
 	// Any commandline arguments

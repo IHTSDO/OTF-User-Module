@@ -1,14 +1,18 @@
 package org.ihtsdo.otf.security.dto;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldSetting;
@@ -20,6 +24,7 @@ public class OtfSettings extends OtfBaseId {
 	public static final String USER_APP_LABEL = "Users Application:";
 	public static final String MEMBER_APP_LABEL = "Members Application:";
 	public static final String ADMIN_APP_LABEL = "Admin Application:";
+	public static final String SETT_INIT_LABEL = "Application Initialized:";
 	public static final String MOD_DATE_LABEL = "Last Modified Date:";
 	private Map<String, OtfCustomFieldSetting> settings;
 
@@ -27,29 +32,31 @@ public class OtfSettings extends OtfBaseId {
 	private String users;
 	private String members;
 	private String admin;
+	private String inited;
 	private String modDate;
 
 	private DateFormat df = null;
 
 	private OtfGroup grp;
+	/**
+	 * <p>
+	 * logger.
+	 * </p>
+	 */
+	private static final Logger LOG = Logger.getLogger(OtfSettings.class
+			.getName());
 
 	public OtfSettings() {
 		super();
 	}
 
-	public OtfSettings(OtfGroup grpIn) {
+	public OtfSettings(final OtfGroup grpIn) {
 		super();
 		setGrp(grpIn);
 		setSettings();
 	}
 
-	public void updateSettings() {
-		setModDate("");
-		updateGrpSettings();
-	}
-
-	public void updateGrpSettings() {
-
+	public final void updateGrpSettings() {
 		for (String key : getSettings().keySet()) {
 			OtfCustomFieldSetting setF = getSettings().get(key);
 			OtfCustomField ocf = getGrp().getCustData().getCustFields()
@@ -58,7 +65,7 @@ public class OtfSettings extends OtfBaseId {
 				ocf = new OtfCustomField();
 				ocf.setKey(setF.getKey());
 				ocf.setModel(setF);
-				getGrp().getCustData().getCustFields().put(setF.getKey(), ocf);
+				getGrp().getCustData().getCustFields().put(ocf.getKey(), ocf);
 			}
 			ocf.setValsFromModelVals();
 			ocf.setValueFromVals();
@@ -74,6 +81,12 @@ public class OtfSettings extends OtfBaseId {
 		setFieldsFromSettings();
 	}
 
+	public final void updateSettings() {
+		setModDate("");
+		setSettingsFromFields();
+		updateGrpSettings();
+	}
+
 	@Override
 	public final void processParams() {
 		resetErrors();
@@ -81,14 +94,12 @@ public class OtfSettings extends OtfBaseId {
 		// If no errors then update
 		if (errors.isEmpty()) {
 			setValsFromParams();
-			setSettingsFromFields();
-			updateGrpSettings();
+			updateSettings();
 		}
-
 	}
 
 	@Override
-	public void validateParams() {
+	public final void validateParams() {
 		String defpIn = getNotNullParam(DEF_PW_LABEL);
 		String membIn = getNotNullParam(MEMBER_APP_LABEL);
 		String usersIn = getNotNullParam(USER_APP_LABEL);
@@ -101,16 +112,17 @@ public class OtfSettings extends OtfBaseId {
 		// TODO: FInd out how & where StormPath Sets it's pw length
 		// complexity/pattern etc & if this is available
 		// Check memb app in List
-		List<String> appNames = new OtfCustomFieldSetting().getAppNames();
-		checkWebFieldInList(membIn, MEMBER_APP_LABEL, appNames, true,
-				"Member App must exist as an application");
+		Collection<String> dirNames = new OtfCustomFieldSetting().getDirsMap()
+				.keySet();
+		checkWebFieldInList(membIn, MEMBER_APP_LABEL, dirNames, true,
+				"Member  must exist as an directory");
 		// Check user app in list.
-		checkWebFieldInList(usersIn, USER_APP_LABEL, appNames, true,
-				"Users App must exist as an application");
+		checkWebFieldInList(usersIn, USER_APP_LABEL, dirNames, true,
+				"Users must exist as an directory");
 	}
 
 	@Override
-	public void addTableRows() {
+	public final void addTableRows() {
 
 		getTableRows().add(
 				getHtmlRowTextInput(DEF_PW_LABEL, getDefPw(),
@@ -125,16 +137,20 @@ public class OtfSettings extends OtfBaseId {
 				getHtmlRowTextInput(ADMIN_APP_LABEL, getAdmin(), getErrors()
 						.get(ADMIN_APP_LABEL)));
 
+		getTableRows().add(
+				getHtmlRowTextInput(SETT_INIT_LABEL, getInited(), getErrors()
+						.get(SETT_INIT_LABEL)));
+
 		getTableRows().add(getHtmlRowPlainText(MOD_DATE_LABEL, getModDate()));
 	}
 
 	@Override
-	public void addHiddenRows() {
+	public final void addHiddenRows() {
 		super.addHiddenRows();
 	}
 
 	@Override
-	public String getTableTitle() {
+	public final String getTableTitle() {
 		return "Update Settings";
 	}
 
@@ -145,7 +161,8 @@ public class OtfSettings extends OtfBaseId {
 		return settings;
 	}
 
-	public final void setSettings(Map<String, OtfCustomFieldSetting> settingsIn) {
+	public final void setSettings(
+			final Map<String, OtfCustomFieldSetting> settingsIn) {
 		settings = settingsIn;
 		setFieldsFromSettings();
 
@@ -158,19 +175,19 @@ public class OtfSettings extends OtfBaseId {
 
 		admin = getSetting(OtfCustomFieldSetting.ADMIN).getVal().trim();
 		modDate = getSetting(OtfCustomFieldSetting.MOD_DATE).getVal().trim();
-
+		inited = getSetting(OtfCustomFieldSetting.INITED).getVal().trim();
 	}
 
 	public final void setSettingsFromFields() {
 		getSetting(OtfCustomFieldSetting.DEFPW).updateVal(getDefPw());
 		getSetting(OtfCustomFieldSetting.USERS).updateVal(getUsers());
 		getSetting(OtfCustomFieldSetting.MEMBERS).updateVal(getMembers());
-
 		getSetting(OtfCustomFieldSetting.ADMIN).updateVal(getAdmin());
 		getSetting(OtfCustomFieldSetting.MOD_DATE).updateVal(getModDate());
+		getSetting(OtfCustomFieldSetting.INITED).updateVal(getInited());
 	}
 
-	private OtfCustomFieldSetting getSetting(String key) {
+	private OtfCustomFieldSetting getSetting(final String key) {
 		OtfCustomFieldSetting rval = getSettings().get(key);
 		if (rval == null) {
 			rval = new OtfCustomFieldSetting();
@@ -189,7 +206,7 @@ public class OtfSettings extends OtfBaseId {
 		return defPw;
 	}
 
-	public final void setDefPw(String defPwIn) {
+	public final void setDefPw(final String defPwIn) {
 		defPw = defPwIn;
 	}
 
@@ -200,7 +217,7 @@ public class OtfSettings extends OtfBaseId {
 		return users;
 	}
 
-	public final void setUsers(String usersIn) {
+	public final void setUsers(final String usersIn) {
 		users = usersIn;
 	}
 
@@ -211,27 +228,28 @@ public class OtfSettings extends OtfBaseId {
 		return members;
 	}
 
-	public final void setMembers(String membersIn) {
+	public final void setMembers(final String membersIn) {
 		members = membersIn;
 	}
 
 	@Override
 	@JsonIgnore
-	public String getInputKey() {
+	public final String getInputKey() {
 		return SecurityService.SETTINGS;
 	}
 
 	@Override
-	public void setValsFromParams() {
+	public final void setValsFromParams() {
 		setDefPw(getNotNullParam(DEF_PW_LABEL));
 		setMembers(getNotNullParam(MEMBER_APP_LABEL));
 		setUsers(getNotNullParam(USER_APP_LABEL));
 		setAdmin(getNotNullParam(ADMIN_APP_LABEL));
+		setInited(getNotNullParam(SETT_INIT_LABEL));
 		setModDate("");
 	}
 
 	@Override
-	public String toString() {
+	public final String toString() {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append("Settings CustomFields:\n");
 		List<String> keys = new ArrayList<String>(settings.keySet());
@@ -249,7 +267,7 @@ public class OtfSettings extends OtfBaseId {
 		return grp;
 	}
 
-	public final void setGrp(OtfGroup grpIn) {
+	public final void setGrp(final OtfGroup grpIn) {
 		grp = grpIn;
 		grp.setGrptype(OtfGroup.TYPE_SETTING);
 	}
@@ -258,7 +276,7 @@ public class OtfSettings extends OtfBaseId {
 		return admin;
 	}
 
-	public final void setAdmin(String adminIn) {
+	public final void setAdmin(final String adminIn) {
 		admin = adminIn;
 	}
 
@@ -269,8 +287,34 @@ public class OtfSettings extends OtfBaseId {
 		return modDate;
 	}
 
-	public final void setModDate(String modDateIn) {
+	public final void setModDate(final String modDateIn) {
 		modDate = modDateIn;
+	}
+
+	public final long getDateTime(final String dateTimeStr) {
+		long dt = -1;
+
+		if (stringOK(dateTimeStr)) {
+			try {
+				Date dtd = getDf().parse(dateTimeStr);
+				dt = dtd.getTime();
+			} catch (ParseException pe) {
+				LOG.log(Level.SEVERE, "Could not parse date String = "
+						+ dateTimeStr, pe);
+			}
+		}
+
+		return dt;
+	}
+
+	public final boolean shouldRefresh(final String dtRemote) {
+
+		long thisTime = getDateTime(getModDate());
+		long remoteTime = getDateTime(dtRemote);
+		boolean shouldRefresh = remoteTime > thisTime;
+
+		LOG.info("shouldRefresh remoteTime > thisTime = " + shouldRefresh);
+		return shouldRefresh;
 	}
 
 	public final DateFormat getDf() {
@@ -282,8 +326,24 @@ public class OtfSettings extends OtfBaseId {
 		return df;
 	}
 
-	public final void setDf(DateFormat dfIn) {
+	public final void setDf(final DateFormat dfIn) {
 		df = dfIn;
+	}
+
+	public final String getInited() {
+
+		if (!stringOK(inited)) {
+			inited = "false";
+		}
+		return inited;
+	}
+
+	public final void setInited(final String initedIn) {
+		inited = initedIn;
+	}
+
+	public final boolean isinited() {
+		return getInited().equalsIgnoreCase("true");
 	}
 
 }

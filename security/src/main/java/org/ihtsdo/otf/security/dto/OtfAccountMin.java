@@ -1,12 +1,11 @@
 package org.ihtsdo.otf.security.dto;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.ihtsdo.otf.security.dto.customfieldmodels.OtfCustomFieldBasic;
-import org.ihtsdo.otf.security.util.UuidConverter;
 
 public class OtfAccountMin extends OtfBaseName {
 
@@ -22,15 +21,11 @@ public class OtfAccountMin extends OtfBaseName {
 	private String givenName;
 	private String middleName;
 	private String surname;
+	private String parentDir;
 
 	private String authToken = "";
 	private boolean auth;
-
-	private long expirytime = -1;
-	// 16 hours
-	private static final long TTL = 57600000;
-	// 5 minutes
-	// private static final long TTL = 300000;
+	private List<String> authTokens = new ArrayList<String>();
 
 	public static final String EMAIL_NAME = "Email:";
 	public static final String GIVEN_NAME = "Given Name:";
@@ -48,13 +43,13 @@ public class OtfAccountMin extends OtfBaseName {
 		givenName = orig.getGivenName();
 		middleName = orig.getMiddleName();
 		surname = orig.getSurname();
+		parentDir = orig.getParentDir();
 		setIdref(orig.getIdref());
 		setId(orig.getId());
 		setStatus(orig.getStatus().toString());
 		setAuthToken(orig.getAuthToken());
 		setAuth(orig.isAuth());
 
-		System.currentTimeMillis();
 	}
 
 	@Override
@@ -109,15 +104,26 @@ public class OtfAccountMin extends OtfBaseName {
 		surname = surnameIn;
 	}
 
+	public final String getParentDir() {
+		if (parentDir == null) {
+			parentDir = "";
+		}
+		return parentDir;
+	}
+
+	public final void setParentDir(final String parentDirIn) {
+		parentDir = parentDirIn;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append(super.toString());
 		sbuild.append("idRef:").append(getIdref()).append(", GivenName:")
 				.append(givenName).append(", MiddleName:").append(middleName)
-				.append(", Surname:").append(surname).append(", Email:")
-				.append(email).append(", Status:")
-				.append(getStatus().toString());
+				.append(", Surname:").append(surname).append(", ParentDir:")
+				.append(parentDir).append(", Email:").append(email)
+				.append(", Status:").append(getStatus().toString());
 		return sbuild.toString();
 
 	}
@@ -206,33 +212,46 @@ public class OtfAccountMin extends OtfBaseName {
 
 	@Override
 	@JsonIgnore
-	public String getHtmlForm(String formName) {
+	public String getHtmlForm(final String formName) {
 		return super.getHtmlForm(formName);
 	}
 
 	@JsonIgnore
+	public final List<String> getAuthTokens() {
+		if (authTokens == null) {
+			authTokens = new ArrayList<String>();
+		}
+		return authTokens;
+	}
+
+	public final void setAuthTokens(final List<String> authTokensIn) {
+		authTokens = authTokensIn;
+	}
+
+	public final void addAuthToken(final String authTokenIn) {
+		getAuthTokens().add(authTokenIn);
+	}
+
+	public final void resetAuthTokens() {
+		authTokens = new ArrayList<String>();
+	}
+
+	@JsonIgnore
 	public final String getAuthToken() {
-		// Temporary until Oauth etc.
-		// Check expired
-		if (isExpired()) {
-			authToken = "";
-			setNewExpiryTime();
-		}
-		if (!stringOK(authToken)) {
-			authToken = UuidConverter.format(UUID.randomUUID());
-		}
 		return authToken;
 	}
 
-	public final void setAuthToken(String authTokenIn) {
+	public final void setAuthToken(final String authTokenIn) {
 		authToken = authTokenIn;
+		addAuthToken(authTokenIn);
 	}
 
 	public final String getToken() {
 		if (isAuth()) {
 			return getAuthToken();
-		} else
-			return "";
+		}
+		return "";
+
 	}
 
 	@JsonIgnore
@@ -240,41 +259,13 @@ public class OtfAccountMin extends OtfBaseName {
 		return auth;
 	}
 
-	public final void setAuth(boolean authIn) {
+	public final void setAuth(final boolean authIn) {
 		auth = authIn;
 	}
 
 	@JsonIgnore
-	public final long getExpirytime() {
-		if (expirytime == -1) {
-			setNewExpiryTime();
-		}
-		return expirytime;
-	}
-
-	public final void setExpiryTtl(long expirytimeIn) {
-		expirytime = expirytimeIn + TTL;
-	}
-
-	public final void setExpirytime(long expirytimeIn) {
-		expirytime = expirytimeIn;
-	}
-
-	private void setNewExpiryTime() {
-		setExpiryTtl(System.currentTimeMillis());
-	}
-
-	@JsonIgnore
-	private boolean isExpired() {
-		if (getExpirytime() > System.currentTimeMillis()) {
-			return false;
-		}
-		return true;
-	}
-
-	@JsonIgnore
-	public boolean checkAuthToken(String token) {
-		if (token.equals(authToken)) {
+	public final boolean checkAuthToken(final String token) {
+		if (getAuthTokens().contains(token)) {
 			setAuth(true);
 			getAuthToken();
 			return true;
@@ -282,4 +273,5 @@ public class OtfAccountMin extends OtfBaseName {
 		setAuth(false);
 		return false;
 	}
+
 }

@@ -2,23 +2,44 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.ihtsdo.otf</groupId>
+	<parent>
+		<groupId>org.ihtsdo.otf</groupId>
+		<artifactId>otf-user-module</artifactId>
+		<version>0.1.2-SNAPSHOT</version>
+	</parent>
+
 	<artifactId>security</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>IHTSDO user management/security/permissions</name>
+
+	<name>OTF User Module</name>
+
+
+
 
 	<dependencies>
 		<dependency>
 			<groupId>com.stormpath.sdk</groupId>
 			<artifactId>stormpath-sdk-api</artifactId>
-			<version>0.9.1</version>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.stormpath.sdk</groupId>
 			<artifactId>stormpath-sdk-httpclient</artifactId>
-			<version>0.9.1</version>
+			<version>1.0.0-SNAPSHOT</version>
 			<scope>runtime</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.stormpath.sdk</groupId>
+			<artifactId>stormpath-sdk-oauth</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.stormpath.sdk</groupId>
+			<artifactId>stormpath-sdk-impl</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		
+		
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

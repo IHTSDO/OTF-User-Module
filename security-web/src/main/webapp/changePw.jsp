@@ -50,6 +50,9 @@
             })();
         </script>
         <%@ page import="org.ihtsdo.otf.security.web.WebStatics" %>
+        <%
+			String sptoken = request.getParameter(WebStatics.SP_TOKEN);
+			String uname = request.getParameter(WebStatics.USERNAME);%>
     </head>
 
     <body>

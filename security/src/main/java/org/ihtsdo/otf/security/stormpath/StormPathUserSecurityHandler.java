@@ -5,22 +5,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.ihtsdo.otf.security.AbstractUserSecurityHandler;
+import org.ihtsdo.otf.security.HandlerAdmin;
+import org.ihtsdo.otf.security.UserSecurityModel;
 import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.OtfApplication;
 import org.ihtsdo.otf.security.dto.OtfDirectory;
 import org.ihtsdo.otf.security.dto.OtfGroup;
 import org.ihtsdo.otf.security.dto.UserSecurity;
+import org.ihtsdo.otf.security.dto.UserSecurityModelCached;
 
 import com.stormpath.sdk.account.Account;
 import com.stormpath.sdk.application.Application;
-import com.stormpath.sdk.application.ApplicationList;
-import com.stormpath.sdk.authc.AuthenticationRequest;
-import com.stormpath.sdk.authc.UsernamePasswordRequest;
 import com.stormpath.sdk.directory.Directory;
 import com.stormpath.sdk.group.Group;
-import com.stormpath.sdk.resource.ResourceException;
 
-public class StormPathUserSecurity extends AbstractUserSecurityHandler {
+public class StormPathUserSecurityHandler extends AbstractUserSecurityHandler {
 
 	/**
 	 * <p>
@@ -28,25 +27,27 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 	 * </p>
 	 */
 	private static final Logger LOG = Logger
-			.getLogger(StormPathUserSecurity.class.getName());
+			.getLogger(StormPathUserSecurityHandler.class.getName());
 
-	private Application usersApplication;
 	private String usersAppName = "OTF Users";
 
 	private StormPathBaseDTO spbd;
 
-	public static final String STORMPATH = "Stormpath";
+	public static final String STORMPATH_APP = "Stormpath";
+	public static final String STORMPATH_DIR = "Stormpath Administrators";
 
 	private Properties props;
+
+	private boolean cacheModel = false;
 
 	private Storm2Model storm2Mod;
 	private Model2Storm mod2Storm;
 
-	public StormPathUserSecurity() {
+	public StormPathUserSecurityHandler() {
 		super();
 	}
 
-	public StormPathUserSecurity(final Properties propsIn) {
+	public StormPathUserSecurityHandler(final Properties propsIn) {
 		super();
 		try {
 			init(propsIn);
@@ -67,9 +68,7 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 			spbd = new StormPathBaseDTO(props);
 			spbd.load();
 		}
-
 		getMod2Storm().sendToStormPath(null);
-
 	}
 
 	@Override
@@ -77,61 +76,49 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 		if (spbd == null) {
 			spbd = new StormPathBaseDTO(props);
 			spbd.load();
+
 		}
-		UserSecurity us = getStorm2Mod().build();
-		us.setHandlerAdminDir(STORMPATH);
-		setUserSecurity(us);
+
+		HandlerAdmin handlerAdmin = new HandlerAdmin();
+		handlerAdmin.setAppName(STORMPATH_APP);
+		handlerAdmin.setDirName(STORMPATH_DIR);
+
+		if (isCacheModel()) {
+			UserSecurity us = getStorm2Mod().buildCachedUserSecurity();
+			getUserSecurityModel(us, handlerAdmin);
+		}
+		if (!isCacheModel()) {
+			UserSecurity us = new UserSecurityStormpath();
+			getUserSecurityModel(us, handlerAdmin);
+		}
+
+		postbuildUserSecurity();
+
+		getUserSecurityModel().init();
 	}
 
 	public final void sendUserSecuritytoStormPath(
 			final UserSecurity userSecurityIn) throws Exception {
 		if (userSecurityIn != null) {
-			setUserSecurity(userSecurityIn);
+			getUserSecurityModel().setModel(userSecurityIn);
 		}
 		if (spbd == null) {
 			spbd = new StormPathBaseDTO(props);
 			spbd.load();
 		}
-
-		getMod2Storm().sendToStormPath(getUserSecurity());
+		// Make sure settings inited by called defpw
+		LOG.info("DefPw = " + getUserSecurityModel().getSettings().getDefPw());
+		getMod2Storm().sendToStormPath(getUserSecurityModel().getModel());
 	}
 
 	@Override
 	public void saveUserSecurity() throws Exception {
 	}
 
-	public final Application getUsersApplication() {
-		if (usersApplication == null) {
-			String userAppName = getUserSecurity().getUsersApp();
-			setUsersApplication(getApplicationByName(userAppName));
-		}
-		return usersApplication;
-	}
-
-	public final Application getApplicationByName(final String appName) {
-		ApplicationList applications = spbd.getTenant().getApplications();
-		for (Application application : applications) {
-			if (application.getName().equals(appName)) {
-				return application;
-			}
-		}
-		return null;
-	}
-
-	public final void setUsersApplication(final Application usersApplicationIn) {
-		usersApplication = usersApplicationIn;
-	}
-
-	public final Application getFirstApplicationByUserName(final String userName) {
-
-		String appname = getUserSecurity().getFirstAppForUser(userName);
-		if (stringOK(appname)) {
-			return getApplicationByName(appname);
-		}
-		return null;
-	}
-
 	public final String getUsersAppName() {
+		if (!stringOK(usersAppName)) {
+			usersAppName = getUserSecurityModel().getSettings().getUsers();
+		}
 		return usersAppName;
 	}
 
@@ -149,30 +136,8 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 
 	@Override
 	public final OtfAccount authAccountLocal(final String acNameIn,
-			String pwIn, final OtfAccount accIn) {
-		Account acc = authSPAccount(acNameIn, pwIn);
-		pwIn = null;
-		if (acc != null) {
-			return accIn;
-		}
-		return null;
-	}
-
-	private Account authSPAccount(final String acName, final String pw) {
-		// Create an authentication request using the credentials
-		AuthenticationRequest request = new UsernamePasswordRequest(acName, pw);
-		// Now let's authenticate the account with the application:
-		try {
-			return getUsersApplication().authenticateAccount(request)
-					.getAccount();
-		} catch (ResourceException name) {
-			// ...catch the error and print it to the syslog if it wasn't.
-			LOG.severe("Auth error: " + name.getDeveloperMessage());
-			return null;
-		} finally {
-			// Clear the request data to prevent later memory access
-			request.clear();
-		}
+			final String pwIn, final String tokenIn) {
+		return getStorm2Mod().authAccountLocal(acNameIn, pwIn, tokenIn);
 	}
 
 	public final Properties getProps() {
@@ -209,11 +174,13 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 	@Override
 	public final String addUpdateAppLocal(final OtfApplication appIn,
 			final boolean isNewIn) {
+		LOG.info("addUpdateAppLocal appIn = " + appIn.getName());
 		// Remember to create a new dir? Before adding app
 		if (isNewIn) {
 			getMod2Storm().buildApp(appIn, null);
 		} else {
 			Application app = getStorm2Mod().getAppByName(appIn.getName());
+			LOG.info("addUpdateAppLocal app = " + app.getName());
 			getMod2Storm().buildApp(appIn, app);
 		}
 		return REMOTE_COMMIT_OK;
@@ -221,13 +188,31 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 
 	@Override
 	public final String addUpdateAccountLocal(final OtfAccount accIn,
-			final OtfDirectory parentIn, final boolean isNewIn) {
-		Directory mdir = getStorm2Mod().getDirByName(parentIn.getName());
+			final String parentDirNameIn, final boolean isNewIn) {
+		Directory mdir = getStorm2Mod().getDirByName(parentDirNameIn);
 		if (mdir == null) {
 			return DIR_NOT_FOUND;
 		}
+		if (!stringOK(accIn.getGivenName())) {
+			accIn.setGivenName(accIn.getName());
+		}
+		if (!stringOK(accIn.getSurname())) {
+			accIn.setSurname("SurnameNotSet");
+		}
+
 		if (isNewIn) {
 			getMod2Storm().buildAccount(accIn, null, mdir);
+			if (getMod2Storm().getErrors().size() > 0) {
+				for (Exception ex : getMod2Storm().getErrors()) {
+					LOG.log(Level.SEVERE, "SP Error", ex);
+				}
+			}
+			if (parentDirNameIn != null) {
+				OtfDirectory parentIn = getUserSecurityModel().getDirByName(
+						parentDirNameIn);
+				parentIn.getAccounts().getAccounts()
+						.put(accIn.getName(), accIn);
+			}
 		} else {
 			Account acc = getStorm2Mod()
 					.getAccountByName(accIn.getName(), mdir);
@@ -279,7 +264,7 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 	public final Model2Storm getMod2Storm() {
 		if (mod2Storm == null) {
 			mod2Storm = new Model2Storm(spbd);
-			mod2Storm.setUserSecurity(getUserSecurity());
+			mod2Storm.setUserSecurity(getUserSecurityModel().getModel());
 		}
 		return mod2Storm;
 	}
@@ -291,51 +276,42 @@ public class StormPathUserSecurity extends AbstractUserSecurityHandler {
 	@Override
 	public final String requestUpdateUserPassword(final String userNameIn,
 			final String emailAddrIn) {
-
-		Application uApp = getFirstApplicationByUserName(userNameIn);
-		if (uApp != null) {
-			Account account = uApp.sendPasswordResetEmail(emailAddrIn);
-			if (account != null) {
-				return "Password Mail requested";
-			}
-		}
-
-		return null;
+		return getStorm2Mod()
+				.requestUpdateUserPassword(userNameIn, emailAddrIn);
 	}
 
 	@Override
 	public final int updateUserPassword(final String userNameIn,
 			final String passwordIn, final String tokenIn) {
-		Account acc = null;
-		Application uApp = getFirstApplicationByUserName(userNameIn);
-		if (uApp != null) {
-			acc = getUsersApplication().verifyPasswordResetToken(tokenIn);
+		return getStorm2Mod().updateUserPassword(userNameIn, passwordIn,
+				tokenIn);
+	}
+
+	@Override
+	public final UserSecurityModel getLocalUserSecurityModel() {
+		if (isCacheModel()) {
+			return new UserSecurityModelCached();
+		} else {
+			return new StormpathUserSecurityModel(getSpbd());
 		}
+	}
 
-		if (acc == null) {
-			return -1;
-		}
+	public final boolean isCacheModel() {
+		return cacheModel;
+	}
 
-		else {
-			// check username & acc username agree
-			boolean namesMatch = userNameIn.equals(acc.getUsername());
-			if (!namesMatch) {
-				return -2;
-			}
-			if (namesMatch) {
-				if (stringOK(passwordIn)) {
-					acc.setPassword(passwordIn);
-					acc.save();
-					return 1;
-				} else {
-					return 0;
-				}
+	public final void setCacheModel(final boolean cacheModelIn) {
+		cacheModel = cacheModelIn;
+	}
 
-			}
-
-		}
-
-		return -3;
+	@Override
+	public String addExistDirToAppLocal(OtfDirectory dirIn,
+			OtfApplication appIn, boolean defAcStIn, boolean defGrpStIn,
+			int orderIn) {
+		Application app = getStorm2Mod().getApplicationByName(appIn.getName());
+		Directory dir = getStorm2Mod().getDirByName(dirIn.getName());
+		getMod2Storm().addDirToApp(dir, app, defAcStIn, defGrpStIn, orderIn);
+		return null;
 	}
 
 }

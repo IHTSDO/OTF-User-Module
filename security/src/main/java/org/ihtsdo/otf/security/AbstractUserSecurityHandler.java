@@ -1,6 +1,7 @@
 package org.ihtsdo.otf.security;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,7 +17,9 @@ public abstract class AbstractUserSecurityHandler implements
 		UserSecurityHandler {
 
 	public static final String USH_KEY = "UserSecurityHandler";
-	private UserSecurity userSecurity;
+	// private UserSecurity userSecurity;
+
+	private UserSecurityModel userSecurityModel;
 
 	public static final String NAME_NOT_UNIQUE = "Name is not unique";
 	public static final String NAME_NOT_SET = "Name is not set";
@@ -37,7 +40,7 @@ public abstract class AbstractUserSecurityHandler implements
 	public abstract void saveUserSecurity() throws Exception;
 
 	public abstract OtfAccount authAccountLocal(String acNameIn, String pwIn,
-			OtfAccount acc);
+			String tokenIn);
 
 	@Override
 	public abstract void init(Properties propsIn) throws Exception;
@@ -57,64 +60,107 @@ public abstract class AbstractUserSecurityHandler implements
 			boolean isNew);
 
 	public abstract String addUpdateAccountLocal(final OtfAccount accIn,
-			final OtfDirectory parentIn, boolean isNew);
+			final String parentDirNameIn, boolean isNew);
 
 	public abstract String addUpdateDirLocal(final OtfDirectory parentIn,
 			boolean isNew);
 
+	public abstract String addExistDirToAppLocal(final OtfDirectory dir,
+			final OtfApplication app, boolean defAcSt, boolean defGrpSt,
+			int order);
+
 	@Override
-	public OtfAccount getUser(String acNameIn, String pwIn) {
-		if (pwIn != null && pwIn.length() > 0) {
+	public abstract UserSecurityModel getLocalUserSecurityModel();
+
+	@Override
+	public OtfAccount getUser(final String acNameIn, final String pwIn,
+			final String tokenIn) {
+		if (stringOK(pwIn) || stringOK(tokenIn)) {
 			// first auth
-			return authAccount(acNameIn, pwIn);
+			return authAccount(acNameIn, pwIn, tokenIn);
 		}
-		if (pwIn == null || pwIn.length() == 0) {
-			return getUserSecurity().getUserAccountByName(acNameIn, "*");
+		if (!stringOK(pwIn) && !stringOK(tokenIn)) {
+			return getUserSecurityModel().getUserAccountByName(acNameIn);
 		}
 		return null;
 	}
 
 	@Override
-	public OtfAccount authAccount(String acNameIn, String pwIn) {
-
-		// check acc exists
-		OtfAccount acc = getUserSecurity().getUserAccountByName(acNameIn,
-				UserSecurity.ALL);
-		if (acc == null) {
-			return null;
-		}
-		// check if uuid/token
-		if (acc.checkAuthToken(pwIn)) {
-			return acc;
-		}
-		// else auth local
-		acc = authAccountLocal(acNameIn, pwIn, acc);
+	public OtfAccount authAccount(final String acNameIn, final String pwIn,
+			final String tokenIn) {
+		OtfAccount acc = authAccountLocal(acNameIn, pwIn, tokenIn);
 		if (acc != null) {
 			acc.setAuth(true);
 		}
 		return acc;
 	}
 
-	@Override
-	public final UserSecurity getUserSecurity() {
-		if (userSecurity == null) {
-			userSecurity = (UserSecurity) ObjectCache.INSTANCE.get(getKey());
-		}
-		return userSecurity;
+	public final String addExistDirToApp(final OtfDirectory dir,
+			final OtfApplication app, final boolean defAcSt,
+			final boolean defGrpSt, final int order) {
+		app.getAccountStores().put(dir.getName(), dir);
+		return addExistDirToAppLocal(dir, app, defAcSt, defGrpSt, order);
+
 	}
 
-	@Override
-	public final void setUserSecurity(final UserSecurity userSecurityIn) {
-		ObjectCache.INSTANCE.put(getKey(), userSecurityIn);
-		if (userSecurityIn != null) {
-			userSecurityIn.initCachedValues();
-		}
-	}
+	// @Override
+	// public final UserSecurity getUserSecurity() {
+	// if (userSecurity == null) {
+	// userSecurity = (UserSecurity) ObjectCache.INSTANCE.get(getKey());
+	// }
+	// return userSecurity;
+	// }
+	//
+	// @Override
+	// public final void setUserSecurity(final UserSecurity userSecurityIn) {
+	// ObjectCache.INSTANCE.put(getKey(), userSecurityIn);
+	// if (userSecurityIn != null) {
+	// userSecurityIn.initCachedValues();
+	// }
+	// }
 
-	public void removeUserSecurity() {
-		userSecurity = null;
+	public void removeUserSecurityModel() {
+		userSecurityModel = null;
 		ObjectCache.INSTANCE.remove(getKey());
+	}
 
+	@Override
+	public UserSecurityModel getUserSecurityModel(UserSecurity userSecurityIn) {
+		UserSecurityModel usm = getLocalUserSecurityModel();
+		usm.setModel(userSecurityIn);
+		setUserSecurityModel(usm);
+		return userSecurityModel;
+	}
+
+	@Override
+	public UserSecurityModel getUserSecurityModel(UserSecurity userSecurityIn,
+			HandlerAdmin handlerAdmin) {
+		UserSecurityModel usm = getLocalUserSecurityModel();
+		usm.setHandlerAdmin(handlerAdmin);
+		usm.setModel(userSecurityIn);
+		setUserSecurityModel(usm);
+		return userSecurityModel;
+	}
+
+	@Override
+	public UserSecurityModel getUserSecurityModel() {
+		if (userSecurityModel == null) {
+			userSecurityModel = (UserSecurityModel) ObjectCache.INSTANCE
+					.get(getKey());
+		}
+		if (userSecurityModel == null) {
+			setUserSecurityModel(getLocalUserSecurityModel());
+		}
+		return userSecurityModel;
+	}
+
+	@Override
+	public void setUserSecurityModel(UserSecurityModel userSecurityModelIn) {
+		userSecurityModel = userSecurityModelIn;
+		ObjectCache.INSTANCE.put(getKey(), userSecurityModelIn);
+		if (userSecurityModelIn != null) {
+			userSecurityModelIn.getModel().init();
+		}
 	}
 
 	private String getKey() {
@@ -124,24 +170,29 @@ public abstract class AbstractUserSecurityHandler implements
 
 	@Override
 	public final void reload() {
-		removeUserSecurity();
+		removeUserSecurityModel();
 		localReload();
 		try {
 			buildUserSecurity();
-			getUserSecurity().resetAllCachedValues();
+			getUserSecurityModel().getModel().reset();
 		} catch (Exception e) {
 
 			LOG.log(Level.SEVERE, "An exception has occurred", e);
 		}
-		getUserSecurity();
+		getUserSecurityModel().getModel();
+
+		// reload cached values
+		getUserSecurityModel().resetSettings();
+		getUserSecurityModel().resetAllAccounts();
+		getUserSecurityModel().resetAppsMap();
+		getUserSecurityModel().resetMembers();
 	}
 
 	@Override
-	public final String addUpdateAccount(final OtfAccount accIn,
-			OtfDirectory parentIn) {
+	public final String addUpdateAccount(final OtfAccount accIn) {
 		boolean isNew = accIn.isNew();
 
-		if (isNew && getUserSecurity().accountExists(accIn.getName())) {
+		if (isNew && getUserSecurityModel().accountExists(accIn.getName())) {
 			// names must be unique
 			return NAME_NOT_UNIQUE;
 		}
@@ -150,28 +201,15 @@ public abstract class AbstractUserSecurityHandler implements
 			return NAME_NOT_SET;
 		}
 
-		if (parentIn == null) {
-			Collection<String> dirnames = getUserSecurity().getDirNamesForUser(
-					accIn.getName());
-			if (!dirnames.isEmpty()) {
-				if (dirnames.size() > 1) {
-					LOG.severe("MORE THAN 1 directory found for user called "
-							+ accIn.getName() + " num dirs = "
-							+ dirnames.size());
-				}
-				// get the user using the 1st...there should only be one.....
-				parentIn = getUserSecurity().getDirs().getDirByName(
-						dirnames.iterator().next());
-			}
-		}
-		if (parentIn == null) {
+		String parentIn = accIn.getParentDir();
+
+		if (!stringOK(parentIn)) {
 			// use the std one in settings.
-			parentIn = getUserSecurity().getUsersDir();
+			parentIn = getUserSecurityModel().getUsersDirName();
 		}
 
-		if (isNew && parentIn != null) {
+		if (isNew) {
 			accIn.getId();
-			parentIn.getAccounts().getAccounts().put(accIn.getName(), accIn);
 		}
 
 		return addUpdateAccountLocal(accIn, parentIn, isNew);
@@ -180,7 +218,7 @@ public abstract class AbstractUserSecurityHandler implements
 	@Override
 	public final String addUpdateMember(final OtfGroup grpIn) {
 		// get members parent dir
-		OtfDirectory mDirectory = getUserSecurity().getMembersDir();
+		OtfDirectory mDirectory = getUserSecurityModel().getMembersDir();
 		// is new
 		boolean isNew = grpIn.isNew();
 
@@ -199,9 +237,7 @@ public abstract class AbstractUserSecurityHandler implements
 	public final String addUpdateGroup(final OtfGroup grpIn) {
 		String pDir = grpIn.getParentDirName();
 		boolean isNew = grpIn.isNew();
-
-		OtfDirectory mDirectory = getUserSecurity().getDirs()
-				.getDirByName(pDir);
+		OtfDirectory mDirectory = getUserSecurityModel().getDirByName(pDir);
 		if (isNew && mDirectory.getGroups().groupExists(grpIn.getName())) {
 			// names must be unique
 			return NAME_NOT_UNIQUE;
@@ -230,14 +266,14 @@ public abstract class AbstractUserSecurityHandler implements
 	public final String addUpdateDir(OtfDirectory dirIn) {
 		boolean isNew = dirIn.isNew();
 
-		if (isNew && getUserSecurity().getDirs().dirExists(dirIn.getName())) {
+		if (isNew && getUserSecurityModel().dirExists(dirIn.getName())) {
 			return NAME_NOT_UNIQUE;
 		}
 		if (!stringOK(dirIn.getName())) {
 			return NAME_NOT_SET;
 		}
 
-		getUserSecurity().getDirs().getDirectories()
+		getUserSecurityModel().getModel().getDirs().getDirectories()
 				.put(dirIn.getName(), dirIn);
 
 		return addUpdateDirLocal(dirIn, isNew);
@@ -246,7 +282,7 @@ public abstract class AbstractUserSecurityHandler implements
 	@Override
 	public final String addUpdateApp(final OtfApplication appIn) {
 		boolean isNew = appIn.isNew();
-		if (isNew && getUserSecurity().getApps().appExists(appIn.getName())) {
+		if (isNew && getUserSecurityModel().appExists(appIn.getName())) {
 			// names must be unique
 			return NAME_NOT_UNIQUE;
 		}
@@ -268,7 +304,7 @@ public abstract class AbstractUserSecurityHandler implements
 			if (!dirRval.equals(NAME_NOT_UNIQUE)
 					&& !dirRval.equals(NAME_NOT_SET)) {
 				appIn.getAccountStores().put(dir.getName(), dir);
-				getUserSecurity().getApps().getApplications()
+				getUserSecurityModel().getModel().getApps().getApplications()
 						.put(appIn.getName(), appIn);
 			} else {
 				return "DIRECTORY " + dirRval;
@@ -282,4 +318,76 @@ public abstract class AbstractUserSecurityHandler implements
 		return toCheck != null && toCheck.length() > 0;
 	}
 
+	@Override
+	public void postbuildUserSecurity() {
+
+		if (getUserSecurityModel() != null
+				&& getUserSecurityModel().getSettings() != null) {
+
+			boolean isInited = getUserSecurityModel().getSettings().isinited();
+			LOG.info("The Model is initialized");
+			if (!isInited) {
+				// See if there is a User Dir
+				String userDir = getUserSecurityModel().getUsersApp();
+				boolean userDirFound = false;
+				OtfDirectory udir = getUserSecurityModel()
+						.getDirByName(userDir);
+				// if no User Dir create it
+				if (udir == null) {
+					udir = new OtfDirectory();
+					udir.setName(userDir);
+					addUpdateDir(udir);
+				}
+
+				List<String> apps = getUserSecurityModel().getApps();
+
+				for (String appname : apps) {
+					List<String> appDirs = getUserSecurityModel()
+							.getDirsByAppName(appname);
+					if (appDirs.contains(userDir)) {
+						userDirFound = true;
+						break;
+					}
+
+				}
+				// if user dir not part of an app then get an app
+				if (!userDirFound) {
+					OtfApplication existApp = null;
+					// if users app exists add it to that
+					if (apps.contains(userDir)) {
+						existApp = getUserSecurityModel().getAppbyName(userDir);
+					}
+
+					if (existApp == null) {
+
+						List<String> adminapps = new ArrayList<String>();
+						adminapps.add(getUserSecurityModel().getMembersApp());
+						adminapps.add(getUserSecurityModel().getAdminApp());
+						adminapps.add(getUserSecurityModel().getHandlerAdmin()
+								.getAppName());
+
+						// get the first not AdminHandler App
+						for (String appname : apps) {
+							if (!adminapps.contains(appname)) {
+								existApp = getUserSecurityModel().getAppbyName(
+										appname);
+								break;
+							}
+						}
+					}
+
+					if (existApp != null) {
+						// add the dir to it.
+						existApp.getAccountStores().put(udir.getName(), udir);
+						// update
+						addExistDirToApp(udir, existApp, true, false, 0);
+					}
+				}
+				// Then update settings setting inited to true
+				getUserSecurityModel().getSettings().setInited("true");
+				getUserSecurityModel().getSettings().updateSettings();
+				addUpdateGroup(getUserSecurityModel().getSettings().getGrp());
+			}
+		}
+	}
 }

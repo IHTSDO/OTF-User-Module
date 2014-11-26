@@ -30,6 +30,7 @@ public class XmlStatics {
 	public static final String XML_A_GNAME = "givenName";
 	public static final String XML_A_MNAME = "middleName";
 	public static final String XML_A_SNAME = "surname";
+	public static final String XML_A_PDIR = "parentDir";
 
 	// default values
 	public static final String DIR = "dir";

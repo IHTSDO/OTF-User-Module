@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,7 +28,8 @@ import org.ihtsdo.otf.security.dto.OtfAccount;
 import org.ihtsdo.otf.security.dto.query.SecurityService;
 import org.ihtsdo.otf.security.objectcache.ObjectCacheClassHandler;
 import org.ihtsdo.otf.security.util.PropertiesLoader;
-import org.ihtsdo.otf.security.xml.XmlUserSecurity;
+import org.ihtsdo.otf.security.util.UuidConverter;
+import org.ihtsdo.otf.security.xml.XmlUserSecurityHandler;
 
 /**
  * 
@@ -66,9 +68,11 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 	private String savePath = null;
 	private Boolean canSave = null;
 
+	public static final String NO_PERM = "NO_Admin_Edit_Perm";
+
 	@Override
 	public void init(final ServletConfig config) throws ServletException {
-
+		LOG.info("Servelet Initializing");
 		try {
 			initParameters(config);
 			getSecServ();
@@ -151,23 +155,50 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 		// See if UN and Token are set in the session
 		String uname = (String) request.getSession().getAttribute(
 				WebStatics.USERNAME);
-		String token = null;
-		if (stringOK(uname)) {
-			token = (String) request.getSession().getAttribute(
-					WebStatics.AUTH_TOKEN);
-			if (stringOK(token)) {
-				return uname;
-			}
+		String token = (String) request.getSession().getAttribute(
+				WebStatics.AUTH_TOKEN);
+
+		// if un & tok OK & set in the Session assume OK
+
+		if (stringOK(uname) && stringOK(token)) {
+			return uname;
 		}
 
 		// Get the UN + pw strings
-		uname = getNamedParam(WebStatics.USERNAME, request);
+		if (!stringOK(uname)) {
+			uname = getNamedParam(WebStatics.USERNAME, request);
+		}
 		String password = getNamedParam(WebStatics.PASSWD, request);
 		// auth users
-		if (stringOK(uname) && stringOK(password)) {
-			OtfAccount oacc = getUsh().authAccount(uname, password);
+
+		// test to see if token
+
+		// HERE
+
+		return authUser(uname, password, token, request);
+
+	}
+
+	private String authUser(final String uname, String password,
+			final String tokenIn, final HttpServletRequest request) {
+		if (stringOK(uname)) {
+			// First see if user is admin
+			Boolean perm = getUsh().getUserSecurityModel().getAdminUsers()
+					.contains(uname);
+			if (!perm) {
+				return NO_PERM;
+			}
+
+			OtfAccount oacc = getUsh().authAccount(uname, password, tokenIn);
 			if (oacc != null) {
-				token = oacc.getAuthToken();
+				String token = oacc.getAuthToken();
+				if (!stringOK(token)) {
+					token = UuidConverter.format(UUID.randomUUID());
+					oacc.setAuthToken(token);
+				}
+
+				getUsh().getUserSecurityModel().setUsersToken(uname, token);
+
 				request.getSession().setAttribute(WebStatics.USERNAME, uname);
 				request.getSession().setAttribute(WebStatics.AUTH_TOKEN, token);
 				password = null;
@@ -222,10 +253,12 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 	protected final String getDecString(String toDec) {
 		String dec = null;
-		try {
-			dec = URLDecoder.decode(toDec, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			dec = toDec.replaceAll("%20", "");
+		if (toDec != null) {
+			try {
+				dec = URLDecoder.decode(toDec, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				dec = toDec.replaceAll("%20", "");
+			}
 		}
 		return dec;
 	}
@@ -354,7 +387,6 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 		if (ush == null) {
 			String ushName = getParamsProps().getProperty(
 					WebStatics.USER_SECURITY_HANDLER);
-
 			Properties props = new Properties();
 			String key = new StringBuilder().append(ushName).append(".")
 					.toString();
@@ -539,9 +571,10 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 
 	public void save() {
 		if (getCanSave()) {
-			XmlUserSecurity xmlUsOut = new XmlUserSecurity();
+			XmlUserSecurityHandler xmlUsOut = new XmlUserSecurityHandler();
 			xmlUsOut.setConfigFN(getSavePath());
-			xmlUsOut.setUserSecurity(getUsh().getUserSecurity());
+			xmlUsOut.getUserSecurityModel().setModel(
+					(getUsh().getUserSecurityModel().getFullModel()));
 			try {
 				xmlUsOut.saveUserSecurity();
 			} catch (Exception e) {
@@ -549,5 +582,4 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 			}
 		}
 	}
-
 }
