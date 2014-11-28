@@ -121,14 +121,14 @@ public class SecurityServlet extends AbstractSecurityServlet {
 		}
 
 		if (!reload) {
-			redirect = getNamedParam(WebStatics.REDIRECT, hr);
-			String json = handleQuery(hr, response);
+			redirect = getNamedParam(WebStatics.REDIRECT, request);
+			String json = handleQuery(request, response);
 			if (!stringOK(json)) {
 				json = "NO RESPONSE";
 			}
 			if (stringOK(redirect)) {
 				request.setAttribute(WebStatics.JSON, json);
-				final String context = getNamedParam(WebStatics.CON_PATH, hr);
+				final String context = getNamedParam(WebStatics.CON_PATH, request);
 				if (stringOK(context)) {
 					ServletContext scon = sc.getServletContext().getContext(
 							context);
