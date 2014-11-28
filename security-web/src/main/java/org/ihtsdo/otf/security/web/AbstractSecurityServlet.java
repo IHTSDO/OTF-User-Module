@@ -540,18 +540,19 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 	}
 
 	public final Boolean getCanSave() {
-
+		return canSave;
+	}
+	
+	public final void setCanSave(HttpServletRequest requestIn) {
 		if (canSave == null) {
 			canSave = new Boolean(canSaveFile());
 			if (canSave) {
-				hr.getSession().setAttribute(WebStatics.SAVE, "true");
+				requestIn.getSession().setAttribute(WebStatics.SAVE, "true");
 			}
 			if (!canSave) {
-				hr.getSession().removeAttribute(WebStatics.SAVE);
+				requestIn.getSession().removeAttribute(WebStatics.SAVE);
 			}
 		}
-
-		return canSave;
 	}
 
 	public final void setCanSave(Boolean canSaveIn) {
