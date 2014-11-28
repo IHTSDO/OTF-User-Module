@@ -136,7 +136,7 @@ public class SecurityServlet extends AbstractSecurityServlet {
 							context);
 					if (scon == null) {
 						// Set crossContext if allowed else write to out
-						writeJSONout(json, response);
+						writeJSONout(json,request, response);
 					} else {
 						final RequestDispatcher reqd = scon
 								.getRequestDispatcher(redirect);
@@ -149,15 +149,17 @@ public class SecurityServlet extends AbstractSecurityServlet {
 				}
 
 			} else {
-				writeJSONout(json, response);
+				writeJSONout(json,request,  response);
 			}
 		}
 	}
 
-	private void writeJSONout(final String json,
+	private void writeJSONout(final String json,final HttpServletRequest request,
 			final HttpServletResponse response) throws IOException {
 		response.setContentType("application/json");
-		hr.getSession().setAttribute(WebStatics.JSON, null);
+		if(request != null){
+		request.getSession().setAttribute(WebStatics.JSON, null);
+		}
 		final PrintWriter out = response.getWriter();
 		out.write(json);
 	}
