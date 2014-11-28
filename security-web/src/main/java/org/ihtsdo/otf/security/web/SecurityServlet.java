@@ -98,7 +98,6 @@ public class SecurityServlet extends AbstractSecurityServlet {
 	protected void handlePostRequest(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException,
 			IOException {
-		setHr(request);
 		// AUTHUSER
 		handleGetRequest(request, response);
 
@@ -107,11 +106,10 @@ public class SecurityServlet extends AbstractSecurityServlet {
 	@Override
 	protected void handleGetRequest(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException,
-			IOException {
-		setHr(request);
-
+			IOException {	
+		setCanSave(request);
 		String urlS = request.getRequestURI();
-		boolean reload = stringOK(getNamedParam(WebStatics.RELOAD, hr));
+		boolean reload = stringOK(getNamedParam(WebStatics.RELOAD, request));
 		if (!reload) {
 			// try rest
 			reload = urlS.endsWith(WebStatics.RELOAD);
@@ -129,7 +127,7 @@ public class SecurityServlet extends AbstractSecurityServlet {
 				json = "NO RESPONSE";
 			}
 			if (stringOK(redirect)) {
-				hr.setAttribute(WebStatics.JSON, json);
+				request.setAttribute(WebStatics.JSON, json);
 				final String context = getNamedParam(WebStatics.CON_PATH, hr);
 				if (stringOK(context)) {
 					ServletContext scon = sc.getServletContext().getContext(
@@ -172,7 +170,7 @@ public class SecurityServlet extends AbstractSecurityServlet {
 		if (isQuery) {
 			final Map<String, String> args = getFiltParamsAsHM(request);
 			final SecurityQueryDTO sqd = new SecurityQueryDTO(queryName, args);
-			String rval = getJSonFromSqd(sqd);
+			String rval = getJSonFromSqd(sqd,request);
 			if (sqd.getQueryName()
 					.equals(SecurityService.GET_USER_BY_NAME_AUTH)
 					&& !stringOK(rval)) {
@@ -188,7 +186,7 @@ public class SecurityServlet extends AbstractSecurityServlet {
 
 		final SecurityQueryDTO sqdRest = getSqdFromRequest(request);
 		if (sqdRest != null) {
-			String rval = getJSonFromSqd(sqdRest);
+			String rval = getJSonFromSqd(sqdRest,request);
 			if (stringOK(rval)) {
 				return rval;
 			}
@@ -198,7 +196,7 @@ public class SecurityServlet extends AbstractSecurityServlet {
 		final String jsonQ = getNamedParam(WebStatics.QUERY_JSON, request);
 		if (jsonQ != null && jsonQ.length() > 0) {
 			final SecurityQueryDTO sqd = getSqdFromJSON(jsonQ);
-			String rval = getJSonFromSqd(sqd);
+			String rval = getJSonFromSqd(sqd,request);
 			if (stringOK(rval)) {
 				return rval;
 			}
@@ -207,7 +205,7 @@ public class SecurityServlet extends AbstractSecurityServlet {
 		final String jsonB = getContentAsString(request);
 		if (jsonB != null && jsonB.length() > 0) {
 			final SecurityQueryDTO sqd = getSqdFromJSON(jsonB);
-			String rval = getJSonFromSqd(sqd);
+			String rval = getJSonFromSqd(sqd,request);
 			if (stringOK(rval)) {
 				return rval;
 			}
@@ -335,7 +333,7 @@ public class SecurityServlet extends AbstractSecurityServlet {
 		return new SecurityQueryDTO(SecurityService.GET_MEMBERS, args);
 	}
 
-	private final String getJSonFromSqd(final SecurityQueryDTO sqd) {
+	private final String getJSonFromSqd(final SecurityQueryDTO sqd,final HttpServletRequest requestIn) {
 		if (sqd != null) {
 			final String rval = getSecServ().getQueryResultFromQueryDTO(sqd);
 
@@ -350,7 +348,7 @@ public class SecurityServlet extends AbstractSecurityServlet {
 							SecurityService.USER_NAME);
 
 					if (stringOK(username)) {
-						hr.getSession().setAttribute(SecurityService.USER_NAME,
+						requestIn.getSession().setAttribute(SecurityService.USER_NAME,
 								username);
 					}
 
@@ -363,10 +361,10 @@ public class SecurityServlet extends AbstractSecurityServlet {
 
 			if (stringOK(redirect)) {
 				final String qasJ = getSecServ().getJSonFromObject(sqd);
-				hr.setAttribute(WebStatics.QUERY_JSON, qasJ);
+				requestIn.setAttribute(WebStatics.QUERY_JSON, qasJ);
 			}
 			if (!stringOK(redirect)) {
-				hr.setAttribute(WebStatics.QUERY_JSON, null);
+				requestIn.setAttribute(WebStatics.QUERY_JSON, null);
 			}
 			return rval;
 		}

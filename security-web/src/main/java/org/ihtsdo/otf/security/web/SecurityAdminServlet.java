@@ -56,7 +56,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 	protected void handlePostRequest(HttpServletRequest requestIn,
 			HttpServletResponse responseIn) throws ServletException,
 			IOException {
-		setHr(requestIn);
+		setCanSave(requestIn);
 		String decPath = getDecString(getNotNullPath(requestIn));
 		if (decPath.endsWith(WebStatics.CHG_PW_REG_URL)) {
 			String userdetails = getNamedParam(WebStatics.USERMAIL, requestIn);
@@ -167,7 +167,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 	protected void handleGetRequest(HttpServletRequest requestIn,
 			HttpServletResponse responseIn) throws ServletException,
 			IOException {
-		setHr(requestIn);
+		setCanSave(requestIn);
 		String decPath = getDecString(getNotNullPath(requestIn));
 		if (decPath.endsWith(WebStatics.CHG_PW_URL)) {
 
@@ -235,8 +235,8 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			throws ServletException, IOException {
 		String curl = getContextUrl(requestIn);
 		OtfCachedListsDTO.setAdminServletContextUrl(curl);
-		hr.getSession().setAttribute(WebStatics.BASEURL, curl);
-		hr.getSession().setAttribute(WebStatics.TREE, getTreeHtml(curl));
+		requestIn.getSession().setAttribute(WebStatics.BASEURL, curl);
+		requestIn.getSession().setAttribute(WebStatics.TREE, getTreeHtml(curl));
 		boolean loadObw = false;
 		if (obw != null) {
 			if (obw instanceof OtfBaseId) {
@@ -245,9 +245,9 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			}
 		}
 		if (loadObw) {
-			hr.getSession().setAttribute(WebStatics.FORM, obw.getRHS());
+			requestIn.getSession().setAttribute(WebStatics.FORM, obw.getRHS());
 		} else {
-			hr.getSession().setAttribute(WebStatics.FORM, getForm());
+			requestIn.getSession().setAttribute(WebStatics.FORM, getForm());
 		}
 		setRedirect("/index-admin.jsp");
 		final RequestDispatcher reqd = sc.getServletContext()
