@@ -103,7 +103,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 
 					loadScreen(requestIn, responseIn, null);
 				} else {
-					obw.setAction(getDecString(getHr().getRequestURI()));
+					obw.setAction(getDecString(requestIn.getRequestURI()));
 					loadScreen(requestIn, responseIn, obw);
 				}
 			}
@@ -247,7 +247,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		if (loadObw) {
 			requestIn.getSession().setAttribute(WebStatics.FORM, obw.getRHS());
 		} else {
-			requestIn.getSession().setAttribute(WebStatics.FORM, getForm());
+			requestIn.getSession().setAttribute(WebStatics.FORM, getForm(requestIn));
 		}
 		setRedirect("/index-admin.jsp");
 		final RequestDispatcher reqd = sc.getServletContext()
@@ -464,34 +464,34 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		}
 	}
 
-	public final String getForm() {
+	public final String getForm(HttpServletRequest requestIn) {
 		switch (getUrlNodes()[0]) {
 		case SecurityService.MEMBERS:
-			return getMemberForm();
+			return getMemberForm(requestIn);
 		case SecurityService.USERS:
-			return getUserForm();
+			return getUserForm(requestIn);
 		case SecurityService.APPS:
-			return getAppForm();
+			return getAppForm(requestIn);
 		case SecurityService.SETTINGS:
-			return getSettingsForm();
+			return getSettingsForm(requestIn);
 		default:
-			return getEmptyForm();
+			return getEmptyForm(requestIn);
 		}
 	}
 
-	public final String getEmptyForm() {
+	public final String getEmptyForm(final HttpServletRequest requestIn) {
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append(OtfBaseWeb.getForm("No record selected"));
 		return sbuild.toString();
 	}
 
-	public final String getSettingsForm() {
+	public final String getSettingsForm(final HttpServletRequest requestIn) {
 		OtfSettings otfSett = getSettings();
-		otfSett.setAction(getDecString(getHr().getRequestURI()));
+		otfSett.setAction(getDecString(requestIn.getRequestURI()));
 		return otfSett.getRHS();
 	}
 
-	public final String getUserForm() {
+	public final String getUserForm(final HttpServletRequest requestIn) {
 		OtfAccount oacc = null;
 
 		if (getUrlNodes().length > 1) {
@@ -504,7 +504,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		if (oacc == null) {
 			oacc = new OtfAccount();
 		}
-		oacc.setAction(getDecString(getHr().getRequestURI()));
+		oacc.setAction(getDecString(requestIn.getRequestURI()));
 		// make sure the lists have been built.
 		// getUsh().getUserSecurityModel().getModel().getCachedListMaps()
 		// .getMembersList();
@@ -514,7 +514,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 
 	}
 
-	public final String getMemberForm() {
+	public final String getMemberForm(final HttpServletRequest requestIn) {
 
 		OtfGroup member = null;
 		if (getUrlNodes().length > 1) {
@@ -528,14 +528,14 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			member = new OtfGroup();
 		}
 
-		member.setAction(getDecString(getHr().getRequestURI()));
+		member.setAction(getDecString(requestIn.getRequestURI()));
 		member.setGrptype(OtfGroup.TYPE_MEMBER);
 		member.setParentDirName(getUsh().getUserSecurityModel().getSettings()
 				.getMembers());
 		return member.getRHS();
 	}
 
-	public final String getAppForm() {
+	public final String getAppForm(final HttpServletRequest requestIn) {
 		OtfApplication oacc = null;
 		if (getUrlNodes().length > 1) {
 			String val = getUrlNodes()[1];
@@ -546,14 +546,14 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			if (oacc == null) {
 				// try dir
 				if (getUsh().getUserSecurityModel().getDirByName(val) != null) {
-					return getDirForm();
+					return getDirForm(requestIn);
 				}
 			}
 		}
 		if (oacc == null) {
 			oacc = new OtfApplication();
 		}
-		oacc.setAction(getDecString(getHr().getRequestURI()));
+		oacc.setAction(getDecString(requestIn.getRequestURI()));
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append(oacc.getRHS());
 
@@ -562,7 +562,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			List<OtfGroup> grps = getUsh().getUserSecurityModel()
 					.getGroupsByAppName(oacc.getName());
 
-			String action = getDecString(getHr().getRequestURI());
+			String action = getDecString(requestIn.getRequestURI());
 			for (OtfGroup grp : grps) {
 				grp.setAction(action);
 				grp.getId();
@@ -584,7 +584,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		return sbuild.toString();
 	}
 
-	public final String getDirForm() {
+	public final String getDirForm(final HttpServletRequest requestIn) {
 		OtfDirectory oacc = null;
 		if (getUrlNodes().length > 1) {
 			String val = getUrlNodes()[1];
@@ -596,7 +596,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 		if (oacc == null) {
 			oacc = new OtfDirectory();
 		}
-		oacc.setAction(getDecString(getHr().getRequestURI()));
+		oacc.setAction(getDecString(requestIn.getRequestURI()));
 		StringBuilder sbuild = new StringBuilder();
 		sbuild.append(oacc.getRHS());
 
@@ -605,7 +605,7 @@ public class SecurityAdminServlet extends AbstractSecurityServlet {
 			List<OtfGroup> grps = getUsh().getUserSecurityModel()
 					.getGroupsByDirName(oacc.getName());
 
-			String action = getDecString(getHr().getRequestURI());
+			String action = getDecString(requestIn.getRequestURI());
 			for (OtfGroup grp : grps) {
 				grp.setAction(action);
 				grp.getId();

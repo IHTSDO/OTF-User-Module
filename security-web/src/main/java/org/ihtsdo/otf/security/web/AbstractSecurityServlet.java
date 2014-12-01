@@ -50,7 +50,6 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 	private static final Logger LOG = Logger
 			.getLogger(AbstractSecurityServlet.class.getName());
 
-	protected HttpServletRequest hr;
 
 	private SecurityService secServ;
 	private UserSecurityHandler ush;
@@ -454,14 +453,6 @@ public abstract class AbstractSecurityServlet extends HttpServlet {
 		paramsProps = paramsPropsIn;
 	}
 
-	public final HttpServletRequest getHr() {
-		return hr;
-	}
-
-	public final void setHr(HttpServletRequest hrIn) {
-		hr = hrIn;
-		getCanSave();
-	}
 
 	public final ServletConfig getSc() {
 		return sc;
