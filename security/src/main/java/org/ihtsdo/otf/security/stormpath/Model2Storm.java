@@ -285,12 +285,12 @@ public class Model2Storm {
 				acc.setMiddleName(oacc.getMiddleName());
 				acc.setSurname(oacc.getSurname());
 				acc.setEmail(oacc.getEmail());
-				if (!oacc.getCustData().getCustFields().isEmpty()) {
+				//if (!oacc.getCustData().getCustFields().isEmpty()) {
 					CustomData cd = spbd.getResourceByHrefCustomData(acc
 							.getCustomData().getHref());
 					buildCustomData(oacc.getCustData().getCustFields(), cd);
 					cd.save();
-				}
+				//}
 				acc.save();
 			} else {
 				if (acc == null) {
@@ -310,13 +310,13 @@ public class Model2Storm {
 
 					acc.setPassword(defPw);
 					// LOG.info("acc pw set to: " + defPw);
-					if (!oacc.getCustData().getCustFields().isEmpty()) {
+					//if (!oacc.getCustData().getCustFields().isEmpty()) {
 						CustomData cd = acc.getCustomData();
 						buildCustomData(oacc.getCustData().getCustFields(), cd);
 						if (log) {
 							LOG.info("Acc1 = " + acc);
 						}
-					}
+					//}
 
 					SPAccountStoreVisitor spa = new SPAccountStoreVisitor();
 					accSt.accept(spa);
@@ -347,7 +347,7 @@ public class Model2Storm {
 		try {
 			if (custFields != null && customData != null) {
 				for (String key : custFields.keySet()) {
-					String value = custFields.get(key).getValFromVals();
+					String value = custFields.get(key).getValFromVals();					
 					// roll through keys in cust field
 					if (!OtfCustomData.getReservedWords().contains(key)) {
 						customData.put(key, value);
