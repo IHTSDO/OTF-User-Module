@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.ihtsdo.otf</groupId>
 		<artifactId>otf-user-module</artifactId>
-		<version>1.0.3-SNAPSHOT</version>
+		<version>1.0.4</version>
 	</parent>
 
 	<artifactId>security-web</artifactId>
