@@ -1,5 +1,4 @@
-
-﻿function common() {
+function common() {
 }
 common.delegate = function (method, scope, context) {
 	/// <summary>Creates an event handler / delegate with a specific scope and context parameter</summary>
