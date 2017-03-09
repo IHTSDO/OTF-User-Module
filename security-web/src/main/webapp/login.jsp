@@ -2,9 +2,9 @@
     <head>
         <title>ihtsdo.org - admin login</title>
 
-        <link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/css/styles-default.css" />
-        <link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/css/core.css" />
-        <link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/css/content-modules.css" />
+        <link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>./css/styles-default.css" />
+        <link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>./css/core.css" />
+        <link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>./css/content-modules.css" />
         <link rel="icon" type="image/png" href="images/favicon.png">
 
         <!--[if lt IE 9]>
