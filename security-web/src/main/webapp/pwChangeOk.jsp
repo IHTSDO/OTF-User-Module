@@ -1,10 +1,10 @@
 <head>
 	<title>ihtsdo.org - request password reset</title>
 
-	<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>./css/styles-default.css" />
-	<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>./css/core.css" />
-	<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>./css/content-modules.css" />
-	<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>./css/gcse.css" />
+	<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/css/styles-default.css" />
+	<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/css/core.css" />
+	<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/css/content-modules.css" />
+	<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/css/gcse.css" />
 	<link rel="icon" type="image/png" href="images/favicon.png">
 
 	<!--[if lt IE 9]>
@@ -47,7 +47,7 @@ document.createElement('section');
 			s.parentNode.insertBefore(gcse, s);
 		})();
 	</script>
-	<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>./style.css">
+	<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/style.css">
 	<%@ page import="org.ihtsdo.otf.security.web.WebStatics" %>
 </head>
 
